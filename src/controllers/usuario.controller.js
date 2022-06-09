@@ -109,17 +109,6 @@ const perfilFromRec = (req) => {
   return perfil
 }
 
-export const usuarios = async (req, res) => {
-  const context = req.body.usuario
-
-  try {
-    const rows = await DAL.findAll(context)
-
-    res.status(200).json(rows)
-  } catch (err) {
-    res.status(400).end()
-  }
-}
 export const usuario = async (req, res) => {
   const context = req.body.usuario
 
@@ -133,6 +122,17 @@ export const usuario = async (req, res) => {
     }
   } catch (err) {
     res.status(500).end()
+  }
+}
+export const usuarios = async (req, res) => {
+  const context = req.body.usuario
+
+  try {
+    const rows = await DAL.findAll(context)
+
+    res.status(200).json(rows)
+  } catch (err) {
+    res.status(400).end()
   }
 }
 
