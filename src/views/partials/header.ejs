@@ -1,3 +1,47 @@
+  <style>
+    .dropdown-menu.msg_list {
+      width: 30rem !important;
+    }
+
+    ul.msg_list li {
+      /* background: #f7f7f7; */
+      /* padding: 5px; */
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      margin: 6px 6px 0;
+      width: 96% !important; 
+      background-color: rgba(27,125,241,.02);
+    }
+
+    ul.msg_list li:last-child {
+      margin-bottom: 6px;
+      /* padding: 10px;  */
+    }
+
+    /* ul.msg_list li a {
+      padding: 3px 5px !important; } */
+
+    ul.msg_list li a .image img {
+      border-radius: 2px 2px 2px 2px;
+      -webkit-border-radius: 2px 2px 2px 2px;
+      float: left;
+      margin-right: 10px;
+      width: 11%; }
+
+    ul.msg_list li a .time {
+      font-size: 9px;
+      font-style: italic;
+      font-weight: bold;
+      position: absolute;
+      right: 35px; }
+
+    ul.msg_list li a .message {
+      display: block !important;
+      font-size: 11px; 
+    }
+  </style>
+
 <header class="navbar navbar-expand-md navbar-light d-print-none">
   <div class="container-xl">
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu">
@@ -10,7 +54,7 @@
     </h1>
     <div class="navbar-nav flex-row order-md-last">
       <div class="nav-item dropdown d-none d-md-flex me-3">
-        <a href="#" class="nav-link px-0" onclick="checkItem(this)" data-bs-toggle="dropdown" tabindex="-1" aria-label="Show notifications">
+        <a href="#" class="nav-link px-0" onclick="checkBadge(this); return" data-bs-toggle="dropdown" tabindex="-1" aria-label="Show notifications">
           <i class="bi bi-bell" style="font-size: 1.1rem; color: cornflowerblue;"></i>
           <span class="badge bg-white"></span>
         </a>
@@ -34,3 +78,80 @@
     </div>
   </div>
 </header>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const messages = document.getElementById('messages')
+  const socket = io('http://localhost:4200')
+
+  socket.emit('client:addUser', {
+    userID: <%- JSON.stringify(user.userID) %>,
+  })
+  socket.on('server:users', (users) => {
+    console.log('Usuarios activos', users)
+  })
+  socket.on('server:loadNotes', (notes) => {
+    messages.innerHTML = ''
+    notes.forEach(element => {        
+      let ele = document.createElement('li')
+      let elea = document.createElement('a')
+
+      elea.classList.add('dropdown-item')
+      elea.innerHTML = `<div class="d-flex flex-column justify-content-center">
+        <h4 class="text-sm font-weight-normal mb-1">
+          <span class="font-weight-bold">${element.message}</span>
+        </h4>
+        <p>
+        <small class="time mb-0">
+          <i class="bi bi-clock"></i>
+          ${element.fecha}
+        </small>
+        </p>
+      `
+      ele.classList.add('nav-item')
+      ele.appendChild(elea)
+      messages.appendChild(ele)
+    });
+
+    if (messages.getElementsByTagName("li").length > 0) {
+      document.querySelector('.badge').classList.remove('bg-white')
+      document.querySelector('.badge').classList.add('bg-red')        
+    } else {
+      document.querySelector('.badge').classList.remove('bg-red')
+      document.querySelector('.badge').classList.add('bg-white')
+    }
+  })
+  socket.on('server:newNote', (note) => {
+    console.log('pass')
+    let ele = document.createElement('li')
+    let elea = document.createElement('a')
+
+    elea.classList.add('dropdown-item')
+    elea.innerHTML = `<div class="d-flex flex-column justify-content-center">
+      <h4 class="text-sm font-weight-normal mb-1">
+        <span class="font-weight-bold">${note.message}</span>
+      </h4>
+      <p>
+      <small class="time mb-0">
+        <i class="bi bi-clock"></i>
+        ${note.fecha}
+      </small>
+      </p>
+    `
+    ele.classList.add('nav-item')
+    ele.appendChild(elea)
+    messages.appendChild(ele)
+
+    if (messages.getElementsByTagName("li").length > 0) {
+      document.querySelector('.badge').classList.remove('bg-white')
+      document.querySelector('.badge').classList.add('bg-red')        
+    } else {
+      document.querySelector('.badge').classList.remove('bg-red')
+      document.querySelector('.badge').classList.add('bg-white')
+    }        
+  })
+
+  function checkBadge(elem) {
+    document.querySelector('.badge').classList.remove('bg-red')
+    document.querySelector('.badge').classList.add('bg-white')
+  }
+</script>

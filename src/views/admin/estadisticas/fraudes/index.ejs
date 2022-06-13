@@ -106,7 +106,7 @@
                 <i class="bi bi-gear" style="font-size: 0.9rem; color: #626976;"></i>
               </a>
             </div>
-              <div class="row row-deck row-cards">
+            <div class="row row-deck row-cards">
               <div class="col-lg-4">
                 <div class="card">
                   <div class="card-body">
@@ -127,491 +127,475 @@
                         </div>
                       </div>
                     </div>
-                      <div class="progress-container">
-                        <div class="err bg-azure progress-separated">
-                          <h6 class="m-0"><%- datos.situacion.ACUERR %></h6>
-                        </div>
-                        <div class="dec bg-purple progress-separated">
-                          <h6 class="m-0"><%- datos.situacion.ACUDEC %></h6>
-                        </div>
-                        <div class="otr bg-teal">
-                          <h6 class="m-0"><%- datos.situacion.ACUOTR %></h6>
-                        </div>
+                    <div class="progress-container">
+                      <div class="err bg-azure progress-separated">
+                        <h6 class="m-0"><%- datos.situacion.ACUERR %></h6>
                       </div>
-                  </div>                  
-                </div>
-              </div>
-              <div class="col-lg-4">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="d-flex align-items-center">
-                      <div class="subheader">Liquidaciones</div>
-                      <div class="subheader ms-auto">Importe</div>
-                    </div>
-                    <div class="d-flex align-items-center">
-                      <div class="h1"><%- Intl.NumberFormat('de-DE').format(datos.hitos.LIQUID) %></div>
-                      <div class="h1 ms-auto"><%- Intl.NumberFormat('de-DE').format(datos.hitos.IMPLIQ) %></div>
-                    </div>
-                    <div class="d-flex align-items-center">
-                      <div class="subheader mt-3">Propuestas</div>
-                    </div>
-                    <div class="h2"><%- Intl.NumberFormat('de-DE').format(datos.hitos.PROLIQ) %></div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-4">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="d-flex align-items-center">
-                      <div class="subheader">Sanciones</div>
-                      <div class="subheader ms-auto">Importe</div>
-                    </div>
-                    <div class="d-flex align-items-center">
-                      <div class="h1"><%- Intl.NumberFormat('de-DE').format(datos.hitos.SANCIO) %></div>
-                      <div class="h1 ms-auto"><%- Intl.NumberFormat('de-DE').format(datos.hitos.IMPSAN) %></div>
-                    </div>
-                    <div class="d-flex align-items-center">
-                      <div class="subheader mt-3">
-                        Propuestas
-                        <span class="text-red">(anuladas)</span>
+                      <div class="dec bg-purple progress-separated">
+                        <h6 class="m-0"><%- datos.situacion.ACUDEC %></h6>
                       </div>
-                    </div>
-                    <div class="d-flex align-items-center">
-                      <div class="h2">
-                        <%- datos.hitos.PROSAN %>
-                        <span class="text-red">(<%- Intl.NumberFormat('de-DE').format(datos.hitos.ANUSAN) %>)</span>
-                      </div>
-                      <div class="ms-auto">
-                        <%- Intl.NumberFormat('de-DE').format(datos.hitos.IMPPSA) %>
-                        <span class="text-red">(<%- Intl.NumberFormat('de-DE').format(datos.hitos.IMPANU) %>)</span>
+                      <div class="otr bg-teal">
+                        <h6 class="m-0"><%- datos.situacion.ACUOTR %></h6>
                       </div>
                     </div>
                   </div>
-                </div>
+                </div>                  
               </div>
-              <div class="col-lg-6 mt-1">
-                <div class="card">
-                  <div class="card-header">
-                    <h3 class="card-title">Acumulados</h3>
-                  </div>                  
-                  <div class="card-body">
-                    <div id="chart-actuac"></div>
+            </div>
+            <div class="col-lg-4">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex align-items-center">
+                    <div class="subheader">Liquidaciones</div>
+                    <div class="subheader ms-auto">Importe</div>
                   </div>
+                  <div class="d-flex align-items-center">
+                    <div class="h1"><%- Intl.NumberFormat('de-DE').format(datos.hitos.LIQUID) %></div>
+                    <div class="h1 ms-auto"><%- Intl.NumberFormat('de-DE').format(datos.hitos.IMPLIQ) %></div>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <div class="subheader mt-3">Propuestas</div>
+                  </div>
+                  <div class="h2"><%- Intl.NumberFormat('de-DE').format(datos.hitos.PROLIQ) %></div>
                 </div>
               </div>
-              <div class="col-lg-6 mt-1">
-                <div class="row row-cards">
-                  <div class="col-12">
-                    <div class="card">
-                      <div class="card-header">
-                        <h3 class="card-title">Oficinas</h3>
-                      </div>
-                      <div class="card-body">
-                        <table class="table table-vcenter table-striped sortable" id="tblFraudes">
-                          <thead>
-                          <tr class="header">
-                            <th>Oficina</th>
-                            <th class="w-5">Pend</th>
-                            <th class="w-5">Adju</th>
-                            <th class="w-5">Resu</th>
-                            <th class="w-6">Total</th>
-                          </tr>
-                          </thead>
-                          <tbody id="table-body">
-                            <% datos.oficinas.map(element => { %>
-                              <tr>
-                                <td>
-                                  <div class="d-flex align-items-center">
-                                    <div class="flex-fill">
-                                      <% if (element.DESOFI === null) { %>
-                                        <div class="font-weight-medium">TOTAL</div>
-                                      <% } else { %> 
-                                        <div class="font-weight-medium"><%- element.DESOFI %></div>
-                                      <% } %> 
-                                    </div>
-                                  </div>
-                                </td>
-                                <td class="w-6">
-                                  <div class="d-flex align-items-center">
-                                    <div class="flex-fill">
-                                      <div class="font-weight-medium"><%- element.PEN %></div>
-                                    </div>
-                                  </div>
-                                </td>
-                                <td class="w-6">
-                                  <div class="d-flex align-items-center">
-                                    <div class="flex-fill">
-                                      <div class="font-weight-medium"><%- element.ADJ %></div>
-                                    </div>
-                                  </div>
-                                </td>
-                                <td class="w-6">
-                                  <div class="d-flex align-items-center">
-                                    <div class="flex-fill">
-                                      <div class="font-weight-medium"><%- element.RES %></div>
-                                    </div>
-                                  </div>
-                                </td>
-                                <td class="w-6">
-                                  <div class="d-flex align-items-center">
-                                    <div class="flex-fill">
-                                      <div class="font-weight-medium"><%- element.TOT %></div>
-                                    </div>
-                                  </div>
-                                </td>
-                              </tr>
-                            <% }) %>
-                          </tbody>
-                        </table>
-                      </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex align-items-center">
+                    <div class="subheader">Sanciones</div>
+                    <div class="subheader ms-auto">Importe</div>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <div class="h1"><%- Intl.NumberFormat('de-DE').format(datos.hitos.SANCIO) %></div>
+                    <div class="h1 ms-auto"><%- Intl.NumberFormat('de-DE').format(datos.hitos.IMPSAN) %></div>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <div class="subheader mt-3">
+                      Propuestas
+                      <span class="text-red">(anuladas)</span>
                     </div>
                   </div>
-                  <div class="col-12 mt-1">
-                    <div class="card" style="display: -webkit-box;">
-                      <div class="col-4 mx-auto w-auto">
-                        <div id="chart-correc" class="chart" data-percent="<%- datos.ratios.correctas %>">
-                          <span class="percent"></span>
-                          <span>Correcto</span>
-                        </div>
+                  <div class="d-flex align-items-center">
+                    <div class="h2">
+                      <%- datos.hitos.PROSAN %>
+                      <span class="text-red">(<%- Intl.NumberFormat('de-DE').format(datos.hitos.ANUSAN) %>)</span>
+                    </div>
+                    <div class="ms-auto">
+                      <%- Intl.NumberFormat('de-DE').format(datos.hitos.IMPPSA) %>
+                      <span class="text-red">(<%- Intl.NumberFormat('de-DE').format(datos.hitos.IMPANU) %>)</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 mt-1">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Acumulados</h3>
+                </div>                  
+                <div class="card-body">
+                  <div id="chart-actuac"></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 mt-1">
+              <div class="row row-cards">
+                <div class="col-12">
+                  <div class="card">
+                    <div class="card-header">
+                      <h3 class="card-title">Oficinas</h3>
+                    </div>
+                    <div class="card-body">
+                      <table class="table table-vcenter table-striped sortable" id="tblFraudes">
+                        <thead>
+                        <tr class="header">
+                          <th>Oficina</th>
+                          <th class="w-5">Pend</th>
+                          <th class="w-5">Adju</th>
+                          <th class="w-5">Resu</th>
+                          <th class="w-6">Total</th>
+                        </tr>
+                        </thead>
+                        <tbody id="table-body">
+                          <% datos.oficinas.map(element => { %>
+                            <tr>
+                              <td>
+                                <div class="d-flex align-items-center">
+                                  <div class="flex-fill">
+                                    <% if (element.DESOFI === null) { %>
+                                      <div class="font-weight-medium">TOTAL</div>
+                                    <% } else { %> 
+                                      <div class="font-weight-medium"><%- element.DESOFI %></div>
+                                    <% } %> 
+                                  </div>
+                                </div>
+                              </td>
+                              <td class="w-6">
+                                <div class="d-flex align-items-center">
+                                  <div class="flex-fill">
+                                    <div class="font-weight-medium"><%- element.PEN %></div>
+                                  </div>
+                                </div>
+                              </td>
+                              <td class="w-6">
+                                <div class="d-flex align-items-center">
+                                  <div class="flex-fill">
+                                    <div class="font-weight-medium"><%- element.ADJ %></div>
+                                  </div>
+                                </div>
+                              </td>
+                              <td class="w-6">
+                                <div class="d-flex align-items-center">
+                                  <div class="flex-fill">
+                                    <div class="font-weight-medium"><%- element.RES %></div>
+                                  </div>
+                                </div>
+                              </td>
+                              <td class="w-6">
+                                <div class="d-flex align-items-center">
+                                  <div class="flex-fill">
+                                    <div class="font-weight-medium"><%- element.TOT %></div>
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                          <% }) %>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 mt-1">
+                  <div class="card" style="display: -webkit-box;">
+                    <div class="col-4 mx-auto w-auto">
+                      <div id="chart-correc" class="chart" data-percent="<%- datos.ratios.correctas %>">
+                        <span class="percent"></span>
+                        <span>Correcto</span>
                       </div>
-                      <div class="col-4 mx-auto w-auto">
-                        <div id="chart-liquid" class="chart" data-percent="<%- datos.ratios.liquidacion %>">
-                          <span class="percent"></span>
-                          <span>Liquida</span>
-                        </div>
+                    </div>
+                    <div class="col-4 mx-auto w-auto">
+                      <div id="chart-liquid" class="chart" data-percent="<%- datos.ratios.liquidacion %>">
+                        <span class="percent"></span>
+                        <span>Liquida</span>
                       </div>
-                      <div class="col-4 mx-auto w-auto">
-                        <div id="chart-sancio" class="chart" data-percent="<%- datos.ratios.sancion %>">
-                          <span class="percent"></span>
-                          <span>Sanción</span>
-                        </div>
+                    </div>
+                    <div class="col-4 mx-auto w-auto">
+                      <div id="chart-sancio" class="chart" data-percent="<%- datos.ratios.sancion %>">
+                        <span class="percent"></span>
+                        <span>Sanción</span>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
         </div>
       </div>
       <%- include('../../../partials/footer') %>
     </div>
-  </body>
 
-  <div class="modal modal-blur fade" id="modal-config" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title mt-0">Estadística de fraudes</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <form action="/admin/estadisticas/fraudes" method="POST" onsubmit="return validate();" >
-          <input type="hidden" id="destip" name="destip">
-          <div class="modal-body">
-            <div class="card-body">
-              <div class="row">
-                <div class="col-12">
-                  <div class="mb-1">
-                    <div class="form-label">Tipo</div>
-                    <select class="form-select form-control" id="cbotip" name="tipfra" value="">
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-4">
-                  <div class="mb-1">
-                    <div class="input-control">
-                      <label class="form-label required">Desde</label>
-                      <input type="date" name="desde" id="desde" class="form-control" value="<%- datos.periodo.desde %>" />
-                      <div class="invalid-feedback"></div>
+    <div class="modal modal-blur fade" id="modal-config" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title mt-0">Estadística de fraudes</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form action="/admin/estadisticas/fraudes" method="POST" onsubmit="return validate();" >
+            <input type="hidden" id="destip" name="destip">
+            <div class="modal-body">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="mb-1">
+                      <div class="form-label">Tipo</div>
+                      <select class="form-select form-control" id="cbotip" name="tipfra" value="">
+                      </select>
                     </div>
                   </div>
                 </div>
-                <div class="col-4">
-                  <div class="mb-1">
-                    <div class="input-control">
-                      <label class="form-label required">Hasta</label>
-                      <input type="date" name="hasta" id="hasta" class="form-control" value="<%- datos.periodo.hasta %>" />
-                      <div class="invalid-feedback"></div>
+                <div class="row">
+                  <div class="col-4">
+                    <div class="mb-1">
+                      <div class="input-control">
+                        <label class="form-label required">Desde</label>
+                        <input type="date" name="desde" id="desde" class="form-control" value="<%- datos.periodo.desde %>" />
+                        <div class="invalid-feedback"></div>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="col-4">
-                  <div class="mb-1">
-                    <div class="input-control">
-                      <label class="form-label required">Fecha de carga</label>
-                      <input type="date" name="fecfra" id="fecfra" class="form-control" value="<%- datos.fraude.fecfra %>" />
-                      <div class="invalid-feedback"></div>
+                  <div class="col-4">
+                    <div class="mb-1">
+                      <div class="input-control">
+                        <label class="form-label required">Hasta</label>
+                        <input type="date" name="hasta" id="hasta" class="form-control" value="<%- datos.periodo.hasta %>" />
+                        <div class="invalid-feedback"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <div class="mb-1">
+                      <div class="input-control">
+                        <label class="form-label required">Fecha de carga</label>
+                        <input type="date" name="fecfra" id="fecfra" class="form-control" value="<%- datos.fraude.fecfra %>" />
+                        <div class="invalid-feedback"></div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-link" data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
-            <button type="submit" class="btn btn-primary ms-auto">Generar estadística</button>              
-          </div>
-        </form>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-link" data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
+              <button type="submit" class="btn btn-primary ms-auto">Generar estadística</button>              
+            </div>
+          </form>
+        </div>
       </div>
     </div>
-  </div>
 
-  <script src="/js/ayuda.min.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-    const messages = document.getElementById('messages')
-    const socket = io()
+    <script src="/js/ayuda.min.js"></script>
+    <script>
+        const changeProgress = (element, progress) => {
+          element.style.width = `${progress}%`;
+        };
 
-    socket.on('receive-message', msg => {
-      const li = document.createElement('li')
-      li.textContent = msg
-      messages.appendChild(li)
-
-      const toggleBadge = document.querySelector('#toggleBadge');
-      const numeroMensajes = messages.getElementsByTagName("li").length
-      if (numeroMensajes === 1) {
-        toggleBadge.classList.toggle('d-none')
+        changeProgress(document.querySelector(".err"), <%- datos.situacion.ACUERR / datos.situacion.CORREC * 100 %>)
+        changeProgress(document.querySelector(".dec"), <%- datos.situacion.ACUDEC / datos.situacion.CORREC * 100 %>)
+        changeProgress(document.querySelector(".otr"), <%- datos.situacion.ACUOTR / datos.situacion.CORREC * 100 %>)
+    </script>
+    <script>
+      const options = {
+        colors : ['#4263eb', '#74b816', '#f76707'],
+        chart: {
+          locales: [{
+            "name": "es",
+            "options": {
+              "months": [
+                "Enero",
+                "Febrero",
+                "Marzo",
+                "Abril",
+                "Mayo",
+                "Junio",
+                "Julio",
+                "Agosto",
+                "Septiembre",
+                "Octubre",
+                "Noviembre",
+                "Diciembre"
+              ],
+              "shortMonths": [
+                "Ene",
+                "Feb",
+                "Mar",
+                "Abr",
+                "May",
+                "Jun",
+                "Jul",
+                "Ago",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dic"
+              ],
+              "days": [
+                "Domingo",
+                "Lunes",
+                "Martes",
+                "Miércoles",
+                "Jueves",
+                "Viernes",
+                "Sábado"
+              ],
+              "shortDays": ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
+              "toolbar": {
+                "exportToSVG": "Descargar SVG",
+                "exportToPNG": "Descargar PNG",
+                "exportToCSV": "Descargar CSV",
+                "menu": "Menu",
+                "selection": "Seleccionar",
+                "selectionZoom": "Seleccionar Zoom",
+                "zoomIn": "Aumentar",
+                "zoomOut": "Disminuir",
+                "pan": "Navegación",
+                "reset": "Reiniciar Zoom"
+              }
+            }          
+          }],
+          defaultLocale: "es",
+          type: 'bar',
+          stacked: true,
+          toolbar: {
+            show: false,
+          },
+        },
+        dataLabels: {
+          enabled: false
+        },
+        series: [
+          {
+            name: 'Correcto',
+            data: <%- datos.serieC %>
+          },
+          {
+            name: 'Liquidaciones',
+            data: <%- datos.serieL %>
+          },
+          {
+            name: 'Sanciones',
+            data: <%- datos.serieS %>
+          }
+        ],
+        xaxis: {
+          type: 'datetime',
+        }
       }
-    })
-  </script>
-  <script>
-      const changeProgress = (element, progress) => {
-        element.style.width = `${progress}%`;
-      };
 
-      changeProgress(document.querySelector(".err"), <%- datos.situacion.ACUERR / datos.situacion.CORREC * 100 %>)
-      changeProgress(document.querySelector(".dec"), <%- datos.situacion.ACUDEC / datos.situacion.CORREC * 100 %>)
-      changeProgress(document.querySelector(".otr"), <%- datos.situacion.ACUOTR / datos.situacion.CORREC * 100 %>)
-  </script>
-  <script>
-    const options = {
-      colors : ['#4263eb', '#74b816', '#f76707'],
-      chart: {
-        locales: [{
-          "name": "es",
-          "options": {
-            "months": [
-              "Enero",
-              "Febrero",
-              "Marzo",
-              "Abril",
-              "Mayo",
-              "Junio",
-              "Julio",
-              "Agosto",
-              "Septiembre",
-              "Octubre",
-              "Noviembre",
-              "Diciembre"
-            ],
-            "shortMonths": [
-              "Ene",
-              "Feb",
-              "Mar",
-              "Abr",
-              "May",
-              "Jun",
-              "Jul",
-              "Ago",
-              "Sep",
-              "Oct",
-              "Nov",
-              "Dic"
-            ],
-            "days": [
-              "Domingo",
-              "Lunes",
-              "Martes",
-              "Miércoles",
-              "Jueves",
-              "Viernes",
-              "Sábado"
-            ],
-            "shortDays": ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
-            "toolbar": {
-              "exportToSVG": "Descargar SVG",
-              "exportToPNG": "Descargar PNG",
-              "exportToCSV": "Descargar CSV",
-              "menu": "Menu",
-              "selection": "Seleccionar",
-              "selectionZoom": "Seleccionar Zoom",
-              "zoomIn": "Aumentar",
-              "zoomOut": "Disminuir",
-              "pan": "Navegación",
-              "reset": "Reiniciar Zoom"
-            }
-          }          
-        }],
-        defaultLocale: "es",
-        type: 'bar',
-        stacked: true,
-        toolbar: {
-          show: false,
-        },
-      },
-      dataLabels: {
-        enabled: false
-      },
-      series: [
-        {
-          name: 'Correcto',
-          data: <%- datos.serieC %>
-        },
-        {
-          name: 'Liquidaciones',
-          data: <%- datos.serieL %>
-        },
-        {
-          name: 'Sanciones',
-          data: <%- datos.serieS %>
-        }
-      ],
-      xaxis: {
-        type: 'datetime',
-      }
-    }
+      const chart = new ApexCharts(document.querySelector("#chart-actuac"), options);
+      chart.render();   
+    </script>
+    <script>
+      const element = document.querySelector('#chart-correc');
+      const element1 = document.querySelector('#chart-liquid');
+      const element2 = document.querySelector('#chart-sancio');
 
-    const chart = new ApexCharts(document.querySelector("#chart-actuac"), options);
-    chart.render();   
-  </script>
-  <script>
-    const element = document.querySelector('#chart-correc');
-    const element1 = document.querySelector('#chart-liquid');
-    const element2 = document.querySelector('#chart-sancio');
+      const chartCorrecto = new EasyPieChart(element, {
+          easing: 'easeOutElastic',
+          delay: 3000,
+          barColor: '#4263eb',
+          trackColor: '#f2f3f4',
+          scaleColor: false,
+          lineWidth: 3,
+          trackWidth: 1,
+          lineCap: 'butt',
+          onStep: function(from, to, percent) {
+            this.el.children[0].innerHTML = Math.round(percent);
+          }
+      });    
+      const chartLiquid = new EasyPieChart(element1, {
+          easing: 'easeOutElastic',
+          delay: 3000,
+          barColor: '#74b816',
+          trackColor: '#f2f3f4',
+          scaleColor: false,
+          lineWidth: 3,
+          trackWidth: 1,
+          lineCap: 'butt',
+          onStep: function(from, to, percent) {
+            this.el.children[0].innerHTML = Math.round(percent);
+          }
+      });
+      const chartSancion = new EasyPieChart(element2, {
+          easing: 'easeOutElastic',
+          delay: 3000,
+          barColor: '#f76707',
+          trackColor: '#f2f3f4',
+          scaleColor: false,
+          lineWidth: 3,
+          trackWidth: 1,
+          lineCap: 'butt',
+          onStep: function(from, to, percent) {
+            this.el.children[0].innerHTML = Math.round(percent);
+          }
+      });
 
-    const chartCorrecto = new EasyPieChart(element, {
-        easing: 'easeOutElastic',
-        delay: 3000,
-        barColor: '#4263eb',
-        trackColor: '#f2f3f4',
-        scaleColor: false,
-        lineWidth: 3,
-        trackWidth: 1,
-        lineCap: 'butt',
-        onStep: function(from, to, percent) {
-          this.el.children[0].innerHTML = Math.round(percent);
-        }
-    });    
-    const chartLiquid = new EasyPieChart(element1, {
-        easing: 'easeOutElastic',
-        delay: 3000,
-        barColor: '#74b816',
-        trackColor: '#f2f3f4',
-        scaleColor: false,
-        lineWidth: 3,
-        trackWidth: 1,
-        lineCap: 'butt',
-        onStep: function(from, to, percent) {
-          this.el.children[0].innerHTML = Math.round(percent);
-        }
-    });
-    const chartSancion = new EasyPieChart(element2, {
-        easing: 'easeOutElastic',
-        delay: 3000,
-        barColor: '#f76707',
-        trackColor: '#f2f3f4',
-        scaleColor: false,
-        lineWidth: 3,
-        trackWidth: 1,
-        lineCap: 'butt',
-        onStep: function(from, to, percent) {
-          this.el.children[0].innerHTML = Math.round(percent);
-        }
-    });
+      // chartCorrecto.update(<%- datos.ratios.correctas %>)
+      // chartLiquid.update(<%- datos.ratios.liquidacion %>)
+      // chartSancion.update(<%- datos.ratios.sancion %>)
+    </script>
+    <script>
+      const desde = document.getElementById('desde')
+      const hasta = document.getElementById('hasta')
+      const fecha = document.getElementById('fecfra')
 
-    // chartCorrecto.update(<%- datos.ratios.correctas %>)
-    // chartLiquid.update(<%- datos.ratios.liquidacion %>)
-    // chartSancion.update(<%- datos.ratios.sancion %>)
-  </script>
-  <script>
-    const desde = document.getElementById('desde')
-    const hasta = document.getElementById('hasta')
-    const fecha = document.getElementById('fecfra')
+      const validate = () => {
+        const desdeValue = desde.value
+        const hastaValue = hasta.value
+        const fechaValue = fecha.value
 
-    const validate = () => {
-      const desdeValue = desde.value
-      const hastaValue = hasta.value
-      const fechaValue = fecha.value
-
-      if (isNaN(Date.parse(desdeValue))) {
-        setError(desde, 'Fecha requerida')
-        setTimeout(function () {
+        if (isNaN(Date.parse(desdeValue))) {
+          setError(desde, 'Fecha requerida')
+          setTimeout(function () {
+            setSuccess(desde)
+          }, 3000)
+          return false
+        } else {
           setSuccess(desde)
-        }, 3000)
-        return false
-      } else {
-        setSuccess(desde)
-      }
-      if (isNaN(Date.parse(hastaValue))) {
-        setError(hasta, 'Fecha requerida')
-        setTimeout(function () {
-          setSuccess(hasta)
-        }, 3000)
-        return false
-      } else {
-        setSuccess(hasta)
-      }
-      if (isNaN(Date.parse(fechaValue))) {
-        setError(fecha, 'Fecha requerida')
-        setTimeout(function () {
-          setSuccess(fecha)
-        }, 3000)
-        return false
-      } else {
-        setSuccess(fecha)
-      }
-
-      return true
-    }
-
-    const setSuccess = (element) => {
-      const inputControl = element.parentElement;
-      const errorDisplay = inputControl.querySelector('.invalid-feedback');
-
-      errorDisplay.innerText = '';
-      inputControl.classList.add('is-valid');
-      element.classList.remove('is-invalid');
-    }
-    const setError = (element, message) => {
-      const inputControl = element.parentElement;
-      const errorDisplay = inputControl.querySelector('.invalid-feedback');
-
-      errorDisplay.innerText = message;
-      element.classList.add('is-invalid');
-      inputControl.classList.remove('is-valid');
-    }
-  </script>
-  <script>
-    const Tipos = () => {
-      const xhr = new XMLHttpRequest();
-
-      xhr.onload = function() {
-        if (xhr.status === 200) {
-          const tipos = JSON.parse(xhr.response)
-          const cbo = document.getElementById('cbotip')
-
-          tipos.map((itm) => {
-            const option = document.createElement('option')
-            option.value = itm.IDTIPO
-            option.text = itm.DESTIP
-
-            if (itm.IDTIPO === <%- datos.fraude.tipfra %>) {
-              document.getElementById('destip').value = itm.DESTIP
-              option.selected = true
-            }
-            cbo.appendChild(option)
-          })
-
-          cbo.addEventListener('change', (e) => {
-            document.getElementById('destip').value = cbo.options[cbo.selectedIndex].text
-          })
         }
-      };
-      xhr.open('POST', 'http://localhost:8100/api/tipos/fraudes', true);
-      xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-      xhr.send()
-    }
-    Tipos();
-  </script>
+        if (isNaN(Date.parse(hastaValue))) {
+          setError(hasta, 'Fecha requerida')
+          setTimeout(function () {
+            setSuccess(hasta)
+          }, 3000)
+          return false
+        } else {
+          setSuccess(hasta)
+        }
+        if (isNaN(Date.parse(fechaValue))) {
+          setError(fecha, 'Fecha requerida')
+          setTimeout(function () {
+            setSuccess(fecha)
+          }, 3000)
+          return false
+        } else {
+          setSuccess(fecha)
+        }
+
+        return true
+      }
+
+      const setSuccess = (element) => {
+        const inputControl = element.parentElement;
+        const errorDisplay = inputControl.querySelector('.invalid-feedback');
+
+        errorDisplay.innerText = '';
+        inputControl.classList.add('is-valid');
+        element.classList.remove('is-invalid');
+      }
+      const setError = (element, message) => {
+        const inputControl = element.parentElement;
+        const errorDisplay = inputControl.querySelector('.invalid-feedback');
+
+        errorDisplay.innerText = message;
+        element.classList.add('is-invalid');
+        inputControl.classList.remove('is-valid');
+      }
+    </script>
+    <script>
+      const Tipos = () => {
+        const xhr = new XMLHttpRequest();
+
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            const tipos = JSON.parse(xhr.response)
+            const cbo = document.getElementById('cbotip')
+
+            tipos.map((itm) => {
+              const option = document.createElement('option')
+              option.value = itm.IDTIPO
+              option.text = itm.DESTIP
+
+              if (itm.IDTIPO === <%- datos.fraude.tipfra %>) {
+                document.getElementById('destip').value = itm.DESTIP
+                option.selected = true
+              }
+              cbo.appendChild(option)
+            })
+
+            cbo.addEventListener('change', (e) => {
+              document.getElementById('destip').value = cbo.options[cbo.selectedIndex].text
+            })
+          }
+        };
+        xhr.open('POST', 'http://localhost:8100/api/tipos/fraudes', true);
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+        xhr.send()
+      }
+      Tipos();
+    </script>
+  </body>  
 </html>

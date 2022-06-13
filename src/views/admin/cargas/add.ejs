@@ -83,76 +83,59 @@
     <%- include('../../partials/footer') %>
   </div>
 
-    <div class="modal modal-blur fade" id="modal-info" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog modal-full-width modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          <div class="modal-status bg-primary"></div>
-          <div class="modal-body text-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-blue icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-              <desc>Download more icon variants from https://tabler-icons.io/i/info-circle</desc>
-              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-              <circle cx="12" cy="12" r="9"></circle>
-              <line x1="12" y1="8" x2="12.01" y2="8"></line>
-              <polyline points="11 12 12 12 12 16 13 16"></polyline>
-            </svg>       
-            <h3>Estructura fichero</h3>
-            <div class="text-muted">
-              <h4>
-                FECHA;NIF;NOMBRE;EMAIL;TELEFONO;MOVIL;REFERENCIA;TIPO;EJERCICIO;OFICINA;OBSERVACION;FUNCIONARIO;LIQUIDADOR;ESTADO
-              </h4>
-              <h4 class="m-0">Campo fecha con formato dd/mm/aaaa. No puede ser nulo. Va encomillado</h4>
-              <h4 class="m-0">Campo nif de 12 caracteres máximo. No puede ser nulo. Va encomillado</h4>
-              <h4 class="m-0">Campo nombre de 128 caracteres máximo. No puede ser nulo. Va encomillado</h4>
-              <h4 class="m-0">Campo email de 128 caracteres máximo. Puede ser nulo. Va encomillado</h4>
-              <h4 class="m-0">Campo telefono de 9 caracteres máximo. Puede ser nulo. Va encomillado</h4>
-              <h4 class="m-0">Campo movil de 9 caracteres máximo. Puede ser nulo. Va encomillado</h4>
-              <h4 class="m-0">Campo referencia de 11 caracteres máximo. No puede ser nulo. Va encomillado</h4>
-              <h4 class="m-0">Campo tipo es numério. No puede ser nulo. Debe coincidir con su correspondiente tipo definido en la base de datos</h4>
-              <h4 class="m-0">Campo ejercicio es numério de 4 posiciones. No puede ser nulo.</h4>
-              <h4 class="m-0">Campo oficina es numério. No puede ser nulo. Debe coincidir con su correspondiente oficina definida en la base de datos</h4>
-              <h4 class="m-0">Campo observacion de 256 caracteres máximo. Puede ser nulo. Va encomillado</h4>
-              <h4 class="m-0">Campo funcionario debe contener el texto "SYSTEM".</h4>
-              <h4 class="m-0">Campo liquidador de 20 caracteres máximo. No puede ser nulo. Va encomillado. Debe coincidir con su correspondiente userid definido en la base de datos</h4>
-              <h4 class="m-0">Campo estado es numério de 2 posiciones. No puede ser nulo. Puede contener o el valor 0 o el valor 1</h4>
-              <h4 class="m-0">Si el campo estado contiene el valor 0 el campo liquidador debe contener el texto "PEND"</h4>
-              <h4 class="m-0">Si el campo estado contiene el valor 1 el campo liquidador debe contener un userid existente en la base de datos.</h4>
-              <h4 class="m-0">En este caso el registro quedara asignado al liquidador indicado en el campo liquidador</h4>
-              <h4 class="m-0">Copiar el fichero (nombre y extencion) a cargar en el directorio m:/filcopy/02051143/FRAUDES</h4>
-              <h4 class="m-0">Nota: La cabecera es obligatoria</h4>
-            </div>
+  <div class="modal modal-blur fade" id="modal-info" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-full-width modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-status bg-primary"></div>
+        <div class="modal-body text-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-blue icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <desc>Download more icon variants from https://tabler-icons.io/i/info-circle</desc>
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <circle cx="12" cy="12" r="9"></circle>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            <polyline points="11 12 12 12 12 16 13 16"></polyline>
+          </svg>       
+          <h3>Estructura fichero</h3>
+          <div class="text-muted">
+            <h4>
+              FECHA;NIF;NOMBRE;EMAIL;TELEFONO;MOVIL;REFERENCIA;TIPO;EJERCICIO;OFICINA;OBSERVACION;FUNCIONARIO;LIQUIDADOR;ESTADO
+            </h4>
+            <h4 class="m-0">Campo fecha con formato dd/mm/aaaa. No puede ser nulo. Va encomillado</h4>
+            <h4 class="m-0">Campo nif de 12 caracteres máximo. No puede ser nulo. Va encomillado</h4>
+            <h4 class="m-0">Campo nombre de 128 caracteres máximo. No puede ser nulo. Va encomillado</h4>
+            <h4 class="m-0">Campo email de 128 caracteres máximo. Puede ser nulo. Va encomillado</h4>
+            <h4 class="m-0">Campo telefono de 9 caracteres máximo. Puede ser nulo. Va encomillado</h4>
+            <h4 class="m-0">Campo movil de 9 caracteres máximo. Puede ser nulo. Va encomillado</h4>
+            <h4 class="m-0">Campo referencia de 11 caracteres máximo. No puede ser nulo. Va encomillado</h4>
+            <h4 class="m-0">Campo tipo es numério. No puede ser nulo. Debe coincidir con su correspondiente tipo definido en la base de datos</h4>
+            <h4 class="m-0">Campo ejercicio es numério de 4 posiciones. No puede ser nulo.</h4>
+            <h4 class="m-0">Campo oficina es numério. No puede ser nulo. Debe coincidir con su correspondiente oficina definida en la base de datos</h4>
+            <h4 class="m-0">Campo observacion de 256 caracteres máximo. Puede ser nulo. Va encomillado</h4>
+            <h4 class="m-0">Campo funcionario debe contener el texto "SYSTEM".</h4>
+            <h4 class="m-0">Campo liquidador de 20 caracteres máximo. No puede ser nulo. Va encomillado. Debe coincidir con su correspondiente userid definido en la base de datos</h4>
+            <h4 class="m-0">Campo estado es numério de 2 posiciones. No puede ser nulo. Puede contener o el valor 0 o el valor 1</h4>
+            <h4 class="m-0">Si el campo estado contiene el valor 0 el campo liquidador debe contener el texto "PEND"</h4>
+            <h4 class="m-0">Si el campo estado contiene el valor 1 el campo liquidador debe contener un userid existente en la base de datos.</h4>
+            <h4 class="m-0">En este caso el registro quedara asignado al liquidador indicado en el campo liquidador</h4>
+            <h4 class="m-0">Copiar el fichero (nombre y extencion) a cargar en el directorio m:/filcopy/02051143/FRAUDES</h4>
+            <h4 class="m-0">Nota: La cabecera es obligatoria</h4>
           </div>
-          <div class="modal-footer">
-            <div class="w-100">
-              <div class="row">
-                <div class="col">
-                  <a href="#" class="btn btn-white w-100" data-bs-dismiss="modal">Salir</a>
-                </div>
+        </div>
+        <div class="modal-footer">
+          <div class="w-100">
+            <div class="row">
+              <div class="col">
+                <a href="#" class="btn btn-white w-100" data-bs-dismiss="modal">Salir</a>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
   <script src="/js/ayuda.min.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-    const messages = document.getElementById('messages')
-    const socket = io()
-
-    socket.on('receive-message', msg => {
-      const li = document.createElement('li')
-      li.textContent = msg
-      messages.appendChild(li)
-
-      const toggleBadge = document.querySelector('#toggleBadge');
-      const numeroMensajes = messages.getElementsByTagName("li").length
-      if (numeroMensajes === 1) {
-        toggleBadge.classList.toggle('d-none')
-      }
-    })
-  </script>
   <script>
     const desofi = document.getElementById('descar')
     const ficcar = document.getElementById('ficcar')
