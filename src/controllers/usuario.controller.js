@@ -1,7 +1,6 @@
 import axios from 'axios'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import { io } from 'socket.io-client'
 import {
   arrTiposRol,
   arrTiposPerfil,
@@ -304,23 +303,5 @@ export const updatePerfil = async (req, res) => {
     res.redirect('/admin')
   } catch (error) {
     res.redirect('/admin')
-  }
-}
-export const enviarNotificacion = async (req, res) => {
-  const user = req.user
-
-  try {
-    const socket = io('http://localhost:4200')
-
-    const note = {
-      senderId: user.userID,
-      message: req.body.texnot,
-      fecha: new Date().toLocaleString('fr-FR'),
-    }
-    socket.emit('client:newNote', note)
-
-    res.redirect('/admin/usuarios')
-  } catch (error) {
-    res.redirect('/admin/usuarios')
   }
 }

@@ -5,10 +5,6 @@
 import debug from "debug";
 import http from "http";
 import app from "../app";
-import { Server } from "socket.io";
-
-let notes = [];
-let users = [];
 
 /**
  * Normalize a port into a number, string, or false.
@@ -70,51 +66,8 @@ const onListening = () => {
 };
 
 /**
- * socket.io
- */
-const io = new Server(server);
-
-io.on("connection", (socket) => {
-  //io.to(socket.id).emit('server:loadNotes', notes)
-  // socket.on('client:addUser', (userID) => {
-  //   addUser(userID, socket.id)
-  //   io.emit('server:users', users)
-  // });
-  socket.on("client:newNote", (note) => {
-    addNote(note)
-    io.emit('server:newNote', note)
-  });
-  // socket.on("client:newNoteTo", (note) => {
-  //   const user = getUser(note.receiverId)
-  //   addNote(note)
-  //   io.to(user.socketId).emit("server:newNote", note)
-  // });
-  // socket.on("disconnect", () => {
-  //   delUser(socket.id)
-  //   io.emit('server:users', users)
-  // });
-});
-
-/**
  * Listen on provided port, on all network interfaces.
  */
 server.listen(port);
 server.on("error", onError);
 server.on("listening", onListening);
-
-/**
- * helpers
- */
-const addUser = (userId, socketId) => {
-  !users.some((user) => user.userId === userId) &&
-    users.push({ userId, socketId });
-}
-const delUser = (socketId) => {
-  users = users.filter(user => user.socketId !== socketId)
-}
-const getUser = (userId) => {
-  return users.find(user => user.userId === userId)
-}
-const addNote = (data) => {
-  notes.push(data);
-}
