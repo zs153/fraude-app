@@ -10,7 +10,6 @@ import {
   remove,
   changePassword,
   updatePerfil,
-  enviarNotificacion,
 } from '../controllers/usuario.controller'
 
 const usuarioRouter = express.Router()
@@ -25,7 +24,6 @@ usuarioRouter.get('/usuarios/perfil/:id', verifyTokenAndResp, perfilPage)
 usuarioRouter.post('/usuarios/insert', verifyTokenAndResp, insert)
 usuarioRouter.post('/usuarios/update', verifyTokenAndResp, update)
 usuarioRouter.post('/usuarios/delete', verifyTokenAndResp, remove)
-usuarioRouter.post('/usuarios/notificacion', verifyTokenAndResp, enviarNotificacion)
 usuarioRouter.post('/usuarios/change', verifyTokenAndResp, changePassword)
 usuarioRouter.post('/usuarios/perfil', verifyTokenAndResp, updatePerfil)
 
