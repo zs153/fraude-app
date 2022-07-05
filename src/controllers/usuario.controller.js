@@ -111,7 +111,6 @@ const perfilFromRec = (req) => {
 
 export const usuario = async (req, res) => {
   const context = req.body.usuario
-
   try {
     const rows = await DAL.find(context)
 
