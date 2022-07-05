@@ -25,7 +25,22 @@
     .sortable .th-sort-desc::after {
       margin-left: 5px;
     }
-  </style>
+    .dots-menu>.nav-item>.nav-info {
+        border-radius: 14px;
+        color: #777;
+        display: block;
+        line-height: 1.2;
+        position: relative;
+        text-decoration: none;
+        transition: background-color .3s;
+    }
+    .dots-menu>.nav-avatar {
+        display: block;
+        float: right;
+        margin: 0;
+        position: relative;
+    }
+  </style>  
 </head>
 
 <body class="antialiased">
@@ -534,11 +549,42 @@
               </span>
             </div>`
           } else if (element.STAFRA === <%- datos.estadosFraude.asignado %>) {
-            cell.innerHTML = `<div class="align-items-center py-1">
-              <span class="avatar avatar-rounded bg-blue-lt">
-                <h6>${element.LIQFRA}</h6>
-              </span>
-            </div>`
+            if (element.NUMHIT === 0 && element.NUMEVE === 0) {
+              cell.innerHTML = `<div class="align-items-center py-1">
+                <span class="avatar avatar-rounded bg-blue-lt">
+                  <h6>${element.LIQFRA}</h6>
+                </span>
+              </div>`
+            } else {
+            cell.innerHTML = `<ul class="dots-menu">
+                <li class="nav-item drop-left p-0">
+                  <div class="align-items-center py-1">
+                    <span class="avatar avatar-rounded bg-yellow-lt">
+                      <h6>${element.LIQFRA}</h6>
+                    </span>
+                  </div>
+                  <a href="#" class="nav-info">
+                  </a>
+                  <ul>
+                    <li>
+                      <h4 class='m-0'>Propuesta liquidación: ${element.PROLIQ === 0 ? 'No':'Sí'}</h4>
+                    </li>
+                    <li>
+                      <h4 class='m-0'>Liquidación: ${element.LIQUID === 0 ? 'No':'Sí'}</h4>
+                    </li>
+                    <li>
+                      <h4 class='m-0'>Propuesta sanción: ${element.PROSAN === 0 ? 'No':'Sí'}</h4>
+                    </li>
+                    <li>
+                      <h4 class='m-0'>Sanción: ${element.SANCIO === 0 ? 'No':'Sí'}</h4>
+                    </li>
+                    <li>
+                      <h4 class='m-0'>Nº de eventos: ${element.NUMEVE}</h4>
+                    </li>
+                  </ul>
+                </li>
+              </ul>`
+            }
           } else if (element.STAFRA === <%- datos.estadosFraude.resuelto %>) {
             cell.innerHTML = `<div class="align-items-center py-1">
               <span class="avatar avatar-rounded bg-green-lt">
