@@ -359,7 +359,6 @@ export const findAll = async (context) => {
         0 PROSAN,
         0 SANCIO,
         0 NUMHIT,
-        0 NUMHIT,
         0 NUMEVE,
         TO_CHAR(ff.fecfra, 'DD/MM/YYYY') "STRFEC"
       FROM fraudes ff

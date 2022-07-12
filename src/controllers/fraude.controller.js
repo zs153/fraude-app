@@ -262,7 +262,6 @@ export const fraudes = async (req, res) => {
 
   try {
     const result = await DAL.findAll(context)
-
     if (result !== null) {
       res.status(200).json(result)
     } else {
