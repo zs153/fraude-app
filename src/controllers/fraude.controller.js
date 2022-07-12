@@ -212,6 +212,34 @@ const insertEventoFromRec = (req) => {
 
   return Object.assign(fraude, evento, movimiento)
 }
+const deleteHitoFromRec = (req) => {
+  const fraude = {
+    idfrau: req.body.fraude.idfrau,
+  }
+  const hito = {
+    idhito: req.body.hito.idhito,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.usumov,
+    tipmov: req.body.movimiento.tipmov,
+  }
+
+  return Object.assign(fraude, hito, movimiento)
+}
+const deleteEventoFromRec = (req) => {
+  const fraude = {
+    idfrau: req.body.fraude.idfrau,
+  }
+  const evento = {
+    ideven: req.body.evento.ideven,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.usumov,
+    tipmov: req.body.movimiento.tipmov,
+  }
+
+  return Object.assign(fraude, evento, movimiento)
+}
 
 // fraude
 export const fraude = async (req, res) => {
@@ -443,6 +471,19 @@ export const crearHitoSancion = async (req, res) => {
     res.status(500).end()
   }
 }
+export const borrarHito = async (req, res) => {
+  try {
+    const result = await DAL.removeHito(deleteHitoFromRec(req))
+
+    if (result !== null) {
+      res.status(200).json(result)
+    } else {
+      res.status(404).end()
+    }
+  } catch (err) {
+    res.status(500).end()
+  }
+}
 
 // eventos
 export const eventosFraude = async (req, res) => {
@@ -463,6 +504,19 @@ export const eventosFraude = async (req, res) => {
 export const crearEvento = async (req, res) => {
   try {
     const result = await DAL.insertEvento(insertEventoFromRec(req))
+
+    if (result !== null) {
+      res.status(200).json(result)
+    } else {
+      res.status(404).end()
+    }
+  } catch (err) {
+    res.status(500).end()
+  }
+}
+export const borrarEvento = async (req, res) => {
+  try {
+    const result = await DAL.removeEvento(deleteEventoFromRec(req))
 
     if (result !== null) {
       res.status(200).json(result)

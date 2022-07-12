@@ -23,15 +23,17 @@ const largeQuery = `SELECT * FROM (
   FROM (
     SELECT 
       ff.idfrau,
-      SUM(CASE WHEN hf.idhito = 1 THEN 1 ELSE 0 END) AS "PROLIQ",
-      SUM(CASE WHEN hf.idhito = 2 THEN 1 ELSE 0 END) AS "LIQUID",
-      SUM(CASE WHEN hf.idhito = 3 THEN 1 ELSE 0 END) AS "PROSAN",
-      SUM(CASE WHEN hf.idhito = 4 THEN 1 ELSE 0 END) AS "SANCIO",
+      SUM(CASE WHEN hh.tiphit = 1 THEN 1 ELSE 0 END) AS "PROLIQ",
+      SUM(CASE WHEN hh.tiphit = 2 THEN 1 ELSE 0 END) AS "LIQUID",
+      SUM(CASE WHEN hh.tiphit = 3 THEN 1 ELSE 0 END) AS "PROSAN",
+      SUM(CASE WHEN hh.tiphit = 4 THEN 1 ELSE 0 END) AS "SANCIO",
       COUNT(hf.idhito) AS "NUMHIT",
       COUNT(ef.ideven) AS "NUMEVE"
     FROM fraudes ff
     LEFT JOIN hitosfraude hf ON hf.idfrau = ff.idfrau
+    LEFT JOIN hitos hh ON hh.idhito = hf.idhito
     LEFT JOIN eventosfraude ef ON ef.idfrau = ff.idfrau
+    LEFT JOIN eventos ee ON ee.ideven = ef.ideven
     WHERE ff.liqfra = :liqfra
     GROUP BY ff.idfrau
   ) p1
@@ -289,6 +291,21 @@ const insertEventoSql = `BEGIN FRAUDE_PKG.INSERTEVENTOFRAUDE(
   :ideven
 ); END;
 `
+const removeHitoSql = `BEGIN FRAUDE_PKG.DELETEHITOFRAUDE(
+  :idfrau,
+  :idhito,
+  :usumov,
+  :tipmov 
+); END;
+`
+const removeEventoSql = `BEGIN FRAUDE_PKG.DELETEEVENTOFRAUDE(
+  :idfrau,
+  :ideven,
+  :usumov,
+  :tipmov 
+); END;
+`
+
 export const find = async (context) => {
   let query = baseQuery
   let binds = {}
@@ -581,4 +598,30 @@ export const insertEvento = async (bind) => {
   }
 
   return bind
+}
+export const removeHito = async (bind) => {
+  let result
+
+  try {
+    await simpleExecute(removeHitoSql, bind)
+
+    result = bind
+  } catch (error) {
+    result = null
+  }
+
+  return result
+}
+export const removeEvento = async (bind) => {
+  let result
+
+  try {
+    await simpleExecute(removeEventoSql, bind)
+
+    result = bind
+  } catch (error) {
+    result = null
+  }
+
+  return result
 }

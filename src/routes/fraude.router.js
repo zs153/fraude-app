@@ -19,6 +19,8 @@ import {
   unasign,
   crearHitoLiquidacion,
   crearHitoSancion,
+  borrarHito,
+  borrarEvento,
 } from '../controllers/fraude.controller'
 
 const apiFraudeRouter = express.Router()
@@ -42,8 +44,10 @@ apiFraudeRouter.post('/fraudes/hitos', hitosFraude)
 apiFraudeRouter.post('/fraudes/hitos/insert', crearHito)
 apiFraudeRouter.post('/fraudes/hitos/insertliq', crearHitoLiquidacion)
 apiFraudeRouter.post('/fraudes/hitos/insertsan', crearHitoSancion)
+apiFraudeRouter.post('/fraudes/hitos/delete', borrarHito)
 //eventos
 apiFraudeRouter.post('/fraudes/events', eventosFraude)
 apiFraudeRouter.post('/fraudes/events/insert', crearEvento)
+apiFraudeRouter.post('/fraudes/events/delete', borrarEvento)
 
 export default apiFraudeRouter

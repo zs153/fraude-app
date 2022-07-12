@@ -118,7 +118,9 @@ export const remove = async (bind) => {
   let result
 
   try {
-    await simpleExecute(removeSql, bind)
+        console.log(removeSql, bind)
+
+    // await simpleExecute(removeSql, bind)
 
     result = bind
   } catch (error) {
