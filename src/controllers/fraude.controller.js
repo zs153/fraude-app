@@ -800,7 +800,8 @@ export const deleteHito = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8100/api/hitos/delete", {
+    await axios.post("http://localhost:8100/api/fraudes/hitos/delete", {
+      fraude,
       hito,
       movimiento,
     });
@@ -919,7 +920,8 @@ export const deleteEvento = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8100/api/events/delete", {
+    await axios.post("http://localhost:8100/api/fraudes/events/delete", {
+      fraude,
       evento,
       movimiento,
     });
