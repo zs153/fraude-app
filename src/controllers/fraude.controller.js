@@ -105,18 +105,16 @@ const estadisticaFromRec = (req) => {
   }
   const fraude = {
     tipfra: req.body.fraude.tipfra,
-    fecfra: req.body.fraude.fecfra,
   }
 
   return Object.assign(periodo, fraude)
 }
 const cargaFromRec = (req) => {
-  const fraude = {
-    tipfra: req.body.fraude.tipfra,
-    fecfra: req.body.fraude.fecfra,
+  const carga = {
+    idcarg: req.body.carga.idcarg,
   }
 
-  return fraude
+  return carga
 }
 const smsFromRec = (req) => {
   const fraude = {
