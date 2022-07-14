@@ -141,7 +141,6 @@
                   </div>
                 </div>                  
               </div>
-            </div>
             <div class="col-lg-4">
               <div class="card">
                 <div class="card-body">
@@ -291,6 +290,7 @@
                 </div>
               </div>
             </div>
+            </div>
           </div>
         </div>
       </div>
@@ -339,9 +339,9 @@
                   <div class="col-4">
                     <div class="mb-1">
                       <div class="input-control">
-                        <label class="form-label required">Fecha de carga</label>
-                        <input type="date" name="fecfra" id="fecfra" class="form-control" value="<%- datos.fraude.fecfra %>" />
-                        <div class="invalid-feedback"></div>
+                        <label class="form-label">Carga</label>
+                        <select class="form-select form-control" id="cbocar" name="idcarg" value="">
+                        </select>
                       </div>
                     </div>
                   </div>
@@ -566,6 +566,27 @@
       }
     </script>
     <script>
+      const Cargas = () => {
+        const xhr = new XMLHttpRequest();
+
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            const cargas = JSON.parse(xhr.response)
+            const cbo = document.getElementById('cbocar')
+
+            cargas.map((itm) => {
+              const option = document.createElement('option')
+              option.value = itm.IDCARG
+              option.text = itm.DESCAR
+
+              cbo.appendChild(option)
+            })
+          }
+        };
+        xhr.open('POST', 'http://localhost:8100/api/cargas', true);
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+        xhr.send()
+      }
       const Tipos = () => {
         const xhr = new XMLHttpRequest();
 
@@ -596,6 +617,7 @@
         xhr.send()
       }
       Tipos();
+      Cargas();
     </script>
   </body>  
 </html>
