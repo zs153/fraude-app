@@ -30,11 +30,12 @@
                     </div>
                   <% }) %>
                 <% } %>
-                <form id="form" action="/admin/fraudes/ejercicio" method="POST" onsubmit="return validate();">
+                <form id="form" action="/admin/fraudes/relacionado" method="POST" onsubmit="return validate();">
                   <input type="hidden" name="idfrau" id="idfrau" value="<%- datos.fraude.IDFRAU %>">
+                  <input type="hidden" name="tipfra" id="tipfra" value="<%- datos.fraude.TIPFRA %>">
                   <input type="hidden" name="reffra" id="reffra" value="<%- datos.fraude.REFFRA %>">
                   <div class="card-header">
-                    <h3 class="card-title">Nuevo ejercicio</h3>
+                    <h3 class="card-title">Nuevo relacionado</h3>
                   </div>
                   <div class="card-body">
                     <div class="row">
@@ -42,7 +43,7 @@
                         <div class="mb-1">
                           <div class="input-control">
                             <label class="form-label required">NIF/NIE</label>
-                            <input type="text" name="nifcon" id="nifcon" class="form-control" style="text-transform: uppercase;" value="<%- datos.fraude.NIFCON %>" readonly/>
+                            <input type="text" name="nifcon" id="nifcon" class="form-control" style="text-transform: uppercase;" value="<%- datos.fraude.NIFCON %>" autofocus/>
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>
@@ -51,7 +52,7 @@
                         <div class="mb-1">
                           <div class="input-control">
                             <label class="form-label required">Nombre</label>
-                            <input type="text" name="nomcon" id="nomcon" class="form-control" style="text-transform: uppercase;" value="<%- datos.fraude.NOMCON %>" readonly/>
+                            <input type="text" name="nomcon" id="nomcon" class="form-control" style="text-transform: uppercase;" value="<%- datos.fraude.NOMCON %>" />
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>
@@ -61,7 +62,7 @@
                       <div class="col-6">
                         <div class="mb-1">
                           <label class="form-label">Correo electrónico</label>
-                          <input type="text" name="emacon" id="emacon" class="form-control" value="<%- datos.fraude.EMACON %>" readonly/>
+                          <input type="text" name="emacon" id="emacon" class="form-control" value="<%- datos.fraude.EMACON %>" />
                         </div>
                       </div>
                       <div class="col-2">
@@ -76,13 +77,13 @@
                       <div class="col-2">
                         <div class="mb-1">
                           <label class="form-label">Teléfono</label>
-                          <input type="text" name="telcon" id="telcon" class="form-control" value="<%- datos.fraude.TELCON %>" readonly/>
+                          <input type="text" name="telcon" id="telcon" class="form-control" value="<%- datos.fraude.TELCON %>" />
                         </div>
                       </div>
                       <div class="col-2">
                         <div class="mb-1">
                           <label class="form-label">Movil</label>
-                          <input type="text" name="movcon" id="movcon" class="form-control" value="<%- datos.fraude.MOVCON %>" readonly/>
+                          <input type="text" name="movcon" id="movcon" class="form-control" value="<%- datos.fraude.MOVCON %>" />
                         </div>
                       </div>
                     </div>
@@ -98,7 +99,7 @@
                   <div class="card-footer text-end">
                     <div class="d-flex">
                       <a href="/admin/fraudes" class="btn btn-link">Cancelar</a>
-                      <button type="submit" class="btn btn-primary ms-auto" id="btnInsert">Crear ejercicio</button>
+                      <button type="submit" class="btn btn-primary ms-auto" id="btnInsert">Crear relacionado</button>
                     </div>
                   </div>
                 </form>
@@ -112,11 +113,73 @@
   </div>
   <script src="/js/ayuda.min.js"></script>
   <script>
+    const nifcon = document.getElementById('nifcon')
+    const nomcon = document.getElementById('nomcon')
     const ejefra = document.getElementById('ejefra')
+    const obsfra = document.getElementById('obsfra')
 
     const validate = () => {
+      const nifconValue = nifcon.value.trim().toUpperCase().slice(0,9)
+      const nomconValue = nomcon.value.trim()
       const ejefraValue = ejefra.value.trim()
+      const obsdocValue = obsfra.value.trim()
 
+      if (nifconValue === '') {
+        setError(nifcon, 'NIF/NIE requerido')
+        setTimeout(function () {
+          setSuccess(nifcon)
+        }, 3000)
+        return false
+      } else {
+        const pattern = /^([X-Y][0-9]{7}[A-Z]{1})|([0-9]{8}[A-Z]{1})$/
+
+        if (!pattern.test(nifconValue)){
+          setError(nifcon, 'Introduzca NIF/NIE válido')
+          setTimeout(function () {
+            setSuccess(nifcon)
+          }, 3000)
+          return false
+        }
+
+        const strBase = "TRWAGMYFPDXBNJZSQVHLCKET";
+        const primeraPosicion = nifconValue.slice(0, 1);
+        const letraNif = nifconValue.slice(8);
+        let nuevoNif = nifconValue;
+
+        if (isNaN(primeraPosicion)) {
+          nuevoNif = nifconValue.slice(1);
+          if (primeraPosicion === 'X') {
+            nuevoNif = '0' + nuevoNif;
+          } else if (primeraPosicion === "Y") {
+            nuevoNif = "1" + nuevoNif;
+          } else if (primeraPosicion === "Z") {
+            nuevoNif = "2" + nuevoNif;
+          }
+        }
+
+        const dniNumero = nuevoNif.slice(0, 8);
+        const pos = parseInt(dniNumero) % 23;
+        const letra = strBase.slice(pos, pos + 1);
+        const isValid = letraNif === letra
+
+        if(isValid === false) {
+          setError(nifcon, 'Introduzca NIF/NIE válido')
+          setTimeout(function () {
+            setSuccess(nifcon)
+          }, 3000)
+          return false
+        }
+        setSuccess(nifcon)
+      }
+      if (nomconValue === '') {
+        setError(nomcon, 'Nombre requerido')
+        setTimeout(function () {
+          setSuccess(nomcon)
+        }, 3000)
+        return false
+      } else {
+        setSuccess(nomcon)
+      }
       if (ejefraValue === '') {
         setError(ejefra, 'Ejercicio requerido')
         setTimeout(function () {
@@ -128,13 +191,13 @@
         const isValid = pattern.test(ejefraValue)
 
         if(isValid === false) {
+          setError(ejefra, 'Introduzca ejercicio válido')
           setTimeout(function () {
             setSuccess(ejefra)
           }, 3000)
-          setError(ejefra, 'Introduzca ejercicio válido')
           return false
         }
-        setSuccess(ejefra)        
+        setSuccess(ejefra)
       }
 
       return true

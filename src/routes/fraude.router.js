@@ -27,6 +27,8 @@ import {
   resolverPage,
   ejercicioPage,
   ejercicio,
+  relacionPage,
+  relacion,
 } from "../controllers/fraude.controller";
 
 const fraudeRouter = express.Router();
@@ -38,6 +40,7 @@ fraudeRouter.get("/fraudes/edit/:id", authRoutes, editPage);
 fraudeRouter.get("/fraudes/sms", authRoutes, mainPage);
 fraudeRouter.get("/fraudes/resolver/:id", authRoutes, resolverPage);
 fraudeRouter.get("/fraudes/ejercicio/:id", authRoutes, ejercicioPage);
+fraudeRouter.get("/fraudes/relacionado/:id", authRoutes, relacionPage);
 fraudeRouter.get("/fraudes/vertodo", authRoutes, verTodo);
 
 // hitoseventos
@@ -65,6 +68,7 @@ fraudeRouter.post("/fraudes/delete", authRoutes, remove);
 fraudeRouter.post("/fraudes/asignar", authRoutes, asign);
 fraudeRouter.post("/fraudes/resolver", authRoutes, resol);
 fraudeRouter.post("/fraudes/ejercicio", authRoutes, ejercicio);
+fraudeRouter.post("/fraudes/relacionado", authRoutes, relacion);
 fraudeRouter.post("/fraudes/desasignar", authRoutes, unasign);
 fraudeRouter.post("/fraudes/sms", authRoutes, sms);
 // hitos

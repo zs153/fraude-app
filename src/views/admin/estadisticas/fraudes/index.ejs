@@ -66,13 +66,28 @@
         margin-left: 0.1em;
         font-size: .8em;
       }
-      .err {
+      .efe {
           width: 50%;
           height: 100%;
           float: left;
       }
+      .err {
+          width: 10%;
+          height: 100%;
+          float: left;
+      }
+      .tri {
+          width: 10%;
+          height: 100%;
+          float: left;
+      }
       .dec {
-          width: 25%;
+          width: 10%;
+          height: 100%;
+          float: left;
+      }
+      .pre {
+          width: 10%;
           height: 100%;
           float: left;
       }
@@ -121,9 +136,13 @@
                           <span class="legend bg-azure"></span>
                           <span>Cruce</span>
                           <span class="legend bg-purple"></span>
-                          <span>Decla</span>
+                          <span>Efect</span>
+                          <span class="legend bg-pink"></span>
+                          <span>Corre</span>
+                          <span class="legend bg-orange"></span>
+                          <span>Presc</span>
                           <span class="legend bg-teal"></span>
-                          <span>Atrib</span>
+                          <span>Otros</span>
                         </div>
                       </div>
                     </div>
@@ -132,7 +151,13 @@
                         <h6 class="m-0"><%- datos.situacion.ACUERR %></h6>
                       </div>
                       <div class="dec bg-purple progress-separated">
-                        <h6 class="m-0"><%- datos.situacion.ACUDEC %></h6>
+                        <h6 class="m-0"><%- datos.situacion.ACUEFE %></h6>
+                      </div>
+                      <div class="err bg-pink progress-separated">
+                        <h6 class="m-0"><%- datos.situacion.ACUTRI %></h6>
+                      </div>
+                      <div class="err bg-orange progress-separated">
+                        <h6 class="m-0"><%- datos.situacion.ACUPRE %></h6>
                       </div>
                       <div class="otr bg-teal">
                         <h6 class="m-0"><%- datos.situacion.ACUOTR %></h6>
@@ -364,7 +389,9 @@
         };
 
         changeProgress(document.querySelector(".err"), <%- datos.situacion.ACUERR / datos.situacion.CORREC * 100 %>)
-        changeProgress(document.querySelector(".dec"), <%- datos.situacion.ACUDEC / datos.situacion.CORREC * 100 %>)
+        changeProgress(document.querySelector(".dec"), <%- datos.situacion.ACUEFE / datos.situacion.CORREC * 100 %>)
+        changeProgress(document.querySelector(".tri"), <%- datos.situacion.ACUTRI / datos.situacion.CORREC * 100 %>)
+        changeProgress(document.querySelector(".pre"), <%- datos.situacion.ACUPRE / datos.situacion.CORREC * 100 %>)
         changeProgress(document.querySelector(".otr"), <%- datos.situacion.ACUOTR / datos.situacion.CORREC * 100 %>)
     </script>
     <script>

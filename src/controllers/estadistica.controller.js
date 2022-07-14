@@ -23,7 +23,7 @@ export const fraudePage = async (req, res) => {
 export const estadisticaFraude = async (req, res) => {
   const user = req.user
   const periodo = {
-    desde: req.body.desde, 
+    desde: req.body.desde,
     hasta: req.body.hasta,
   }
   const tipo = {
@@ -31,20 +31,23 @@ export const estadisticaFraude = async (req, res) => {
   }
   const fraude = {
     tipfra: req.body.tipfra,
-    fecfra: req.body.fecfra,
+  }
+  const carga = {
+    idcarg: req.body.idcarg,
   }
 
   try {
     const hitos = await axios.post('http://localhost:8100/api/fraudes/stat/hitos', {
       periodo,
       fraude,
+      carga,
     })
     const situacion = await axios.post('http://localhost:8100/api/fraudes/stat/situacion', {
       periodo,
       fraude,
     })
     const oficinas = await axios.post('http://localhost:8100/api/fraudes/stat/oficinas', {
-      fraude
+      carga,
     })
     const actuacion = await axios.post('http://localhost:8100/api/fraudes/stat/actuacion', {
       periodo,
