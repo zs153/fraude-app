@@ -362,7 +362,7 @@ export const estadisticasHitos = async (req, res) => {
 }
 export const estadisticasOficinas = async (req, res) => {
   try {
-    const result = await DAL.statOficinas(cargaFromRec(req))
+   const result = await DAL.statOficinas(cargaFromRec(req))
 
     if (result !== null) {
       res.status(200).json(result)
