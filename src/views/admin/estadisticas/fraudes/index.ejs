@@ -28,20 +28,13 @@
       }
       .progress-container {
         display: flex;
-        height: 0.7rem;
+        height: 1rem;
         width: 100%;
         border-radius: 0.4rem;
         background: #f2f3f4;
         text-align: center;
         color: #fff;
       }
-      /* .progress-container .progress {
-        height: 100%;
-        width: 0;
-        border-radius: 0.4rem;
-        background: #225ddd;
-        transition: width 0.4s ease;
-      } */
       .chart {
         position: relative;
         display: inline-block;
@@ -66,35 +59,30 @@
         margin-left: 0.1em;
         font-size: .8em;
       }
-      .efe {
-          width: 50%;
-          height: 100%;
-          float: left;
-      }
       .err {
-          width: 10%;
-          height: 100%;
-          float: left;
+        width: 10%;
+        height: 100%;
+        float: left;
+      }
+      .efe {
+        width: 10%;
+        height: 100%;
+        float: left;
       }
       .tri {
-          width: 10%;
-          height: 100%;
-          float: left;
-      }
-      .dec {
-          width: 10%;
-          height: 100%;
-          float: left;
+        width: 10%;
+        height: 100%;
+        float: left;
       }
       .pre {
-          width: 10%;
-          height: 100%;
-          float: left;
+        width: 10%;
+        height: 100%;
+        float: left;
       }
       .otr {
-          width: 10%;
-          height: 100%;
-          float: left;
+        width: 10%;
+        height: 100%;        
+        float: left;
       }
       .legend {
         display: inline-block;
@@ -105,6 +93,33 @@
       .progress-separated {
         border-right: 2px solid #fff;
       }
+      .tooltip {
+        position: relative;
+        display: inline-block;
+      }
+      .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+      }
+      .tooltiptext {
+        visibility: hidden;
+        width: 180px;
+        color: black;
+        text-align: center;
+        border-radius: 6px;
+        padding: 4px;
+        position: absolute;
+        z-index: 1;
+        border:1px solid rgb(233, 233, 233);
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-10%);
+        margin-bottom: 0.5rem;
+        margin-left: -2rem;
+        background-color:white;
+        opacity: 0;
+        transition: opacity 1s;
+      }      
     </style>
   </head>
   <body class="antialiased">
@@ -132,35 +147,40 @@
                     <div class="d-flex">
                       <div class="subheader">Causas</div>
                       <div class="ms-auto">
-                        <div class="col-auto mb-1">
+                        <div class="col-auto">
                           <span class="legend bg-azure"></span>
-                          <span>Cruce</span>
+                          <div class="tooltip">CE
+                            <span class="tooltiptext">Datos cruce erroneos</span>
+                          </div>
                           <span class="legend bg-purple"></span>
-                          <span>Efect</span>
+                          <div class="tooltip">SE
+                            <span class="tooltiptext">Sin efecto económico</span>
+                          </div>
                           <span class="legend bg-pink"></span>
-                          <span>Corre</span>
+                          <div class="tooltip">TC
+                            <span class="tooltiptext">Tributación correcta</span>
+                          </div>
                           <span class="legend bg-orange"></span>
-                          <span>Presc</span>
+                          <div class="tooltip">PR
+                            <span class="tooltiptext">Prescrito</span>
+                          </div>
                           <span class="legend bg-teal"></span>
-                          <span>Otros</span>
+                          <div class="tooltip">OT
+                            <span class="tooltiptext">Otros casos</span>
+                          </div>
                         </div>
                       </div>
                     </div>
                     <div class="progress-container">
                       <div class="err bg-azure progress-separated">
-                        <h6 class="m-0"><%- datos.situacion.ACUERR %></h6>
                       </div>
-                      <div class="dec bg-purple progress-separated">
-                        <h6 class="m-0"><%- datos.situacion.ACUEFE %></h6>
+                      <div class="efe bg-purple progress-separated">
                       </div>
-                      <div class="err bg-pink progress-separated">
-                        <h6 class="m-0"><%- datos.situacion.ACUTRI %></h6>
+                      <div class="tri bg-pink progress-separated">
                       </div>
-                      <div class="err bg-orange progress-separated">
-                        <h6 class="m-0"><%- datos.situacion.ACUPRE %></h6>
+                      <div class="pre bg-orange progress-separated">
                       </div>
                       <div class="otr bg-teal">
-                        <h6 class="m-0"><%- datos.situacion.ACUOTR %></h6>
                       </div>
                     </div>
                   </div>
@@ -174,11 +194,11 @@
                     <div class="subheader ms-auto">Importe</div>
                   </div>
                   <div class="d-flex align-items-center">
-                    <div class="h1"><%- Intl.NumberFormat('de-DE').format(datos.hitos.LIQUID) %></div>
+                    <div class="h1 mb-3"><%- Intl.NumberFormat('de-DE').format(datos.hitos.LIQUID) %></div>
                     <div class="h1 ms-auto"><%- Intl.NumberFormat('de-DE').format(datos.hitos.IMPLIQ) %></div>
                   </div>
                   <div class="d-flex align-items-center">
-                    <div class="subheader mt-3">Propuestas</div>
+                    <div class="subheader">Propuestas</div>
                   </div>
                   <div class="h2"><%- Intl.NumberFormat('de-DE').format(datos.hitos.PROLIQ) %></div>
                 </div>
@@ -192,11 +212,11 @@
                     <div class="subheader ms-auto">Importe</div>
                   </div>
                   <div class="d-flex align-items-center">
-                    <div class="h1"><%- Intl.NumberFormat('de-DE').format(datos.hitos.SANCIO) %></div>
+                    <div class="h1 mb-3"><%- Intl.NumberFormat('de-DE').format(datos.hitos.SANCIO) %></div>
                     <div class="h1 ms-auto"><%- Intl.NumberFormat('de-DE').format(datos.hitos.IMPSAN) %></div>
                   </div>
                   <div class="d-flex align-items-center">
-                    <div class="subheader mt-3">
+                    <div class="subheader">
                       Propuestas
                       <span class="text-red">(anuladas)</span>
                     </div>
@@ -384,15 +404,22 @@
 
     <script src="/js/ayuda.min.js"></script>
     <script>
-        const changeProgress = (element, progress) => {
+        const changeProgress = (element, texto, valor, progress) => {
           element.style.width = `${progress}%`;
+          element.innerHTML = `<div class="tooltip" style="display: block;">${valor}
+            <span class="tooltiptext">
+              <p>${texto}</p>
+              <p>Total: ${valor}</p>
+              <p>Porcentaje: ${progress}%</p>
+            </span>
+          </div>`
         };
 
-        changeProgress(document.querySelector(".err"), <%- datos.situacion.ACUERR / datos.situacion.CORREC * 100 %>)
-        changeProgress(document.querySelector(".dec"), <%- datos.situacion.ACUEFE / datos.situacion.CORREC * 100 %>)
-        changeProgress(document.querySelector(".tri"), <%- datos.situacion.ACUTRI / datos.situacion.CORREC * 100 %>)
-        changeProgress(document.querySelector(".pre"), <%- datos.situacion.ACUPRE / datos.situacion.CORREC * 100 %>)
-        changeProgress(document.querySelector(".otr"), <%- datos.situacion.ACUOTR / datos.situacion.CORREC * 100 %>)
+        changeProgress(document.querySelector(".err"), 'Datos cruce erroneos', <%- datos.situacion.ACUERR %>, Math.round(<%- datos.situacion.ACUERR / datos.situacion.CORREC * 100 %> * 100) / 100)
+        changeProgress(document.querySelector(".efe"), 'Sin efectos económicos', <%- datos.situacion.ACUEFE %>, Math.round(<%- datos.situacion.ACUEFE / datos.situacion.CORREC * 100 %> * 100) / 100)
+        changeProgress(document.querySelector(".tri"), 'Tributación correcta', <%- datos.situacion.ACUTRI %>, Math.round(<%- datos.situacion.ACUTRI / datos.situacion.CORREC * 100 %> * 100) / 100)
+        changeProgress(document.querySelector(".pre"), 'Prescrito', <%- datos.situacion.ACUPRE %>, Math.round(<%- datos.situacion.ACUPRE / datos.situacion.CORREC * 100 %> * 100) / 100)
+        changeProgress(document.querySelector(".otr"), 'Otros casos', <%- datos.situacion.ACUOTR %>, Math.round(<%- datos.situacion.ACUOTR / datos.situacion.CORREC * 100 %> * 100) / 100)
     </script>
     <script>
       const options = {
