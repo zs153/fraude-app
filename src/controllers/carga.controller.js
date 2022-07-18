@@ -4,6 +4,7 @@ const insertFromRec = (req) => {
   const carga = {
     descar: req.body.carga.descar,
     ficcar: req.body.carga.ficcar,
+    refcar: req.body.carga.refcar,
     stacar: req.body.carga.stacar,
   };
   const movimiento = {
@@ -18,6 +19,7 @@ const updateFromRec = (req) => {
     idcarg: req.body.carga.idcarg,
     descar: req.body.carga.descar,
     ficcar: req.body.carga.ficcar,
+    refcar: req.body.carga.refcar,    
     stacar: req.body.carga.stacar,
   };
   const movimiento = {

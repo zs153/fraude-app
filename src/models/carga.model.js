@@ -8,6 +8,7 @@ FROM cargas cc
 const insertSql = `BEGIN FRAUDE_PKG.INSERTCARGA(
   :descar,
   :ficcar,
+  :refcar,
   :stacar,
   :usumov,
   :tipmov,
@@ -18,6 +19,7 @@ const updateSql = `BEGIN FRAUDE_PKG.UPDATECARGA(
   :idcarg,
   :descar,
   :ficcar,
+  :refcar,
   :stacar,
   :usumov,
   :tipmov

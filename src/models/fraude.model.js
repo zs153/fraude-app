@@ -144,8 +144,7 @@ const estadisticaOficinaSql = `SELECT
         SUM(CASE WHEN ff.stafra = 1 THEN 1 ELSE 0 END) as adj,
         SUM(CASE WHEN ff.stafra = 2 THEN 1 ELSE 0 END) as res
         FROM fraudes ff
-        INNER JOIN fraudescarga fc ON fc.idfrau = ff.idfrau
-        WHERE fc.idcarg = :idcarg
+        WHERE ff.reffra = :refcar
         GROUP BY ff.ofifra
   ) p1
 INNER JOIN oficinas oo ON oo.idofic = p1.ofi

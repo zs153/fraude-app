@@ -111,7 +111,7 @@ const estadisticaFromRec = (req) => {
 }
 const cargaFromRec = (req) => {
   const carga = {
-    idcarg: req.body.carga.idcarg,
+    refcar: req.body.carga.refcar,
   }
 
   return carga
