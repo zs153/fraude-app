@@ -25,6 +25,7 @@
               <div class="card">              
                 <form action="/admin/estadisticas/fraudes" method="POST" onsubmit="return validate();" >
                   <input type="hidden" id="destip" name="destip">
+                  <input type="hidden" id="refcar" name="refcar">
                   <div class="modal-body">
                     <div class="card-body">
                       <div class="row">
@@ -83,6 +84,17 @@
 
   <script src="/js/ayuda.min.js"></script>
   <script>
+    const cboC = document.getElementById('cbocar');
+    const cboT = document.getElementById('cbotip');
+
+    cboC.addEventListener('change', (e) => {  
+      document.getElementById('refcar').value = e.target.options[e.target.selectedIndex].getAttribute('data-foo')
+    })
+    cboT.addEventListener('change', (e) => {
+      document.getElementById('destip').value = e.target.options[e.target.selectedIndex].text
+    })    
+  </script>
+  <script>
     const desde = document.getElementById('desde')
     const hasta = document.getElementById('hasta')
     const fecha = document.getElementById('fecfra')
@@ -140,7 +152,7 @@
       inputControl.classList.remove('is-valid');
     }
   </script>
-  <script>
+  <script>    
     const Cargas = () => {
       const xhr = new XMLHttpRequest();
 
@@ -153,9 +165,12 @@
             const option = document.createElement('option')
             option.value = itm.IDCARG
             option.text = itm.DESCAR
+            option.setAttribute('data-foo', itm.REFCAR)
 
             cbo.appendChild(option)
           })
+            
+          document.getElementById('refcar').value = cbo.options[cbo.selectedIndex].getAttribute('data-foo')
         }
       };
       xhr.open('POST', 'http://localhost:8100/api/cargas', true);
@@ -178,9 +193,7 @@
             cbo.appendChild(option)
           })
 
-          cbo.addEventListener('change', (e) => {
-            document.getElementById('destip').value = cbo.options[cbo.selectedIndex].text
-          })
+          document.getElementById('destip').value = cbo.options[cbo.selectedIndex].text
         }
       };
       xhr.open('POST', 'http://localhost:8100/api/tipos/fraudes', true);

@@ -33,14 +33,13 @@ export const estadisticaFraude = async (req, res) => {
     tipfra: req.body.tipfra,
   }
   const carga = {
-    idcarg: req.body.idcarg,
+    refcar: req.body.refcar,
   }
 
   try {
     const hitos = await axios.post('http://localhost:8100/api/fraudes/stat/hitos', {
       periodo,
       fraude,
-      carga,
     })
     const situacion = await axios.post('http://localhost:8100/api/fraudes/stat/situacion', {
       periodo,
@@ -73,6 +72,7 @@ export const estadisticaFraude = async (req, res) => {
       anulacion: Math.round((hitos.data.ANUSAN * 100 / totalSituacion) * 100) / 100.0,
       correctas: Math.round((situacion.data.CORREC * 100 / totalSituacion) * 100) / 100.0,
     }
+  
     const datos = {
       fraude,
       periodo,

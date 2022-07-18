@@ -39,11 +39,27 @@
                   </div>
                   <div class="card-body">
                     <div class="row">
-                      <div class="col-8">
+                      <div class="col-12">
                         <div class="mb-1">
                           <div class="input-control">
                             <label class="form-label required">Descripción</label>
-                            <input type="text" name="desofi" id="desofi" class="form-control" style="text-transform: uppercase;" value="<%- datos.oficina.DESOFI %>" autofocus/>
+                            <input type="text" name="descar" id="descar" class="form-control" style="text-transform: uppercase;" value="" autofocus/>
+                            <div class="invalid-feedback"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-8">
+                        <div class="mb-1">
+                          <label class="form-label required">Nombre de fichero</label>
+                          <div class="input-group input-group-flat">
+                            <input type="text" name="ficcar" id="ficcar" class="form-control" value="" placeholder="Nombre de fichero con extencion" />
+                            <span class="input-group-text">
+                              <a href="#" class="link-secondary" data-bs-toggle="modal" data-bs-target="#modal-info">
+                                <i class="bi bi-info-circle"></i>
+                              </a>
+                            </span>
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>
@@ -51,8 +67,8 @@
                       <div class="col-4">
                         <div class="mb-1">
                           <div class="input-control">
-                            <label class="form-label required">Código</label>
-                            <input type="text" name="codofi" id="codofi" class="form-control" style="text-transform: uppercase;" value="<%- datos.oficina.CODOFI %>" />
+                            <label class="form-label required">Referencia</label>
+                            <input type="text" name="refcar" id="refcar" class="form-control" style="text-transform: uppercase;" value="" />
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>
@@ -78,30 +94,41 @@
 
   <script src="/js/ayuda.min.js"></script>
   <script>
-    const desofi = document.getElementById('desofi')
-    const codofi = document.getElementById('codofi')
+    const desofi = document.getElementById('descar')
+    const ficcar = document.getElementById('ficcar')
+    const refcar = document.getElementById('refcar')
 
     const validate = () => {
-      const desofiValue = desofi.value.trim()
-      const codofiValue = codofi.value.trim()
+      const descarValue = descar.value.trim()
+      const ficcarValue = ficcar.value.trim()
+      const refcarValue = refcar.value.trim()
 
-      if (desofiValue === '') {
-        setError(desofi, 'Descripción requerida')
+      if (descarValue === '') {
+        setError(descar, 'Descripción requerida')
         setTimeout(function () {
-          setSuccess(desofi)
+          setSuccess(descar)
         }, 3000)
         return false
       } else {
-        setSuccess(desofi)
+        setSuccess(descar)
       }
-      if (codofiValue === '') {
-        setError(codofi, 'Código requerido')
+      if (ficcarValue === '') {
+        setError(ficcar, 'Nombre de fichero requerido')
         setTimeout(function () {
-          setSuccess(codofi)
+          setSuccess(ficcar)
         }, 3000)
         return false
       } else {
-        setSuccess(codofi)
+        setSuccess(ficcar)
+      }
+      if (refcarValue === '') {
+        setError(refcar, 'Referencia requerida')
+        setTimeout(function () {
+          setSuccess(refcar)
+        }, 3000)
+        return false
+      } else {
+        setSuccess(refcar)
       }
 
       return true

@@ -351,6 +351,7 @@
           </div>
           <form action="/admin/estadisticas/fraudes" method="POST" onsubmit="return validate();" >
             <input type="hidden" id="destip" name="destip">
+            <input type="hidden" id="refcar" name="refcar">
             <div class="modal-body">
               <div class="card-body">
                 <div class="row">
@@ -403,6 +404,17 @@
     </div>
 
     <script src="/js/ayuda.min.js"></script>
+    <script>
+      const cboC = document.getElementById('cbocar');
+      const cboT = document.getElementById('cbotip');
+
+      cboC.addEventListener('change', (e) => {  
+        document.getElementById('refcar').value = e.target.options[e.target.selectedIndex].getAttribute('data-foo')
+      })
+      cboT.addEventListener('change', (e) => {
+        document.getElementById('destip').value = e.target.options[e.target.selectedIndex].text
+      })    
+    </script>    
     <script>
         const changeProgress = (element, texto, valor, progress) => {
           element.style.width = `${progress}%`;
@@ -527,7 +539,7 @@
           trackWidth: 1,
           lineCap: 'butt',
           onStep: function(from, to, percent) {
-            this.el.children[0].innerHTML = Math.round(percent);
+            this.el.children[0].innerHTML = Math.round(percent * 100) / 100;
           }
       });    
       const chartLiquid = new EasyPieChart(element1, {
@@ -540,7 +552,7 @@
           trackWidth: 1,
           lineCap: 'butt',
           onStep: function(from, to, percent) {
-            this.el.children[0].innerHTML = Math.round(percent);
+            this.el.children[0].innerHTML = Math.round(percent * 100) / 100;
           }
       });
       const chartSancion = new EasyPieChart(element2, {
@@ -553,13 +565,10 @@
           trackWidth: 1,
           lineCap: 'butt',
           onStep: function(from, to, percent) {
-            this.el.children[0].innerHTML = Math.round(percent);
+            this.el.children[0].innerHTML = Math.round(percent * 100) / 100;
           }
       });
 
-      // chartCorrecto.update(<%- datos.ratios.correctas %>)
-      // chartLiquid.update(<%- datos.ratios.liquidacion %>)
-      // chartSancion.update(<%- datos.ratios.sancion %>)
     </script>
     <script>
       const desde = document.getElementById('desde')
@@ -619,7 +628,7 @@
         inputControl.classList.remove('is-valid');
       }
     </script>
-    <script>
+    <script>    
       const Cargas = () => {
         const xhr = new XMLHttpRequest();
 
@@ -632,9 +641,12 @@
               const option = document.createElement('option')
               option.value = itm.IDCARG
               option.text = itm.DESCAR
+              option.setAttribute('data-foo', itm.REFCAR)
 
               cbo.appendChild(option)
             })
+              
+            document.getElementById('refcar').value = cbo.options[cbo.selectedIndex].getAttribute('data-foo')
           }
         };
         xhr.open('POST', 'http://localhost:8100/api/cargas', true);
@@ -654,16 +666,10 @@
               option.value = itm.IDTIPO
               option.text = itm.DESTIP
 
-              if (itm.IDTIPO === <%- datos.fraude.tipfra %>) {
-                document.getElementById('destip').value = itm.DESTIP
-                option.selected = true
-              }
               cbo.appendChild(option)
             })
 
-            cbo.addEventListener('change', (e) => {
-              document.getElementById('destip').value = cbo.options[cbo.selectedIndex].text
-            })
+            document.getElementById('destip').value = cbo.options[cbo.selectedIndex].text
           }
         };
         xhr.open('POST', 'http://localhost:8100/api/tipos/fraudes', true);

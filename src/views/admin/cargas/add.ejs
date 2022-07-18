@@ -42,7 +42,7 @@
                   </div>
                   <div class="card-body">
                     <div class="row">
-                      <div class="col-8">
+                      <div class="col-12">
                         <div class="mb-1">
                           <div class="input-control">
                             <label class="form-label required">Descripción</label>
@@ -51,7 +51,9 @@
                           </div>
                         </div>
                       </div>
-                      <div class="col-4">
+                    </div>
+                    <div class="row">
+                      <div class="col-8">
                         <div class="mb-1">
                           <label class="form-label required">Nombre de fichero</label>
                           <div class="input-group input-group-flat">
@@ -61,6 +63,15 @@
                                 <i class="bi bi-info-circle"></i>
                               </a>
                             </span>
+                            <div class="invalid-feedback"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="mb-1">
+                          <div class="input-control">
+                            <label class="form-label required">Referencia</label>
+                            <input type="text" name="refcar" id="refcar" class="form-control" style="text-transform: uppercase;" value="" />
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>
@@ -138,10 +149,12 @@
   <script>
     const desofi = document.getElementById('descar')
     const ficcar = document.getElementById('ficcar')
+    const refcar = document.getElementById('refcar')
 
     const validate = () => {
       const descarValue = descar.value.trim()
       const ficcarValue = ficcar.value.trim()
+      const refcarValue = refcar.value.trim()
 
       if (descarValue === '') {
         setError(descar, 'Descripción requerida')
@@ -160,6 +173,15 @@
         return false
       } else {
         setSuccess(ficcar)
+      }
+      if (refcarValue === '') {
+        setError(refcar, 'Referencia requerida')
+        setTimeout(function () {
+          setSuccess(refcar)
+        }, 3000)
+        return false
+      } else {
+        setSuccess(refcar)
       }
 
       return true
