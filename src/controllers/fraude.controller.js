@@ -194,6 +194,38 @@ export const hitoseventosPage = async (req, res) => {
     });
   }
 };
+export const roHitosEventosPage = async (req, res) => {
+  const user = req.user;
+  const fraude = {
+    idfrau: req.params.id,
+  };
+
+  try {
+    const result = await axios.post("http://localhost:8100/api/fraude", {
+      fraude,
+    });
+    const hitos = await axios.post("http://localhost:8100/api/fraudes/hitos", {
+      fraude,
+    });
+    const eventos = await axios.post("http://localhost:8100/api/fraudes/events", {
+      fraude,
+    });
+    const datos = {
+      fraude: result.data,
+      hitos: hitos.data,
+      eventos: eventos.data,
+      estadosHito,
+    };
+
+    res.render("admin/fraudes/hitoseventos/readOnly", { user, datos });
+  } catch (error) {
+    const msg = "No se ha podido acceder a los hitos del fraude seleccionado.";
+
+    res.render("admin/error400", {
+      alerts: [{ msg }],
+    });
+  }
+};
 
 // pages hito
 export const addHitosPage = async (req, res) => {
@@ -658,16 +690,49 @@ export const unasign = async (req, res) => {
     });
   }
 };
+export const deshacer = async (req, res) => {
+  const user = req.user;
+  const fraude = {
+    idfrau: req.body.idfrau,
+    liqfra: user.userID,
+    stafra: estadosFraude.asignado,
+  };
+  const movimiento = {
+    usumov: user.id,
+    tipmov: tiposMovimiento.desasignarFraude,
+  };
+
+  try {
+    const resul = await axios.post("http://localhost:8100/api/fraude", {
+      fraude,
+    });
+
+    if (resul.data.STAFRA === estadosFraude.resuelto) {
+      await axios.post("http://localhost:8100/api/fraudes/unasign", {
+        fraude,
+        movimiento,
+      });
+    }
+
+    res.redirect("/admin/fraudes");
+  } catch (error) {
+    const msg = "No se ha podido desasignar el documento.";
+
+    res.render("admin/error400", {
+      alerts: [{ msg }],
+    });
+  }
+};
 export const verTodo = async (req, res) => {
   const user = req.user;
   const fraude = {
     liqfra: user.userID,
-    stafra: estadosFraude.pendiente + estadosFraude.resuelto,
+    stafra: estadosFraude.resuelto,
   };
   const verTodo = true;
 
   if (user.rol === tiposRol.admin) {
-    delete fraude.stafra
+    delete fraude.liqfra
   }
 
   try {

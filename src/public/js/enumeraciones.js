@@ -55,6 +55,7 @@ export const tiposMovimiento = {
   crearCarga: 53,
   modificiarCarga: 54,
   borrarCarga: 55,
+  deshacerFraude: 56,
   nuevoRelacionadoFraude: 57,
   nuevoEjercicioFraude: 58,
   archivadoSancion: 59,

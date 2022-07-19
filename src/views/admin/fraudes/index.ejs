@@ -63,9 +63,9 @@
                       </div>
                       <a href="#" class="btn btn-warning" onclick="checkItem(this)">
                         <% if (datos.verTodo ) { %>
-                          <i class='bi bi-eye-slash dropdown-item-icon'></i>Sólo pendientes
+                          <i class='bi bi-eye-slash dropdown-item-icon'></i>Pendientes
                         <% } else { %>
-                          <i class='bi bi-eye dropdown-item-icon'></i>Mostrar todo
+                          <i class='bi bi-eye dropdown-item-icon'></i>Resueltos
                         <% } %>
                       </a>                      
                       <a href="/admin/fraudes/add" class="btn btn-primary">
@@ -268,6 +268,38 @@
       </div>
     </div>
   </div>
+  <div class="modal modal-blur fade" id="modal-deshacer" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-status bg-danger"></div>
+        <div class="modal-body text-center py-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-danger icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <path d="M12 9v2m0 4v.01"></path>
+            <path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75"></path>
+          </svg>
+          <h3>Deshacer cierre</h3>
+          <div id="texcie"></div>
+        </div>
+        <div class="modal-footer">
+          <div class="w-100">
+            <div class="row">
+              <div class="col">
+                <a href="/admin/fraudes" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
+              </div>
+              <div class="col">
+                <form action="/admin/fraudes/deshacer" method="POST">
+                  <input type="hidden" id="deshacer" name="idfrau" value="">
+                  <button type="submit" class="btn btn-danger w-100">Deshacer cierre</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>  
   <div class="modal modal-blur fade" id="modal-sms" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
       <div class="modal-content">
@@ -697,21 +729,21 @@
                 </ul>
               </li>                              
             </ul>`
-          } else if (element.STAFRA === <%- datos.estadosFraude.resuelto %> || element.STAFRA === <%- datos.estadosFraude.remitido %>) {
+          } else if (element.STAFRA === <%- datos.estadosFraude.resuelto %>) {
             cell.innerHTML = `<ul class="dots-menu">
               <li class="nav-item drop-right">
                 <a href="#" class="nav-link">
                   <i class="bi bi-three-dots-vertical"></i>
                 </a>
                 <ul>
-                  <li class="nav-item">
-                    <a href="/admin/fraudes/edit/${element.IDFRAU}" class="nav-link">
-                      <i class="bi bi-pencil dropdown-item-icon"></i>Editar fraude
+                  <li class="nav-item ">
+                    <a href="/admin/fraudes/hitoseventos/readonly/${element.IDFRAU}" class="nav-link">
+                      <i class="bi bi-flag dropdown-item-icon"></i>Hitos / Eventos
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="#" class="nav-link" onclick="{document.getElementById('desasig').value ='${element.IDFRAU}', document.getElementById('texdes').innerHTML ='<p>${element.REFFRA}</p><p>${element.NIFCON}</p><p>${element.NOMCON}</p>'}" data-bs-toggle="modal" data-bs-target="#modal-desasignar">
-                      <i class="bi bi-x-square dropdown-item-icon"></i>Desasignar fraude
+                    <a href="#" class="nav-link" onclick="{document.getElementById('deshacer').value ='${element.IDFRAU}', document.getElementById('texcie').innerHTML ='<p>${element.REFFRA}</p><p>${element.NIFCON}</p><p>${element.NOMCON}</p>'}" data-bs-toggle="modal" data-bs-target="#modal-deshacer">
+                      <i class="bi bi-x-square dropdown-item-icon"></i>Deshacer cierre
                     </a>
                   </li>
                   <li class="nav-item list-divider"></li>

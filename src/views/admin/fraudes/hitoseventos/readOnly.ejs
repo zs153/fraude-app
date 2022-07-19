@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>Hitos/Eventos</title>
+    <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="/css/bootstrap-icons.css">
+    <!-- custom -->
+    <link rel="stylesheet" href="/css/estilos.min.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <style>
+      .sortable th {
+        cursor: pointer;
+      }
+      .sortable .th-sort-asc::after {
+        content: "\25b4";
+      }
+      .sortable .th-sort-desc::after {
+        content: "\25be";
+      }
+      .sortable .th-sort-asc::after,
+      .sortable .th-sort-desc::after {
+        margin-left: 5px;
+      }
+      .subtitulo {
+        margin: 0;
+        align-items: center;
+        justify-content: center;
+        color: #656d77;
+        pointer-events: none;
+        font-size: 0.8em;
+      }
+      .table-fixHead tbody {
+        overflow-y: scroll;
+        height: 24vh;
+        display: block;
+        flex: 1 1 auto;
+      }
+    </style>
+  </head>
+  <body class="antialiased">
+    <div class="wrapper">
+      <%- include('../../../partials/header') %>
+      <%- include('../../../partials/navbar', {opcion: 'FRAUDES'}) %>
+      <div class="page-wrapper">
+        <div class="container-xl">
+          <div class="page-body">
+            <div class="row row-deck row-cards">
+              <div class="col-12">
+                <div class="card" style="height: 38vh;">
+                  <div class="card-header">
+                    <div>
+                      <h3 class="card-title">Hitos</h3>
+                      <p class="subtitulo">
+                        <%- datos.fraude.NIFCON %> <%- datos.fraude.NOMCON %>
+                      </p>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <table class="table table-vcenter table-striped sortable" id="tblHitos">
+                      <thead>
+                      <tr class="header">
+                        <th class="w-4"></th>
+                        <th class="w-8 px-3">Fecha</th>
+                        <th>Tipo</th>
+                        <th>Observaciones</th>
+                        <th class="w-9">Valor</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                        <% datos.hitos.map(element => { %>
+                          <tr>
+                            <td class="w-4">
+                              <% if (element.STAHIT === datos.estadosHito.sancionAnulada) { %>
+                                <span class="avatar avatar-rounded bg-red-lt">
+                                  <h6>ANUL</h6>
+                                </span>
+                              <% } else { %>
+                                <span class="avatar avatar-rounded bg-green-lt">
+                                  <h6>OK</h6>
+                                </span>
+                              <% } %>
+                            </td>                            
+                            <td class="w-8 px-3">
+                              <div class="d-flex py-1 align-items-center">
+                                <div class="flex-fill">
+                                  <div class="font-weight-medium"><%- element.STRFEC %></div>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="d-flex py-1 align-items-center">
+                                <div class="flex-fill">
+                                  <div class="font-weight-medium"><%- element.DESTIP %></div>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="d-flex py-1 align-items-center">
+                                <div class="flex-fill">
+                                  <% if (element.OBSHIT !== null) { %>
+                                    <div class="font-weight-medium"><%- element.OBSHIT %></div>
+                                  <% }%>
+                                </div>
+                              </div>
+                            </td>
+                            <td class="w-9">
+                              <div class="d-flex py-1 align-items-center">
+                                <div class="flex-fill">
+                                  <div class="font-weight-medium"><%- element.IMPHIT %></div>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        <% }) %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 mt-0">
+                <div class="card">
+                  <div class="card-header">
+                    <div>
+                      <h3 class="card-title">Eventos</h3>
+                      <p class="subtitulo">
+                        <%- datos.fraude.NIFCON %> <%- datos.fraude.NOMCON %>
+                      </p>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <table class="table table-vcenter table-striped table-fixHead sortable" id="tblEventos">
+                      <thead>
+                      <tr class="header">
+                        <th class="w-4"></th>
+                        <th class="w-8 px-3">Fecha</th>
+                        <th>Tipo</th>
+                        <th>Observaciones</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                        <% datos.eventos.map(element => { %>
+                          <tr>
+                            <td class="w-4">
+                              <span class="avatar avatar-rounded bg-green-lt">
+                                <h5>OK</h5>
+                              </span>
+                            </td>                            
+                            <td class="w-8 px-3">
+                              <div class="d-flex py-1 align-items-center">
+                                <div class="flex-fill">
+                                  <div class="font-weight-medium"><%- element.STRFEC %></div>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="d-flex py-1 align-items-center">
+                                <div class="flex-fill">
+                                  <div class="font-weight-medium"><%- element.DESTIP %></div>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="d-flex py-1 align-items-center">
+                                <div class="flex-fill">
+                                  <div class="font-weight-medium"><%- element.OBSEVE %></div>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        <% }) %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 mt-0">
+                <a href="/admin/fraudes" class="btn btn-link">Salir</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <%- include('../../../partials/footer') %>
+    </div>
+
+    <script src="/js/ayuda.min.js"></script>
+  </body>
+</html>
