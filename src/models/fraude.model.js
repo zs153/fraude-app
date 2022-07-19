@@ -39,7 +39,7 @@ const largeQuery = `SELECT * FROM (
   ) p1
   INNER JOIN fraudes ff ON ff.idfrau = p1.idfrau
   INNER JOIN tiposfraude tt ON tt.idtipo = ff.tipfra
-  INNER JOIN oficinas oo ON oo.idofic = ff.ofifra  
+  INNER JOIN oficinas oo ON oo.idofic = ff.ofifra
 `
 const allQuery = `SELECT 
     oo.desofi,
@@ -71,6 +71,8 @@ const allQuery = `SELECT
   INNER JOIN fraudes ff ON ff.idfrau = p1.idfrau
   INNER JOIN tiposfraude tt ON tt.idtipo = ff.tipfra
   INNER JOIN oficinas oo ON oo.idofic = ff.ofifra
+  AND BITAND(ff.stafra,2) > 0
+
 `
 const hitosFraudeQuery = `SELECT 
   th.destip,
@@ -357,7 +359,7 @@ export const findAll = async (context) => {
   let query = largeQuery
   let binds = {}
 
-  if (!context.stafra) {
+  if (!context.liqfra) {
     query = allQuery
   } else {
     if (context.stafra === 1) {
@@ -379,23 +381,7 @@ export const findAll = async (context) => {
         INNER JOIN oficinas oo ON oo.idofic = ff.ofifra
         WHERE ff.stafra = 0)`
     } else {
-      query += `AND BITAND(ff.stafra,3) > 0
-      UNION ALL
-        SELECT
-          oo.desofi,
-          tt.destip,
-          ff.*,
-          0 PROLIQ,
-          0 LIQUID,
-          0 PROSAN,
-          0 SANCIO,
-          0 NUMHIT,
-          0 NUMEVE,
-          TO_CHAR(ff.fecfra, 'DD/MM/YYYY') "STRFEC"
-        FROM fraudes ff
-        INNER JOIN tiposfraude tt ON tt.idtipo = ff.tipfra
-        INNER JOIN oficinas oo ON oo.idofic = ff.ofifra
-        WHERE ff.stafra = 0)`
+      query += `AND BITAND(ff.stafra,2) > 0)`
     }
     binds.liqfra = context.liqfra
   }
