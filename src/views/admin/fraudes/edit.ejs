@@ -6,11 +6,8 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>Fraude</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
-  <!-- bootstrap -->
-  <link rel="stylesheet" href="/css/bootstrap-icons.css">
-  <!-- custom -->
-  <link rel="stylesheet" href="/css/estilos.min.css">
-  <link rel="stylesheet" href="/css/navbar.css">
+  <!-- styles -->
+  <link rel="stylesheet" href="/css/styles.css">
 </head>
 
 <body class="antialiased">
@@ -23,15 +20,9 @@
           <div class="row">
             <div class="col-12">
               <div class="card">
-                <% if(typeof alerts !='undefined' ) { %>
-                  <% alerts.map(function (alert) { %>
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                      <%- alert.msg %>
-                    </div>
-                  <% }) %>
-                <% } %>
                 <form id="form" action="/admin/fraudes/update" method="POST" onsubmit="return validate();">
                   <input type="hidden" name="idfrau" id="idfrau" value="<%- datos.fraude.IDFRAU %>">
+                  <input type="hidden" name="verall" id="verall" value="">
                   <div class="card-header">
                     <h3 class="card-title">Editar fraude</h3>
                   </div>
@@ -67,6 +58,11 @@
                         <div class="mb-1">
                           <div class="form-label">Tipo</div>
                           <select class="form-select" id="cbotip" name="tipfra" value="<%- datos.fraude.TIPFRA %>">
+                            <% datos.tipos.map(element=> { %>
+                            <option value="<%- element.IDTIPO %>" <%- element.IDTIPO === datos.fraude.TIPFRA ? " selected" :"" %>>
+                              <%- element.DESTIP %>
+                            </option>
+                            <% }) %>
                           </select>
                         </div>
                       </div>
@@ -91,7 +87,7 @@
                         <div class="mb-1">
                           <div class="input-control">
                             <label class="form-label required">Fecha</label>
-                            <input type="date" name="fecfra" id="fecfra" class="form-control" value="<%- datos.fraude.STRFEC %>" <%- datos.fraude.FUNFRA === 'SYSTEM' ? 'readonly' : '' %>/>
+                            <input type="date" name="fecfra" id="fecfra" class="form-control" value="<%- datos.fraude.ISOFEC %>" <%- datos.fraude.FUNFRA === 'SYSTEM' ? 'readonly' : '' %>/>
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>
@@ -99,8 +95,13 @@
                       <div class="col-5">
                         <div class="mb-1">
                           <div class="form-label">Oficina</div>
-                          <select class="form-select" id="cboofi" name="ofifra" value="<%- datos.fraude.OFIFRA %>">
-                          </select>
+                            <select class="form-select" id="cboofi" name="ofifra" value="<%- datos.fraude.OFIFRA %>">
+                              <% datos.oficinas.map(element=> { %>
+                                <option value="<%- element.IDOFIC %>" <%- element.IDOFIC === datos.fraude.OFIFRA ? " selected" :"" %>>
+                                  <%- element.DESOFI %>
+                                </option>
+                              <% }) %>
+                            </select>
                         </div>
                       </div>
                       <div class="col-2">
@@ -136,8 +137,8 @@
                   </div>
                   <div class="card-footer text-end">
                     <div class="d-flex">
-                      <a href="/admin/fraudes" class="btn btn-link">Cancelar</a>
-                      <button type="submit" class="btn btn-primary ms-auto" id="btnUpdate">Actualizar fraude</button>
+                      <input type="submit" class="btn btn-white" action="action" onclick="window.history.go(-1); return false;" value="Cancelar" />
+                      <button type="submit" class="btn btn-success ms-auto" onclick="checkVer()">Actualizar fraude</button>
                     </div>
                   </div>
                 </form>
@@ -156,7 +157,7 @@
     const nomcon = document.getElementById('nomcon')
     const ejefra = document.getElementById('ejefra')
     const fecfra = document.getElementById('fecfra')
-    
+
     const validate = () => {
       const nifconValue = nifcon.value.trim()
       const nomconValue = nomcon.value.trim()
@@ -169,8 +170,6 @@
           setSuccess(nifcon)
         }, 3000)
         return false
-      } else {º
-        setSuccess(nifcon)
       }
       if (nomconValue === '') {
         setError(nomcon, 'Nombre requerido')
@@ -178,8 +177,6 @@
           setSuccess(nomcon)
         }, 3000)
         return false
-      } else {
-        setSuccess(nomcon)
       }
       if (ejefraValue === '') {
         setError(ejefra, 'Ejercicio requerido')
@@ -198,7 +195,6 @@
           }, 3000)
           return false
         }
-        setSuccess(ejefra)        
       }
       if (isNaN(Date.parse(fecfraValue))) {
         setError(fecfra, 'Fecha requerida')
@@ -206,8 +202,6 @@
           setSuccess(fecfra)
         }, 3000)
         return false
-      } else {
-        setSuccess(fecfra)        
       }
 
       return true
@@ -229,59 +223,6 @@
       inputControl.classList.remove('is-valid');
       element.classList.add('is-invalid');
     }
-  </script>
-  <script>
-    const Tipos = () => {
-      const xhr = new XMLHttpRequest();
-
-      xhr.onload = function() {
-        if (xhr.status === 200) {
-          const tipos = JSON.parse(xhr.response)
-          const cbo = document.getElementById('cbotip')
-
-          tipos.map((itm) => {
-            const option = document.createElement('option')
-            option.value = itm.IDTIPO
-            option.text = itm.DESTIP
-            if (itm.IDTIPO === <%- datos.fraude.TIPFRA %>) {
-              option.selected = true
-            }
-            cbo.appendChild(option)
-          })
-        }
-      };
-      xhr.open('POST', 'http://localhost:8100/api/tipos/fraudes', true);
-      xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-      xhr.send()
-    }
-    Tipos();
-  </script>
-  <script>
-    const Oficinas = () => {
-      const xhr = new XMLHttpRequest();
-
-      xhr.onload = function() {
-        if (xhr.status === 200) {
-          const oficinas = JSON.parse(xhr.response)
-
-          const cbo = document.getElementById('cboofi')
-
-          oficinas.map((itm) => {
-            const option = document.createElement('option')
-            option.value = itm.IDOFIC
-            option.text = itm.DESOFI
-            if (itm.IDOFIC === <%- datos.fraude.OFIFRA %>) {
-              option.selected = true
-            }
-            cbo.appendChild(option)
-          })
-        }
-      };
-      xhr.open('POST', 'http://localhost:8100/api/oficinas', true);
-      xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-      xhr.send()
-    }
-    Oficinas();
   </script>
 </body>
 </html>

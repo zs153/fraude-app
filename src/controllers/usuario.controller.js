@@ -1,7 +1,7 @@
 import axios from 'axios'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import { io } from 'socket.io-client'
+import { secreto } from '../config/settings'
 import {
   arrTiposRol,
   arrTiposPerfil,
@@ -290,7 +290,7 @@ export const updatePerfil = async (req, res) => {
         oficina: usuario.ofiusu,
         telefono: usuario.telusu,
       },
-      `${process.env.ACCESS_TOKEN_SECRET}`,
+      `${secreto}`,
       { expiresIn: '8h' }
     )
     const options = {

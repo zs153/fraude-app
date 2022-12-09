@@ -6,11 +6,8 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>Resolver</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
-  <!-- bootstrap -->
-  <link rel="stylesheet" href="/css/bootstrap-icons.css">
-  <!-- custom -->
-  <link rel="stylesheet" href="/css/estilos.min.css">
-  <link rel="stylesheet" href="/css/navbar.css">
+  <!-- styles -->
+  <link rel="stylesheet" href="/css/styles.css">
 </head>
 
 <body class="antialiased">
@@ -23,13 +20,6 @@
           <div class="row">
             <div class="col-12">
               <div class="card">
-                <% if(typeof alerts !='undefined' ) { %>
-                  <% alerts.map(function (alert) { %>
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                      <%- alert.msg %>
-                    </div>
-                  <% }) %>
-                <% } %>
                 <form action="/admin/fraudes/resolver" method="POST">
                   <input type="hidden" id="idfrau" name="idfrau" value="<%- datos.fraude.IDFRAU %>">
                   <div class="card-header">
@@ -92,7 +82,7 @@
                   <div class="card-footer text-end">
                     <div class="d-flex">
                       <a href="/admin/fraudes" class="btn btn-link">Cancelar</a>
-                      <button type="submit" class="btn btn-primary ms-auto" id="btnInsert">Resolver fraude</button>
+                      <button type="submit" class="btn btn-primary ms-auto">Resolver fraude</button>
                     </div>
                   </div>
                 </form>

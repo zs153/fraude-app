@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken'
+import { secreto } from '../config/settings'
 import { tiposRol } from '../public/js/enumeraciones'
 
 const authRoutes = (req, res, next) => {
@@ -8,7 +9,7 @@ const authRoutes = (req, res, next) => {
     try {
       jwt.verify(
         tokenHeader,
-        `${process.env.ACCESS_TOKEN_SECRET}`,
+        `${secreto}`,
         (err, user) => {
           if (err) {
             throw new Error('Token expirado')

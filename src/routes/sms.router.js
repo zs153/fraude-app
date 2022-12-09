@@ -1,5 +1,5 @@
 import express from 'express'
-import {verifyTokenAndAdmin} from "../middleware/auth";
+import { verifyTokenAndAdmin } from "../middleware/auth";
 import {
   mainPage,
   addPage,

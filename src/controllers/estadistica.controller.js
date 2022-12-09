@@ -1,15 +1,24 @@
 import axios from 'axios'
 
 // pages
-export const fraudePage = async (req, res) => {
+export const mainPage = async (req, res) => {
   const user = req.user
-  let fecha = new Date()
-  const desde = new Date(fecha.getFullYear(), fecha.getMonth(), 1, 23,0,0).toISOString().slice(0,10)
-  const hasta = new Date(fecha.getFullYear(), fecha.getMonth()+1, 0, 23,0,0).toISOString().slice(0,10)
+  const fecha = new Date()
+  const currentYear = fecha.getFullYear()
+  const currentMonth = fecha.getMonth() + 1
 
-  fecha = fecha.toISOString().slice(0,10)
+  let desde = new Date(yearMonthDayToUTCString(currentYear, currentMonth, 1)).toISOString().slice(0, 10)
+  let hasta = new Date(yearMonthDayToUTCString(currentYear, currentMonth, lastDayMonth)).toISOString().slice(0, 10)
+
   try {
-    res.render('admin/estadisticas/fraudes/periodo', { user, fecha, desde, hasta })
+    const cargas = await axios.post('http://localhost:8100/api/cargas', {})
+    const datos = {
+      desde,
+      hasta,
+      cargas: cargas.data,
+    }
+
+    res.render('admin/estadisticas', { user, datos })
   } catch (error) {
     const msg = 'No se ha podido acceder a los datos de la aplicación.'
 
@@ -20,35 +29,27 @@ export const fraudePage = async (req, res) => {
 }
 
 // proc
-export const estadisticaFraude = async (req, res) => {
+export const generarEstadistica = async (req, res) => {
   const user = req.user
   const periodo = {
-    desde: req.body.desde, 
+    desde: req.body.desde,
     hasta: req.body.hasta,
   }
-  const tipo = {
-    destip: req.body.destip,
-  }
   const fraude = {
-    tipfra: req.body.tipfra,
-    fecfra: req.body.fecfra,
+    REFFRA: req.body.reffra,
   }
 
   try {
-    const hitos = await axios.post('http://localhost:8100/api/fraudes/stat/hitos', {
-      periodo,
+    const situacion = await axios.post('http://localhost:8100/api/estadisticas/situacion', {
       fraude,
     })
-    const situacion = await axios.post('http://localhost:8100/api/fraudes/stat/situacion', {
-      periodo,
-      fraude,
+    const oficinas = await axios.post('http://localhost:8100/api/estadisticas/oficinas', {
+      carga,
     })
-    const oficinas = await axios.post('http://localhost:8100/api/fraudes/stat/oficinas', {
-      fraude
-    })
-    const actuacion = await axios.post('http://localhost:8100/api/fraudes/stat/actuacion', {
-      periodo,
+    const actuacion = await axios.post('http://localhost:8100/api/estadisticas/actuacion', {
       fraude,
+      tiposMovimiento,
+      periodo,
     })
 
     const serieL = []
@@ -56,9 +57,9 @@ export const estadisticaFraude = async (req, res) => {
     const serieC = []
 
     actuacion.data.map(itm => {
-      serieC.push({x: itm.FEC,y: itm.COR})
-      serieL.push({x: itm.FEC,y: itm.LIQ})
-      serieS.push({x: itm.FEC,y: itm.SAN})
+      serieC.push({ x: itm.FEC, y: itm.COR })
+      serieL.push({ x: itm.FEC, y: itm.LIQ })
+      serieS.push({ x: itm.FEC, y: itm.SAN })
     })
 
     const totalSituacion = situacion.data.TOTAL
@@ -83,7 +84,7 @@ export const estadisticaFraude = async (req, res) => {
       serieS: JSON.stringify(serieS),
     }
 
-    res.render('admin/estadisticas/fraudes', { user, datos})
+    res.render('admin/estadisticas/fraudes', { user, datos })
   } catch (error) {
     const msg = 'No se ha podido acceder a los datos de la aplicación.'
 
@@ -91,4 +92,16 @@ export const estadisticaFraude = async (req, res) => {
       alerts: [{ msg }],
     })
   }
+}
+
+// helpers
+const yearMonthDayToUTCString = (year, month, day) => {
+  const yearCDM = ('000' + year).slice(-4)
+  const monthCDM = ('0' + month).slice(-2)
+  const dayCDM = ('0' + day).slice(-2)
+
+  const fecha = new Date(`${yearCDM}-${monthCDM}-${dayCDM}T00:00:00`)
+  const userTimezoneOffset = fecha.getTimezoneOffset() * 60000
+
+  return new Date(fecha.getTime() - userTimezoneOffset).toISOString().slice(0, 10)
 }

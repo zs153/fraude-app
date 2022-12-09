@@ -1,5 +1,4 @@
 import axios from 'axios'
-import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import {
   arrTiposRol,
@@ -17,6 +16,7 @@ export const perfilPage = async (req, res) => {
   const usuario = {
     userid: user.userID,
   }
+
   try {
     const result = await axios.post('http://localhost:8100/api/usuario', {
       usuario,
@@ -40,21 +40,23 @@ export const perfilPage = async (req, res) => {
 export const errorPage = async (req, res) => {
   res.render('admin/error400')
 }
+
+// proc
 export const changePassword = async (req, res) => {
   const user = req.user
   const salt = await bcrypt.genSalt(10)
   const passHash = await bcrypt.hash(req.body.pwdusu, salt)
   const usuario = {
-    idusua: req.body.idusua,
-    pwdusu: passHash,
+    IDUSUA: req.body.idusua,
+    PWDUSU: passHash,
   }
   const movimiento = {
-    usumov: user.id,
-    tipmov: tiposMovimiento.cambioPassword,
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.cambioPassword,
   }
 
   try {
-    const result = await axios.post(
+    await axios.post(
       'http://localhost:8100/api/usuarios/cambio',
       {
         usuario,
@@ -70,19 +72,18 @@ export const changePassword = async (req, res) => {
 export const updatePerfil = async (req, res) => {
   const user = req.user
   const usuario = {
-    idusua: user.id,
-    nomusu: req.body.nomusu.toUpperCase(),
-    ofiusu: req.body.ofiusu,
-    emausu: req.body.emausu,
-    telusu: req.body.telusu,
+    IDUSUA: user.id,
+    NOMUSU: req.body.nomusu.toUpperCase(),
+    EMAUSU: req.body.emausu,
+    TELUSU: req.body.telusu,
   }
   const movimiento = {
-    usumov: user.id,
-    tipmov: tiposMovimiento.modificarPerfil,
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.modificarPerfil,
   }
 
   try {
-    const result = await axios.post(
+    await axios.post(
       'http://localhost:8100/api/usuarios/perfil',
       {
         usuario,
@@ -90,28 +91,7 @@ export const updatePerfil = async (req, res) => {
       }
     )
 
-    const accessToken = jwt.sign(
-      {
-        id: user.id,
-        nombre: usuario.nomusu,
-        userID: user.userID,
-        email: usuario.emausu,
-        rol: user.rol,
-        oficina: usuario.ofiusu,
-        telefono: usuario.telusu,
-      },
-      `${process.env.ACCESS_TOKEN_SECRET}`,
-      { expiresIn: '8h' }
-    )
-    const options = {
-      path: '/',
-      sameSite: true,
-      maxAge: 1000 * 60 * 60 * 8, // 8 horas
-      httpOnly: true,
-    }
-
-    res.cookie('auth', accessToken, options)
-    res.redirect('/log/logout')
+    res.redirect('.')
   } catch (error) {
     res.redirect('/admin')
   }

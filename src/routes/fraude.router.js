@@ -5,76 +5,90 @@ import {
   addPage,
   editPage,
   hitoseventosPage,
+  addEventosPage,
+  editEventosPage,
+  addHitosPage,
+  editHitosPage,
+  smssPage,
+  smssAddPage,
+  smssEditPage,
+  resolverPage,
+  ejercicioPage,
+  verTodo,
   insert,
   update,
   remove,
-  asign,
-  resol,
-  unasign,
-  verTodo,
-  sms,
+  asignar,
+  desasignar,
+  resolver,
+  ejercicio,
   insertHito,
   updateHito,
-  deleteHito,
+  removeHito,
   archivoHito,
   insertEvento,
   updateEvento,
-  deleteEvento,
-  addHitosPage,
-  editHitosPage,
-  addEventosPage,
-  editEventosPage,
-  resolverPage,
-  ejercicioPage,
-  ejercicio,
+  removeEvento,
+  insertSms,
+  updateSms,
+  removeSms,
 } from "../controllers/fraude.controller";
 
 const fraudeRouter = express.Router();
 
-// paginas
+// paginas fraude
 fraudeRouter.get("/fraudes", authRoutes, mainPage);
 fraudeRouter.get("/fraudes/add", authRoutes, addPage);
 fraudeRouter.get("/fraudes/edit/:id", authRoutes, editPage);
-fraudeRouter.get("/fraudes/sms", authRoutes, mainPage);
-fraudeRouter.get("/fraudes/resolver/:id", authRoutes, resolverPage);
-fraudeRouter.get("/fraudes/ejercicio/:id", authRoutes, ejercicioPage);
-fraudeRouter.get("/fraudes/vertodo", authRoutes, verTodo);
 
-// hitoseventos
+// pag ejercicio
+fraudeRouter.get("/fraudes/ejercicio/:id", authRoutes, ejercicioPage);
+
+// pag smss
+fraudeRouter.get("/fraudes/sms/:idfra", authRoutes, smssPage);
+fraudeRouter.get("/fraudes/smss/add/:idfra", authRoutes, smssAddPage);
+fraudeRouter.get("/fraudes/smss/edit/:idfra/:idsms", authRoutes, smssEditPage);
+
+// page hitoseventos
 fraudeRouter.get("/fraudes/hitoseventos/:id", authRoutes, hitoseventosPage);
 
-// hitos
+// page hitos
 fraudeRouter.get("/fraudes/hitos/add/:id", authRoutes, addHitosPage);
-fraudeRouter.get(
-  "/fraudes/hitos/edit/:idfra/:idhit",
-  authRoutes,
-  editHitosPage
-);
-// eventos
+fraudeRouter.get("/fraudes/hitos/edit/:idfra/:idhit", authRoutes, editHitosPage);
+
+// page eventos
 fraudeRouter.get("/fraudes/eventos/add/:id", authRoutes, addEventosPage);
-fraudeRouter.get(
-  "/fraudes/eventos/edit/:idfra/:ideve",
-  authRoutes,
-  editEventosPage
-);
+fraudeRouter.get("/fraudes/eventos/edit/:idfra/:ideve", authRoutes, editEventosPage);
+
+// page otros
+fraudeRouter.get("/fraudes/resolver/:id", authRoutes, resolverPage);
 
 // procedures
 fraudeRouter.post("/fraudes/insert", authRoutes, insert);
 fraudeRouter.post("/fraudes/update", authRoutes, update);
 fraudeRouter.post("/fraudes/delete", authRoutes, remove);
-fraudeRouter.post("/fraudes/asignar", authRoutes, asign);
-fraudeRouter.post("/fraudes/resolver", authRoutes, resol);
+fraudeRouter.post("/fraudes/asignar", authRoutes, asignar);
+fraudeRouter.post("/fraudes/resolver", authRoutes, resolver);
 fraudeRouter.post("/fraudes/ejercicio", authRoutes, ejercicio);
-fraudeRouter.post("/fraudes/desasignar", authRoutes, unasign);
-fraudeRouter.post("/fraudes/sms", authRoutes, sms);
+fraudeRouter.post("/fraudes/desasignar", authRoutes, desasignar);
+
+// proc sms
+fraudeRouter.post("/fraudes/sms/insert", authRoutes, insertSms);
+fraudeRouter.post("/fraudes/sms/update", authRoutes, updateSms);
+fraudeRouter.post("/fraudes/sms/delete", authRoutes, removeSms);
+
 // hitos
 fraudeRouter.post("/fraudes/hitos/insert", authRoutes, insertHito);
 fraudeRouter.post("/fraudes/hitos/update", authRoutes, updateHito);
-fraudeRouter.post("/fraudes/hitos/delete", authRoutes, deleteHito);
+fraudeRouter.post("/fraudes/hitos/delete", authRoutes, removeHito);
 fraudeRouter.post("/fraudes/hitos/archivado", authRoutes, archivoHito);
+
 // eventos
 fraudeRouter.post("/fraudes/eventos/insert", authRoutes, insertEvento);
 fraudeRouter.post("/fraudes/eventos/update", authRoutes, updateEvento);
-fraudeRouter.post("/fraudes/eventos/delete", authRoutes, deleteEvento);
+fraudeRouter.post("/fraudes/eventos/delete", authRoutes, removeEvento);
+
+// otros
+fraudeRouter.get("/fraudes/vertodo", authRoutes, verTodo);
 
 export default fraudeRouter;

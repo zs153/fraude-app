@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Sms</title>
+  <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
+  <!-- styles -->
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body class="antialiased">
+  <div class="wrapper">
+    <%- include('../../../partials/header') %>
+    <%- include('../../../partials/navbar', {opcion: 'FRAUDE'}) %>
+    <div class="page-wrapper">
+      <div class="page-body">
+        <div class="container-xl">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <form id="form" action="/admin/fraudes/smss/update" method="POST" onsubmit="return validate();">
+                  <input type="hidden" name="idfrau" id="idfrau" value="<%- datos.fraude.IDFRAU %>">
+                  <input type="hidden" name="idsmss" id="idsmss" value="<%- datos.sms.IDSMSS %>">
+                  <div class="card-header">
+                    <h3 class="card-title">Sms</h3>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-4">
+                        <div class="mb-1">
+                          <div class="input-control">
+                            <label class="form-label required">Móvil</label>
+                            <input type="text" name="movsms" id="movsms" class="form-control"
+                              value="<%- datos.sms.MOVSMS %>" autofocus />
+                            <div class="invalid-feedback"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-12">
+                          <div class="mb-1">
+                            <label class="form-label required">Texto</label>
+                            <textarea type="text" name="texsms" id="texsms" class="form-control" rows="3"
+                              style="resize: vertical"><%- datos.sms.TEXSMS %></textarea>
+                            <div class="invalid-feedback"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer text-end">
+                    <div class="d-flex">
+                      <a href="/admin/fraudes/smss/<%- datos.fraude.IDFRAU %>"
+                        class="btn btn-white">Cancelar</a>
+                      <button type="submit" class="btn btn-success ms-auto">Modificar sms</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%- include('../../../partials/footer') %>
+  </div>
+  <script src="/js/ayuda.js"></script>
+
+  <script>
+    const movsms = document.getElementById('movsms')
+    const texsms = document.getElementById('texsms')
+
+    const validate = () => {
+      const movsmsValue = movsms.value.trim()
+      const texsmsValue = texsms.value.trim()
+
+      if (movsmsValue === '' || movsmsValue.length !== 9) {
+        setError(movsms, 'Móvil requerido')
+        setTimeout(function () {
+          setSuccess(movsms)
+        }, 3000)
+        return false
+      }
+      if (texsmsValue === '' || texsmsValue.length > 140) {
+        setError(texsms, 'Texto requerido (longitud máxima 140 caracteres)')
+        setTimeout(function () {
+          setSuccess(texsms)
+        }, 3000)
+        return false
+      }
+
+      return true
+    }
+    const setSuccess = (element) => {
+      const inputControl = element.parentElement;
+      const errorDisplay = inputControl.querySelector('.invalid-feedback');
+
+      errorDisplay.innerText = '';
+      inputControl.classList.add('is-valid');
+      element.classList.remove('is-invalid');
+    }
+    const setError = (element, message) => {
+      const inputControl = element.parentElement;
+      const errorDisplay = inputControl.querySelector('.invalid-feedback');
+
+      errorDisplay.innerText = message;
+      element.classList.add('is-invalid');
+      inputControl.classList.remove('is-valid');
+    }
+  </script>
+</body>
+
+</html>

@@ -10,7 +10,6 @@ export const mainPage = async (req, res) => {
   const sms = {
     stasms: estadosSms.pendiente,
   }
-  const verTodo = false
 
   try {
     const result = await axios.post('http://localhost:8100/api/smss', {
@@ -19,7 +18,7 @@ export const mainPage = async (req, res) => {
     const datos = {
       smss: JSON.stringify(result.data),
       estadosSms,
-      verTodo,
+      verTodo: false,
     }
 
     res.render('admin/smss', { user, datos })
@@ -165,7 +164,6 @@ export const verTodo = async (req, res) => {
   const sms = {
     stasms: estadosSms.pendiente + estadosSms.enviado,
   }
-  const verTodo = true
 
   try {
     const result = await axios.post('http://localhost:8100/api/smss', {
@@ -175,7 +173,7 @@ export const verTodo = async (req, res) => {
     const datos = {
       smss: JSON.stringify(result.data),
       estadosSms,
-      verTodo,
+      verTodo: true,
     }
 
     res.render('admin/smss', { user, datos })

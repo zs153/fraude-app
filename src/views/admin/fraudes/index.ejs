@@ -6,26 +6,8 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>Fraudes</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
-  <!-- bootstrap -->
-  <link rel="stylesheet" href="/css/bootstrap-icons.css">
-  <!-- custom -->
-  <link rel="stylesheet" href="/css/estilos.min.css">
-  <link rel="stylesheet" href="/css/navbar.css">
-  <style>
-    .sortable th {
-      cursor: pointer;
-    }
-    .sortable .th-sort-asc::after {
-      content: "\25b4";
-    }
-    .sortable .th-sort-desc::after {
-      content: "\25be";
-    }
-    .sortable .th-sort-asc::after,
-    .sortable .th-sort-desc::after {
-      margin-left: 5px;
-    }
-  </style>
+  <!-- styles -->
+  <link rel="stylesheet" href="/css/styles.css">
 </head>
 
 <body class="antialiased">
@@ -43,26 +25,40 @@
                   <div class="col-auto ms-auto">
                     <div class="d-flex">
                       <div class="input-icon me-3">
-                        <span class="input-icon-addon"><i class="bi bi-search"></i></span>
-                        <input type="text" class="form-control d-inline-block me-3" id="buscarFraudeBox" onkeyup="arrayFilter();" placeholder="Buscar..." aria-label="Buscar en fraudes">
+                        <span class="input-icon-addon">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
+                            stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <circle cx="10" cy="10" r="7"></circle>
+                            <line x1="21" y1="21" x2="15" y2="15"></line>
+                          </svg>
+                        </span>
+                        <input type="text" class="form-control d-inline-block me-3" id="buscarFraudeBox"
+                          onkeyup="arrayFilter(this.value);" placeholder="Buscar..." aria-label="Buscar en fraudes">
                       </div>
-                      <a href="#" class="btn btn-warning" onclick="checkItem(this)">
-                        <% if (datos.verTodo ) { %>
-                          <i class='bi bi-eye-slash dropdown-item-icon'></i>Sólo pendientes
+                      <a href="#" class="btn" onclick="checkItem(localStorage.getItem('vertodo'));">
+                        <% if (datos.verTodo) { %>
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon" height="20" width="20" viewBox="0 0 20 20">
+                            <path
+                              d="M10 12.792q1.167 0 1.979-.813.813-.812.813-1.979t-.813-1.979q-.812-.813-1.979-.813t-1.979.813q-.813.812-.813 1.979t.813 1.979q.812.813 1.979.813ZM10 12q-.833 0-1.417-.583Q8 10.833 8 10q0-.833.583-1.417Q9.167 8 10 8q.833 0 1.417.583Q12 9.167 12 10q0 .833-.583 1.417Q10.833 12 10 12Zm0 3.167q-2.625 0-4.802-1.407Q3.021 12.354 1.896 10q1.125-2.354 3.292-3.76Q7.354 4.833 10 4.833q2.625 0 4.802 1.407 2.177 1.406 3.302 3.76-1.125 2.354-3.292 3.76-2.166 1.407-4.812 1.407ZM10 10Zm0 4.5q2.333 0 4.312-1.208 1.98-1.209 3.042-3.292-1.062-2.083-3.042-3.292Q12.333 5.5 10 5.5T5.688 6.708Q3.708 7.917 2.646 10q1.062 2.083 3.042 3.292Q7.667 14.5 10 14.5Z" />
+                          </svg>
+                          Pendientes
                         <% } else { %>
-                          <i class='bi bi-eye dropdown-item-icon'></i>Mostrar todo
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon" height="20" width="20" viewBox="0 0 20 20">
+                            <path
+                              d="m12.729 10.604-.75-.75q.083-.896-.531-1.416-.615-.521-1.302-.438l-.75-.75q.125-.021.281-.031.156-.011.323-.011 1.167 0 1.979.813.813.812.813 1.979 0 .167-.011.333-.01.167-.052.271Zm2.729 2.708-.5-.479q.75-.583 1.365-1.281T17.354 10q-1.021-2.104-3.01-3.302Q12.354 5.5 10 5.5q-.542 0-1.062.062-.521.063-1.021.209l-.563-.563q.667-.229 1.344-.302.677-.073 1.302-.073 2.542 0 4.802 1.365 2.26 1.364 3.302 3.802-.437.958-1.094 1.76-.656.802-1.552 1.552Zm.48 3.605-2.459-2.5q-.604.312-1.51.531-.907.219-1.969.219-2.562 0-4.802-1.365Q2.958 12.438 1.896 10q.5-1.188 1.385-2.188.886-1 1.927-1.687L3.083 4.042l.5-.48 12.834 12.855ZM5.688 6.625q-.834.563-1.709 1.448-.875.885-1.333 1.927 1.021 2.104 3.01 3.302Q7.646 14.5 10 14.5q.854 0 1.708-.156t1.334-.365l-1.563-1.521q-.25.146-.687.24-.438.094-.792.094-1.167 0-1.979-.813-.813-.812-.813-1.979 0-.333.115-.76.115-.428.219-.719ZM11 9Zm-1.208 1.625Z" />
+                          </svg>
+                          Resueltos
                         <% } %>
-                      </a>                      
-                      <a href="/admin/fraudes/add" class="btn btn-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                          <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                          <line x1="12" y1="5" x2="12" y2="19"></line>
-                          <line x1="5" y1="12" x2="19" y2="12"></line>
+                      </a>
+                      <a href="/admin/fraudes/add" class="btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" height="24" width="24" viewBox="0 0 24 24">
+                          <path d="M11.25 18.75v-6h-6v-1.5h6v-6h1.5v6h6v1.5h-6v6Z" />
                         </svg>
                         Nuevo
                       </a>
                     </div>
-                  </div>                    
+                  </div>
                 </div>
                 <div class="card-body">
                   <table class="table table-vcenter table-striped sortable" id="tblFraudes">
@@ -82,7 +78,7 @@
                     <tbody id="table-body">
                     </tbody>
                   </table>
-                  <div id="pagination-wrapper" class="pagination py-1"></div>
+                  <div id="pagination-wrapper" class="py-1"></div>
                 </div>
               </div>                
             </div>
@@ -93,31 +89,34 @@
     <%- include('../../partials/footer') %>
   </div>
 
+  <!-- moddales -->
   <div class="modal modal-blur fade" id="modal-borrar" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
       <div class="modal-content">
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         <div class="modal-status bg-danger"></div>
         <div class="modal-body text-center py-4">
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-danger icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-danger icon-lg" width="24" height="24"
+            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+            stroke-linejoin="round">
             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
             <path d="M12 9v2m0 4v.01"></path>
             <path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75"></path>
           </svg>
           <h3>¿Desea borrar este documento?</h3>
-          <div id="delfor"></div>
+          <div id="msgbor"></div>
           <div class="text-muted">Lo que vas a hacer no puede ser recuperado.</div>
         </div>
         <div class="modal-footer">
           <div class="w-100">
             <div class="row">
               <div class="col">
-                <a href="/admin/fraudes" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
+                <a href="#" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
               </div>
               <div class="col">
                 <form action="/admin/fraudes/delete" method="POST">
-                  <input type="hidden" id="idfrau" name="idfrau" value="">
-                  <button type="submit" class="btn btn-danger w-100" id="btnUpdate">Borrar fraude</button>
+                  <input type="hidden" id="idborr" name="idfrau" value="">
+                  <button type="submit" class="btn btn-danger w-100">Borrar fraude</button>
                 </form>
               </div>
             </div>
@@ -132,24 +131,26 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         <div class="modal-status bg-primary"></div>
         <div class="modal-body text-center py-4">
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-blue icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-blue icon-lg" width="24" height="24"
+            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+            stroke-linejoin="round">
             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
             <path d="M12 9v2m0 4v.01"></path>
             <path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75"></path>
           </svg>
           <h3>Asignar fraude</h3>
-          <div id="texasi"></div>
+          <div id="msgasi"></div>
         </div>
         <div class="modal-footer">
           <div class="w-100">
             <div class="row">
               <div class="col">
-                <a href="/admin/fraudes" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
+                <a href="#" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
               </div>
               <div class="col">
                 <form action="/admin/fraudes/asignar" method="POST">
-                  <input type="hidden" id="asign" name="idfrau" value="">
-                  <button type="submit" class="btn btn-primary w-100">Asignar fraude</button>
+                  <input type="hidden" id="idasig" name="idfrau" value="">
+                  <button type="submit" class="btn btn-success w-100">Asignar fraude</button>
                 </form>
               </div>
             </div>
@@ -164,54 +165,53 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         <div class="modal-status bg-success"></div>
         <form action="/admin/fraudes/resolver" method="POST">
+          <input type="hidden" id="idreso" name="idfrau" value="">
           <div class="modal-body text-center py-4">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-green icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-green icon-lg" width="24" height="24"
+              viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+              stroke-linejoin="round">
               <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
               <circle cx="12" cy="12" r="9"></circle>
               <path d="M9 12l2 2l4 -4"></path>
-            </svg> 
+            </svg>
             <h3>Resolver fraude</h3>
-            <div id="texres"></div>
-              <div id="cierre" >
-                cierre
-              </div>
-              <div class="card-header">
-                SMS
-              </div>
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-4">
-                    <div class="mb-1">
-                      <label class="form-label text-start">Móvil</label>
-                      <input type="text" name="movsms" id="resol" class="form-control" value="" readonly/>
-                    </div>
-                  </div>
-                  <div class="col-8">
-                    <div class="mb-1">
-                      <label class="form-label text-start">Texto sms</label>
-                      <textarea autofocus name="texsms" id="texsms" class="form-control" value="" maxlength="140" rows="3" style="resize: vertical" ></textarea>
-                    </div>
+            <div id="msgres"></div>
+            <div class="card-header">
+              SMS
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-4">
+                  <div class="mb-1">
+                    <label class="form-label text-start">Móvil</label>
+                    <input type="text" name="movsms" id="movres" class="form-control" readonly />
                   </div>
                 </div>
-                <div class="row">
-                  <div class="col-2 text-start">
-                    <label class="form-check form-check-inline">
-                      <input type="checkbox" class="form-check-input" name="chkenv" id="chkenv" />
-                      <span class="form-check-label">Enviar</span>
-                    </label>
+                <div class="col-8">
+                  <div class="mb-1">
+                    <label class="form-label text-start">Texto sms</label>
+                    <textarea name="texsms" id="texres" class="form-control" value="" maxlength="140" rows="3"
+                      style="resize: vertical"></textarea>
                   </div>
                 </div>
               </div>
-
+              <div class="row">
+                <div class="col-2 text-start">
+                  <label class="form-check form-check-inline">
+                    <input type="checkbox" class="form-check-input" name="chkenv" id="chkenv" />
+                    <span class="form-check-label">Enviar</span>
+                  </label>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="modal-footer">
             <div class="w-100">
               <div class="row">
                 <div class="col">
-                  <a href="/admin/fraudes" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
+                  <a href="#" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
                 </div>
                 <div class="col">
-                  <input type="hidden" id="resdoc" name="idfrau" value="">
                   <button type="submit" class="btn btn-success w-100">Resolver fraude</button>
                 </div>
               </div>
@@ -227,24 +227,27 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         <div class="modal-status bg-danger"></div>
         <div class="modal-body text-center py-4">
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-danger icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-danger icon-lg" width="24" height="24"
+            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+            stroke-linejoin="round">
             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
             <path d="M12 9v2m0 4v.01"></path>
             <path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75"></path>
           </svg>
           <h3>Desasignar fraude</h3>
-          <div id="texdes"></div>
+          <div id="msgdes"></div>
         </div>
         <div class="modal-footer">
           <div class="w-100">
             <div class="row">
               <div class="col">
-                <a href="/admin/fraudes" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
+                <a href="" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
               </div>
               <div class="col">
                 <form action="/admin/fraudes/desasignar" method="POST">
-                  <input type="hidden" id="desasig" name="idfrau" value="">
-                  <button type="submit" class="btn btn-danger w-100">Desasignar fraude</button>
+                  <input type="hidden" id="iddesa" name="idfrau" value="">
+                  <input type="hidden" name="verall" id="verall" value="">
+                  <button type="submit" class="btn btn-danger w-100" onclick="checkVer()">Desasignar fraude</button>
                 </form>
               </div>
             </div>
@@ -253,483 +256,130 @@
       </div>
     </div>
   </div>
-  <div class="modal modal-blur fade" id="modal-sms" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+  <div class="modal modal-blur fade" id="modal-revisar" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title mt-0">Envío SMS</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <form action="/admin/fraudes/sms" method="POST" onsubmit="return validateSms();">
-          <input type="hidden" name="idfrau" id="idsmss">
-          <div class="modal-body">
-            <div class="card-body">
-              <div class="row">
-                <div class="col-4">
-                  <div class="mb-1">
-                    <label class="form-label">Movil</label>
-                    <input type="text" name="movsms" id="movfra" class="form-control" value="" readonly/>
-                    <div class="invalid-feedback"></div>
-                  </div>
-                </div>
-                <div class="col-8">
-                  <div class="mb-1">
-                    <label class="form-label">Nombre</label>
-                    <input type="text" name="nomcon" id="nomsms" class="form-control" value="" readonly/>
-                    <div class="invalid-feedback"></div>
-                  </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-status bg-success"></div>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Revisar fraude</h3>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-2">
+                <div class="mb-1">
+                  <label class="form-label">NIF/NIE</label>
+                  <input type="text" name="nifcon" id="nifcon" class="form-control" readonly />
                 </div>
               </div>
-              <div class="row">
-                <div class="col-12">
-                  <div class="mb-1">
-                    <div class="input-control">
-                      <label class="form-label required">Texto</label>
-                      <textarea name="texsms" id="modsms" class="form-control" value="" maxlength="140" rows="5" style="resize: vertical"></textarea>
-                      <div class="invalid-feedback"></div>
-                    </div>
-                  </div>
+              <div class="col-6">
+                <div class="mb-1">
+                  <label class="form-label">Nombre</label>
+                  <input type="text" name="nomcon" id="nomcon" class="form-control" readonly />
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="mb-1">
+                  <label class="form-label">Correo electrónico</label>
+                  <input type="text" name="emacon" id="emacon" class="form-control" readonly />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-9">
+                <div class="mb-1">
+                  <div class="form-label">Tipo</div>
+                  <input type="text" name="tipfra" id="tipfra" class="form-control" readonly />
+                </div>
+              </div>
+              <div class="col-2">
+                <div class="mb-1">
+                  <label class="form-label">Ejercicio</label>
+                  <input type="text" name="ejefra" id="ejefra" class="form-control" readonly />
+                </div>
+              </div>
+              <div class="col-1">
+                <div class="mb-1">
+                  <label class="form-label">Adm</label>
+                  <input type="text" name="funfra" id="funfra" class="form-control" readonly />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-3">
+                <div class="mb-1">
+                  <label class="form-label">Fecha</label>
+                  <input type="text" name="fecfra" id="fecfra" class="form-control" readonly />
+                </div>
+              </div>
+              <div class="col-5">
+                <div class="mb-1">
+                  <div class="form-label">Oficina</div>
+                  <input type="text" name="ofifra" id="ofifra" class="form-control" readonly />
+                </div>
+              </div>
+              <div class="col-2">
+                <div class="mb-3">
+                  <label class="form-label">Teléfono</label>
+                  <input type="text" name="telcon" id="telcon" class="form-control" readonly />
+                </div>
+              </div>
+              <div class="col-2">
+                <div class="mb-1">
+                  <label class="form-label">Movil</label>
+                  <input type="text" name="movcon" id="movcon" class="form-control" readonly />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <small></small>
+                <div class="mb-1">
+                  <label class="form-label">Observaciones</label>
+                  <textarea type="text" name="obsfra" id="obsfra" class="form-control" rows="3" style="resize: vertical"
+                    readonly></textarea>
                 </div>
               </div>
             </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-link" data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
-            <button type="submit" class="btn btn-primary ms-auto">Enviar SMS</button>              
+          <div class="card-footer text-end">
+            <div class="d-flex">
+              <a href="#" class="btn btn-white" data-bs-dismiss="modal">Volver</a>
+            </div>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   </div>
 
   <script src="/js/ayuda.min.js"></script>
+  <script src="/js/fraude.js"></script>
   <script>
-    function checkItem(elem) {
-      <% if (datos.verTodo) { %>
-        window.location.href = 'http://localhost:4200/admin/fraudes'
-      <% } else { %>
-        window.location.href = 'http://localhost:4200/admin/fraudes/vertodo'
-      <% } %>
-    }
-  </script>
-  <script>
-    function focoRes() {
-      const ele = document.getElementById('texsms')
-
-      ele.focus()
-    }
-    function focoSMS() {
-      const ele = document.getElementById('modsms')
-
-      ele.focus()
-    }
-  </script>
-  <script>
-    const getCookie = (key) => {
-      let value = ''
-      document.cookie.split(';').forEach((e)=>{
-        if(e.includes(key)) {
-          value = e.split('=')[1]
-        }
-      })
-      return value
-    }
-    const setCookie = (name,value,days) => {
-      let expires = "";
-      if (days) {
-          let date = new Date();
-          date.setTime(date.getTime() + (days*24*60*60*1000));
-          expires = "; expires=" + date.toUTCString();
-      }
-      // document.cookie = name + "=" + (encodeURIComponent(value) || "")  + expires + "; path=/";
-      document.cookie = name + "=" + (value || "")  + expires + "; path=/";
-    }
-    const deleteCookie = () => {
-      document.cookie = 'filtro=; expires=Thu, 01 Jan 1970 00:00:01 GMT; Path=/;'
-    }
-  </script>
-  <script>
-    const elemBuscar = document.getElementById('buscarFraudeBox');
-    elemBuscar.onchange = (event) => {
-      setCookie('filtro', event.target.value, .5) // medio dia
-    }
-
-    function arrayFilter() {
-      const filtro = elemBuscar.value.toUpperCase()
-      const trimmedData = orgList.filter(itm => Object.keys(itm).some(k => JSON.stringify(itm[k]).includes(filtro)))
-
-      state.querySet= trimmedData
-      state.page = 1
-
-      buildTable()
-    }
-  </script>
-  <script>
-    function sortTableByColumn(table, column, asc = true) {
-      const dirModifier = asc ? 1 : -1;
-      const tBody = table.tBodies[0];
-      const rows = Array.from(tBody.querySelectorAll("tr"));
-
-      const sortedRows = rows.sort((a, b) => {
-        const aColText = a.cells[column].textContent;
-        const bColText = b.cells[column].textContent;
-
-        return aColText > bColText ? (1 * dirModifier) : (-1 * dirModifier);
-      });
-
-      for(let row of sortedRows) {
-        tBody.appendChild( row );
-      }
-
-      table.querySelectorAll("th").forEach(th => th.classList.remove("th-sort-asc", "th-sort-desc"));
-      table.querySelector(`th:nth-child(${ column + 1})`).classList.toggle("th-sort-asc", asc);
-      table.querySelector(`th:nth-child(${ column + 1})`).classList.toggle("th-sort-desc", !asc);
-    }
-
-    document.querySelectorAll(".sortable th").forEach(headerCell => {
-      headerCell.addEventListener("click", () => {
-        const tableElement = headerCell.parentElement.parentElement.parentElement;
-        const headerIndex = Array.prototype.indexOf.call(headerCell.parentElement.children, headerCell);
-        const currentIsAscending = headerCell.classList.contains("th-sort-asc");
-        
-        sortTableByColumn(tableElement, headerIndex, !currentIsAscending);
-      });
-    });
-  </script>  
-  <script>
-    const modsms = document.getElementById('modsms')
-    const movsms = document.getElementById('movfra')
-    const nomsms = document.getElementById('nomsms')
-
-    const validateSms = () => {
-      const modsmsValue = modsms.value.trim()
-      const movsmsValue = movsms.value.trim()
-      const nomsmsValue = nomsms.value.trim()
-
-      if (movsmsValue === '') {
-        setError(movsms, 'Movil requerido')
-        setTimeout(function () {
-          setSuccess(movsms)
-        }, 3000)        
-        return false
-      } else {
-        setSuccess(movsms)
-      }
-      if (nomsmsValue === '') {
-        setError(nomsms, 'Nombre requerido')
-        setTimeout(function () {
-          setSuccess(nomsms)
-        }, 3000)        
-        return false
-      } else {
-        setSuccess(modsms)
-      }
-      if (modsmsValue === '') {
-        setError(modsms, 'Texto requerido')
-        setTimeout(function () {
-          setSuccess(modsms)
-        }, 3000)        
-        return false
-      } else {
-        setSuccess(modsms)
-      }
-
-      return true
-    }
-
-    const setSuccess = (element) => {
-      const inputControl = element.parentElement;
-      const errorDisplay = inputControl.querySelector('.invalid-feedback');
-
-      errorDisplay.innerText = '';
-      inputControl.classList.add('is-valid');
-      element.classList.remove('is-invalid');
-    }
-    const setError = (element, message) => {
-      const inputControl = element.parentElement;
-      const errorDisplay = inputControl.querySelector('.invalid-feedback');
-
-      errorDisplay.innerText = message;
-      element.classList.add('is-invalid');
-      inputControl.classList.remove('is-valid');
+    const checkVer = () => {
+      document.getElementById('verall').value = localStorage.getItem('vertodo')
     }
   </script>
   <script>
     const orgList = <%- datos.fraudes %>
+    const estadosFraude = <%- datos.estadosFraude %>
+
     let state = {
       'querySet': orgList,
       'page': 1,
       'rows': 9,
-      'window': 3 ,
+      'window': 3,
     }
 
+    // events
+    const elemBuscar = document.getElementById('buscarFraudeBox');
+    elemBuscar.onchange = (event) => {
+      setCookie('filtro', event.target.value, .5) // medio dia
+    }
     elemBuscar.value = getCookie('filtro')
-    if (elemBuscar.value !== '') {
-      arrayFilter()
-    } else {
-      buildTable()
-    }
-    
-    function pagination(querySet, page, rows) {
-      const trimStart = (page - 1) * rows
-      const trimEnd = trimStart + rows
-      const trimmedData = querySet.slice(trimStart, trimEnd)
-      const pages = Math.ceil(querySet.length / rows);
 
-      return {
-        'querySet': trimmedData,
-        'pages': pages,
-      }
-    }
-    function pageButtons(pages) {
-      let wrapper = document.getElementById('pagination-wrapper')
-      let maxLeft = (state.page - Math.floor(state.window / 2))
-      let maxRight = (state.page + Math.floor(state.window / 2))
-      
-      wrapper.innerHTML = ``
-      if (maxLeft < 1) {
-        maxLeft = 1
-        maxRight = state.window
-      }
-
-      if (maxRight > pages) {
-        maxLeft = pages - (state.window - 1)
-        
-        if (maxLeft < 1){
-          maxLeft = 1
-        }
-        maxRight = pages
-      }
-
-      for (let page = maxLeft; page <= maxRight; page++) {
-          wrapper.innerHTML += `<button value=${page} class="page-item btn btn-primary">${page}</button>`
-      } 
-      wrapper.innerHTML = `<button value=${1} class="page-item btn btn-primary">&#171; Primero</button>` + wrapper.innerHTML
-      wrapper.innerHTML += `<button value=${pages} class="page-item btn btn-primary">Último &#187;</button>`
-
-      const elem = document.getElementsByClassName('page-item')
-      for (let i = 0; i < elem.length; i++) {
-        elem[i].addEventListener('click', (e) => {
-          state.page = Number(e.target.value)
-
-          buildTable()
-        })
-      }
-    }
-    function buildTable() {
-        const table = document.getElementById('table-body')
-        const data = pagination(state.querySet, state.page, state.rows)
-        const myList = data.querySet
-        table.innerHTML = ''
-
-        myList.map(element => {
-          // col1
-          const row = document.createElement('tr')
-          let cell = document.createElement('td')
-          cell.classList.add("w-4")
-          if (element.STAFRA === <%- datos.estadosFraude.pendiente %>) {
-            cell.innerHTML = `<div class="align-items-center py-1">
-              <span class="avatar avatar-rounded bg-red-lt">
-                <h6>${element.LIQFRA}</h6>
-              </span>
-            </div>`
-          } else if (element.STAFRA === <%- datos.estadosFraude.asignado %>) {
-            cell.innerHTML = `<div class="align-items-center py-1">
-              <span class="avatar avatar-rounded bg-blue-lt">
-                <h6>${element.LIQFRA}</h6>
-              </span>
-            </div>`
-          } else if (element.STAFRA === <%- datos.estadosFraude.resuelto %>) {
-            cell.innerHTML = `<div class="align-items-center py-1">
-              <span class="avatar avatar-rounded bg-green-lt">
-                <h6>${element.LIQFRA}</h6>
-              </span>
-            </div>`
-          } else {
-            cell.innerHTML = `<div class="align-items-center py-1">
-              <span class="avatar avatar-rounded bg-orange-lt">
-                <h6>${element.LIQFRA}</h6>
-              </span>
-            </div>`
-          }
-          row.appendChild(cell)
-
-          // col2
-          cell = document.createElement('td')
-          cell.classList.add("w-8")
-          cell.innerHTML = `<div class="d-flex py-1 align-items-center">
-            <div class="flex-fill">
-              <div class="font-weight-medium">${element.DESOFI}</div>
-            </div>
-          </div>`
-          row.appendChild(cell)
-
-          // col3
-          cell = document.createElement('td')
-          cell.classList.add("w-6")
-          cell.innerHTML = `<div class="d-flex py-1 align-items-center">
-            <div class="flex-fill">
-              <div class="font-weight-medium">${element.STRFEC}</div>
-            </div>
-          </div>`
-          row.appendChild(cell)
-
-          // col4
-          cell = document.createElement('td')
-          cell.classList.add("w-5")
-          cell.innerHTML = `<div class="d-flex py-1 align-items-center">
-            <div class="flex-fill">
-              <div class="font-weight-medium">${element.EJEFRA}</div>
-            </div>
-          </div>`
-          row.appendChild(cell)
-
-          // col5
-          cell = document.createElement('td')
-          cell.classList.add("w-8")
-          cell.innerHTML = `<div class="d-flex py-1 align-items-center">
-            <div class="flex-fill">
-              <div class="font-weight-medium">${element.NIFCON}</div>
-            </div>
-          </div>`
-          row.appendChild(cell)
-
-          // col6
-          cell = document.createElement('td')
-          cell.innerHTML = `<div class="d-flex py-1 align-items-center">
-            <div class="flex-fill">
-              <div class="font-weight-medium">${element.NOMCON}</div>
-            </div>
-          </div>`
-          row.appendChild(cell)
-
-          // col7
-          cell = document.createElement('td')
-          cell.innerHTML = `<div class="d-flex py-1 align-items-center">
-            <div class="flex-fill">
-              <div class="font-weight-medium">${element.DESTIP}</div>
-            </div>
-          </div>`
-          row.appendChild(cell)
-
-          // col8
-          cell = document.createElement('td')
-          if (element.OBSFRA !== null) {
-            cell.innerHTML = `<div class="d-flex py-1 align-items-center">
-              <div class="flex-fill">
-                <div class="font-weight-medium">${element.OBSFRA.length > 30 ? element.OBSFRA.slice(0,30) + '...': element.OBSFRA}</div>
-              </div>
-            </div>`
-          }                                
-          row.appendChild(cell)
-
-          // col9
-          cell = document.createElement('td')
-          cell.classList.add("w-5")
-          if (element.STAFRA === <%- datos.estadosFraude.pendiente %>) {
-            cell.innerHTML = `<ul class="dots-menu">
-              <li class="nav-item drop-right">
-                <a href="#" class="nav-link">
-                  <i class="bi bi-three-dots-vertical"></i>
-                </a>
-                <ul>
-                  <li class="nav-item">
-                    <a href="/admin/fraudes/edit/${element.IDFRAU}" class="nav-link">
-                      <i class="bi bi-pencil dropdown-item-icon"></i>Editar fraude
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="#" class="nav-link" onclick="{document.getElementById('idfrau').value ='${element.IDFRAU}', document.getElementById('delfor').innerHTML ='<p>${element.REFFRA}</p><p>${element.NIFCON}</p><p>${element.NOMCON}</p>'}" data-bs-toggle="modal" data-bs-target="#modal-borrar">
-                      <i class="bi bi-trash dropdown-item-icon"></i>Borrar fraude
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="#" class="nav-link" onclick="{document.getElementById('asign').value ='${element.IDFRAU}', document.getElementById('texasi').innerHTML ='<p>${element.REFFRA}</p><p>${element.NIFCON}</p><p>${element.NOMCON}</p>'}" data-bs-toggle="modal" data-bs-target="#modal-asignar">
-                      <i class="bi bi-heart dropdown-item-icon"></i>Asignar fraude
-                    </a>
-                  </li>
-                </ul>
-              </li>                              
-            </ul>`
-          } else if (element.STAFRA === <%- datos.estadosFraude.resuelto %> || element.STAFRA === <%- datos.estadosFraude.remitido %>) {
-            cell.innerHTML = `<ul class="dots-menu">
-              <li class="nav-item drop-right">
-                <a href="#" class="nav-link">
-                  <i class="bi bi-three-dots-vertical"></i>
-                </a>
-                <ul>
-                  <li class="nav-item">
-                    <a href="/admin/fraudes/edit/${element.IDFRAU}" class="nav-link">
-                      <i class="bi bi-pencil dropdown-item-icon"></i>Editar fraude
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="#" class="nav-link" onclick="{document.getElementById('desasig').value ='${element.IDFRAU}', document.getElementById('texdes').innerHTML ='<p>${element.REFFRA}</p><p>${element.NIFCON}</p><p>${element.NOMCON}</p>'}" data-bs-toggle="modal" data-bs-target="#modal-desasignar">
-                      <i class="bi bi-x-square dropdown-item-icon"></i>Desasignar fraude
-                    </a>
-                  </li>
-                  <li class="nav-item list-divider"></li>
-                  <li class="nav-item ">
-                    <a href="#" class="nav-link" onclick="{document.getElementById('movfra').value ='${element.MOVCON}', document.getElementById('nomsms').value ='${element.NOMCON}', document.getElementById('idsmss').value ='${element.IDFRAU}', setTimeout(focoSMS,500)}" data-bs-toggle="modal" data-bs-target="#modal-sms">
-                      <i class="bi bi-chat dropdown-item-icon"></i>Enviar SMS
-                    </a>
-                  </li>
-                </ul>
-              </li>                              
-            </ul>`
-          } else {
-            if(element.LIQFRA === '<%- user.userID %>' || <%- user.rol %> === <%- datos.tiposRol.admin %>) {
-              cell.innerHTML = `<ul class="dots-menu">
-              <li class="nav-item drop-right">
-                <a href="#" class="nav-link">
-                  <i class="bi bi-three-dots-vertical"></i>
-                </a>
-                <ul>
-                  <li class="nav-item">
-                    <a href="/admin/fraudes/edit/${element.IDFRAU}" class="nav-link">
-                      <i class="bi bi-pencil dropdown-item-icon"></i>Editar fraude
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="/admin/fraudes/resolver/${element.IDFRAU}" class="nav-link">
-                      <i class="bi bi-check2 dropdown-item-icon"></i>Resolver fraude
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="#" class="nav-link" onclick="{document.getElementById('desasig').value ='${element.IDFRAU}', document.getElementById('texdes').innerHTML ='<p>${element.REFFRA}</p><p>${element.NIFCON}</p><p>${element.NOMCON}</p>'}" data-bs-toggle="modal" data-bs-target="#modal-desasignar">
-                      <i class="bi bi-x-square dropdown-item-icon"></i>Desasignar fraude
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="/admin/fraudes/ejercicio/${element.IDFRAU}" class="nav-link">
-                      <i class="bi bi-calendar dropdown-item-icon"></i>Nuevo ejercicio
-                    </a>
-                  </li>
-                  <li class="nav-item ">
-                    <a href="/admin/fraudes/hitoseventos/${element.IDFRAU}" class="nav-link">
-                      <i class="bi bi-flag dropdown-item-icon"></i>Hitos / Eventos
-                    </a>
-                  </li>
-                  <li class="nav-item list-divider"></li>
-                  <li class="nav-item ">
-                    <a href="#" class="nav-link" onclick="{document.getElementById('movfra').value ='${element.MOVCON}', document.getElementById('nomsms').value ='${element.NOMCON}', document.getElementById('idsmss').value ='${element.IDFRAU}', setTimeout(focoSMS,500)}" data-bs-toggle="modal" data-bs-target="#modal-sms">
-                      <i class="bi bi-chat dropdown-item-icon"></i>Enviar SMS
-                    </a>
-                  </li>
-                </ul>
-              </li>
-            </ul>`
-            } else {
-              cell.innerHTML = ``
-            }
-          }
-          row.appendChild(cell)
-
-          table.appendChild(row)
-        })
-
-        pageButtons(data.pages)
-    }
+    // inicializa tabla
+    arrayFilter(elemBuscar.value)
   </script>
 </body>
 </html>
