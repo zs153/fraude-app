@@ -3,8 +3,6 @@ import {
   carga,
   cargas,
   crear,
-  modificar,
-  borrar,
 } from "../controllers/carga.controller";
 
 const apiCargaRouter = express.Router();
@@ -13,7 +11,5 @@ const apiCargaRouter = express.Router();
 apiCargaRouter.post("/carga", carga);
 apiCargaRouter.post("/cargas", cargas);
 apiCargaRouter.post("/cargas/insert", crear);
-apiCargaRouter.post("/cargas/update", modificar);
-apiCargaRouter.post("/cargas/delete", borrar);
 
 export default apiCargaRouter;

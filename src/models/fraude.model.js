@@ -2,11 +2,13 @@ import oracledb from 'oracledb'
 import { simpleExecute } from '../services/database.js'
 
 const baseQuery = `SELECT
+  oo.desofi,
   tf.destip,
   ff.*,
-  TO_CHAR(ff.fecfra, 'YYYY-MM-DD') "STRFEC"
+  TO_CHAR(ff.fecfra, 'DD/MM/YYYY') "STRFEC"
 FROM fraudes ff
 INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra
+INNER JOIN oficinas oo ON oo.idofic = ff.ofifra
 `
 const largeQuery = `SELECT * FROM (  
   SELECT 
@@ -343,13 +345,35 @@ export const find = async (context) => {
   let query = baseQuery
   let binds = {}
 
-  if (context.idfrau) {
-    binds.idfrau = context.idfrau
+  if (context.IDFRAU) {
+    binds.idfrau = context.IDFRAU
     query += `WHERE ff.idfrau = :idfrau`
-  }
-  if (context.reffra) {
-    binds.reffra = context.reffra
+  } else if (context.REFFRA) {
+    binds.reffra = context.REFFRA
     query += `WHERE ff.reffra = :reffra`
+  } else if (context.LIQFRA) {
+    binds.liqfra = context.LIQFRA
+    if (context.TIPVIS === 1) {
+      // mostrar asignados al liquidador y todos los pendientes
+      query += `WHERE ff.liqfra = :liqfra
+          AND BITAND(ff.stafra,1) > 0
+        UNION ALL
+        SELECT
+          oo.desofi,
+          tf.destip,
+          ff.*,
+          TO_CHAR(ff.fecfra, 'DD/MM/YYYY') STRFEC
+        FROM fraudes ff
+        INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra
+        INNER JOIN oficinas oo ON oo.idofic = ff.ofifra
+        WHERE ff.stafra = 0
+      `
+    } else {
+      // mostrar los resueltos por el liquidador
+      query += `WHERE ff.liqfra = :liqfra
+        AND BITAND(ff.stafra,2) > 0
+      `
+    }
   }
 
   const result = await simpleExecute(query, binds)
@@ -364,22 +388,22 @@ export const findAll = async (context) => {
   } else {
     if (context.stafra === 1) {
       query += `AND BITAND(ff.stafra,1) > 0
-        UNION ALL
-        SELECT
-          oo.desofi,
-          tt.destip,
-          ff.*,
-          0 PROLIQ,
-          0 LIQUID,
-          0 PROSAN,
-          0 SANCIO,
-          0 NUMHIT,
-          0 NUMEVE,
-          TO_CHAR(ff.fecfra, 'DD/MM/YYYY') "STRFEC"
-        FROM fraudes ff
-        INNER JOIN tiposfraude tt ON tt.idtipo = ff.tipfra
-        INNER JOIN oficinas oo ON oo.idofic = ff.ofifra
-        WHERE ff.stafra = 0)`
+      UNION ALL
+      SELECT
+        oo.desofi,
+        tt.destip,
+        ff.*,
+        0 PROLIQ,
+        0 LIQUID,
+        0 PROSAN,
+        0 SANCIO,
+        0 NUMHIT,
+        0 NUMEVE,
+        TO_CHAR(ff.fecfra, 'DD/MM/YYYY') "STRFEC"
+      FROM fraudes ff
+      INNER JOIN tiposfraude tt ON tt.idtipo = ff.tipfra
+      INNER JOIN oficinas oo ON oo.idofic = ff.ofifra
+      WHERE ff.stafra = 0)`
     } else {
       query += `AND BITAND(ff.stafra,2) > 0)`
     }

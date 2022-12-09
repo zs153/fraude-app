@@ -2,40 +2,14 @@ import * as DAL from "../models/carga.model";
 
 const insertFromRec = (req) => {
   const carga = {
-    descar: req.body.carga.descar,
-    ficcar: req.body.carga.ficcar,
-    refcar: req.body.carga.refcar,
-    stacar: req.body.carga.stacar,
+    descar: req.body.carga.DESCAR,
+    ficcar: req.body.carga.FICCAR,
+    refcar: req.body.carga.REFCAR,
+    stacar: req.body.carga.STACAR,
   };
   const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
-  };
-
-  return Object.assign(carga, movimiento);
-};
-const updateFromRec = (req) => {
-  const carga = {
-    idcarg: req.body.carga.idcarg,
-    descar: req.body.carga.descar,
-    ficcar: req.body.carga.ficcar,
-    refcar: req.body.carga.refcar,    
-    stacar: req.body.carga.stacar,
-  };
-  const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
-  };
-
-  return Object.assign(carga, movimiento);
-};
-const deleteFromRec = (req) => {
-  const carga = {
-    idcarg: req.body.carga.idcarg,
-  };
-  const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
   };
 
   return Object.assign(carga, movimiento);
@@ -58,7 +32,7 @@ export const carga = async (req, res) => {
 };
 export const cargas = async (req, res) => {
   try {
-    const result = await DAL.findAll();
+    const result = await DAL.find({});
 
     if (result !== null) {
       res.status(200).json(result);
@@ -72,32 +46,6 @@ export const cargas = async (req, res) => {
 export const crear = async (req, res) => {
   try {
     const result = await DAL.insert(insertFromRec(req));
-
-    if (result !== null) {
-      res.status(200).json(result);
-    } else {
-      res.status(404).end();
-    }
-  } catch (err) {
-    res.status(500).end();
-  }
-};
-export const modificar = async (req, res) => {
-  try {
-    const result = await DAL.update(updateFromRec(req));
-
-    if (result !== null) {
-      res.status(200).json(result);
-    } else {
-      res.status(404).end();
-    }
-  } catch (err) {
-    res.status(500).end();
-  }
-};
-export const borrar = async (req, res) => {
-  try {
-    const result = await DAL.remove(deleteFromRec(req));
 
     if (result !== null) {
       res.status(200).json(result);

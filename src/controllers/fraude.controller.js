@@ -238,6 +238,46 @@ const deleteEventoFromRec = (req) => {
 
   return Object.assign(fraude, evento, movimiento)
 }
+const insertSmsFromRec = (req) => {
+  const fraude = {
+    iddocu: req.body.fraude.IDFRAU,
+  }
+  const sms = {
+    texsms: req.body.sms.TEXSMS,
+    movsms: req.body.sms.MOVSMS,
+    stasms: req.body.sms.STASMS,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+
+  return Object.assign(fraude, sms, movimiento)
+}
+const updateSmsFromRec = (req) => {
+  const sms = {
+    idsmss: req.body.sms.IDSMSS,
+    texsms: req.body.sms.TEXSMS,
+    movsms: req.body.sms.MOVSMS,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+
+  return Object.assign(sms, movimiento)
+}
+const deleteSmsFromRec = (req) => {
+  const sms = {
+    idsmss: req.body.sms.IDSMSS,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+
+  return Object.assign(sms, movimiento)
+}
 
 // fraude
 export const fraude = async (req, res) => {
@@ -259,7 +299,7 @@ export const fraudes = async (req, res) => {
   const context = req.body.fraude
 
   try {
-    const result = await DAL.findAll(context)
+    const result = await DAL.find(context)
     if (result !== null) {
       res.status(200).json(result)
     } else {
@@ -308,7 +348,7 @@ export const borrar = async (req, res) => {
     res.status(500).end()
   }
 }
-export const cambioEstado = async (req, res) => {
+export const asignar = async (req, res) => {
   try {
     const result = await DAL.change(cambioFromRec(req))
 
@@ -321,7 +361,7 @@ export const cambioEstado = async (req, res) => {
     res.status(500).end()
   }
 }
-export const unasign = async (req, res) => {
+export const desasignar = async (req, res) => {
   try {
     const result = await DAL.unasing(unasignFromRec(req))
 
@@ -347,6 +387,8 @@ export const cierre = async (req, res) => {
     res.status(500).end()
   }
 }
+
+// estadistica
 export const estadisticasHitos = async (req, res) => {
   try {
     const result = await DAL.statHitos(estadisticaFromRec(req))
@@ -362,7 +404,7 @@ export const estadisticasHitos = async (req, res) => {
 }
 export const estadisticasOficinas = async (req, res) => {
   try {
-   const result = await DAL.statOficinas(cargaFromRec(req))
+    const result = await DAL.statOficinas(cargaFromRec(req))
 
     if (result !== null) {
       res.status(200).json(result)
@@ -399,21 +441,8 @@ export const estadisticasActuacion = async (req, res) => {
     res.status(500).end()
   }
 }
-export const crearSms = async (req, res) => {
-  try {
-    const result = await DAL.insertSms(smsFromRec(req))
 
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
-  } catch (err) {
-    res.status(403).end()
-  }
-}
-
-// hitos
+// hito
 export const hitosFraude = async (req, res) => {
   const context = req.body.fraude
 
@@ -482,7 +511,7 @@ export const borrarHito = async (req, res) => {
   }
 }
 
-// eventos
+// evento
 export const eventosFraude = async (req, res) => {
   const context = req.body.fraude
 
@@ -514,6 +543,77 @@ export const crearEvento = async (req, res) => {
 export const borrarEvento = async (req, res) => {
   try {
     const result = await DAL.removeEvento(deleteEventoFromRec(req))
+
+    if (result !== null) {
+      res.status(200).json(result)
+    } else {
+      res.status(404).end()
+    }
+  } catch (err) {
+    res.status(500).end()
+  }
+}
+
+// sms
+export const sms = async (req, res) => {
+  const context = req.body.sms
+
+  try {
+    const result = await DAL.findSms(context)
+
+    if (result.length === 1) {
+      return res.status(200).json(result[0])
+    } else {
+      res.status(404).end()
+    }
+  } catch (err) {
+    res.status(500).end()
+  }
+}
+export const smss = async (req, res) => {
+  const context = req.body.fraude
+
+  try {
+    const result = await DAL.findSms(context)
+
+    if (result !== null) {
+      res.status(200).json(result)
+    } else {
+      res.status(404).end()
+    }
+  } catch (err) {
+    res.status(500).end()
+  }
+}
+export const crearSms = async (req, res) => {
+  try {
+    const result = await DAL.insertSms(insertSmsFromRec(req))
+
+    if (result !== null) {
+      res.status(200).json(result)
+    } else {
+      res.status(404).end()
+    }
+  } catch (err) {
+    res.status(500).end()
+  }
+}
+export const modificarSms = async (req, res) => {
+  try {
+    const result = await DAL.updateSms(updateSmsFromRec(req))
+
+    if (result !== null) {
+      res.status(200).json(result)
+    } else {
+      res.status(404).end()
+    }
+  } catch (err) {
+    res.status(500).end()
+  }
+}
+export const borrarSms = async (req, res) => {
+  try {
+    const result = await DAL.removeSms(deleteSmsFromRec(req))
 
     if (result !== null) {
       res.status(200).json(result)

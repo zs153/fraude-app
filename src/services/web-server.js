@@ -2,9 +2,9 @@ import http from 'http'
 import logger from 'morgan'
 import express from 'express'
 import cookieParser from 'cookie-parser'
-import path from 'path'
 import cors from 'cors'
-import { port } from '../config/settings'
+import { puerto } from '../config/settings'
+// routes
 import apiOficinaRouter from '../routes/oficina.router'
 import apiSmsRouter from '../routes/sms.router'
 import apiGenteRouter from '../routes/gente.router'
@@ -31,7 +31,6 @@ function initialize() {
     app.use(express.urlencoded({ extended: true }))
     app.use(cookieParser())
     app.use(cors())
-    // app.use(express.static(path.join(__dirname, '/public')))
 
     // routes
     app.use('/api', apiOficinaRouter)
@@ -49,9 +48,9 @@ function initialize() {
 
     // server
     httpServer
-      .listen(port)
+      .listen(puerto)
       .on('listening', () => {
-        console.log(`Web server listening on localhost:${port}`)
+        console.log(`Web server listening on localhost:${puerto}`)
 
         resolve()
       })
@@ -60,7 +59,6 @@ function initialize() {
       })
   })
 }
-
 module.exports.initialize = initialize
 
 function close() {
@@ -75,12 +73,10 @@ function close() {
     })
   })
 }
-
 module.exports.close = close
 
 const iso8601RegExp = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/
-
-function reviveJson(key, value) {
+const reviveJson = (key, value) => {
   // revive ISO 8601 date strings to instances of Date
   if (typeof value === 'string' && iso8601RegExp.test(value)) {
     return new Date(value)

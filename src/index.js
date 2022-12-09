@@ -12,7 +12,9 @@ async function startup() {
   try {
     console.log('Initializing database module')
 
-    await database.initialize()
+    await database.initialize().then(
+      console.log('Database inicializada')
+    )
   } catch (err) {
     console.error(err)
 
@@ -22,7 +24,9 @@ async function startup() {
   try {
     console.log('Initializing web server module')
 
-    await webServer.initialize()
+    await webServer.initialize().then(
+      console.log('Servidor web inicializado')
+    )
   } catch (err) {
     console.error(err)
 

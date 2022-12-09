@@ -1,11 +1,12 @@
 import oracledb from "oracledb";
 import { simpleExecute } from "../services/database.js";
 
-const baseQuery = `SELECT cc.*,
-  TO_CHAR(cc.feccar, 'DD/MM/YYYY') "STRFEC"
-FROM cargas cc
+const baseQuery = `SELECT 
+  *,
+  TO_CHAR(feccar, 'DD/MM/YYYY') "STRFEC"
+FROM cargas
 `;
-const insertSql = `BEGIN FRAUDE_PKG.INSERTCARGA(
+const insertSql = `BEGIN FRAUDES_PKG.INSERTCARGA(
   :descar,
   :ficcar,
   :refcar,
@@ -15,39 +16,17 @@ const insertSql = `BEGIN FRAUDE_PKG.INSERTCARGA(
   :idcarg
 ); END;
 `;
-const updateSql = `BEGIN FRAUDE_PKG.UPDATECARGA(
-  :idcarg,
-  :descar,
-  :ficcar,
-  :refcar,
-  :stacar,
-  :usumov,
-  :tipmov
-); END;
-`;
-const removeSql = `BEGIN FRAUDE_PKG.DELETECARGA(
-  :idcarg,
-  :usumov,
-  :tipmov 
-); END;
-`;
 
 export const find = async (context) => {
   let query = baseQuery;
   let binds = {};
 
-  if (context.idcarg) {
-    binds.idcarg = context.idcarg;
-    query += `WHERE idcarg = :idcarg`;
+  if (context.IDCARG) {
+    binds.idcarg = context.IDCARG
+    query += `WHERE idcarg = :idcarg`
   }
 
   const result = await simpleExecute(query, binds);
-  return result.rows;
-};
-export const findAll = async () => {
-  let query = baseQuery;
-
-  const result = await simpleExecute(query);
   return result.rows;
 };
 export const insert = async (bind) => {
@@ -65,30 +44,4 @@ export const insert = async (bind) => {
   }
 
   return bind;
-};
-export const update = async (bind) => {
-  let result;
-
-  try {
-    await simpleExecute(updateSql, bind);
-
-    result = bind;
-  } catch (error) {
-    result = null;
-  }
-
-  return result;
-};
-export const remove = async (bind) => {
-  let result;
-
-  try {
-    await simpleExecute(removeSql, bind);
-
-    result = bind;
-  } catch (error) {
-    result = null;
-  }
-
-  return result;
 };
