@@ -1713,8 +1713,8 @@ ul ol {
   text-decoration: none;
 }
 .icon-inline {
-  width: 1em;
-  height: 1em;
+  width: 1.25em;
+  height: 1.25em;
   font-size: 1.1428571em;
   vertical-align: -0.2em;
 }
@@ -4968,10 +4968,12 @@ Card table
 }
 
 /* dots-menu */
-tbody i {
+tbody i,
+tbody svg {
   display: none;
 }
-tbody tr:hover i {
+tbody tr:hover i,
+tbody tr:hover svg {
   display: block;
 }
 
