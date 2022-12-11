@@ -10,71 +10,38 @@ FROM fraudes ff
 INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra
 INNER JOIN oficinas oo ON oo.idofic = ff.ofifra
 `
-const largeQuery = `SELECT * FROM (  
+const largeQuery = `SELECT 
+  oo.desofi, tt.destip, 
+  ff.reffra, ff.liqfra, ff.ejefra, ff.nifcon, ff.nomcon, ff.movcon, ff.obsfra, ff.stafra,
+  p1.*,
+  TO_CHAR(ff.fecfra, 'DD/MM/YYYY') "STRFEC"
+FROM (
+  SELECT
+    ff.idfrau,
+    SUM(CASE WHEN hh.tiphit = 1 THEN 1 ELSE 0 END) AS "PROLIQ",
+    SUM(CASE WHEN hh.tiphit = 2 THEN 1 ELSE 0 END) AS "LIQUID",
+    SUM(CASE WHEN hh.tiphit = 3 THEN 1 ELSE 0 END) AS "PROSAN",
+    SUM(CASE WHEN hh.tiphit = 4 THEN 1 ELSE 0 END) AS "SANCIO",
+    COUNT(hf.idhito) AS "NUMHIT",
+    COUNT(ef.ideven) AS "NUMEVE"
+  FROM fraudes ff
+  LEFT JOIN hitosfraude hf ON hf.idfrau = ff.idfrau
+  LEFT JOIN hitos hh ON hh.idhito = hf.idhito
+  LEFT JOIN eventosfraude ef ON ef.idfrau = ff.idfrau
+  LEFT JOIN eventos ee ON ee.ideven = ef.ideven
+  WHERE liqfra = :liqfra
+      AND ff.stafra = 1
+  GROUP BY ff.idfrau
+  UNION
   SELECT 
-    oo.desofi,
-    tt.destip,
-    ff.*,
-    p1.PROLIQ,
-    p1.LIQUID,
-    p1.PROSAN,
-    p1.SANCIO,
-    p1.NUMHIT,
-    p1.NUMEVE,
-    TO_CHAR(ff.fecfra, 'DD/MM/YYYY') "STRFEC"
-  FROM (
-    SELECT 
-      ff.idfrau,
-      SUM(CASE WHEN hh.tiphit = 1 THEN 1 ELSE 0 END) AS "PROLIQ",
-      SUM(CASE WHEN hh.tiphit = 2 THEN 1 ELSE 0 END) AS "LIQUID",
-      SUM(CASE WHEN hh.tiphit = 3 THEN 1 ELSE 0 END) AS "PROSAN",
-      SUM(CASE WHEN hh.tiphit = 4 THEN 1 ELSE 0 END) AS "SANCIO",
-      COUNT(hf.idhito) AS "NUMHIT",
-      COUNT(ef.ideven) AS "NUMEVE"
-    FROM fraudes ff
-    LEFT JOIN hitosfraude hf ON hf.idfrau = ff.idfrau
-    LEFT JOIN hitos hh ON hh.idhito = hf.idhito
-    LEFT JOIN eventosfraude ef ON ef.idfrau = ff.idfrau
-    LEFT JOIN eventos ee ON ee.ideven = ef.ideven
-    WHERE ff.liqfra = :liqfra
-    GROUP BY ff.idfrau
-  ) p1
-  INNER JOIN fraudes ff ON ff.idfrau = p1.idfrau
-  INNER JOIN tiposfraude tt ON tt.idtipo = ff.tipfra
-  INNER JOIN oficinas oo ON oo.idofic = ff.ofifra
-`
-const allQuery = `SELECT 
-    oo.desofi,
-    tt.destip,
-    ff.*,
-    p1.PROLIQ,
-    p1.LIQUID,
-    p1.PROSAN,
-    p1.SANCIO,
-    p1.NUMHIT,
-    p1.NUMEVE,
-    TO_CHAR(ff.fecfra, 'DD/MM/YYYY') "STRFEC"
-  FROM (
-    SELECT 
-      ff.idfrau,
-      SUM(CASE WHEN hh.tiphit = 1 THEN 1 ELSE 0 END) AS "PROLIQ",
-      SUM(CASE WHEN hh.tiphit = 2 THEN 1 ELSE 0 END) AS "LIQUID",
-      SUM(CASE WHEN hh.tiphit = 3 THEN 1 ELSE 0 END) AS "PROSAN",
-      SUM(CASE WHEN hh.tiphit = 4 THEN 1 ELSE 0 END) AS "SANCIO",
-      COUNT(hf.idhito) AS "NUMHIT",
-      COUNT(ef.ideven) AS "NUMEVE"
-    FROM fraudes ff
-    LEFT JOIN hitosfraude hf ON hf.idfrau = ff.idfrau
-    LEFT JOIN hitos hh ON hh.idhito = hf.idhito
-    LEFT JOIN eventosfraude ef ON ef.idfrau = ff.idfrau
-    LEFT JOIN eventos ee ON ee.ideven = ef.ideven
-    GROUP BY ff.idfrau
-  ) p1
-  INNER JOIN fraudes ff ON ff.idfrau = p1.idfrau
-  INNER JOIN tiposfraude tt ON tt.idtipo = ff.tipfra
-  INNER JOIN oficinas oo ON oo.idofic = ff.ofifra
-  AND BITAND(ff.stafra,2) > 0
-
+    ff.idfrau, 0 "PROLIQ", 0 "LIQUID", 0 "PROSAN", 0 "SANCIO", 0 "NUMHIT", 0 "NUMEVE"
+  FROM fraudes ff
+  WHERE ff.stafra = 0
+) p1
+INNER JOIN fraudes ff ON ff.idfrau = p1.idfrau
+INNER JOIN tiposfraude tt ON tt.idtipo = ff.tipfra
+INNER JOIN oficinas oo ON oo.idofic = ff.ofifra
+ORDER BY ff.stafra DESC
 `
 const hitosFraudeQuery = `SELECT 
   th.destip,
@@ -354,65 +321,17 @@ export const find = async (context) => {
   } else if (context.LIQFRA) {
     binds.liqfra = context.LIQFRA
     if (context.TIPVIS === 1) {
-      // mostrar asignados al liquidador y todos los pendientes
-      query += `WHERE ff.liqfra = :liqfra
-          AND BITAND(ff.stafra,1) > 0
-        UNION ALL
-        SELECT
-          oo.desofi,
-          tf.destip,
-          ff.*,
-          TO_CHAR(ff.fecfra, 'DD/MM/YYYY') STRFEC
-        FROM fraudes ff
-        INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra
-        INNER JOIN oficinas oo ON oo.idofic = ff.ofifra
-        WHERE ff.stafra = 0
-      `
+      // mostrar asignados al liquidador y todos los no asignados
+      query = largeQuery
     } else {
       // mostrar los resueltos por el liquidador
       query += `WHERE ff.liqfra = :liqfra
-        AND BITAND(ff.stafra,2) > 0
+        AND stafra = 2
       `
     }
   }
 
   const result = await simpleExecute(query, binds)
-  return result.rows
-}
-export const findAll = async (context) => {
-  let query = largeQuery
-  let binds = {}
-
-  if (!context.liqfra) {
-    query = allQuery
-  } else {
-    if (context.stafra === 1) {
-      query += `AND BITAND(ff.stafra,1) > 0
-      UNION ALL
-      SELECT
-        oo.desofi,
-        tt.destip,
-        ff.*,
-        0 PROLIQ,
-        0 LIQUID,
-        0 PROSAN,
-        0 SANCIO,
-        0 NUMHIT,
-        0 NUMEVE,
-        TO_CHAR(ff.fecfra, 'DD/MM/YYYY') "STRFEC"
-      FROM fraudes ff
-      INNER JOIN tiposfraude tt ON tt.idtipo = ff.tipfra
-      INNER JOIN oficinas oo ON oo.idofic = ff.ofifra
-      WHERE ff.stafra = 0)`
-    } else {
-      query += `AND BITAND(ff.stafra,2) > 0)`
-    }
-    binds.liqfra = context.liqfra
-  }
-
-
-  const result = await simpleExecute(query, binds)
-
   return result.rows
 }
 export const findHitosFraude = async (context) => {

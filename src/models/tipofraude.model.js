@@ -35,15 +35,8 @@ export const find = async (context) => {
     binds.idtipo = context.idtipo;
     query += `WHERE idtipo = :idtipo`;
   }
-
   const result = await simpleExecute(query, binds);
-  return result.rows;
-};
-export const findAll = async (context) => {
-  let query = baseQuery;
-  let binds = {};
 
-  const result = await simpleExecute(query, binds);
   return result.rows;
 };
 

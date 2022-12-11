@@ -1,44 +1,47 @@
-import * as DAL from '../models/oficina.model'
+import * as DAL from '../models/relacion.model'
 
 const insertFromRec = (req) => {
-  const oficina = {
-    desofi: req.body.oficina.DESOFI,
-    codofi: req.body.oficina.CODOFI,
+  const fraude = {
+    idfrau: req.body.fraude.IDFRAU,
+  }
+  const relacion = {
+    desofi: req.body.relacion.DESOFI,
+    codofi: req.body.relacion.CODOFI,
   }
   const movimiento = {
     usumov: req.body.movimiento.USUMOV,
     tipmov: req.body.movimiento.TIPMOV,
   }
 
-  return Object.assign(oficina, movimiento)
+  return Object.assign(fraude, relacion, movimiento)
 }
 const updateFromRec = (req) => {
-  const oficina = {
-    idofic: req.body.oficina.IDOFIC,
-    desofi: req.body.oficina.DESOFI,
-    codofi: req.body.oficina.CODOFI,
+  const relacion = {
+    idofic: req.body.relacion.IDOFIC,
+    desofi: req.body.relacion.DESOFI,
+    codofi: req.body.relacion.CODOFI,
   }
   const movimiento = {
     usumov: req.body.movimiento.USUMOV,
     tipmov: req.body.movimiento.TIPMOV,
   }
 
-  return Object.assign(oficina, movimiento)
+  return Object.assign(relacion, movimiento)
 }
 const deleteFromRec = (req) => {
-  const oficina = {
-    idofic: req.body.oficina.IDOFIC,
+  const relacion = {
+    idofic: req.body.relacion.IDOFIC,
   }
   const movimiento = {
     usumov: req.body.movimiento.USUMOV,
     tipmov: req.body.movimiento.TIPMOV,
   }
 
-  return Object.assign(oficina, movimiento)
+  return Object.assign(relacion, movimiento)
 }
 
-export const oficina = async (req, res) => {
-  const context = req.body.oficina
+export const relacion = async (req, res) => {
+  const context = req.body.relacion
 
   try {
     const result = await DAL.find(context)
@@ -52,7 +55,7 @@ export const oficina = async (req, res) => {
     res.status(500).end()
   }
 }
-export const oficinas = async (req, res) => {
+export const relacions = async (req, res) => {
   const context = req.body
 
   try {

@@ -2,238 +2,222 @@ import * as DAL from '../models/fraude.model'
 
 const insertFromRec = (req) => {
   const fraude = {
-    fecfra: req.body.fraude.fecfra,
-    nifcon: req.body.fraude.nifcon,
-    nomcon: req.body.fraude.nomcon,
-    emacon: req.body.fraude.emacon,
-    telcon: req.body.fraude.telcon,
-    movcon: req.body.fraude.movcon,
-    reffra: req.body.fraude.reffra,
-    tipfra: req.body.fraude.tipfra,
-    ejefra: req.body.fraude.ejefra,
-    ofifra: req.body.fraude.ofifra,
-    obsfra: req.body.fraude.obsfra,
-    funfra: req.body.fraude.funfra,
-    liqfra: req.body.fraude.liqfra,
-    stafra: req.body.fraude.stafra,
+    fecfra: req.body.fraude.FECFRA,
+    nifcon: req.body.fraude.NIFCON,
+    nomcon: req.body.fraude.NOMCON,
+    emacon: req.body.fraude.EMACON,
+    telcon: req.body.fraude.TELCON,
+    movcon: req.body.fraude.MOVCON,
+    reffra: req.body.fraude.REFFRA,
+    tipfra: req.body.fraude.TIPFRA,
+    ejefra: req.body.fraude.EJEFRA,
+    ofifra: req.body.fraude.OFIFRA,
+    obsfra: req.body.fraude.OBSFRA,
+    funfra: req.body.fraude.FUNFRA,
+    liqfra: req.body.fraude.LIQFRA,
+    stafra: req.body.fraude.STAFRA,
   }
   const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
   }
 
   return Object.assign(fraude, movimiento)
 }
 const updateFromRec = (req) => {
   const fraude = {
-    idfrau: req.body.fraude.idfrau,
-    fecfra: req.body.fraude.fecfra,
-    nifcon: req.body.fraude.nifcon,
-    nomcon: req.body.fraude.nomcon,
-    emacon: req.body.fraude.emacon,
-    telcon: req.body.fraude.telcon,
-    movcon: req.body.fraude.movcon,
-    tipfra: req.body.fraude.tipfra,
-    ejefra: req.body.fraude.ejefra,
-    ofifra: req.body.fraude.ofifra,
-    obsfra: req.body.fraude.obsfra,
+    idfrau: req.body.fraude.IDFRAU,
+    fecfra: req.body.fraude.FECFRA,
+    nifcon: req.body.fraude.NIFCON,
+    nomcon: req.body.fraude.NOMCON,
+    emacon: req.body.fraude.EMACON,
+    telcon: req.body.fraude.TELCON,
+    movcon: req.body.fraude.MOVCON,
+    tipfra: req.body.fraude.TIPFRA,
+    ejefra: req.body.fraude.EJEFRA,
+    ofifra: req.body.fraude.OFIFRA,
+    obsfra: req.body.fraude.OBSFRA,
   }
   const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
   }
 
   return Object.assign(fraude, movimiento)
 }
 const deleteFromRec = (req) => {
   const fraude = {
-    idfrau: req.body.fraude.idfrau,
+    idfrau: req.body.fraude.IDFRAU,
   }
   const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
   }
 
   return Object.assign(fraude, movimiento)
 }
-const cambioFromRec = (req) => {
+const asignFromRec = (req) => {
   const fraude = {
-    idfrau: req.body.fraude.idfrau,
-    liqfra: req.body.fraude.liqfra,
-    stafra: req.body.fraude.stafra,
+    idfrau: req.body.fraude.IDFRAU,
+    liqfra: req.body.fraude.LIQFRA,
+    stafra: req.body.fraude.STAFRA,
   }
   const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
   }
 
   return Object.assign(fraude, movimiento)
 }
 const unasignFromRec = (req) => {
   const fraude = {
-    idfrau: req.body.fraude.idfrau,
-    liqfra: req.body.fraude.liqfra,
-    stafra: req.body.fraude.stafra,
+    idfrau: req.body.fraude.IDFRAU,
+    liqfra: req.body.fraude.LIQFRA,
+    stafra: req.body.fraude.STAFRA,
   }
   const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
   }
 
   return Object.assign(fraude, movimiento)
 }
 const cierreFromRec = (req) => {
   const fraude = {
-    idfrau: req.body.fraude.idfrau,
-    liqfra: req.body.fraude.liqfra,
-    stafra: req.body.fraude.stafra,
+    idfrau: req.body.fraude.IDFRAU,
+    liqfra: req.body.fraude.LIQFRA,
+    stafra: req.body.fraude.STAFRA,
   }
   const cierre = {
-    sitcie: req.body.cierre.sitcie
+    sitcie: req.body.cierre.SITCIE
   }
   const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
   }
 
   return Object.assign(fraude, cierre, movimiento)
 }
 const estadisticaFromRec = (req) => {
   const periodo = {
-    desfec: req.body.periodo.desde,
-    hasfec: req.body.periodo.hasta,
+    desfec: req.body.periodo.DESDE,
+    hasfec: req.body.periodo.HASTA,
   }
   const fraude = {
-    tipfra: req.body.fraude.tipfra,
+    tipfra: req.body.fraude.TIPFRA,
   }
 
   return Object.assign(periodo, fraude)
 }
 const cargaFromRec = (req) => {
   const carga = {
-    refcar: req.body.carga.refcar,
+    refcar: req.body.carga.REFCAR,
   }
 
   return carga
 }
-const smsFromRec = (req) => {
-  const fraude = {
-    idfrau: req.body.fraude.idfrau,
-  }
-  const sms = {
-    texsms: req.body.sms.texsms,
-    movsms: req.body.sms.movsms,
-    stasms: req.body.sms.stasms,
-  }
-  const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
-  }
-
-  return Object.assign(fraude, sms, movimiento)
-}
 const insertHitoFromRec = (req) => {
   const fraude = {
-    idfrau: req.body.fraude.idfrau,
+    idfrau: req.body.fraude.IDFRAU,
   }
   const hito = {
-    tiphit: req.body.hito.tiphit,
-    imphit: req.body.hito.imphit,
-    obshit: req.body.hito.obshit,
-    stahit: req.body.hito.stahit,
+    tiphit: req.body.hito.TIPHIT,
+    imphit: req.body.hito.IMPHIT,
+    obshit: req.body.hito.OBSHIT,
+    stahit: req.body.hito.STAHIT,
   }
   const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
   }
 
   return Object.assign(fraude, hito, movimiento)
 }
 const insertHitoLiqFromRec = (req) => {
   const fraude = {
-    idfrau: req.body.fraude.idfrau,
+    idfrau: req.body.fraude.IDFRAU,
   }
   const hito = {
-    tiphit: req.body.hito.tiphit,
-    imphit: req.body.hito.imphit,
-    obshit: req.body.hito.obshit,
-    stahit: req.body.hito.stahit,
+    tiphit: req.body.hito.TIPHIT,
+    imphit: req.body.hito.IMPHIT,
+    obshit: req.body.hito.OBSHIT,
+    stahit: req.body.hito.STAHIT,
   }
   const liquidacion = {
-    tipliq: req.body.liquidacion.tipliq,
-    impliq: req.body.liquidacion.impliq,
-    obsliq: req.body.liquidacion.obsliq,
-    staliq: req.body.liquidacion.staliq,
+    tipliq: req.body.liquidacion.TIPLIQ,
+    impliq: req.body.liquidacion.IMPLIQ,
+    obsliq: req.body.liquidacion.OBSLIQ,
+    staliq: req.body.liquidacion.STALIQ,
   }
   const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
   }
 
   return Object.assign(fraude, hito, liquidacion, movimiento)
 }
 const insertHitoSanFromRec = (req) => {
   const fraude = {
-    idfrau: req.body.fraude.idfrau,
+    idfrau: req.body.fraude.IDFRAU,
   }
   const hito = {
-    tiphit: req.body.hito.tiphit,
-    imphit: req.body.hito.imphit,
-    obshit: req.body.hito.obshit,
-    stahit: req.body.hito.stahit,
+    tiphit: req.body.hito.TIPHIT,
+    imphit: req.body.hito.IMPHIT,
+    obshit: req.body.hito.OBSHIT,
+    stahit: req.body.hito.STAHIT,
   }
   const sancion = {
-    tipsan: req.body.sancion.tipsan,
-    impsan: req.body.sancion.impsan,
-    obssan: req.body.sancion.obssan,
-    stasan: req.body.sancion.stasan,
+    tipsan: req.body.sancion.TIPSAN,
+    impsan: req.body.sancion.IMPSAN,
+    obssan: req.body.sancion.OBSSAN,
+    stasan: req.body.sancion.STASAN,
   }
   const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
   }
 
   return Object.assign(fraude, hito, sancion, movimiento)
 }
 const insertEventoFromRec = (req) => {
   const fraude = {
-    idfrau: req.body.fraude.idfrau,
+    idfrau: req.body.fraude.IDFRAU,
   }
   const evento = {
-    tipeve: req.body.evento.tipeve,
-    obseve: req.body.evento.obseve,
+    tipeve: req.body.evento.TIPEVE,
+    obseve: req.body.evento.OBSEVE,
   }
   const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
   }
 
   return Object.assign(fraude, evento, movimiento)
 }
 const deleteHitoFromRec = (req) => {
   const fraude = {
-    idfrau: req.body.fraude.idfrau,
+    idfrau: req.body.fraude.IDFRAU,
   }
   const hito = {
-    idhito: req.body.hito.idhito,
+    idhito: req.body.hito.IDHITO,
   }
   const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
   }
 
   return Object.assign(fraude, hito, movimiento)
 }
 const deleteEventoFromRec = (req) => {
   const fraude = {
-    idfrau: req.body.fraude.idfrau,
+    idfrau: req.body.fraude.IDFRAU,
   }
   const evento = {
-    ideven: req.body.evento.ideven,
+    ideven: req.body.evento.IDEVEN,
   }
   const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
   }
 
   return Object.assign(fraude, evento, movimiento)
@@ -350,7 +334,7 @@ export const borrar = async (req, res) => {
 }
 export const asignar = async (req, res) => {
   try {
-    const result = await DAL.change(cambioFromRec(req))
+    const result = await DAL.change(asignFromRec(req))
 
     if (result !== null) {
       res.status(200).json(result)

@@ -2,32 +2,36 @@ import oracledb from 'oracledb'
 import { simpleExecute } from '../services/database.js'
 
 const baseQuery = `SELECT 
-    idofic,
-    desofi,
-    codofi
-  FROM oficinas
+  idrela,
+  fecrel,
+  nifcon,
+  nomcon
+FROM relaciones
 `
-const insertSql = `BEGIN FRAUDE_PKG.INSERTOFICINA(
-    :desofi, 
-    :codofi,
-    :usumov,
-    :tipmov,
-    :idofic
-  ); END;
+const insertSql = `BEGIN FRAUDE_PKG.INSERTRELACION(
+  :idfrau,
+  TO_DATE(:fecrel, 'YYYY-MM-DD'),
+  :nifcon,
+  :nomcon,
+  :usumov,
+  :tipmov,
+  :idrela
+); END;
 `
-const updateSql = `BEGIN FRAUDE_PKG.UPDATEOFICINA(
-  :idofic,
-  :desofi, 
-  :codofi,
+const updateSql = `BEGIN FRAUDE_PKG.UPDATERELACION(
+  :idrela,
+  TO_DATE(:fecrel, 'YYYY-MM-DD'),
+  :nifcon,
+  :nomcon,
   :usumov,
   :tipmov
 ); END;
 `
-const deleteSql = `BEGIN FRAUDE_PKG.DELETEOFICINA(
-    :idofic,
-    :usumov,
-    :tipmov 
-  ); END;
+const deleteSql = `BEGIN FRAUDE_PKG.DELETERELACION(
+  :idrela,
+  :usumov,
+  :tipmov 
+); END;
 `
 
 export const find = async (context) => {
@@ -36,11 +40,7 @@ export const find = async (context) => {
 
   if (context.idofic) {
     binds.idofic = context.idofic
-    query += `WHERE idofic = :idofic`
-  }
-  if (context.codofi) {
-    binds.codofi = context.codofi
-    query += `WHERE codofi = :codofi`
+    query += `WHERE idrela = :idrela`
   }
 
   const result = await simpleExecute(query, binds)
@@ -48,7 +48,7 @@ export const find = async (context) => {
 }
 
 export const insert = async (bind) => {
-  bind.idofic = {
+  bind.idrela = {
     dir: oracledb.BIND_OUT,
     type: oracledb.NUMBER,
   }
@@ -56,7 +56,7 @@ export const insert = async (bind) => {
   try {
     const result = await simpleExecute(insertSql, bind)
 
-    bind.idofic = await result.outBinds.idofic
+    bind.idrela = await result.outBinds.idrela
   } catch (error) {
     bind = null
   }

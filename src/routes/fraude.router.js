@@ -35,7 +35,7 @@ apiFraudeRouter.post('/fraudes', fraudes)
 apiFraudeRouter.post('/fraudes/insert', crear)
 apiFraudeRouter.post('/fraudes/update', modificar)
 apiFraudeRouter.post('/fraudes/delete', borrar)
-apiFraudeRouter.post('/fraudes/cambio', asignar)
+apiFraudeRouter.post('/fraudes/asign', asignar)
 apiFraudeRouter.post('/fraudes/unasign', desasignar)
 apiFraudeRouter.post('/fraudes/cierre', cierre)
 
