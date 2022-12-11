@@ -32,6 +32,7 @@ import {
   insertSms,
   updateSms,
   removeSms,
+  relacionPage,
 } from "../controllers/fraude.controller";
 
 const fraudeRouter = express.Router();
@@ -40,6 +41,8 @@ const fraudeRouter = express.Router();
 fraudeRouter.get("/fraudes", authRoutes, mainPage);
 fraudeRouter.get("/fraudes/add", authRoutes, addPage);
 fraudeRouter.get("/fraudes/edit/:id", authRoutes, editPage);
+fraudeRouter.get("/fraudes/resolver/:id", authRoutes, resolverPage);
+fraudeRouter.get("/fraudes/relacion/:id", authRoutes, relacionPage);
 
 // pag ejercicio
 fraudeRouter.get("/fraudes/ejercicio/:id", authRoutes, ejercicioPage);
@@ -59,9 +62,6 @@ fraudeRouter.get("/fraudes/hitos/edit/:idfra/:idhit", authRoutes, editHitosPage)
 // page eventos
 fraudeRouter.get("/fraudes/eventos/add/:id", authRoutes, addEventosPage);
 fraudeRouter.get("/fraudes/eventos/edit/:idfra/:ideve", authRoutes, editEventosPage);
-
-// page otros
-fraudeRouter.get("/fraudes/resolver/:id", authRoutes, resolverPage);
 
 // procedures
 fraudeRouter.post("/fraudes/insert", authRoutes, insert);

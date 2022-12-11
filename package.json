@@ -33,7 +33,7 @@
     "@babel/runtime": "^7.17.2",
     "cssnano": "^5.1.5",
     "nodemon": "^2.0.15",
-    "postcss": "^8.4.12",
-    "postcss-cli": "^9.1.0"
+    "postcss": "^8.4.19",
+    "postcss-cli": "^10.1.0"
   }
 }

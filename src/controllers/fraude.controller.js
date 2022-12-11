@@ -46,7 +46,7 @@ export const addPage = async (req, res) => {
   };
 
   try {
-    const tipos = await axios.post("http://localhost:8100/api/tipos", {})
+    const tipos = await axios.post("http://localhost:8100/api/tipos/fraudes", {})
     const oficinas = await axios.post("http://localhost:8100/api/oficinas", {})
     const datos = {
       fraude,
@@ -54,6 +54,7 @@ export const addPage = async (req, res) => {
       oficinas: oficinas.data,
     };
 
+    console.log(datos)
     res.render("admin/fraudes/add", { user, datos });
   } catch (error) {
     const msg = "No se ha podido acceder a los datos de la aplicación.";
@@ -70,7 +71,7 @@ export const editPage = async (req, res) => {
   };
 
   try {
-    const tipos = await axios.post("http://localhost:8100/api/tipos", {})
+    const tipos = await axios.post("http://localhost:8100/api/tipos/fraudes", {})
     const oficinas = await axios.post("http://localhost:8100/api/oficinas", {})
     const result = await axios.post("http://localhost:8100/api/fraude", {
       fraude,
@@ -163,6 +164,39 @@ export const resolverPage = async (req, res) => {
     res.render("admin/fraudes/resolver", { user, datos });
   } catch (error) {
     const msg = "No se ha podido acceder a los datos de la aplicación.";
+
+    res.render("admin/error400", {
+      alerts: [{ msg }],
+    });
+  }
+};
+export const relacionPage = async (req, res) => {
+  const user = req.user;
+  const fecha = new Date();
+  let fraude = {
+    idfrau: req.params.id,
+  };
+
+  try {
+    // fraude
+    const result = await axios.post("http://localhost:8100/api/fraude", {
+      fraude,
+    });
+
+    fraude = result.data
+    fraude.EJEFRA = fecha.getFullYear()
+    fraude.FUNFRA = user.userID
+    fraude.LIQDOC = user.userID
+    fraude.STAFRA = estadosFraude.asignado
+
+    const datos = {
+      fraude,
+    };
+
+    res.render("admin/fraudes/relacion", { user, datos });
+  } catch (error) {
+    const msg =
+      "No se ha podido acceder a los datos de la aplicación. Si persiste el error solicite asistencia.";
 
     res.render("admin/error400", {
       alerts: [{ msg }],
@@ -405,7 +439,7 @@ export const smssEditPage = async (req, res) => {
   }
 }
 
-// otros
+// pag otros
 export const ejercicioPage = async (req, res) => {
   const user = req.user;
   const fecha = new Date();
@@ -414,7 +448,6 @@ export const ejercicioPage = async (req, res) => {
   };
 
   try {
-    const tipos = await axios.post("http://localhost:8100/api/tipos", {})
     const result = await axios.post("http://localhost:8100/api/fraude", {
       fraude,
     });
@@ -427,7 +460,6 @@ export const ejercicioPage = async (req, res) => {
 
     const datos = {
       fraude,
-      tipos: tipos.data,
     };
 
     res.render("admin/fraudes/ejercicio", { user, datos });
@@ -458,8 +490,8 @@ export const insert = async (req, res) => {
     OFIFRA: req.body.ofifra,
     OBSFRA: req.body.obsfra,
     FUNFRA: req.body.funfra,
-    LIQFRA: "PEND",
-    STAFRA: estadosFraude.pendiente,
+    LIQFRA: user.userID,
+    STAFRA: estadosFraude.asignado,
   };
   const movimiento = {
     USUMOV: user.id,
@@ -571,7 +603,7 @@ export const asignar = async (req, res) => {
     };
 
     if (result.data.STAFRA === estadosFraude.pendiente) {
-      await axios.post("http://localhost:8100/api/fraudes/cambio", {
+      await axios.post("http://localhost:8100/api/fraudes/asign", {
         fraude,
         movimiento,
       });
@@ -708,6 +740,70 @@ export const desasignar = async (req, res) => {
     }
   } catch (error) {
     const msg = "No se ha podido desasignar el documento.";
+
+    res.render("admin/error400", {
+      alerts: [{ msg }],
+    });
+  }
+};
+
+// proc relacion
+export const insertRelacion = async (req, res) => {
+  const user = req.user;
+  const fecha = new Date()
+  const fraude = {
+    IDFRAU: req.body.idfrau,
+  }
+  const relacion = {
+    FECREL: fecha.toISOString().substring(0, 10),
+    NIFCON: req.body.nifcon.toUpperCase(),
+    NOMCON: req.body.nomcon.toUpperCase(),
+  };
+  const movimiento = {
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.nuevoRelacionadoFraude,
+  };
+
+  try {
+    await axios.post("http://localhost:8100/api/relacion/insert", {
+      relacion,
+      movimiento,
+    });
+
+    res.redirect("/admin/fraudes");
+  } catch (error) {
+    const msg = "No se ha podido insertar el ejercicio.";
+
+    res.render("admin/error400", {
+      alerts: [{ msg }],
+    });
+  }
+};
+export const updateRelacion = async (req, res) => {
+  const user = req.user;
+  const fraude = {
+    IDFRAU: req.body.idfrau,
+  };
+  const relacion = {
+    IDRELA: req.body.idrela,
+    FECREL: req.body.fecrel,
+    NIFCON: req.body.nifcon,
+    NOMCON: req.body.nomcon,
+  };
+  const movimiento = {
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.modicarRelacion,  //TODO
+  };
+
+  try {
+    await axios.post("http://localhost:8100/api/hitos/update", {
+      hito,
+      movimiento,
+    });
+
+    res.redirect(`/admin/fraudes/hitoseventos/${fraude.IDFRAU}`);
+  } catch (error) {
+    const msg = "No se ha podido actualizar el hito.";
 
     res.render("admin/error400", {
       alerts: [{ msg }],

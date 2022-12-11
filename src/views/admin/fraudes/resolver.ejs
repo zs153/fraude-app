@@ -7,13 +7,15 @@
   <title>Resolver</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
   <!-- styles -->
-  <link rel="stylesheet" href="/css/styles.css">
+  <!-- <link rel="stylesheet" href="/css/styles.css"> -->
+  <link rel="stylesheet" href="/css/estilos.css">
+  <link rel="stylesheet" href="/css/navbar.css">
 </head>
 
 <body class="antialiased">
   <div class="wrapper">
     <%- include('../../partials/header') %>
-    <%- include('../../partials/navbar', {opcion: 'FRAUDES'}) %>
+    <%- include('../../partials/navbar', {opcion: 'FRAUDE'}) %>
     <div class="page-wrapper">
       <div class="page-body">
         <div class="container-xl">
@@ -61,18 +63,18 @@
                       </div>
                     </div>
                     <% if(!datos.hayLiquidacion) { %>
-                    <div class="row">
-                      <div class="col-12">
-                        <div class="mb-1">
-                          <div class="form-label">Causa cierre</div>
-                          <select class="form-select" id="cbotip" name="sitcie">
-                            <% datos.subtipos.map(element => { %> 
-                              <option value="<%- element.IDSUBT %>"><%- element.DESSUB %></option>
-                            <% }) %> 
-                          </select>
+                      <div class="row">
+                        <div class="col-12">
+                          <div class="mb-1">
+                            <div class="form-label">Causa cierre</div>
+                            <select class="form-select" id="cbotip" name="sitcie">
+                              <% datos.subtipos.map(element => { %> 
+                                <option value="<%- element.IDSUBT %>"><%- element.DESSUB %></option>
+                              <% }) %> 
+                            </select>
+                          </div>
                         </div>
                       </div>
-                    </div>
                     <% } else { %> 
                       <div class="row">
                         <input type="hidden" id="sitcie" name="sitcie" value="0">
@@ -82,7 +84,7 @@
                   <div class="card-footer text-end">
                     <div class="d-flex">
                       <a href="/admin/fraudes" class="btn btn-link">Cancelar</a>
-                      <button type="submit" class="btn btn-primary ms-auto">Resolver fraude</button>
+                      <button type="submit" class="btn btn-success ms-auto">Resolver fraude</button>
                     </div>
                   </div>
                 </form>

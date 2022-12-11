@@ -7,13 +7,15 @@
   <title>Fraude</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
   <!-- styles -->
-  <link rel="stylesheet" href="/css/styles.css">
+  <!-- <link rel="stylesheet" href="/css/styles.css"> -->
+  <link rel="stylesheet" href="/css/estilos.css">
+  <link rel="stylesheet" href="/css/navbar.css">
 </head>
 
 <body class="antialiased">
   <div class="wrapper">
     <%- include('../../partials/header') %>
-    <%- include('../../partials/navbar', {opcion: 'FRAUDES'}) %>
+    <%- include('../../partials/navbar', {opcion: 'FRAUDE'}) %>
     <div class="page-wrapper">
       <div class="page-body">
         <div class="container-xl">
@@ -32,10 +34,6 @@
                             <label class="form-label required">NIF/NIE</label>
                             <input type="text" name="nifcon" id="nifcon" class="form-control" style="text-transform: uppercase;" value="" autofocus/>
                             <div class="invalid-feedback"></div>
-                            <div class="discrim">
-                              <ul id="iddisc">
-                              </ul>
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -60,10 +58,10 @@
                         <div class="mb-1">
                           <div class="form-label">Tipo</div>
                           <div class="input-control">
-                            <select class="form-select form-control" id="cbotip" name="tipdoc" value="<%- datos.fraude.TIPDOC %>">
+                            <select class="form-select form-control" id="cbotip" name="tipfra" value="">
                               <option value="0">SELECCIONE UN TIPO</option>
                               <% datos.tipos.map(element=> { %>
-                                <option value="<%- element.IDTIPO %>" <%- element.IDTIPO === datos.fraude.TIPDOC ? " selected" :"" %>>
+                                <option value="<%- element.IDTIPO %>">
                                   <%- element.DESTIP %>
                                 </option>
                               <% }) %>
@@ -101,9 +99,9 @@
                       <div class="col-5">
                         <div class="mb-1">
                           <div class="form-label">Oficina</div>
-                          <select class="form-select" id="cboofi" name="ofidoc" value="<%- datos.fraude.OFIDOC %>">
+                          <select class="form-select" id="cboofi" name="ofifra" value="<%- datos.fraude.OFIFRA %>">
                             <% datos.oficinas.map(element=> { %>
-                              <option value="<%- element.IDOFIC %>" <%- element.IDOFIC === datos.fraude.OFIDOC ? " selected" :"" %>>
+                              <option value="<%- element.IDOFIC %>" <%- element.IDOFIC === datos.fraude.OFIFRA ? " selected" :"" %>>
                                 <%- element.DESOFI %>
                               </option>
                             <% }) %>
@@ -271,56 +269,6 @@
       element.classList.add('is-invalid');
       inputControl.classList.remove('is-valid');
     }
-  </script>
-  <script>
-    const eleNif = document.getElementById('nifcon')
-    const eleNombre = document.getElementById('nomcon')
-    const eleDiscri = document.getElementById('iddisc')
-
-    eleNif.addEventListener('blur', async () => {
-      if (eleNif.value !== '') {
-        const xhr = new XMLHttpRequest();
-
-        xhr.onload = function() {
-          if (xhr.status === 200) {
-            const gentes = JSON.parse(xhr.response)
-            const discriminantes = document.getElementById('iddisc')
-
-            if (gentes.length > 1) {
-              discriminantes.innerHTML = ''
-              gentes.map((item) => {
-                const li = document.createElement('li')
-                li.textContent = item.NIFGEN + ` ${item.DISGEN} ` + item.NOMGEN
-                discriminantes.appendChild(li)
-              })
-              const li = document.createElement('li')
-              li.textContent = 'Introduzca discriminante'
-              discriminantes.appendChild(li)
-              
-              eleDiscri.style.display = 'block'
-              eleNif.focus()
-            } else {
-              if (gentes.NOMGEN) {
-                eleNif.value = gentes.NIFGEN
-                eleNombre.value = gentes.NOMGEN
-              } else {
-                eleNombre.value = ''
-              }
-              eleDiscri.style.display = 'none'
-            }
-          } else {
-            eleNombre.value = ''
-          }
-        };
-        try {
-          xhr.open('POST', 'http://localhost:8100/api/gente', true);
-          xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');     
-          xhr.send(JSON.stringify({nifgen: eleNif.value}))
-        } catch (error) {
-          eleNombre.value = ''
-        }
-      }
-    })
   </script>
 </body>
 </html>
