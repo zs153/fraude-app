@@ -2,21 +2,21 @@ import oracledb from 'oracledb'
 import { simpleExecute } from '../services/database.js'
 
 const baseQuery = `SELECT 
-  ideven,
-  TO_CHAR(feceve, 'YYYY-MM-DD') "FECFRA",
-  tipeve,
-  obseve,
-  TO_CHAR(feceve, 'DD/MM/YYYY') "STRFEC"
-FROM eventos
+  ee.*,
+  TO_CHAR(ee.feceve, 'DD/MM/YYYY') "STRFEC"
+FROM eventos ee
 `
 const largeQuery = `SELECT 
-  tt.destip,
+  te.destip,
   ee.*,
-  TO_CHAR(ff.feceve, 'DD/MM/YYYY') "STRFEC"
+  TO_CHAR(ee.feceve, 'DD/MM/YYYY') "STRFEC"
 FROM eventos ee
-INNER JOIN tipos tt ON tt.idtipo = ee.tipeve
+INNER JOIN eventosfraude ef ON ef.ideven = ee.ideven
+INNER JOIN tiposevento te ON te.idtipo = ee.tipeve
+WHERE ef.idfrau = :idfrau
 `
-const insertSql = `BEGIN FRAUDE_PKG.INSERTEVENTO(
+const insertSql = `BEGIN FRAUDE_PKG.INSERTEVENTOFRAUDE(
+  :idfrau,
   TO_DATE(:feceve, 'YYYY-MM-DD'),
   :tipeve,
   :obseve,
@@ -27,13 +27,15 @@ const insertSql = `BEGIN FRAUDE_PKG.INSERTEVENTO(
 `
 const updateSql = `BEGIN FRAUDE_PKG.UPDATEEVENTO(
   :ideven,
+  TO_DATE(:feceve, 'YYYY-MM-DD'),
   :tipeve, 
   :obseve,
   :usumov,
   :tipmov
 ); END;
 `
-const removeSql = `BEGIN FRAUDE_PKG.DELETEEVENTO(
+const removeSql = `BEGIN FRAUDE_PKG.DELETEEVENTOFRAUDE(
+  :idfrau,
   :ideven,
   :usumov,
   :tipmov 
@@ -44,19 +46,15 @@ export const find = async (context) => {
   let query = baseQuery
   let binds = {}
 
-  if (context.ideven) {
-    binds.ideven = context.ideven
-    query += `WHERE ideven = :ideven`
+  if (context.IDEVEN) {
+    binds.ideven = context.IDEVEN
+    query += `WHERE ee.ideven = :ideven`
+  } else if (context.IDFRAU) {
+    binds.idfrau = context.IDFRAU
+    query = largeQuery
   }
-
+  console.log(query, binds)
   const result = await simpleExecute(query, binds)
-  return result.rows
-}
-export const findAll = async (context) => {
-  let query = largeQuery
-
-  const result = await simpleExecute(query)
-
   return result.rows
 }
 

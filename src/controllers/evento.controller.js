@@ -1,44 +1,53 @@
 import * as DAL from '../models/evento.model'
 
 const insertFromRec = (req) => {
+  const fraude = {
+    idfrau: req.body.fraude.IDFRAU,
+  }
   const evento = {
-    tipeve: req.body.evento.tipeve,
-    obseve: req.body.evento.obseve,
+    feceve: req.body.evento.FECEVE,
+    tipeve: req.body.evento.TIPEVE,
+    obseve: req.body.evento.OBSEVE,
   }
   const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
   }
 
-  return Object.assign(evento, movimiento)
+  return Object.assign(fraude, evento, movimiento)
 }
 const updateFromRec = (req) => {
   const evento = {
-    ideven: req.body.evento.ideven,
-    tipeve: req.body.evento.tipeve,
-    obseve: req.body.evento.obseve,
+    ideven: req.body.evento.IDEVEN,
+    feceve: req.body.evento.FECEVE,
+    tipeve: req.body.evento.TIPEVE,
+    obseve: req.body.evento.OBSEVE,
   }
   const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
   }
 
   return Object.assign(evento, movimiento)
 }
 const deleteFromRec = (req) => {
+  const fraude = {
+    idfrau: req.body.fraude.IDFRAU,
+  }
   const evento = {
-    ideven: req.body.evento.ideven,
+    ideven: req.body.evento.IDEVEN,
   }
   const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
   }
 
-  return Object.assign(evento, movimiento)
+  return Object.assign(fraude, evento, movimiento)
 }
 
 export const evento = async (req, res) => {
   const context = req.body.evento
+
   try {
     const result = await DAL.find(context)
 
@@ -52,16 +61,12 @@ export const evento = async (req, res) => {
   }
 }
 export const eventos = async (req, res) => {
-  const context = req.body.evento
+  const context = req.body.fraude
 
   try {
-    const result = await DAL.findAll(context)
+    const result = await DAL.find(context)
 
-    if (rows !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
+    res.status(200).json(result)
   } catch (err) {
     res.status(400).end()
   }

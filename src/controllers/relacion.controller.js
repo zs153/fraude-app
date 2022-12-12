@@ -5,8 +5,9 @@ const insertFromRec = (req) => {
     idfrau: req.body.fraude.IDFRAU,
   }
   const relacion = {
-    desofi: req.body.relacion.DESOFI,
-    codofi: req.body.relacion.CODOFI,
+    fecrel: req.body.relacion.FECREL,
+    nifcon: req.body.relacion.NIFCON,
+    nomcon: req.body.relacion.NOMCON,
   }
   const movimiento = {
     usumov: req.body.movimiento.USUMOV,
@@ -16,21 +17,25 @@ const insertFromRec = (req) => {
   return Object.assign(fraude, relacion, movimiento)
 }
 const updateFromRec = (req) => {
+  const fraude = {
+    idfrau: req.body.fraude.IDFRAU,
+  }
   const relacion = {
-    idofic: req.body.relacion.IDOFIC,
-    desofi: req.body.relacion.DESOFI,
-    codofi: req.body.relacion.CODOFI,
+    idrela: req.body.relacion.IDRELA,
+    fecrel: req.body.relacion.FECREL,
+    nifcon: req.body.relacion.NIFCON,
+    nomcon: req.body.relacion.NOMCON,
   }
   const movimiento = {
     usumov: req.body.movimiento.USUMOV,
     tipmov: req.body.movimiento.TIPMOV,
   }
 
-  return Object.assign(relacion, movimiento)
+  return Object.assign(fraude, relacion, movimiento)
 }
 const deleteFromRec = (req) => {
   const relacion = {
-    idofic: req.body.relacion.IDOFIC,
+    idrela: req.body.relacion.IDRELA,
   }
   const movimiento = {
     usumov: req.body.movimiento.USUMOV,
@@ -55,7 +60,7 @@ export const relacion = async (req, res) => {
     res.status(500).end()
   }
 }
-export const relacions = async (req, res) => {
+export const relaciones = async (req, res) => {
   const context = req.body
 
   try {

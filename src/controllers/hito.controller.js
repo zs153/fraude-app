@@ -1,52 +1,58 @@
 import * as DAL from '../models/hito.model'
 
 const insertFromRec = (req) => {
+  const fraude = {
+    idfrau: req.body.fraude.IDFRAU,
+  }
   const hito = {
-    tiphit: req.body.hito.tiphit,
-    imphit: req.body.hito.imphit,
-    obshit: req.body.hito.obshit,
-    stahit: req.body.hito.stahit,
+    tiphit: req.body.hito.TIPHIT,
+    imphit: req.body.hito.IMPHIT,
+    obshit: req.body.hito.OBSHIT,
+    stahit: req.body.hito.STAHIT,
   }
   const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
   }
 
-  return Object.assign(hito, movimiento)
+  return Object.assign(fraude, hito, movimiento)
 }
 const updateFromRec = (req) => {
   const hito = {
-    idhito: req.body.hito.idhito,
-    tiphit: req.body.hito.tiphit,
-    imphit: req.body.hito.imphit,
-    obshit: req.body.hito.obshit,
+    idhito: req.body.hito.IDHITO,
+    tiphit: req.body.hito.TIPHIT,
+    imphit: req.body.hito.IMPHIT,
+    obshit: req.body.hito.OBSHIT,
   }
   const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
   }
 
   return Object.assign(hito, movimiento)
 }
 const deleteFromRec = (req) => {
+  const fraude = {
+    idfrau: req.body.fraude.IDFRAU,
+  }
   const hito = {
-    idhito: req.body.hito.idhito,
+    idhito: req.body.hito.IDHITO,
   }
   const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
   }
 
-  return Object.assign(hito, movimiento)
+  return Object.assign(fraude, hito, movimiento)
 }
 const cambioFromRec = (req) => {
   const hito = {
-    idhito: req.body.hito.idhito,
-    stahit: req.body.hito.stahit,
+    idhito: req.body.hito.IDHITO,
+    stahit: req.body.hito.STAHIT,
   }
   const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
   }
 
   return Object.assign(hito, movimiento)
@@ -68,16 +74,12 @@ export const hito = async (req, res) => {
   }
 }
 export const hitos = async (req, res) => {
-  const context = req.body.hitos
+  const context = req.body.fraude
 
   try {
-    const result = await DAL.findAll(context)
+    const result = await DAL.find(context)
 
-    if (rows !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
+    res.status(200).json(result)
   } catch (err) {
     res.status(400).end()
   }

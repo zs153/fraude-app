@@ -10,10 +10,10 @@ import {
 const apiEventoRouter = express.Router()
 
 // eventos
-apiEventoRouter.post('/event', evento)
-apiEventoRouter.post('/events', eventos)
-apiEventoRouter.post('/events/insert', crear)
-apiEventoRouter.post('/events/update', modificar)
-apiEventoRouter.post('/events/delete', borrar)
+apiEventoRouter.post('/evento', evento)
+apiEventoRouter.post('/eventos', eventos)
+apiEventoRouter.post('/eventos/insert', crear)
+apiEventoRouter.post('/eventos/update', modificar)
+apiEventoRouter.post('/eventos/delete', borrar)
 
 export default apiEventoRouter
