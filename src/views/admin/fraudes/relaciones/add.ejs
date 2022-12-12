@@ -23,13 +23,6 @@
           <div class="row">
             <div class="col-12">
               <div class="card">
-                <% if(typeof alerts !='undefined' ) { %>
-                <% alerts.map(function (alert) { %>
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                  <%- alert.msg %>
-                </div>
-                <% }) %>
-                <% } %>
                 <form id="form" action="/admin/fraudes/relacion" method="POST" onsubmit="return validate();">
                   <input type="hidden" name="idfrau" id="idfrau" value="<%- datos.fraude.IDFRAU %>">
                   <div class="card-header">
@@ -41,7 +34,8 @@
                         <div class="mb-1">
                           <div class="input-control">
                             <label class="form-label required">NIF/NIE</label>
-                            <input type="text" name="nifcon" id="nifcon" class="form-control" style="text-transform: uppercase;" value="" autofocus />
+                            <input type="text" name="nifcon" id="nifcon" class="form-control"
+                              style="text-transform: uppercase;" value="" autofocus />
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>
@@ -50,7 +44,8 @@
                         <div class="mb-1">
                           <div class="input-control">
                             <label class="form-label required">Nombre</label>
-                            <input type="text" name="nomcon" id="nomcon" class="form-control" style="text-transform: uppercase;" value="" />
+                            <input type="text" name="nomcon" id="nomcon" class="form-control"
+                              style="text-transform: uppercase;" value="" />
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>

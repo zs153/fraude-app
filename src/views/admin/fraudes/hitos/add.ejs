@@ -6,10 +6,9 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>Hito</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
-  <!-- bootstrap -->
-  <link rel="stylesheet" href="/css/bootstrap-icons.css">
-  <!-- custom -->
-  <link rel="stylesheet" href="/css/estilos.min.css">
+  <!-- styles -->
+  <!-- <link rel="stylesheet" href="/css/styles.css"> -->
+  <link rel="stylesheet" href="/css/estilos.css">
   <link rel="stylesheet" href="/css/navbar.css">
 </head>
 
@@ -23,15 +22,8 @@
           <div class="row">
             <div class="col-12">
               <div class="card">
-                <% if(typeof alerts !='undefined') { %>
-                  <% alerts.map(function (alert){ %>
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                      <%- alert.msg %>
-                    </div>
-                  <% }) %>
-                <% } %> 
                 <form action="/admin/fraudes/hitos/insert" method="POST" onsubmit="return validate();">
-                  <input type="hidden" id="idfrau" name="idfrau" value="<%- datos.fraude.idfrau %>">
+                  <input type="hidden" id="idfrau" name="idfrau" value="<%- datos.fraude.IDFRAU %>">
                   <input type="hidden" id="anuhit" name="anuhit" value="">
                   <div class="card-header">
                     <h3 class="card-title">Nuevo hito</h3>
@@ -43,6 +35,12 @@
                           <div class="form-label">Tipo</div>
                           <div class="input-control">
                             <select class="form-select form-control" id="cbotip" name="tiphit" value="">
+                              <option value="0">SELECCIONE UN TIPO</option>
+                              <% datos.tipos.map(element=> { %>
+                              <option value="<%- element.IDTIPO %>" data-foo="<%- element.ANUHIT %>" <%- element.DISABLED ? 'disabled':'' %>>
+                                <%- element.DESTIP %> 
+                              </option>
+                              <% }) %>
                             </select>
                             <div class="invalid-feedback"></div>
                           </div>
@@ -87,8 +85,8 @@
                   </div>
                   <div class="card-footer text-end">
                     <div class="d-flex">
-                      <a href="/admin/fraudes/hitoseventos/<%- datos.fraude.idfrau %>" class="btn btn-link">Cancelar</a>
-                      <button type="submit" class="btn btn-primary ms-auto" id="btnInsert">Crear hito</button>
+                      <a href="/admin/fraudes/hitoseventos/<%- datos.fraude.IDFRAU %>" class="btn btn-link">Cancelar</a>
+                      <button type="submit" class="btn btn-success ms-auto" id="btnInsert">Crear hito</button>
                     </div>
                   </div>
                 </form>
@@ -104,18 +102,25 @@
   <script src="/js/ayuda.min.js"></script>
   <script>
     const imphit = document.getElementById('imphit')
+    const tiphit = document.getElementById('cbotip')
 
     const validate = () => {
       const imphitValue = imphit.value
+      const tiphitValue = tiphit.value
 
+      if (tiphitValue === '0') {
+        setError(tiphit, 'Tipo requerido')
+        setTimeout(function () {
+          setSuccess(tiphit)
+        }, 3000)
+        return false
+      }
       if (imphitValue === '') {
         setError(imphit, 'Importe requerido')
         setTimeout(function () {
           setSuccess(imphit)
         }, 3000)
         return false
-      } else {
-        setSuccess(imphit)
       }
 
       document.getElementById('anuhit').value = combo.options[combo.selectedIndex].getAttribute('data-foo')
@@ -139,60 +144,7 @@
       inputControl.classList.remove('is-valid');
     }
   </script>
-  <script>
-    const Hitos = () => {
-      const xhr = new XMLHttpRequest();
 
-      xhr.onload = function() {
-        if (xhr.status === 200) {
-          const hitos = JSON.parse(xhr.response)
-
-          Tipos(hitos);
-        }
-      };
-      xhr.open('POST', 'http://localhost:8100/api/fraudes/hitos', true);
-      xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-      xhr.send(JSON.stringify({fraude: {idfrau: <%- datos.fraude.idfrau %>}}))
-    }
-    Hitos();
-  </script>
-  <script>
-    const Tipos = (hitos) => {
-      const xhr = new XMLHttpRequest();
-
-      xhr.onload = function() {
-        if (xhr.status === 200) {
-          const tipos = JSON.parse(xhr.response)
-          const cbo = document.getElementById('cbotip')
-
-          tipos.map((itm) => {
-            const option = document.createElement('option')
-            option.value = itm.IDTIPO
-            option.text = itm.DESTIP
-            option.setAttribute('data-foo', itm.ANUHIT)
-
-            if (hitos.some(el => el.TIPHIT === itm.IDTIPO)) {
-              option.setAttribute('disabled', 'disabled')
-            }
-            cbo.appendChild(option)
-          });
-
-          elemLiq.style.display = 'none'
-          elemSan.style.display = 'none'
-
-          if (parseInt(cbo.options[cbo.selectedIndex].getAttribute('data-foo')) === <%- datos.estadosHito.propuestaLiquidacion %>) {
-            elemLiq.style.display = ''
-          }
-          if (parseInt(cbo.options[cbo.selectedIndex].getAttribute('data-foo')) === <%- datos.estadosHito.propuestaSancion %>) {
-            elemSan.style.display = ''
-          }
-        }
-      };
-      xhr.open('POST', 'http://localhost:8100/api/tipos/hitos', true);
-      xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-      xhr.send()
-    }
-  </script>
   <script>
     const input = document.querySelector('#imphit');
     const elemLiq = document.querySelector('#liq');

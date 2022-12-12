@@ -43,13 +43,11 @@ fraudeRouter.get("/fraudes/add", authRoutes, addPage);
 fraudeRouter.get("/fraudes/edit/:id", authRoutes, editPage);
 fraudeRouter.get("/fraudes/resolver/:id", authRoutes, resolverPage);
 fraudeRouter.get("/fraudes/relacion/:id", authRoutes, relacionPage);
-
-// pag ejercicio
 fraudeRouter.get("/fraudes/ejercicio/:id", authRoutes, ejercicioPage);
 
 // pag smss
-fraudeRouter.get("/fraudes/sms/:idfra", authRoutes, smssPage);
-fraudeRouter.get("/fraudes/smss/add/:idfra", authRoutes, smssAddPage);
+fraudeRouter.get("/fraudes/sms/:id", authRoutes, smssPage);
+fraudeRouter.get("/fraudes/smss/add/:id", authRoutes, smssAddPage);
 fraudeRouter.get("/fraudes/smss/edit/:idfra/:idsms", authRoutes, smssEditPage);
 
 // page hitoseventos

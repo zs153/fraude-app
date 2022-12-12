@@ -6,10 +6,9 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>Hito</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
-  <!-- bootstrap -->
-  <link rel="stylesheet" href="/css/bootstrap-icons.css">
-  <!-- custom -->
-  <link rel="stylesheet" href="/css/estilos.min.css">
+  <!-- styles -->
+  <!-- <link rel="stylesheet" href="/css/styles.css"> -->
+  <link rel="stylesheet" href="/css/estilos.css">
   <link rel="stylesheet" href="/css/navbar.css">
 </head>
 
@@ -23,16 +22,9 @@
           <div class="row">
             <div class="col-12">
               <div class="card">
-                <% if(typeof alerts !='undefined') { %>
-                  <% alerts.map(function (alert){ %>
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                      <%- alert.msg %>
-                    </div>
-                  <% }) %>
-                <% } %>   
                 <form action="/admin/fraudes/hitos/update" method="POST" onsubmit="return validate();">
                   <input type="hidden" id="idhito" name="idhito" value="<%- datos.hito.IDHITO %>">
-                  <input type="hidden" id="idfrau" name="idfrau" value="<%- datos.fraude.idfrau %>">
+                  <input type="hidden" id="idfrau" name="idfrau" value="<%- datos.fraude.IDFRAU %>">
                   <div class="card-header">
                     <h3 class="card-title">Editar hito</h3>
                   </div>
@@ -41,8 +33,16 @@
                       <div class="col-8">
                         <div class="mb-1">
                           <div class="form-label">Tipo</div>
-                          <select class="form-select" id="cbotip" name="tiphit">
-                          </select>
+                          <div class="input-control">
+                            <select class="form-select form-control" id="cbotip" name="tiphit" value="">
+                              <% datos.tipos.map(element=> { %>
+                              <option value="<%- element.IDTIPO %>" data-foo="<%- element.ANUHIT %>" <%- element.IDTIPO === datos.hito.TIPHIT ? "select": element.DISABLED ? 'disabled':'' %>>
+                                <%- element.DESTIP %>
+                              </option>
+                              <% }) %>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                          </div>
                         </div>
                       </div>
                       <div class="col-4">
@@ -66,8 +66,8 @@
                   </div>
                   <div class="card-footer text-end">
                     <div class="d-flex">
-                      <a href="/admin/fraudes/hitoseventos/<%- datos.fraude.idfrau %>" class="btn btn-link">Cancelar</a>
-                      <button type="submit" class="btn btn-primary ms-auto" id="btnUpdate">Actualizar hito</button>
+                      <a href="/admin/fraudes/hitoseventos/<%- datos.fraude.IDFRAU %>" class="btn btn-link">Cancelar</a>
+                      <button type="submit" class="btn btn-success ms-auto" id="btnUpdate">Actualizar hito</button>
                     </div>
                   </div>
                 </form>
@@ -82,39 +82,52 @@
 
   <script src="/js/ayuda.min.js"></script>
   <script>
-    const Tipos = () => {
-      const xhr = new XMLHttpRequest();
-
-      xhr.onload = function() {
-        if (xhr.status === 200) {
-          const tipos = JSON.parse(xhr.response)
-          const cbo = document.getElementById('cbotip')
-
-          tipos.map((itm) => {
-            const option = document.createElement('option')
-            option.value = itm.IDTIPO
-            option.text = itm.DESTIP
-            option.setAttribute('data-foo', itm.ANUHIT)
-            
-            if (itm.IDTIPO === <%- datos.hito.TIPHIT %>) {
-              option.selected = true
-            }
-
-            cbo.appendChild(option)
-          });
-        }
-      };
-      xhr.open('POST', 'http://localhost:8100/api/tipos/hitos', true);
-      xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-      xhr.send()
-    }
-    Tipos();
-  </script>
-  <script>
     const input = document.querySelector('#imphit');
+    const imphit = document.getElementById('imphit')
+    const cbo = document.getElementById('cbotip')
+
     input.addEventListener('input', function() {
       this.value = this.value.replace(/[^0-9 \,.]/, '').replace(/[.]/g, ',')
     });
+
+    const validate = () => {
+      const imphitValue = imphit.value
+      const tiphitValue = cbo.value
+
+      if (tiphitValue === '0') {
+        setError(tiphit, 'Tipo requerido')
+        setTimeout(function () {
+          setSuccess(tiphit)
+        }, 3000)
+        return false
+      }
+      if (imphitValue === '') {
+        setError(imphit, 'Importe requerido')
+        setTimeout(function () {
+          setSuccess(imphit)
+        }, 3000)
+        return false
+      }
+
+      return true
+    }
+
+    const setSuccess = (element) => {
+      const inputControl = element.parentElement;
+      const errorDisplay = inputControl.querySelector('.invalid-feedback');
+
+      errorDisplay.innerText = '';
+      inputControl.classList.add('is-valid');
+      element.classList.remove('is-invalid');
+    }
+    const setError = (element, message) => {
+      const inputControl = element.parentElement;
+      const errorDisplay = inputControl.querySelector('.invalid-feedback');
+
+      errorDisplay.innerText = message;
+      element.classList.add('is-invalid');
+      inputControl.classList.remove('is-valid');
+    }
   </script>  
 </body>
 </html>

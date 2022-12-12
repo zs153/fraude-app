@@ -6,40 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
     <title>Hitos/Eventos</title>
     <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
-    <!-- bootstrap -->
-    <link rel="stylesheet" href="/css/bootstrap-icons.css">
-    <!-- custom -->
-    <link rel="stylesheet" href="/css/estilos.min.css">
+    <!-- styles -->
+    <!-- <link rel="stylesheet" href="/css/styles.css"> -->
+    <link rel="stylesheet" href="/css/estilos.css">
     <link rel="stylesheet" href="/css/navbar.css">
-    <style>
-      .sortable th {
-        cursor: pointer;
-      }
-      .sortable .th-sort-asc::after {
-        content: "\25b4";
-      }
-      .sortable .th-sort-desc::after {
-        content: "\25be";
-      }
-      .sortable .th-sort-asc::after,
-      .sortable .th-sort-desc::after {
-        margin-left: 5px;
-      }
-      .subtitulo {
-        margin: 0;
-        align-items: center;
-        justify-content: center;
-        color: #656d77;
-        pointer-events: none;
-        font-size: 0.8em;
-      }
-      .table-fixHead tbody {
-        overflow-y: scroll;
-        height: 24vh;
-        display: block;
-        flex: 1 1 auto;
-      }
-    </style>
   </head>
   <body class="antialiased">
     <div class="wrapper">
@@ -60,15 +30,9 @@
                     </div>
                     <div class="col-auto ms-auto">
                       <div class="d-flex">
-                        <div class="input-icon me-3">
-                          <span class="input-icon-addon"><i class="bi bi-search"></i></span>
-                          <input type="text" class="form-control d-inline-block me-3" id="buscarHitoBox" onkeyup="filtroHitos();" placeholder="Buscar..." aria-label="Buscar en sms">
-                        </div>
-                        <a href="/admin/fraudes/hitos/add/<%- datos.fraude.IDFRAU %>" class="btn btn-primary">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                            <line x1="12" y1="5" x2="12" y2="19"></line>
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <a href="/admin/fraudes/hitos/add/<%- datos.fraude.IDFRAU %>" class="btn">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon" height="24" width="24" viewBox="0 0 24 24">
+                            <path d="M11.25 18.75v-6h-6v-1.5h6v-6h1.5v6h6v1.5h-6v6Z" />
                           </svg>
                           Nuevo
                         </a>
@@ -76,11 +40,11 @@
                     </div>
                   </div>
                   <div class="card-body">
-                    <table class="table table-vcenter table-striped sortable" id="tblHitos">
+                    <table class="table table-vcenter table-striped" id="tblHitos">
                       <thead>
                       <tr class="header">
                         <th class="w-4"></th>
-                        <th class="w-8 px-3">Fecha</th>
+                        <th class="w-6">Fecha</th>
                         <th>Tipo</th>
                         <th>Observaciones</th>
                         <th class="w-9">Valor</th>
@@ -90,87 +54,129 @@
                       <tbody>
                         <% datos.hitos.map(element => { %>
                           <tr>
-                            <td class="w-4">
+                            <!-- col1 -->
+                            <td class="w4">
                               <% if (element.STAHIT === datos.estadosHito.sancionAnulada) { %>
-                                <span class="avatar avatar-rounded bg-red-lt">
-                                  <h6>ANUL</h6>
-                                </span>
+                                <div class="align-items-center py-1">
+                                  <span class="avatar avatar-rounded bg-red-lt">
+                                    <h6>ANU</h6>
+                                  </span>
+                                </div>
                               <% } else { %>
-                                <span class="avatar avatar-rounded bg-green-lt">
-                                  <h6>OK</h6>
-                                </span>
+                                <div class="align-items-center py-1">
+                                  <span class="avatar avatar-rounded bg-green-lt">
+                                    <h6>OK</h6>
+                                  </span>
+                                </div>
                               <% } %>
-                            </td>                            
-                            <td class="w-8 px-3">
+                            </td>
+                            <!-- col2 -->
+                            <td class="w-6">
                               <div class="d-flex py-1 align-items-center">
                                 <div class="flex-fill">
                                   <div class="font-weight-medium"><%- element.STRFEC %></div>
                                 </div>
                               </div>
                             </td>
+                            <!-- col3 -->
                             <td>
-                              <div class="d-flex py-1 align-items-center">
+                              <div div class="d-flex py-1 align-items-center">
                                 <div class="flex-fill">
                                   <div class="font-weight-medium"><%- element.DESTIP %></div>
                                 </div>
                               </div>
                             </td>
+                            <!-- col4 -->
                             <td>
                               <div class="d-flex py-1 align-items-center">
                                 <div class="flex-fill">
-                                  <% if (element.OBSHIT !== null) { %>
-                                    <div class="font-weight-medium"><%- element.OBSHIT %></div>
-                                  <% }%>
+                                  <div class="font-weight-medium"><%- element.OBSHIT %></div>
                                 </div>
                               </div>
                             </td>
+                            <!-- col5 -->
                             <td class="w-9">
                               <div class="d-flex py-1 align-items-center">
                                 <div class="flex-fill">
-                                  <div class="font-weight-medium"><%- element.IMPHIT %></div>
+                                  <div class="font-weight-medium"><%- Math.round((element.IMPHIT + Number.EPSILON) * 100) / 100 %></div>
                                 </div>
                               </div>
                             </td>
-                            <td class="text-end w-5">
+                            <!-- col 6 -->
+                            <td class="w-5">
                               <ul class="dots-menu">
                                 <li class="nav-item drop-right">
                                   <a href="#" class="nav-link">
-                                    <i class="bi bi-three-dots-vertical"></i>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" width="24" height="24" viewBox="0 0 24 24"
+                                      stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                      <path stroke-width="1" fill="none"
+                                        d="M12 18.7q-.4 0-.688-.287-.287-.288-.287-.688 0-.4.287-.687.288-.288.688-.288.4 0 .688.288.287.287.287.687 0 .4-.287.688-.288.287-.688.287Zm0-5.725q-.4 0-.688-.287-.287-.288-.287-.688 0-.4.287-.688.288-.287.688-.287.4 0 .688.287.287.288.287.688 0 .4-.287.688-.288.287-.688.287Zm0-5.725q-.4 0-.688-.287-.287-.288-.287-.688 0-.4.287-.687Q11.6 5.3 12 5.3q.4 0 .688.288.287.287.287.687 0 .4-.287.688-.288.287-.688.287Z" />
+                                    </svg>
                                   </a>
                                   <ul>
                                     <li class="nav-item">
                                       <a href="/admin/fraudes/hitos/edit/<%- datos.fraude.IDFRAU %>/<%- element.IDHITO %>" class="nav-link">
-                                        <i class="bi bi-pencil dropdown-item-icon"></i>Editar hito
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" width="24" height="24"
+                                          viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                          <path stroke-width=".4" fill="none"
+                                            d="M6.85 20.575q-.6 0-1.012-.412-.413-.413-.413-1.013V4.85q0-.6.413-1.013.412-.412 1.012-.412h7.825L18.6 7.35v3.4h-.65V7.675h-3.6V4.05h-7.5q-.3 0-.55.25-.25.25-.25.55v14.275q0 .3.25.55.25.25.55.25h4.25v.65Zm-.8-.65V4.05 19.925ZM17.025 14.6l.45.425-3.75 3.75v1.1h1.1l3.775-3.75.45.45-3.95 3.95h-2v-2Zm2.025 1.975L17.025 14.6l1.05-1.05q.225-.2.525-.2.3 0 .475.2l1 1q.2.2.2.487 0 .288-.2.538Z" />
+                                        </svg>
+                                        Editar
                                       </a>
                                     </li>
                                     <% if (element.TIPHIT === datos.estadosHito.propuestaLiquidacion) { %>
-                                      <% if (!datos.hitos.find(q => q.TIPHIT === datos.estadosHito.liquidacion)) { %>
+                                      <% if (!datos.hitos.find(itm => itm.TIPHIT === datos.estadosHito.liquidacion)) { %>
                                         <li class="nav-item">
-                                          <a href="#" class="nav-link" onclick="{document.getElementById('idhito').value ='<%- element.IDHITO %>', document.getElementById('texdel').innerHTML ='<p><%- element.STRFEC %></p><p><%- element.DESTIP %></p>'}" data-bs-toggle="modal" data-bs-target="#modal-borrarHito">
-                                            <i class="bi bi-trash dropdown-item-icon"></i>Borrar hito
+                                          <a href="#" class="nav-link" onclick="{document.getElementById('hitbor').value ='<%- element.IDHITO %>', document.getElementById('msghit').innerHTML ='<p><%- element.STRFEC %></p><p><%- element.DESTIP %></p>'}"
+                                            data-bs-toggle="modal" data-bs-target="#modal-borrarHito">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" width="24" height="24" viewBox="0 0 24 24"
+                                              stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                              <path stroke-width=".4" fill="none"
+                                                d="M7.85 19.575q-.6 0-1.025-.425-.425-.425-.425-1.025v-12.1h-.975V5.4h3.6v-.675H15V5.4h3.6v.625h-.975V18.15q0 .6-.425 1.013-.425.412-1.025.412Zm9.125-13.55H7.05v12.1q0 .35.225.575.225.225.575.225h8.325q.3 0 .55-.25.25-.25.25-.55Zm-6.85 10.925h.625V8h-.625Zm3.15 0h.625V8h-.625ZM7.05 6.025V18.925 18.125Z" />
+                                            </svg>
+                                            Borrar
                                           </a>
                                         </li>
                                       <% } %>
                                     <% } else if (element.TIPHIT === datos.estadosHito.propuestaSancion) { %>
-                                      <% if (!datos.hitos.find(q => q.TIPHIT === datos.estadosHito.sancion)) { %>
+                                      <% if (!datos.hitos.find(itm => itm.TIPHIT === datos.estadosHito.sancion)) { %>
                                         <li class="nav-item">
-                                          <a href="#" class="nav-link" onclick="{document.getElementById('idhito').value ='<%- element.IDHITO %>', document.getElementById('texdel').innerHTML ='<p><%- element.STRFEC %></p><p><%- element.DESTIP %></p>'}" data-bs-toggle="modal" data-bs-target="#modal-borrarHito">
-                                            <i class="bi bi-trash dropdown-item-icon"></i>Borrar hito
+                                          <a href="#" class="nav-link" onclick="{document.getElementById('hitbor').value ='<%- element.IDHITO %>', document.getElementById('msghit').innerHTML ='<p><%- element.STRFEC %></p><p><%- element.DESTIP %></p>'}" 
+                                            data-bs-toggle="modal" data-bs-target="#modal-borrarHito">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" width="24" height="24" viewBox="0 0 24 24"
+                                              stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                              <path stroke-width=".4" fill="none"
+                                                d="M7.85 19.575q-.6 0-1.025-.425-.425-.425-.425-1.025v-12.1h-.975V5.4h3.6v-.675H15V5.4h3.6v.625h-.975V18.15q0 .6-.425 1.013-.425.412-1.025.412Zm9.125-13.55H7.05v12.1q0 .35.225.575.225.225.575.225h8.325q.3 0 .55-.25.25-.25.25-.55Zm-6.85 10.925h.625V8h-.625Zm3.15 0h.625V8h-.625ZM7.05 6.025V18.925 18.125Z" />
+                                            </svg>
+                                            Borrar
                                           </a>
                                         </li>
                                       <% } %>
                                     <% } else { %>
                                       <li class="nav-item">
-                                        <a href="#" class="nav-link" onclick="{document.getElementById('idhito').value ='<%- element.IDHITO %>', document.getElementById('texdel').innerHTML ='<p><%- element.STRFEC %></p><p><%- element.DESTIP %></p>'}" data-bs-toggle="modal" data-bs-target="#modal-borrarHito">
-                                          <i class="bi bi-trash dropdown-item-icon"></i>Borrar hito
+                                        <a href="#" class="nav-link"
+                                          onclick="{document.getElementById('hitbor').value ='<%- element.IDHITO %>', document.getElementById('msghit').innerHTML ='<p><%- element.STRFEC %></p><p><%- element.DESTIP %></p>'}"
+                                          data-bs-toggle="modal" data-bs-target="#modal-borrarHito">
+                                          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" width="24" height="24" viewBox="0 0 24 24"
+                                            stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke-width=".4" fill="none"
+                                              d="M7.85 19.575q-.6 0-1.025-.425-.425-.425-.425-1.025v-12.1h-.975V5.4h3.6v-.675H15V5.4h3.6v.625h-.975V18.15q0 .6-.425 1.013-.425.412-1.025.412Zm9.125-13.55H7.05v12.1q0 .35.225.575.225.225.575.225h8.325q.3 0 .55-.25.25-.25.25-.55Zm-6.85 10.925h.625V8h-.625Zm3.15 0h.625V8h-.625ZM7.05 6.025V18.925 18.125Z" />
+                                          </svg>
+                                          Borrar
                                         </a>
-                                      </li>                                        
+                                      </li>
                                     <% } %>
-                                    <% if(element.STAHIT === datos.estadosHito.sancion) { %>
-                                      <li class="nav-item list-divider"></li>
+                                    <% if (element.TIPHIT === datos.estadosHito.sancion && element.STAHIT !== datos.estadosHito.sancionAnulada) { %>
                                       <li class="nav-item">
-                                        <a href="#" class="nav-link" onclick="{document.getElementById('archito').value ='<%- element.IDHITO %>', document.getElementById('texarc').innerHTML ='<p><%- element.STRFEC %></p><p><%- element.DESTIP %></p>'}" data-bs-toggle="modal" data-bs-target="#modal-archivo">
-                                          <i class="bi bi-archive dropdown-item-icon"></i>Archivado de sanción
+                                        <a href="#" class="nav-link"
+                                          onclick="{document.getElementById('idarch').value ='<%- element.IDHITO %>', document.getElementById('msgsan').innerHTML ='<p><%- element.STRFEC %></p><p><%- element.DESTIP %></p><p><%- element.IMPHIT %></p>'}"
+                                          data-bs-toggle="modal" data-bs-target="#modal-archivo">
+                                          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" width="24" height="24" viewBox="0 0 24 24"
+                                            stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke-width=".4" fill="none"
+                                              d="M7.85 19.575q-.6 0-1.025-.425-.425-.425-.425-1.025v-12.1h-.975V5.4h3.6v-.675H15V5.4h3.6v.625h-.975V18.15q0 .6-.425 1.013-.425.412-1.025.412Zm9.125-13.55H7.05v12.1q0 .35.225.575.225.225.575.225h8.325q.3 0 .55-.25.25-.25.25-.55Zm-6.85 10.925h.625V8h-.625Zm3.15 0h.625V8h-.625ZM7.05 6.025V18.925 18.125Z" />
+                                          </svg>
+                                          Archivado de sanción
                                         </a>
                                       </li>
                                     <% } %>
@@ -196,15 +202,9 @@
                     </div>
                     <div class="col-auto ms-auto">
                       <div class="d-flex">
-                        <div class="input-icon me-3">
-                          <span class="input-icon-addon"><i class="bi bi-search"></i></span>
-                          <input type="text" class="form-control d-inline-block me-3" id="buscarEventoBox" onkeyup="filtroEventos();" placeholder="Buscar..." aria-label="Buscar en sms">
-                        </div>
-                        <a href="/admin/fraudes/eventos/add/<%- datos.fraude.IDFRAU %>" class="btn btn-primary">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                            <line x1="12" y1="5" x2="12" y2="19"></line>
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <a href="/admin/fraudes/eventos/add/<%- datos.fraude.IDFRAU %>" class="btn">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon" height="24" width="24" viewBox="0 0 24 24">
+                            <path d="M11.25 18.75v-6h-6v-1.5h6v-6h1.5v6h6v1.5h-6v6Z" />
                           </svg>
                           Nuevo
                         </a>
@@ -212,31 +212,36 @@
                     </div>
                   </div>
                   <div class="card-body">
-                    <table class="table table-vcenter table-striped table-fixHead sortable" id="tblEventos">
+                    <table class="table table-vcenter table-striped" id="tblEventos">
                       <thead>
                       <tr class="header">
                         <th class="w-4"></th>
-                        <th class="w-8 px-3">Fecha</th>
+                        <th class="w-6">Fecha</th>
                         <th>Tipo</th>
                         <th>Observaciones</th>
-                        <th class="w-4"></th>
+                        <th class="w-5"></th>
                       </tr>
                       </thead>
                       <tbody>
                         <% datos.eventos.map(element => { %>
                           <tr>
+                            <!-- col1 -->
                             <td class="w-4">
-                              <span class="avatar avatar-rounded bg-green-lt">
-                                <h5>OK</h5>
-                              </span>
-                            </td>                            
-                            <td class="w-8 px-3">
+                              <div class="align-items-center py-1">
+                                <span class="avatar avatar-rounded bg-green-lt">
+                                  <h6>OK</h6>
+                                </span>
+                              </div>
+                            </td>
+                            <!-- col2 -->
+                            <td class="w-4">
                               <div class="d-flex py-1 align-items-center">
                                 <div class="flex-fill">
                                   <div class="font-weight-medium"><%- element.STRFEC %></div>
                                 </div>
                               </div>
                             </td>
+                            <!-- col3 -->
                             <td>
                               <div class="d-flex py-1 align-items-center">
                                 <div class="flex-fill">
@@ -244,28 +249,48 @@
                                 </div>
                               </div>
                             </td>
+                            <!-- col4 -->
                             <td>
                               <div class="d-flex py-1 align-items-center">
                                 <div class="flex-fill">
-                                  <div class="font-weight-medium"><%- element.OBSEVE %></div>
+                                  <div class="font-weight-medium">
+                                    <%- element.OBSEVE.length > 30 ? element.OBSEVE.slice(0, 30) + '...' : element.OBSEVE %>
+                                  </div>
                                 </div>
                               </div>
                             </td>
-                            <td class="text-end w-4">
+                            <!-- col5 -->
+                            <td class="w-5">
                               <ul class="dots-menu">
                                 <li class="nav-item drop-right">
                                   <a href="#" class="nav-link">
-                                    <i class="bi bi-three-dots-vertical"></i>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" width="24" height="24" viewBox="0 0 24 24"
+                                      stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                      <path stroke-width="1" fill="none"
+                                        d="M12 18.7q-.4 0-.688-.287-.287-.288-.287-.688 0-.4.287-.687.288-.288.688-.288.4 0 .688.288.287.287.287.687 0 .4-.287.688-.288.287-.688.287Zm0-5.725q-.4 0-.688-.287-.287-.288-.287-.688 0-.4.287-.688.288-.287.688-.287.4 0 .688.287.287.288.287.688 0 .4-.287.688-.288.287-.688.287Zm0-5.725q-.4 0-.688-.287-.287-.288-.287-.688 0-.4.287-.687Q11.6 5.3 12 5.3q.4 0 .688.288.287.287.287.687 0 .4-.287.688-.288.287-.688.287Z" />
+                                    </svg>
                                   </a>
                                   <ul>
                                     <li class="nav-item">
                                       <a href="/admin/fraudes/eventos/edit/<%- datos.fraude.IDFRAU %>/<%- element.IDEVEN %>" class="nav-link">
-                                        <i class="bi bi-pencil dropdown-item-icon"></i>Editar evento
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" width="24" height="24" viewBox="0 0 24 24"
+                                          stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                          <path stroke-width=".4" fill="none"
+                                            d="M6.85 20.575q-.6 0-1.012-.412-.413-.413-.413-1.013V4.85q0-.6.413-1.013.412-.412 1.012-.412h7.825L18.6 7.35v3.4h-.65V7.675h-3.6V4.05h-7.5q-.3 0-.55.25-.25.25-.25.55v14.275q0 .3.25.55.25.25.55.25h4.25v.65Zm-.8-.65V4.05 19.925ZM17.025 14.6l.45.425-3.75 3.75v1.1h1.1l3.775-3.75.45.45-3.95 3.95h-2v-2Zm2.025 1.975L17.025 14.6l1.05-1.05q.225-.2.525-.2.3 0 .475.2l1 1q.2.2.2.487 0 .288-.2.538Z" />
+                                        </svg>
+                                        Editar
                                       </a>
                                     </li>
                                     <li class="nav-item">
-                                      <a href="#" class="nav-link" onclick="{document.getElementById('ideven').value ='<%- element.IDEVEN %>', document.getElementById('deleve').innerHTML ='<p><%- element.STRFEC %></p><p><%- element.DESTIP %></p>'}" data-bs-toggle="modal" data-bs-target="#modal-borrarEvento">
-                                        <i class="bi bi-trash dropdown-item-icon"></i>Borrar evento
+                                      <a href="#" class="nav-link"
+                                        onclick="{document.getElementById('evebor').value ='<%- element.IDEVEN %>', document.getElementById('msgbor').innerHTML ='<p><%- element.STRFEC %></p><p><%- element.DESTIP %></p>'}"
+                                        data-bs-toggle="modal" data-bs-target="#modal-borrarEvento">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" width="24" height="24" viewBox="0 0 24 24"
+                                          stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                          <path stroke-width=".4" fill="none"
+                                            d="M7.85 19.575q-.6 0-1.025-.425-.425-.425-.425-1.025v-12.1h-.975V5.4h3.6v-.675H15V5.4h3.6v.625h-.975V18.15q0 .6-.425 1.013-.425.412-1.025.412Zm9.125-13.55H7.05v12.1q0 .35.225.575.225.225.575.225h8.325q.3 0 .55-.25.25-.25.25-.55Zm-6.85 10.925h.625V8h-.625Zm3.15 0h.625V8h-.625ZM7.05 6.025V18.925 18.125Z" />
+                                        </svg>
+                                        Borrar
                                       </a>
                                     </li>
                                   </ul>
@@ -280,7 +305,7 @@
                 </div>
               </div>
               <div class="col-12 mt-0">
-                <a href="/admin/fraudes" class="btn btn-link">Salir</a>
+                <a href="/admin/fraudes" class="btn btn-link">Volver</a>
                 <a href="/admin/fraudes/resolver/<%- datos.fraude.IDFRAU %>" class="btn btn-primary ms-auto">
                   <i class="bi bi-check2 dropdown-item-icon"></i>Resolver fraude
                 </a>
@@ -304,7 +329,7 @@
               <path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75"></path>
             </svg>
             <h3>¿Desea borrar este hito?</h3>
-            <div id="texdel"></div>
+            <div id="msghit"></div>
             <div class="text-muted">Lo que vas a hacer no puede ser recuperado.</div>
           </div>
           <div class="modal-footer">
@@ -315,8 +340,8 @@
                 </div>
                 <div class="col">
                   <form action="/admin/fraudes/hitos/delete" method="POST">
-                    <input type="hidden" id="idhito" name="idhito" value="">
-                    <input type="hidden" id="idfrau" name="idfrau" value="<%- datos.fraude.IDFRAU %>">
+                    <input type="hidden" id="hitbor" name="idhito" value="">
+                    <input type="hidden" id="idbohf" name="idfrau" value="<%- datos.fraude.IDFRAU %>">
                     <button type="submit" class="btn btn-danger w-100" id="btnBorrarHito">Borrar hito</button>
                   </form>
                 </div>
@@ -338,7 +363,7 @@
               <path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75"></path>
             </svg>
             <h3>¿Desea borrar este evento?</h3>
-            <div id="deleve"></div>
+            <div id="msgeve"></div>
             <div class="text-muted">Lo que vas a hacer no puede ser recuperado.</div>
           </div>
           <div class="modal-footer">
@@ -349,8 +374,8 @@
                 </div>
                 <div class="col">
                   <form action="/admin/fraudes/eventos/delete" method="POST">
-                    <input type="hidden" id="ideven" name="ideven" value="">
-                    <input type="hidden" id="idfrau" name="idfrau" value="<%- datos.fraude.IDFRAU %>">
+                    <input type="hidden" id="evebor" name="ideven" value="">
+                    <input type="hidden" id="idboef" name="idfrau" value="<%- datos.fraude.IDFRAU %>">
                     <button type="submit" class="btn btn-danger w-100" id="btnBorrarEvento">Borrar evento</button>
                   </form>
                 </div>
@@ -366,24 +391,27 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           <div class="modal-status bg-primary"></div>
           <div class="modal-body text-center py-4">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-blue icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-blue icon-lg" width="24" height="24"
+              viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+              stroke-linejoin="round">
               <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
               <path d="M12 9v2m0 4v.01"></path>
               <path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75"></path>
             </svg>
             <h3>Archivado de sanción</h3>
-            <div id="texarc"></div>
+            <div id="msgsan"></div>
           </div>
           <div class="modal-footer">
             <div class="w-100">
               <div class="row">
                 <div class="col">
-                  <a href="/admin/fraudes/hitos/<%- datos.fraude.IDFRAU %>" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
+                  <a href="/admin/fraudes/hitos/<%- datos.fraude.IDFRAU %>" class="btn btn-white w-100"
+                    data-bs-dismiss="modal">Cancelar</a>
                 </div>
                 <div class="col">
                   <form action="/admin/fraudes/hitos/archivado" method="POST">
-                    <input type="hidden" id="archito" name="idhito" value="">
-                    <input type="hidden" id="idfrau" name="idfrau" value="<%- datos.fraude.IDFRAU %>">                  
+                    <input type="hidden" id="idarch" name="idhito" value="">
+                    <input type="hidden" id="idarcf" name="idfrau" value="<%- datos.fraude.IDFRAU %>">
                     <button type="submit" class="btn btn-primary w-100">Archivado de sanción</button>
                   </form>
                 </div>
@@ -395,55 +423,5 @@
     </div>
 
     <script src="/js/ayuda.min.js"></script>
-    <script>
-      function filtroHitos() {
-        const filter = document.querySelector('#buscarHitoBox').value.toUpperCase()
-
-        document.querySelectorAll('#tblHitos tr:not(.header)').forEach((tr) => {
-          const anyMatch = [...tr.children].some(td => td.textContent.toUpperCase().includes(filter));
-          anyMatch ? tr.style.display = '' : tr.style.display = 'none'
-        });
-      }
-      function filtroEventos() {
-        const filter = document.querySelector('#buscarEventoBox').value.toUpperCase()
-
-        document.querySelectorAll('#tblEventos tr:not(.header)').forEach((tr) => {
-          const anyMatch = [...tr.children].some(td => td.textContent.toUpperCase().includes(filter));
-          anyMatch ? tr.style.display = '' : tr.style.display = 'none'
-        });
-      }
-    </script>
-    <script>
-      function sortTableByColumn(table, column, asc = true) {
-        const dirModifier = asc ? 1 : -1;
-        const tBody = table.tBodies[0];
-        const rows = Array.from(tBody.querySelectorAll("tr"));
-
-        const sortedRows = rows.sort((a, b) => {
-          const aColText = a.cells[column].textContent;
-          const bColText = b.cells[column].textContent;
-
-          return aColText > bColText ? (1 * dirModifier) : (-1 * dirModifier);
-        });
-
-        for(let row of sortedRows) {
-          tBody.appendChild( row );
-        }
-
-        table.querySelectorAll("th").forEach(th => th.classList.remove("th-sort-asc", "th-sort-desc"));
-        table.querySelector(`th:nth-child(${ column + 1})`).classList.toggle("th-sort-asc", asc);
-        table.querySelector(`th:nth-child(${ column + 1})`).classList.toggle("th-sort-desc", !asc);
-      }
-
-      document.querySelectorAll(".sortable th").forEach(headerCell => {
-        headerCell.addEventListener("click", () => {
-          const tableElement = headerCell.parentElement.parentElement.parentElement;
-          const headerIndex = Array.prototype.indexOf.call(headerCell.parentElement.children, headerCell);
-          const currentIsAscending = headerCell.classList.contains("th-sort-asc");
-          
-          sortTableByColumn(tableElement, headerIndex, !currentIsAscending);
-        });
-      });
-    </script>
   </body>
 </html>
