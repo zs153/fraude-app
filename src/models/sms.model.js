@@ -7,6 +7,7 @@ const baseQuery = `SELECT
 FROM smss ss
 `
 const insertSql = `BEGIN FRAUDE_PKG.INSERTSMS(
+  TO_DATE(:fecsms, 'YYYY-MM-DD'),
   :texsms, 
   :movsms, 
   :stasms, 
@@ -17,9 +18,9 @@ const insertSql = `BEGIN FRAUDE_PKG.INSERTSMS(
 `
 const updateSql = `BEGIN FRAUDE_PKG.UPDATESMS(
   :idsmss,
+  TO_DATE(:fecsms, 'YYYY-MM-DD'),
   :texsms, 
   :movsms,
-  :stasms, 
   :usumov,
   :tipmov
 ); END;
@@ -42,24 +43,10 @@ export const find = async (context) => {
   let query = baseQuery
   let binds = {}
 
-  if (context.idsmss) {
-    binds.idsmss = context.idsmss
+  if (context.IDSMSS) {
+    binds.idsmss = context.IDSMSS
     query += `WHERE ss.idsmss = :idsmss`
   }
-  if (context.movsms) {
-    binds.idsmss = context.idsmss
-    query += `WHERE ss.movsms = :movsms`
-  }
-
-  const result = await simpleExecute(query, binds)
-  return result.rows
-}
-export const findAll = async (context) => {
-  let query = baseQuery
-  let binds = {}
-
-  binds.stasms = context.stasms
-  query += `WHERE ss.stasms <= :stasms`
 
   const result = await simpleExecute(query, binds)
   return result.rows
@@ -108,7 +95,7 @@ export const remove = async (bind) => {
 }
 export const change = async (bind) => {
   let result
-
+  console.log(cambioSql, bind)
   try {
     await simpleExecute(cambioSql, bind)
 

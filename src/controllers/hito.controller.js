@@ -1,9 +1,6 @@
 import * as DAL from '../models/hito.model'
 
 const insertFromRec = (req) => {
-  const fraude = {
-    idfrau: req.body.fraude.IDFRAU,
-  }
   const hito = {
     tiphit: req.body.hito.TIPHIT,
     imphit: req.body.hito.IMPHIT,
@@ -15,7 +12,7 @@ const insertFromRec = (req) => {
     tipmov: req.body.movimiento.TIPMOV,
   }
 
-  return Object.assign(fraude, hito, movimiento)
+  return Object.assign(hito, movimiento)
 }
 const updateFromRec = (req) => {
   const hito = {
@@ -32,9 +29,6 @@ const updateFromRec = (req) => {
   return Object.assign(hito, movimiento)
 }
 const deleteFromRec = (req) => {
-  const fraude = {
-    idfrau: req.body.fraude.IDFRAU,
-  }
   const hito = {
     idhito: req.body.hito.IDHITO,
   }
@@ -43,7 +37,7 @@ const deleteFromRec = (req) => {
     tipmov: req.body.movimiento.TIPMOV,
   }
 
-  return Object.assign(fraude, hito, movimiento)
+  return Object.assign(hito, movimiento)
 }
 const cambioFromRec = (req) => {
   const hito = {
@@ -63,7 +57,6 @@ export const hito = async (req, res) => {
 
   try {
     const result = await DAL.find(context)
-
     if (result.length === 1) {
       return res.status(200).json(result[0])
     } else {
@@ -74,7 +67,7 @@ export const hito = async (req, res) => {
   }
 }
 export const hitos = async (req, res) => {
-  const context = req.body.fraude
+  const context = req.body
 
   try {
     const result = await DAL.find(context)

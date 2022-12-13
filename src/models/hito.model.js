@@ -2,26 +2,11 @@ import oracledb from 'oracledb'
 import { simpleExecute } from '../services/database.js'
 
 const baseQuery = `SELECT 
-  idhito,
-  TO_CHAR(fechit, 'YYYY-MM-DD') "FECHIT",
-  tiphit,
-  TO_CHAR(imphit) "IMPHIT",
-  obshit,
-  stahit,
-  TO_CHAR(fechit, 'DD/MM/YYYY') "STRFEC"
-FROM hitos
-`
-const largeQuery = `SELECT 
-  th.destip,
   hh.*,
-  TO_CHAR(hh.fechit, 'DD/MM/YYYY') "STRFEC"
+  TO_CHAR(fechit, 'DD/MM/YYYY') "STRFEC"
 FROM hitos hh
-INNER JOIN hitosfraude hf ON hf.idhito = hh.idhito
-INNER JOIN tiposhito th ON th.idtipo = hh.tiphit
-WHERE hf.idfrau = :idfrau
 `
-const insertSql = `BEGIN FRAUDE_PKG.INSERTHITOFRAUDE(
-  :idfrau,
+const insertSql = `BEGIN FRAUDE_PKG.INSERTHITO(
   :tiphit,
   :imphit,
   :obshit,
@@ -40,8 +25,7 @@ const updateSql = `BEGIN FRAUDE_PKG.UPDATEHITO(
   :tipmov
 ); END;
 `
-const removeSql = `BEGIN FRAUDE_PKG.DELETEHITOFRAUDE(
-  :idfrau,
+const removeSql = `BEGIN FRAUDE_PKG.DELETEHITO(
   :idhito,
   :usumov,
   :tipmov 
@@ -61,10 +45,7 @@ export const find = async (context) => {
 
   if (context.IDHITO) {
     binds.idhito = context.IDHITO
-    query += `WHERE idhito = :idhito`
-  } else if (context.IDFRAU) {
-    binds.idfrau = context.IDFRAU
-    query = largeQuery
+    query += `WHERE hh.idhito = :idhito`
   }
 
   const result = await simpleExecute(query, binds)

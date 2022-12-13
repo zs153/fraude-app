@@ -34,12 +34,12 @@ export const find = async (context) => {
   let query = baseQuery
   let binds = {}
 
-  if (context.idofic) {
-    binds.idofic = context.idofic
+  if (context.IDOFIC) {
+    binds.idofic = context.IDOFIC
     query += `WHERE idofic = :idofic`
   }
-  if (context.codofi) {
-    binds.codofi = context.codofi
+  if (context.CODOFI) {
+    binds.codofi = context.CODOFI
     query += `WHERE codofi = :codofi`
   }
 

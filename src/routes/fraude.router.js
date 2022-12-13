@@ -20,11 +20,14 @@ import {
   crearHitoSancion,
   borrarHito,
   borrarEvento,
-  sms,
   smss,
   crearSms,
   modificarSms,
   borrarSms,
+  relaciones,
+  crearRelacion,
+  modificarRelacion,
+  borrarRelacion,
 } from '../controllers/fraude.controller'
 
 const apiFraudeRouter = express.Router()
@@ -53,15 +56,20 @@ apiFraudeRouter.post('/fraudes/hitos/insertsan', crearHitoSancion)
 apiFraudeRouter.post('/fraudes/hitos/delete', borrarHito)
 
 //eventos
-apiFraudeRouter.post('/fraudes/events', eventosFraude)
-apiFraudeRouter.post('/fraudes/events/insert', crearEvento)
-apiFraudeRouter.post('/fraudes/events/delete', borrarEvento)
+apiFraudeRouter.post('/fraudes/eventos', eventosFraude)
+apiFraudeRouter.post('/fraudes/eventos/insert', crearEvento)
+apiFraudeRouter.post('/fraudes/eventos/delete', borrarEvento)
 
 // sms
-apiFraudeRouter.post('/fraudes/sms', sms)
 apiFraudeRouter.post('/fraudes/smss', smss)
 apiFraudeRouter.post('/fraudes/smss/insert', crearSms)
 apiFraudeRouter.post('/fraudes/smss/update', modificarSms)
 apiFraudeRouter.post('/fraudes/smss/delete', borrarSms)
+
+// relacionados
+apiFraudeRouter.post('/fraudes/relaciones', relaciones)
+apiFraudeRouter.post('/fraudes/relaciones/insert', crearRelacion)
+apiFraudeRouter.post('/fraudes/relaciones/update', modificarRelacion)
+apiFraudeRouter.post('/fraudes/relaciones/delete', borrarRelacion)
 
 export default apiFraudeRouter

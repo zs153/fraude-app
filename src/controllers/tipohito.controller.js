@@ -2,36 +2,36 @@ import * as DAL from "../models/tipohito.model";
 
 const insertFromRec = (req) => {
   const tipo = {
-    destip: req.body.tipo.destip,
-    anuhit: req.body.tipo.anuhit,
+    destip: req.body.tipo.DESTIP,
+    anuhit: req.body.tipo.ANUHIT,
   };
   const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
   };
 
   return Object.assign(tipo, movimiento);
 };
 const updateFromRec = (req) => {
   const tipo = {
-    idtipo: req.body.tipo.idtipo,
-    destip: req.body.tipo.destip,
-    anuhit: req.body.tipo.anuhit,
+    idtipo: req.body.tipo.IDTIPO,
+    destip: req.body.tipo.DESTIP,
+    anuhit: req.body.tipo.ANUHIT,
   };
   const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
   };
 
   return Object.assign(tipo, movimiento);
 };
 const deleteFromRec = (req) => {
   const tipo = {
-    idtipo: req.body.tipo.idtipo,
+    idtipo: req.body.tipo.IDTIPO,
   };
   const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
   };
 
   return Object.assign(tipo, movimiento);
@@ -53,10 +53,10 @@ export const tipo = async (req, res) => {
   }
 };
 export const tipos = async (req, res) => {
-  const context = req.body.tipo;
+  const context = req.body;
 
   try {
-    const result = await DAL.findAll(context);
+    const result = await DAL.find(context);
 
     if (result !== null) {
       res.status(200).json(result);

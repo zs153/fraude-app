@@ -38,8 +38,8 @@ export const find = async (context) => {
   let query = baseQuery
   let binds = {}
 
-  if (context.idofic) {
-    binds.idofic = context.idofic
+  if (context.IDRELA) {
+    binds.idrela = context.IDRELA
     query += `WHERE idrela = :idrela`
   }
 

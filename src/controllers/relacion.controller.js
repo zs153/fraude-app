@@ -1,9 +1,6 @@
 import * as DAL from '../models/relacion.model'
 
 const insertFromRec = (req) => {
-  const fraude = {
-    idfrau: req.body.fraude.IDFRAU,
-  }
   const relacion = {
     fecrel: req.body.relacion.FECREL,
     nifcon: req.body.relacion.NIFCON,
@@ -14,12 +11,9 @@ const insertFromRec = (req) => {
     tipmov: req.body.movimiento.TIPMOV,
   }
 
-  return Object.assign(fraude, relacion, movimiento)
+  return Object.assign(relacion, movimiento)
 }
 const updateFromRec = (req) => {
-  const fraude = {
-    idfrau: req.body.fraude.IDFRAU,
-  }
   const relacion = {
     idrela: req.body.relacion.IDRELA,
     fecrel: req.body.relacion.FECREL,
@@ -31,7 +25,7 @@ const updateFromRec = (req) => {
     tipmov: req.body.movimiento.TIPMOV,
   }
 
-  return Object.assign(fraude, relacion, movimiento)
+  return Object.assign(relacion, movimiento)
 }
 const deleteFromRec = (req) => {
   const relacion = {

@@ -31,8 +31,8 @@ export const find = async (context) => {
   let query = baseQuery;
   let binds = {};
 
-  if (context.idtipo) {
-    binds.idtipo = context.idtipo;
+  if (context.IDTIPO) {
+    binds.idtipo = context.IDTIPO;
     query += `WHERE idtipo = :idtipo`;
   }
   const result = await simpleExecute(query, binds);

@@ -2,34 +2,34 @@ import * as DAL from '../models/tipoevento.model'
 
 const insertFromRec = (req) => {
   const tipo = {
-    destip: req.body.tipo.destip,
+    destip: req.body.tipo.DESTIP,
   }
   const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
   }
 
   return Object.assign(tipo, movimiento)
 }
 const updateFromRec = (req) => {
   const tipo = {
-    idtipo: req.body.tipo.idtipo,
-    destip: req.body.tipo.destip,
+    idtipo: req.body.tipo.IDTIPO,
+    destip: req.body.tipo.DESTIP,
   }
   const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
   }
 
   return Object.assign(tipo, movimiento)
 }
 const deleteFromRec = (req) => {
   const tipo = {
-    idtipo: req.body.tipo.idtipo,
+    idtipo: req.body.tipo.IDTIPO,
   }
   const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
   }
 
   return Object.assign(tipo, movimiento)
