@@ -8,7 +8,9 @@
   <title>Sms</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
   <!-- styles -->
-  <link rel="stylesheet" href="/css/styles.css">
+  <!-- <link rel="stylesheet" href="/css/styles.css"> -->
+  <link rel="stylesheet" href="/css/estilos.css">
+  <link rel="stylesheet" href="/css/navbar.css">
 </head>
 
 <body class="antialiased">
@@ -21,29 +23,28 @@
           <div class="row">
             <div class="col-12">
               <div class="card">
-                <form id="form" action="/admin/fraudes/smss/insert" method="POST" onsubmit="return validate();">
-                  <input type="hidden" name="iddocu" id="iddocu" value="<%- datos.fraude.IDDOCU %>">
+                <form action="/admin/fraudes/smss/insert" method="POST" onsubmit="return validate();">
+                  <input type="hidden" id="idfrau" name="idfrau" value="<%- datos.fraude.IDFRAU %>">
                   <div class="card-header">
-                    <h3 class="card-title">Sms</h3>
+                    <h3 class="card-title">Nuevo sms</h3>
                   </div>
                   <div class="card-body">
                     <div class="row">
                       <div class="col-4">
                         <div class="mb-1">
-                          <div class="input-control">
-                            <label class="form-label required">Móvil</label>
+                          <div class="input-control required">
+                            <label class="form-label required">Movil</label>
                             <input type="text" name="movsms" id="movsms" class="form-control"
-                              value="<%- datos.sms.MOVSMS %>" autofocus />
+                              style="text-transform: uppercase;" value="<%- datos.sms.MOVSMS %>" readonly />
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>
                       </div>
-                      <div class="row">
-                        <div class="col-12">
-                          <div class="mb-1">
+                      <div class="col-8">
+                        <div class="mb-1">
+                          <div class="input-control required">
                             <label class="form-label required">Texto</label>
-                            <textarea type="text" name="texsms" id="texsms" class="form-control" rows="3"
-                              style="resize: vertical"></textarea>
+                            <textarea type="text" name="texsms" id="texsms" class="form-control" rows="3" style="resize: vertical"></textarea>
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>
@@ -52,9 +53,8 @@
                   </div>
                   <div class="card-footer text-end">
                     <div class="d-flex">
-                      <a href="/admin/fraudes/smss/<%- datos.fraude.IDDOCU %>"
-                        class="btn btn-white">Cancelar</a>
-                      <button type="submit" class="btn btn-success ms-auto" id="btnInsert">Crear sms</button>
+                      <a href="/admin/fraudes/smss/<%- datos.fraude.IDFRAU %>" class="btn btn-link">Cancelar</a>
+                      <button type="submit" class="btn btn-success ms-auto" id="btnInsert">Crear relación</button>
                     </div>
                   </div>
                 </form>
@@ -66,8 +66,8 @@
     </div>
     <%- include('../../../partials/footer') %>
   </div>
-  <script src="/js/ayuda.js"></script>
 
+  <script src="/js/ayuda.min.js"></script>
   <script>
     const movsms = document.getElementById('movsms')
     const texsms = document.getElementById('texsms')
@@ -76,15 +76,15 @@
       const movsmsValue = movsms.value.trim()
       const texsmsValue = texsms.value.trim()
 
-      if (movsmsValue === '' || movsmsValue.length !== 9) {
-        setError(movsms, 'Móvil requerido')
+      if (movsmsValue === '') {
+        setError(movsms, 'Movil requerido')
         setTimeout(function () {
           setSuccess(movsms)
         }, 3000)
         return false
       }
       if (texsmsValue === '' || texsmsValue.length > 140) {
-        setError(texsms, 'Texto requerido (longitud máxima 140 caracteres)')
+        setError(texsms, 'Texto requerido (no puede superar los 140 caracteres)')
         setTimeout(function () {
           setSuccess(texsms)
         }, 3000)
@@ -93,6 +93,7 @@
 
       return true
     }
+
     const setSuccess = (element) => {
       const inputControl = element.parentElement;
       const errorDisplay = inputControl.querySelector('.invalid-feedback');

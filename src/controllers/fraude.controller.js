@@ -247,10 +247,10 @@ export const hitoseventosPage = async (req, res) => {
     const result = await axios.post("http://localhost:8100/api/fraude", {
       fraude,
     });
-    const hitos = await axios.post("http://localhost:8100/api/hitos", {
+    const hitos = await axios.post("http://localhost:8100/api/fraudes/hitos", {
       fraude,
     });
-    const eventos = await axios.post("http://localhost:8100/api/eventos", {
+    const eventos = await axios.post("http://localhost:8100/api/fraudes/eventos", {
       fraude,
     });
     const tiposHito = await axios.post("http://localhost:8100/api/tipos/hitos", {});
@@ -282,7 +282,7 @@ export const addHitosPage = async (req, res) => {
   };
 
   try {
-    const hitos = await axios.post("http://localhost:8100/api/hitos", {
+    const hitos = await axios.post("http://localhost:8100/api/fraudes/hitos", {
       fraude,
     });
     const tipos = await axios.post("http://localhost:8100/api/tipos/hitos", {});
@@ -328,7 +328,7 @@ export const editHitosPage = async (req, res) => {
     const result = await axios.post("http://localhost:8100/api/hito", {
       hito,
     });
-    const hitos = await axios.post("http://localhost:8100/api/hitos", {
+    const hitos = await axios.post("http://localhost:8100/api/fraudes/hitos", {
       fraude,
     });
     const tipos = await axios.post("http://localhost:8100/api/tipos/hitos", {});
@@ -437,13 +437,13 @@ export const smssPage = async (req, res) => {
     const fraudeData = {
       NIFCON: ret.data.NIFCON,
       NOMCON: ret.data.NOMCON,
-      EJEDOC: ret.data.EJEDOC,
+      EJEFRA: ret.data.EJEFRA,
     }
     const datos = {
       fraude,
       fraudeData,
       smss: JSON.stringify(smss.data),
-      estadosSms: JSON.stringify(estadosSms),
+      estadosSms,
     }
 
     res.render("admin/fraudes/smss", { user, datos });
@@ -490,20 +490,104 @@ export const smssEditPage = async (req, res) => {
   const fraude = {
     IDFRAU: req.params.idfra,
   }
-  let sms = {
+  const sms = {
     IDSMSS: req.params.idsms,
   };
 
   try {
-    const sms = await axios.post("http://localhost:8100/api/fraudes/sms", {
+    const result = await axios.post("http://localhost:8100/api/sms", {
       sms,
     });
     const datos = {
       fraude,
-      sms: sms.data,
+      sms: result.data,
     };
 
     res.render("admin/fraudes/smss/edit", { user, datos });
+  } catch (error) {
+    const msg =
+      "No se ha podido acceder a los datos de la aplicación. Si persiste el error solicite asistencia.";
+
+    res.render("admin/error400", {
+      alerts: [{ msg }],
+    });
+  }
+}
+
+// pag relacionados
+export const relacionesPage = async (req, res) => {
+  const user = req.user;
+  const fraude = {
+    IDFRAU: req.params.id,
+  };
+
+  try {
+    const ret = await axios.post("http://localhost:8100/api/fraude", {
+      fraude,
+    })
+    const relaciones = await axios.post("http://localhost:8100/api/fraudes/relaciones", {
+      fraude,
+    })
+
+    const fraudeData = {
+      NIFCON: ret.data.NIFCON,
+      NOMCON: ret.data.NOMCON,
+      EJEFRA: ret.data.EJEFRA,
+    }
+    const datos = {
+      fraude,
+      fraudeData,
+      relaciones: JSON.stringify(relaciones.data),
+    }
+
+    res.render("admin/fraudes/relaciones", { user, datos });
+  } catch (error) {
+    const msg = "No se ha podido acceder a los datos de la aplicación.";
+
+    res.render("admin/error400", {
+      alerts: [{ msg }],
+    });
+  }
+}
+export const relacionesAddPage = async (req, res) => {
+  const user = req.user;
+  let fraude = {
+    IDFRAU: req.params.id,
+  };
+  try {
+    const datos = {
+      fraude,
+    };
+
+    res.render("admin/fraudes/relaciones/add", { user, datos });
+  } catch (error) {
+    const msg =
+      "No se ha podido acceder a los datos de la aplicación. Si persiste el error solicite asistencia.";
+
+    res.render("admin/error400", {
+      alerts: [{ msg }],
+    });
+  }
+}
+export const relacionesEditPage = async (req, res) => {
+  const user = req.user;
+  const fraude = {
+    IDFRAU: req.params.idfra,
+  }
+  const relacion = {
+    IDRELA: req.params.idrel,
+  };
+
+  try {
+    const result = await axios.post("http://localhost:8100/api/relacion", {
+      relacion,
+    });
+    const datos = {
+      fraude,
+      relacion: result.data,
+    };
+
+    res.render("admin/fraudes/relaciones/edit", { user, datos });
   } catch (error) {
     const msg =
       "No se ha podido acceder a los datos de la aplicación. Si persiste el error solicite asistencia.";
@@ -828,70 +912,6 @@ export const ejercicio = async (req, res) => {
   }
 };
 
-// proc relacion
-export const insertRelacion = async (req, res) => {
-  const user = req.user;
-  const fecha = new Date()
-  const fraude = {
-    IDFRAU: req.body.idfrau,
-  }
-  const relacion = {
-    FECREL: fecha.toISOString().substring(0, 10),
-    NIFCON: req.body.nifcon.toUpperCase(),
-    NOMCON: req.body.nomcon.toUpperCase(),
-  };
-  const movimiento = {
-    USUMOV: user.id,
-    TIPMOV: tiposMovimiento.crearRelacion,
-  };
-
-  try {
-    await axios.post("http://localhost:8100/api/relaciones/insert", {
-      relacion,
-      movimiento,
-    });
-
-    res.redirect("/admin/fraudes");
-  } catch (error) {
-    const msg = "No se ha podido insertar el ejercicio.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
-  }
-};
-export const updateRelacion = async (req, res) => {
-  const user = req.user;
-  const fraude = {
-    IDFRAU: req.body.idfrau,
-  };
-  const relacion = {
-    IDRELA: req.body.idrela,
-    FECREL: req.body.fecrel,
-    NIFCON: req.body.nifcon,
-    NOMCON: req.body.nomcon,
-  };
-  const movimiento = {
-    USUMOV: user.id,
-    TIPMOV: tiposMovimiento.modificarRelacion,
-  };
-
-  try {
-    await axios.post("http://localhost:8100/api/relaciones/update", {
-      relacion,
-      movimiento,
-    });
-
-    res.redirect(`/admin/fraudes/hitoseventos/${fraude.IDFRAU}`);
-  } catch (error) {
-    const msg = "No se ha podido actualizar el hito.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
-  }
-};
-
 // proc hito
 export const insertHito = async (req, res) => {
   const user = req.user;
@@ -1015,6 +1035,7 @@ export const removeHito = async (req, res) => {
 
   try {
     await axios.post("http://localhost:8100/api/hitos/delete", {
+      fraude,
       hito,
       movimiento,
     });
@@ -1136,6 +1157,7 @@ export const removeEvento = async (req, res) => {
 
   try {
     await axios.post("http://localhost:8100/api/eventos/delete", {
+      fraude,
       evento,
       movimiento,
     });
@@ -1153,10 +1175,12 @@ export const removeEvento = async (req, res) => {
 // proc sms
 export const insertSms = async (req, res) => {
   const user = req.user;
+  const fecha = new Date()
   const fraude = {
     IDFRAU: req.body.idfrau,
-  };
+  }
   const sms = {
+    FECSMS: fecha.toISOString().substring(0, 10),
     TEXSMS: req.body.texsms,
     MOVSMS: req.body.movsms,
     STASMS: estadosSms.pendiente,
@@ -1167,7 +1191,7 @@ export const insertSms = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8100/api/smss/insert", {
+    await axios.post("http://localhost:8100/api/fraudes/smss/insert", {
       fraude,
       sms,
       movimiento,
@@ -1175,7 +1199,7 @@ export const insertSms = async (req, res) => {
 
     res.redirect(`/admin/fraudes/smss/${fraude.IDFRAU}`);
   } catch (error) {
-    const msg = "No se ha podido enviar el sms.";
+    const msg = "No se ha podido insertar el ejercicio.";
 
     res.render("admin/error400", {
       alerts: [{ msg }],
@@ -1189,6 +1213,7 @@ export const updateSms = async (req, res) => {
   }
   const sms = {
     IDSMSS: req.body.idsmss,
+    FECSMS: new Date().toISOString().slice(0, 10),
     TEXSMS: req.body.texsms,
     MOVSMS: req.body.movsms,
   };
@@ -1226,12 +1251,136 @@ export const removeSms = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8100/api/smss/delete", {
+    await axios.post("http://localhost:8100/api/fraudes/smss/delete", {
+      fraude,
       sms,
       movimiento,
     });
 
     res.redirect(`/admin/fraudes/smss/${fraude.IDFRAU}`);
+  } catch (error) {
+    const msg = "No se ha podido enviar el sms.";
+
+    res.render("admin/error400", {
+      alerts: [{ msg }],
+    });
+  }
+}
+export const cambioSms = async (req, res) => {
+  const user = req.user;
+  const fraude = {
+    IDFRAU: req.body.idfrau,
+  }
+  const sms = {
+    IDSMSS: req.body.idsmss,
+    STASMS: estadosSms.enviado,
+  };
+  const movimiento = {
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.cambioEstadoSms,
+  };
+
+  try {
+    await axios.post("http://localhost:8100/api/smss/cambio", {
+      sms,
+      movimiento,
+    });
+
+    res.redirect(`/admin/fraudes/smss/${fraude.IDFRAU}`);
+  } catch (error) {
+    const msg = "No se ha podido enviar el sms.";
+
+    res.render("admin/error400", {
+      alerts: [{ msg }],
+    });
+  }
+}
+
+// proc relacion
+export const insertRelacion = async (req, res) => {
+  const user = req.user;
+  const fecha = new Date()
+  const fraude = {
+    IDFRAU: req.body.idfrau,
+  }
+  const relacion = {
+    FECREL: fecha.toISOString().substring(0, 10),
+    NIFCON: req.body.nifcon.toUpperCase(),
+    NOMCON: req.body.nomcon.toUpperCase(),
+  };
+  const movimiento = {
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.crearRelacion,
+  };
+
+  try {
+    await axios.post("http://localhost:8100/api/fraudes/relaciones/insert", {
+      fraude,
+      relacion,
+      movimiento,
+    });
+
+    res.redirect(`/admin/fraudes/relaciones/${fraude.IDFRAU}`);
+  } catch (error) {
+    const msg = "No se ha podido insertar el ejercicio.";
+
+    res.render("admin/error400", {
+      alerts: [{ msg }],
+    });
+  }
+};
+export const updateRelacion = async (req, res) => {
+  const user = req.user;
+  const fraude = {
+    IDFRAU: req.body.idfrau,
+  };
+  const relacion = {
+    IDRELA: req.body.idrela,
+    FECREL: new Date().toISOString().slice(0, 10),
+    NIFCON: req.body.nifcon.toUpperCase(),
+    NOMCON: req.body.nomcon.toUpperCase(),
+  };
+  const movimiento = {
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.modificarRelacion,
+  };
+
+  try {
+    await axios.post("http://localhost:8100/api/relaciones/update", {
+      relacion,
+      movimiento,
+    });
+
+    res.redirect(`/admin/fraudes/relaciones/${fraude.IDFRAU}`);
+  } catch (error) {
+    const msg = "No se ha podido actualizar el hito.";
+
+    res.render("admin/error400", {
+      alerts: [{ msg }],
+    });
+  }
+};
+export const removeRelacion = async (req, res) => {
+  const user = req.user;
+  const fraude = {
+    IDFRAU: req.body.idfrau,
+  }
+  const relacion = {
+    IDRELA: req.body.idrela,
+  };
+  const movimiento = {
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.borrarRelacion,
+  };
+
+  try {
+    await axios.post("http://localhost:8100/api/fraudes/relaciones/delete", {
+      fraude,
+      relacion,
+      movimiento,
+    });
+
+    res.redirect(`/admin/fraudes/relaciones/${fraude.IDFRAU}`);
   } catch (error) {
     const msg = "No se ha podido enviar el sms.";
 

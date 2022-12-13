@@ -101,57 +101,15 @@
 
   <script src="/js/ayuda.min.js"></script>
   <script>
-    const imphit = document.getElementById('imphit')
-    const tiphit = document.getElementById('cbotip')
-
-    const validate = () => {
-      const imphitValue = imphit.value
-      const tiphitValue = tiphit.value
-
-      if (tiphitValue === '0') {
-        setError(tiphit, 'Tipo requerido')
-        setTimeout(function () {
-          setSuccess(tiphit)
-        }, 3000)
-        return false
-      }
-      if (imphitValue === '') {
-        setError(imphit, 'Importe requerido')
-        setTimeout(function () {
-          setSuccess(imphit)
-        }, 3000)
-        return false
-      }
-
-      document.getElementById('anuhit').value = combo.options[combo.selectedIndex].getAttribute('data-foo')
-      return true
-    }
-
-    const setSuccess = (element) => {
-      const inputControl = element.parentElement;
-      const errorDisplay = inputControl.querySelector('.invalid-feedback');
-
-      errorDisplay.innerText = '';
-      inputControl.classList.add('is-valid');
-      element.classList.remove('is-invalid');
-    }
-    const setError = (element, message) => {
-      const inputControl = element.parentElement;
-      const errorDisplay = inputControl.querySelector('.invalid-feedback');
-
-      errorDisplay.innerText = message;
-      element.classList.add('is-invalid');
-      inputControl.classList.remove('is-valid');
-    }
-  </script>
-
-  <script>
     const input = document.querySelector('#imphit');
     const elemLiq = document.querySelector('#liq');
     const elemSan = document.querySelector('#san');
     const combo = document.getElementById('cbotip');
     const gLiq = document.querySelector('#genliq');
     const gSan = document.querySelector('#gensan');
+
+    elemSan.style.display = 'none'
+    elemLiq.style.display = 'none'
 
     input.addEventListener('input', (e) => {
       e.target.value = e.target.value.replace(/[^0-9 \,.]/, '').replace(/[.]/g, ',')
@@ -181,6 +139,45 @@
         gSan.checked = false
       }
     })
+
+      const validate = () => {
+        const imphitValue = input.value
+        const tiphitValue = combo.value
+
+        if (tiphitValue === '0') {
+          setError(combo, 'Tipo requerido')
+          setTimeout(function () {
+            setSuccess(combo)
+          }, 3000)
+          return false
+        }
+        if (imphitValue === '') {
+          setError(input, 'Importe requerido')
+          setTimeout(function () {
+            setSuccess(input)
+          }, 3000)
+          return false
+        }
+
+        document.getElementById('anuhit').value = combo.options[combo.selectedIndex].getAttribute('data-foo')
+        return true
+      }
+      const setSuccess = (element) => {
+        const inputControl = element.parentElement;
+        const errorDisplay = inputControl.querySelector('.invalid-feedback');
+
+        errorDisplay.innerText = '';
+        inputControl.classList.add('is-valid');
+        element.classList.remove('is-invalid');
+      }
+      const setError = (element, message) => {
+        const inputControl = element.parentElement;
+        const errorDisplay = inputControl.querySelector('.invalid-feedback');
+
+        errorDisplay.innerText = message;
+        element.classList.add('is-invalid');
+        inputControl.classList.remove('is-valid');
+      }
   </script>
 </body>
 </html>

@@ -7,10 +7,9 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>Oficina</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
-  <!-- bootstrap -->
-  <link rel="stylesheet" href="/css/bootstrap-icons.css">
-  <!-- custom -->
-  <link rel="stylesheet" href="/css/estilos.min.css">
+  <!-- styles -->
+  <!-- <link rel="stylesheet" href="/css/styles.css"> -->
+  <link rel="stylesheet" href="/css/estilos.css">
   <link rel="stylesheet" href="/css/navbar.css">
 </head>
 
@@ -21,21 +20,13 @@
     <div class="page-wrapper">
       <div class="page-body">
         <div class="container-xl">
-          <div class="row row-deck row-cards">
-            <div class="col-2"></div>
-            <div class="col-8">
-              <div class="card mt-3">
-                <% if(typeof alerts !='undefined') { %>
-                  <% alerts.map(function (alert){ %>
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                      <%- alert.msg %>
-                    </div>
-                  <% }) %>
-                <% } %>               
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
                 <form action="/admin/oficinas/update" method="POST" onsubmit="return validate();">
                   <input type="hidden" id="idofic" name="idofic" value="<%- datos.oficina.IDOFIC %>">
                   <div class="card-header">
-                    <h3 class="card-title">Oficina</h3>
+                    <h3 class="card-title">Nueva Oficina</h3>
                   </div>
                   <div class="card-body">
                     <div class="row">
@@ -43,7 +34,8 @@
                         <div class="mb-1">
                           <div class="input-control">
                             <label class="form-label required">Descripción</label>
-                            <input type="text" name="desofi" id="desofi" class="form-control" style="text-transform: uppercase;" value="<%- datos.oficina.DESOFI %>" autofocus/>
+                            <input type="text" name="desofi" id="desofi" class="form-control" style="text-transform: uppercase;"
+                              value="<%- datos.oficina.DESOFI %>" autofocus />
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>
@@ -52,7 +44,8 @@
                         <div class="mb-1">
                           <div class="input-control">
                             <label class="form-label required">Código</label>
-                            <input type="text" name="codofi" id="codofi" class="form-control" style="text-transform: uppercase;" value="<%- datos.oficina.CODOFI %>" />
+                            <input type="text" name="codofi" id="codofi" class="form-control" style="text-transform: uppercase;"
+                              value="<%- datos.oficina.CODOFI %>" />
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>
@@ -62,13 +55,12 @@
                   <div class="card-footer text-end">
                     <div class="d-flex">
                       <a href="/admin/oficinas" class="btn btn-link">Cancelar</a>
-                      <button type="submit" class="btn btn-primary ms-auto" id="btnUpdate">Actualizar oficina</button>
+                      <button type="submit" class="btn btn-success ms-auto" id="btnUpdate">Actualizar oficina</button>
                     </div>
                   </div>
                 </form>
-              </div>                
+              </div>
             </div>
-            <div class="col-2"></div>
           </div>
         </div>
       </div>

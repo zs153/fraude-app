@@ -8,7 +8,9 @@
   <title>Sms</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
   <!-- styles -->
-  <link rel="stylesheet" href="/css/styles.css">
+  <!-- <link rel="stylesheet" href="/css/styles.css"> -->
+  <link rel="stylesheet" href="/css/estilos.css">
+  <link rel="stylesheet" href="/css/navbar.css">
 </head>
 
 <body class="antialiased">
@@ -18,12 +20,12 @@
     <div class="page-wrapper">
       <div class="page-body">
         <div class="container-xl">
-          <div class="row row-deck row-cards">
+          <div class="row">
             <div class="col-12">
               <div class="card">
                 <div class="card-header">
                   <div>
-                    <h3 class="card-title">Gestión sms</h3>
+                    <h3 class="card-title">Gestión Sms</h3>
                     <p class="subtitulo">
                       <span class="text-muted">
                         <%- datos.fraudeData.NIFCON %>
@@ -39,15 +41,16 @@
                       <div class="input-icon me-3">
                         <span class="input-icon-addon">
                           <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-                            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path stroke="none" fill="none" d="M0 0h24v24H0z" fill="none"></path>
                             <circle cx="10" cy="10" r="7"></circle>
                             <line x1="21" y1="21" x2="15" y2="15"></line>
                           </svg>
                         </span>
                         <input type="text" class="form-control d-inline-block me-3" id="buscarSmsBox"
-                          onkeyup="arrayFilter(this.value);" placeholder="Buscar..." aria-label="Buscar en referencias">
+                          onkeyup="arrayFilter(this.value);" placeholder="Buscar..."
+                          aria-label="Buscar en smss">
                       </div>
                       <a href="/admin/fraudes/smss/add/<%- datos.fraude.IDFRAU %>" class="btn">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" height="24" width="24" viewBox="0 0 24 24">
@@ -59,10 +62,10 @@
                   </div>
                 </div>
                 <div class="card-body">
-                  <table class="table table-vcenter table-striped sortable" id="tblSmss">
+                  <table class="table table-vcenter table-striped sortable" id="tblSms">
                     <thead>
                       <tr class="header">
-                        <th class="w-5"></th>
+                        <th class="w-3"></th>
                         <th>Fecha</th>
                         <th>Movil</th>
                         <th>Texto</th>
@@ -99,7 +102,7 @@
             <path d="M12 9v2m0 4v.01"></path>
             <path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75"></path>
           </svg>
-          <h3>¿Desea borrar este sms?</h3>
+          <h3>¿Desea borrar este mensaje sms?</h3>
           <div id="msgbor"></div>
           <div class="text-muted">Lo que vas a hacer no puede ser recuperado.</div>
         </div>
@@ -113,8 +116,44 @@
               <div class="col">
                 <form action="/admin/fraudes/smss/delete" method="POST">
                   <input type="hidden" id="idsmss" name="idsmss" value="">
-                  <input type="hidden" id="iddocu" name="iddocu" value="<%- datos.fraude.IDFRAU %>">
-                  <button type="submit" class="btn btn-danger w-100">Borrar sms</button>
+                  <input type="hidden" id="idfrau" name="idfrau" value="<%- datos.fraude.IDFRAU %>">
+                  <button type="submit" class="btn btn-danger w-100">Borrar mensaje sms</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal modal-blur fade" id="modal-cambio" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-status bg-warning"></div>
+        <div class="modal-body text-center py-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-warning icon-lg" width="24" height="24"
+            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <path d="M12 9v2m0 4v.01"></path>
+            <path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75"></path>
+          </svg>
+          <h3>¿Desea cambiar el estado de mensaje sms?</h3>
+          <div id="msgcam"></div>
+        </div>
+        <div class="modal-footer">
+          <div class="w-100">
+            <div class="row">
+              <div class="col">
+                <a href="/admin/fraudes/smss/<%- datos.fraude.IDFRAU %>" class="btn btn-white w-100"
+                  data-bs-dismiss="modal">Cancelar</a>
+              </div>
+              <div class="col">
+                <form action="/admin/fraudes/smss/cambio" method="POST">
+                  <input type="hidden" id="idcamb" name="idsmss" value="">
+                  <input type="hidden" id="idfrau" name="idfrau" value="<%- datos.fraude.IDFRAU %>">
+                  <button type="submit" class="btn btn-danger w-100">Cambiar estado</button>
                 </form>
               </div>
             </div>
@@ -127,15 +166,16 @@
   <script src="/js/ayuda.js"></script>
   <script src="/js/sms.js"></script>
   <script>
-    const orgList = <% - datos.smss %>
-      const estadosSms = <% - datos.estadosSms %>
+    const orgList = <%- datos.smss %>
+    const fraude = <%- JSON.stringify(datos.fraude) %>
+    const estadosSms = <%- JSON.stringify(datos.estadosSms) %>
 
-      let state = {
-        'querySet': orgList,
-        'page': 1,
-        'rows': 9,
-        'window': 3,
-      }
+    let state = {
+      'querySet': orgList,
+      'page': 1,
+      'rows': 9,
+      'window': 3,
+    }
 
     // events
     const elemBuscar = document.getElementById('buscarSmsBox');
@@ -144,7 +184,7 @@
     }
     elemBuscar.value = getCookie('filtro')
 
-    arrayFilter(elemBuscar.value)
+    arrayFilter(elemBuscar.value, fraude, estadosSms)
   </script>
 </body>
 

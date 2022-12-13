@@ -5,7 +5,7 @@ export const mainPage = async (req, res) => {
   const user = req.user
 
   try {
-    const result = await axios.post('http://localhost:8100/api/oficinas')
+    const result = await axios.post('http://localhost:8100/api/oficinas', {})
     const datos = {
       oficinas: JSON.stringify(result.data),
     }
@@ -35,7 +35,7 @@ export const addPage = async (req, res) => {
 export const editPage = async (req, res) => {
   const user = req.user
   const oficina = {
-    idofic: req.params.id,
+    IDOFIC: req.params.id,
   }
   try {
     const result = await axios.post('http://localhost:8100/api/oficina', {
@@ -57,12 +57,12 @@ export const editPage = async (req, res) => {
 export const insert = async (req, res) => {
   const user = req.user
   const oficina = {
-    desofi: req.body.desofi.toUpperCase(),
-    codofi: req.body.codofi.toUpperCase(),
+    DESOFI: req.body.desofi.toUpperCase(),
+    CODOFI: req.body.codofi.toUpperCase(),
   }
   const movimiento = {
-    usumov: user.id,
-    tipmov: tiposMovimiento.crearOficina,
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.crearOficina,
   }
 
   try {
@@ -87,13 +87,13 @@ export const insert = async (req, res) => {
 export const update = async (req, res) => {
   const user = req.user
   const oficina = {
-    idofic: req.body.idofic,
-    desofi: req.body.desofi.toUpperCase(),
-    codofi: req.body.codofi.toUpperCase(),
+    IDOFIC: req.body.idofic,
+    DESOFI: req.body.desofi.toUpperCase(),
+    CODOFI: req.body.codofi.toUpperCase(),
   }
   const movimiento = {
-    usumov: user.id,
-    tipmov: tiposMovimiento.modificarOficina,
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.modificarOficina,
   }
 
   try {
@@ -119,11 +119,11 @@ export const update = async (req, res) => {
 export const remove = async (req, res) => {
   const user = req.user
   const oficina = {
-    idofic: req.body.idofic,
+    IDOFIC: req.body.idofic,
   }
   const movimiento = {
-    usumov: user.id,
-    tipmov: tiposMovimiento.borrarOficina,
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.borrarOficina,
   }
 
   try {

@@ -6,10 +6,9 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>Añadir Oficina</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
-  <!-- bootstrap -->
-  <link rel="stylesheet" href="/css/bootstrap-icons.css">
-  <!-- css -->
-  <link rel="stylesheet" href="/css/estilos.min.css">
+  <!-- styles -->
+  <!-- <link rel="stylesheet" href="/css/styles.css"> -->
+  <link rel="stylesheet" href="/css/estilos.css">
   <link rel="stylesheet" href="/css/navbar.css">
 </head>
 
@@ -20,19 +19,12 @@
     <div class="page-wrapper">
       <div class="page-body">
         <div class="container-xl">
-          <div class="row row-deck row-cards">
+          <div class="row">
             <div class="col-12">
-              <div class="card mt-3">
-                <% if(typeof alerts !='undefined') { %>
-                  <% alerts.map(function (alert){ %>
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                      <%- alert.msg %>
-                    </div>
-                  <% }) %>
-                <% } %>  
+              <div class="card">
                 <form action="/admin/oficinas/insert" method="POST" onsubmit="return validate();">
                   <div class="card-header">
-                    <h3 class="card-title">Oficina</h3>
+                    <h3 class="card-title">Nueva Oficina</h3>
                   </div>
                   <div class="card-body">
                     <div class="row">
@@ -59,7 +51,7 @@
                   <div class="card-footer text-end">
                     <div class="d-flex">
                       <a href="/admin/oficinas" class="btn btn-link">Cancelar</a>
-                      <button type="submit" class="btn btn-primary ms-auto" id="btnInsert">Crear oficina</button>
+                      <button type="submit" class="btn btn-success ms-auto" id="btnInsert">Crear oficina</button>
                     </div>
                   </div>
                 </form>
@@ -87,8 +79,6 @@
           setSuccess(desofi)
         }, 3000)
         return false
-      } else {
-        setSuccess(desofi)
       }
       if (codofiValue === '') {
         setError(codofi, 'Código requerido')
@@ -96,8 +86,6 @@
           setSuccess(codofi)
         }, 3000)
         return false
-      } else {
-        setSuccess(codofi)
       }
 
       return true

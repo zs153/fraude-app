@@ -41,6 +41,7 @@ export const tiposMovimiento = {
   desharcerFraude: 40,
   crearEjercicio: 41,
   archivadoSancion: 42,
+  cambioEstadoSms: 43,
   cambioPassword: 60,
   olvidoPassword: 61,
   restablecerPassword: 62,
