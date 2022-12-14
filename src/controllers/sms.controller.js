@@ -123,7 +123,6 @@ export const borrar = async (req, res) => {
   }
 }
 export const cambioEstado = async (req, res) => {
-  console.log(cambioFromRec(req))
   try {
     const result = await DAL.change(cambioFromRec(req))
 

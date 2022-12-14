@@ -95,7 +95,7 @@ export const remove = async (bind) => {
 }
 export const change = async (bind) => {
   let result
-  console.log(cambioSql, bind)
+
   try {
     await simpleExecute(cambioSql, bind)
 

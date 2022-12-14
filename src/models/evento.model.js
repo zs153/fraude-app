@@ -53,7 +53,6 @@ export const find = async (context) => {
     binds.idfrau = context.IDFRAU
     query = largeQuery
   }
-  console.log(query, binds)
   const result = await simpleExecute(query, binds)
   return result.rows
 }

@@ -639,7 +639,7 @@ export const insertSms = async (bind) => {
 }
 export const removeSms = async (bind) => {
   let result
-  console.log(removeSmsSql, bind)
+
   try {
     await simpleExecute(removeSmsSql, bind)
 

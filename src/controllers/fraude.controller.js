@@ -669,7 +669,6 @@ export const crearRelacion = async (req, res) => {
       res.status(404).end()
     }
   } catch (err) {
-    console.log(err)
     res.status(500).end()
   }
 }

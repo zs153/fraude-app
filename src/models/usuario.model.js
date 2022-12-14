@@ -83,7 +83,8 @@ const cambioSql = `BEGIN FRAUDE_PKG.CHANGEPASSWORD(
 `;
 const olvidoSql = `BEGIN FRAUDE_PKG.FORGOTPASSWORD(
   :emausu,
-  :pwdusu, 
+  :pwdusu,
+  :usumov,
   :tipmov,
   :saltus
 ); END;
@@ -91,7 +92,6 @@ const olvidoSql = `BEGIN FRAUDE_PKG.FORGOTPASSWORD(
 const perfilSql = `BEGIN FRAUDE_PKG.UPDATEPERFILUSUARIO(
   :idusua,
   :nomusu,
-  :ofiusu,
   :emausu,
   :telusu, 
   :usumov,
@@ -103,35 +103,22 @@ export const find = async (context) => {
   let query = baseQuery;
   let binds = {};
 
-  if (context.idusua) {
-    binds.idusua = context.idusua;
+  if (context.IDUSUA) {
+    binds.idusua = context.IDUSUA;
     query += "WHERE idusua = :idusua";
   }
-  if (context.userid) {
-    binds.userid = context.userid;
+  if (context.USERID) {
+    binds.userid = context.USERID;
     query += "WHERE userid = :userid";
   }
-  if (context.emausu) {
-    binds.emausu = context.emausu;
+  if (context.EMAUSU) {
+    binds.emausu = context.EMAUSU;
     query += "WHERE emausu = :emausu";
   }
 
   const result = await simpleExecute(query, binds);
   return result.rows;
 };
-export const findAll = async (context) => {
-  let query = largeQuery;
-  let binds = {}
-
-  if (context.ofiusu) {
-    binds.ofiusu = context.ofiusu;
-    query += "WHERE ofiusu = :ofiusu";
-  }
-
-  const result = await simpleExecute(query, binds);
-  return result.rows;
-};
-
 export const insert = async (bind) => {
   bind.idusua = {
     dir: oracledb.BIND_OUT,
@@ -173,21 +160,6 @@ export const remove = async (bind) => {
   }
 
   return result;
-};
-export const register = async (bind) => {
-  bind.idusua = {
-    dir: oracledb.BIND_OUT,
-    type: oracledb.NUMBER,
-  };
-  try {
-    const result = await simpleExecute(registroSql, bind);
-
-    bind.idusua = await result.outBinds.idusua;
-  } catch (error) {
-    bind = null;
-  }
-
-  return bind;
 };
 export const change = async (bind) => {
   let result;
