@@ -54,7 +54,6 @@ export const addPage = async (req, res) => {
       oficinas: oficinas.data,
     };
 
-    console.log(datos)
     res.render("admin/fraudes/add", { user, datos });
   } catch (error) {
     const msg = "No se ha podido acceder a los datos de la aplicación.";
@@ -409,7 +408,6 @@ export const editEventosPage = async (req, res) => {
 
     res.render("admin/fraudes/eventos/edit", { user, datos });
   } catch (error) {
-    console.log(error)
     const msg =
       "No se ha podido acceder a los datos de la aplicación. Si persiste el error solicite asistencia.";
 
@@ -1004,7 +1002,6 @@ export const updateHito = async (req, res) => {
     TIPMOV: tiposMovimiento.modificarHito,
   };
 
-  console.log(hito)
   try {
     await axios.post("http://localhost:8100/api/hitos/update", {
       hito,

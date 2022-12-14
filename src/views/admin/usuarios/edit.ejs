@@ -7,10 +7,9 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>Usuario</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
-  <!-- bootstrap -->
-  <link rel="stylesheet" href="/css/bootstrap-icons.css">
-  <!-- custom -->
-  <link rel="stylesheet" href="/css/estilos.min.css">
+  <!-- styles -->
+  <!-- <link rel="stylesheet" href="/css/styles.css"> -->
+  <link rel="stylesheet" href="/css/estilos.css">
   <link rel="stylesheet" href="/css/navbar.css">
 </head>
 
@@ -21,16 +20,9 @@
     <div class="page-wrapper">
       <div class="page-body">
         <div class="container-xl">
-          <div class="row row-deck row-cards">
+          <div class="row">
             <div class="col-12">
               <div class="card mt-3">
-                <% if(typeof alerts !='undefined') { %>
-                  <% alerts.map(function (alert){ %>
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                      <%- alert.msg %>
-                    </div>
-                  <% }) %>
-                <% } %> 
                 <form action="/admin/usuarios/update" method="POST" onsubmit="return validate();">
                   <input type="hidden" name="idusua" id="idusua" value="<%- datos.usuario.IDUSUA %>">
                   <div class="card-header">
@@ -91,7 +83,12 @@
                       <div class="col-4">
                         <div class="mb-1">
                           <div class="form-label">Oficina</div>
-                          <select class="form-select" id="cboofi" name="ofiusu" value="<%- datos.usuario.OFIUSU %>">
+                          <select class="form-select form-control" id="cboofi" name="ofiusu" value="">
+                            <% datos.tipos.map(element=> { %>
+                            <option value="<%- element.IDOFIC %>">
+                              <%- element.DESOFI %>
+                            </option>
+                            <% }) %>
                           </select>
                         </div>
                       </div>
@@ -156,8 +153,6 @@
           setSuccess(userid)
         }, 3000)
         return false
-      } else {
-        setSuccess(userid)
       }
       if (nomusuValue === '') {
         setError(nomusu, 'Nombre requerido')
@@ -165,8 +160,6 @@
           setSuccess(nomusu)
         }, 3000)
         return false
-      } else {
-        setSuccess(nomusu)
       }
       if (emausuValue === '') {
         setError(emausu, 'Email requerido')
@@ -174,8 +167,6 @@
           setSuccess(emausu)
         }, 3000)
         return false
-      } else {
-        setSuccess(emausu)
       }
       if (telusuValue === '') {
         setError(telusu, 'Teléfono requerido')
@@ -183,8 +174,6 @@
           setSuccess(telusu)
         }, 3000)
         return false
-      } else {
-        setSuccess(telusu)
       }
 
       return true
@@ -207,34 +196,5 @@
       inputControl.classList.remove('is-valid');
     }
   </script>
-  <script>
-    const Oficinas = () => {
-      const xhr = new XMLHttpRequest();
-
-      xhr.onload = function() {
-        if (xhr.status === 200) {
-          const oficinas = JSON.parse(xhr.response)
-          const cbo = document.getElementById('cboofi')
-          const rolUser = <%- JSON.stringify(user.rol) %>
-          const oficinaUser = <%- JSON.stringify(user.oficina) %>
-
-          oficinas.map((itm) => {
-            const option = document.createElement('option')
-            option.value = itm.IDOFIC
-            option.text = itm.DESOFI
-
-            if (itm.IDOFIC === <%- datos.usuario.OFIUSU %>) {
-              option.selected = true
-            }
-            cbo.appendChild(option)
-          })
-        }
-      };
-      xhr.open('POST', 'http://localhost:8100/api/oficinas', true);
-      xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-      xhr.send()
-    }
-    Oficinas();
-  </script>  
 </body>
 </html>

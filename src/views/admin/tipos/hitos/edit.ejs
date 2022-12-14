@@ -7,10 +7,9 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>Hito</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
-  <!-- bootstrap -->
-  <link rel="stylesheet" href="/css/bootstrap-icons.css">
-  <!-- custom -->
-  <link rel="stylesheet" href="/css/estilos.min.css">
+  <!-- styles -->
+  <!-- <link rel="stylesheet" href="/css/styles.css"> -->
+  <link rel="stylesheet" href="/css/estilos.css">
   <link rel="stylesheet" href="/css/navbar.css">
 </head>
 
@@ -21,16 +20,9 @@
     <div class="page-wrapper">
       <div class="page-body">
         <div class="container-xl">
-          <div class="row row-deck row-cards">
+          <div class="row">
             <div class="col-12">
-              <div class="card">
-                <% if(typeof alerts !='undefined') { %>
-                  <% alerts.map(function (alert){ %>
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                      <%- alert.msg %>
-                    </div>
-                  <% }) %> 
-                <% } %>                   
+              <div class="card">               
                 <form action="/admin/tipos/hitos/update" method="POST" onsubmit="return validate();">
                   <input type="hidden" name="idtipo" id="idtipo" value = <%- datos.tipo.IDTIPO %>>
                   <div class="card-header">
@@ -40,9 +32,11 @@
                     <div class="row">
                       <div class="col-12">
                         <div class="mb-1">
-                          <label class="form-label required">Descripción</label>
-                          <input type="text" name="destip" id="destip" class="form-control" value="<%- datos.tipo.DESTIP %>" style="text-transform: uppercase;" autofocus/>
-                          <div class="invalid-feedback"></div>
+                          <div class="input-control">
+                            <label class="form-label required">Descripción</label>
+                            <input type="text" name="destip" id="destip" class="form-control" value="<%- datos.tipo.DESTIP %>" style="text-transform: uppercase;" autofocus/>
+                            <div class="invalid-feedback"></div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -50,8 +44,13 @@
                       <div class="col-12">
                         <div class="mb-1">
                           <label class="form-label required">Estado</label>
-                          <input type="text" name="anuhit" id="anuhit" class="form-control" value="<%- datos.tipo.ANUHIT %>" />
-                          <div class="invalid-feedback"></div>
+                          <select class="form-select" id="cbosta" name="anuhit" value="<%- datos.tipo.ANUHIT %>">
+                            <% datos.arrEstadosHito.map(element => { %>
+                            <option value="<%- element.id %>"<%- element.id === datos.tipo.ANUHIT ? " selected":"" %>>
+                              <%= element.des %>
+                            </option>
+                            <% }) %>
+                          </select>
                         </div>
                       </div>
                     </div>
@@ -59,7 +58,7 @@
                   <div class="card-footer text-end">
                     <div class="d-flex">
                       <a href="/admin/tipos/hitos" class="btn btn-link">Cancelar</a>
-                      <button type="submit" class="btn btn-primary ms-auto" id="btnUpdate">Actualizar tipo</button>
+                      <button type="submit" class="btn btn-success ms-auto" id="btnUpdate">Actualizar tipo</button>
                     </div>
                   </div>
                 </form>
@@ -85,8 +84,6 @@
           setSuccess(destip)
         }, 3000)
         return false
-      } else {
-        setSuccess(destip)
       }
 
       return true

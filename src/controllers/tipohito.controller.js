@@ -1,11 +1,11 @@
 import axios from "axios";
-import { tiposMovimiento } from "../public/js/enumeraciones";
+import { tiposMovimiento, arrEstadosHito } from "../public/js/enumeraciones";
 
 export const mainPage = async (req, res) => {
   const user = req.user;
 
   try {
-    const result = await axios.post("http://localhost:8100/api/tipos/hitos");
+    const result = await axios.post("http://localhost:8100/api/tipos/hitos", {});
     const datos = {
       tipos: JSON.stringify(result.data),
     };
@@ -21,9 +21,11 @@ export const mainPage = async (req, res) => {
 };
 export const addPage = async (req, res) => {
   const user = req.user;
-
+  const datos = {
+    arrEstadosHito,
+  }
   try {
-    res.render("admin/tipos/hitos/add", { user });
+    res.render("admin/tipos/hitos/add", { user, datos });
   } catch (error) {
     const msg = "No se ha podido acceder a los datos de la aplicación.";
 
@@ -35,7 +37,7 @@ export const addPage = async (req, res) => {
 export const editPage = async (req, res) => {
   const user = req.user;
   const tipo = {
-    idtipo: req.params.id,
+    IDTIPO: req.params.id,
   };
 
   try {
@@ -44,6 +46,7 @@ export const editPage = async (req, res) => {
     });
     const datos = {
       tipo: result.data,
+      arrEstadosHito,
     };
 
     res.render("admin/tipos/hitos/edit", { user, datos });
@@ -59,12 +62,12 @@ export const editPage = async (req, res) => {
 export const insert = async (req, res) => {
   const user = req.user;
   const tipo = {
-    destip: req.body.destip.toUpperCase(),
-    anuhit: req.body.anuhit,
+    DESTIP: req.body.destip.toUpperCase(),
+    ANUHIT: req.body.anuhit,
   };
   const movimiento = {
-    usumov: user.id,
-    tipmov: tiposMovimiento.crearTipoHito,
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.crearTipoHito,
   };
 
   try {
@@ -77,10 +80,6 @@ export const insert = async (req, res) => {
   } catch (error) {
     let msg = "No se ha podido crear el tipo.";
 
-    if (error.response.data.errorNum === 20100) {
-      msg = "El tipo ya existe.";
-    }
-
     res.render("admin/error400", {
       alerts: [{ msg }],
     });
@@ -89,15 +88,15 @@ export const insert = async (req, res) => {
 export const update = async (req, res) => {
   const user = req.user;
   const tipo = {
-    idtipo: req.body.idtipo,
-    destip: req.body.destip.toUpperCase(),
-    anuhit: req.body.anuhit,
+    IDTIPO: req.body.idtipo,
+    DESTIP: req.body.destip.toUpperCase(),
+    ANUHIT: req.body.anuhit,
   };
   const movimiento = {
-    usumov: user.id,
-    tipmov: tiposMovimiento.modificarTipoHito,
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.modificarTipoHito,
   };
-
+  console.log(tipo)
   try {
     axios.post("http://localhost:8100/api/tipos/hitos/update", {
       tipo,
@@ -109,10 +108,6 @@ export const update = async (req, res) => {
     let msg =
       "No se ha podido actualizar el tipo. Verifique los datos introducidos";
 
-    if (error.response.data.errorNum === 20100) {
-      msg = "El tipo ya existe";
-    }
-
     res.render("admin/error400", {
       alerts: [{ msg }],
     });
@@ -121,11 +116,11 @@ export const update = async (req, res) => {
 export const remove = async (req, res) => {
   const user = req.user;
   const tipo = {
-    idtipo: req.body.idtipo,
+    IDTIPO: req.body.idtipo,
   };
   const movimiento = {
-    usumov: user.id,
-    tipmov: tiposMovimiento.borrarTipoHito,
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.borrarTipoHito,
   };
 
   try {

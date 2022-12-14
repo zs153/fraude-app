@@ -4,22 +4,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>Evento</title>
+  <title>Tipo</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
-  <!-- bootstrap -->
-  <link rel="stylesheet" href="/css/bootstrap-icons.css">
-  <!-- custom -->
-  <link rel="stylesheet" href="/css/estilos.min.css">
+  <!-- styles -->
+  <!-- <link rel="stylesheet" href="/css/styles.css"> -->
+  <link rel="stylesheet" href="/css/estilos.css">
   <link rel="stylesheet" href="/css/navbar.css">
-  <style>
-    .subtitulo {
-      position: absolute;
-      top: 1.5rem;
-      color: #656d77;
-      pointer-events: none;
-      font-size: 0.8em;
-    }
-  </style>
 </head>
 
 <body class="antialiased">
@@ -31,25 +21,20 @@
         <div class="container-xl">
           <div class="row">
             <div class="col-12">
-              <div class="card">
-                <% if(typeof alerts !='undefined') { %>
-                  <% alerts.map(function (alert){ %>
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                      <%- alert.msg %>
-                    </div>
-                  <% }) %>
-                <% } %>                
+              <div class="card">             
                 <form action="/admin/tipos/eventos/insert" method="POST" onsubmit="return validate();">
                   <div class="card-header">
-                    <h3 class="card-title">Tipo</h3>
+                    <h3 class="card-title">Nuevo Tipo Evento</h3>
                   </div>
                   <div class="card-body">
                     <div class="row">
                       <div class="col-12">
                         <div class="mb-1">
-                          <label class="form-label required">Descripción</label>
-                          <input type="text" name="destip" id="destip" class="form-control" value="" style="text-transform: uppercase;" autofocus/>
-                          <div class="invalid-feedback"></div>
+                          <div class="input-control">
+                            <label class="form-label required">Descripción</label>
+                            <input type="text" name="destip" id="destip" class="form-control" value="" style="text-transform: uppercase;" autofocus/>
+                            <div class="invalid-feedback"></div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -57,7 +42,7 @@
                   <div class="card-footer text-end">
                     <div class="d-flex">
                       <a href="/admin/tipos/eventos" class="btn btn-link">Cancelar</a>
-                      <button type="submit" class="btn btn-primary ms-auto" id="btnInsert">Crear tipo</button>
+                      <button type="submit" class="btn btn-primary ms-auto" id="btnInsert">Crear nuevo tipo</button>
                     </div>
                   </div>
                 </form>
@@ -83,8 +68,6 @@
           setSuccess(destip)
         }, 3000)
         return false
-      } else {
-        setSuccess(destip)
       }
 
       return true

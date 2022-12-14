@@ -75,10 +75,6 @@ export const insert = async (req, res) => {
   } catch (error) {
     let msg = 'No se ha podido crear la oficina.'
 
-    if (error.response.data.errorNum === 20100) {
-      msg = 'La oficina ya existe.'
-    }
-
     res.render('admin/error400', {
       alerts: [{ msg }],
     })
@@ -106,10 +102,6 @@ export const update = async (req, res) => {
   } catch (error) {
     let msg =
       'No se han podido modificar los datos de la oficina. Verifique los datos introducidos'
-
-    if (error.response.data.errorNum === 20100) {
-      msg = 'La oficina ya existe'
-    }
 
     res.render('admin/error400', {
       alerts: [{ msg }],

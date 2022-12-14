@@ -5,7 +5,7 @@ export const mainPage = async (req, res) => {
   const user = req.user;
 
   try {
-    const result = await axios.post("http://localhost:8100/api/tipos/fraudes");
+    const result = await axios.post("http://localhost:8100/api/tipos/fraudes", {});
     const datos = {
       tipos: JSON.stringify(result.data),
     };
@@ -34,7 +34,7 @@ export const addPage = async (req, res) => {
 export const editPage = async (req, res) => {
   const user = req.user;
   const tipo = {
-    idtipo: req.params.id,
+    IDTIPO: req.params.id,
   };
 
   try {
@@ -58,11 +58,11 @@ export const editPage = async (req, res) => {
 export const insert = async (req, res) => {
   const user = req.user;
   const tipo = {
-    destip: req.body.destip.toUpperCase(),
+    DESTIP: req.body.destip.toUpperCase(),
   };
   const movimiento = {
-    usumov: user.id,
-    tipmov: tiposMovimiento.crearTipoFraude,
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.crearTipoFraude,
   };
 
   try {
@@ -75,10 +75,6 @@ export const insert = async (req, res) => {
   } catch (error) {
     let msg = "No se ha podido crear el tipo.";
 
-    if (error.response.data.errorNum === 20100) {
-      msg = "El tipo ya existe.";
-    }
-
     res.render("admin/error400", {
       alerts: [{ msg }],
     });
@@ -87,12 +83,12 @@ export const insert = async (req, res) => {
 export const update = async (req, res) => {
   const user = req.user;
   const tipo = {
-    idtipo: req.body.idtipo,
-    destip: req.body.destip.toUpperCase(),
+    IDTIPO: req.body.idtipo,
+    DESTIP: req.body.destip.toUpperCase(),
   };
   const movimiento = {
-    usumov: user.id,
-    tipmov: tiposMovimiento.modificarTipoFraude,
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.modificarTipoFraude,
   };
 
   try {
@@ -106,10 +102,6 @@ export const update = async (req, res) => {
     let msg =
       "No se ha podido actualizar el tipo. Verifique los datos introducidos";
 
-    if (error.response.data.errorNum === 20100) {
-      msg = "El tipo ya existe";
-    }
-
     res.render("admin/error400", {
       alerts: [{ msg }],
     });
@@ -118,11 +110,11 @@ export const update = async (req, res) => {
 export const remove = async (req, res) => {
   const user = req.user;
   const tipo = {
-    idtipo: req.body.idtipo,
+    IDTIPO: req.body.idtipo,
   };
   const movimiento = {
-    usumov: user.id,
-    tipmov: tiposMovimiento.borrarTipoFraude,
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.borrarTipoFraude,
   };
 
   try {
