@@ -61,7 +61,7 @@ const arrayFilter = (value) => {
   state.querySet = trimmedData
   state.page = 1
 
-  buildTable(state, estadosCarga)
+  buildTable(state)
 }
 const pagination = (querySet, page, rows) => {
   const trimStart = (page - 1) * rows
@@ -84,29 +84,23 @@ const buildTable = (state) => {
     // col1
     const row = document.createElement('tr')
     let cell = document.createElement('td')
-    cell.classList.add("w-5")
-    if (element.STACAR === estadosCarga.procesado) {
-      cell.innerHTML = `<div class="align-items-center py-1">
-        <span class="avatar avatar-rounded bg-green-lt">
-          <h6>PROC</h6>
-        </span>
-      </div>`
-    } else {
-      cell.innerHTML = `<div class="align-items-center py-1">
-        <span class="avatar avatar-rounded bg-red-lt">
-          <h6>PEND</h6>
-        </span>
-      </div>`
-    }
+    cell.classList.add("w-4")
+    cell.innerHTML = `<div class="align-items-center py-1">
+      <span class="avatar avatar-rounded bg-green-lt">
+        <h6>PROC</h6>
+      </span>
+    </div>`
     row.appendChild(cell)
     // col2
     cell = document.createElement('td')
+    cell.classList.add("w-6")
     cell.innerHTML = `<div class="d-flex py-1 align-items-center">
       <div class="flex-fill">
         <div class="font-weight-medium">${element.STRFEC}</div>
       </div>
     </div>`
     row.appendChild(cell)
+
     // col3
     cell = document.createElement('td')
     cell.innerHTML = `<div class="d-flex py-1 align-items-center">
@@ -115,6 +109,7 @@ const buildTable = (state) => {
       </div>
     </div>`
     row.appendChild(cell)
+
     // col4
     cell = document.createElement('td')
     cell.innerHTML = `<div class="d-flex py-1 align-items-center">
@@ -123,6 +118,7 @@ const buildTable = (state) => {
       </div>
     </div>`
     row.appendChild(cell)
+
     // col5
     cell = document.createElement('td')
     cell.innerHTML = `<div class="d-flex py-1 align-items-center">
@@ -132,10 +128,12 @@ const buildTable = (state) => {
     </div>`
     row.appendChild(cell)
     // col6
+
     cell = document.createElement('td')
+    cell.classList.add("w-6")
     cell.innerHTML = `<div class="d-flex py-1 align-items-center">
       <div class="flex-fill">
-        <div class="font-weight-medium">${element.NUMREG}</div>
+        <div class="font-weight-medium">${element.NUMCAR}</div>
       </div>
     </div>`
     row.appendChild(cell)

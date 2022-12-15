@@ -6,6 +6,7 @@ export const mainPage = async (req, res) => {
   const fecha = new Date()
   const currentYear = fecha.getFullYear()
   const currentMonth = fecha.getMonth() + 1
+  const lastDayMonth = new Date(currentYear, currentMonth, 0).getDate()
 
   let desde = new Date(yearMonthDayToUTCString(currentYear, currentMonth, 1)).toISOString().slice(0, 10)
   let hasta = new Date(yearMonthDayToUTCString(currentYear, currentMonth, lastDayMonth)).toISOString().slice(0, 10)
@@ -36,9 +37,10 @@ export const generarEstadistica = async (req, res) => {
     hasta: req.body.hasta,
   }
   const fraude = {
-    REFFRA: req.body.reffra,
+    REFFRA: req.body.refcar,
   }
 
+  console.log(fraude, periodo)
   try {
     const situacion = await axios.post('http://localhost:8100/api/estadisticas/situacion', {
       fraude,

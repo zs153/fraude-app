@@ -18,7 +18,7 @@ export const perfilPage = async (req, res) => {
   }
 
   try {
-    const result = await axios.post('http://localhost:8100/api/usuario', {
+    const result = await axios.post("http://localhost:8100/api/usuario", {
       usuario,
     })
 
@@ -56,13 +56,10 @@ export const changePassword = async (req, res) => {
   }
 
   try {
-    await axios.post(
-      'http://localhost:8100/api/usuarios/cambio',
-      {
-        usuario,
-        movimiento,
-      }
-    )
+    await axios.post("http://localhost:8100/api/usuarios/cambio", {
+      usuario,
+      movimiento,
+    })
 
     res.redirect('/log/logout')
   } catch (error) {
@@ -83,13 +80,10 @@ export const updatePerfil = async (req, res) => {
   }
 
   try {
-    await axios.post(
-      'http://localhost:8100/api/usuarios/perfil',
-      {
-        usuario,
-        movimiento,
-      }
-    )
+    await axios.post("http://localhost:8100/api/usuarios/perfil", {
+      usuario,
+      movimiento,
+    })
 
     res.redirect('.')
   } catch (error) {

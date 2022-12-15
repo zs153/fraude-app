@@ -36,7 +36,9 @@ export const addPage = async (req, res) => {
   const user = req.user
 
   try {
+    const oficinas = await axios.post('http://localhost:8100/api/oficinas', {})
     const datos = {
+      oficinas: oficinas.data,
       arrTiposRol,
       arrTiposPerfil,
       arrEstadosUsuario,
@@ -59,11 +61,17 @@ export const editPage = async (req, res) => {
   }
 
   try {
+    const oficinas = await axios.post('http://localhost:8100/api/oficinas', {})
     const result = await axios.post('http://localhost:8100/api/usuario', {
       usuario,
     })
     const datos = {
       usuario: result.data,
+      oficinas: oficinas.data,
+      arrTiposRol,
+      arrTiposPerfil,
+      arrEstadosUsuario,
+      tiposRol,
     }
 
     res.render('admin/usuarios/edit', { user, datos })
@@ -121,7 +129,7 @@ export const insert = async (req, res) => {
     PERUSU: req.body.perusu,
     TELUSU: req.body.telusu,
     PWDUSU: passHash,
-    STAUSU: estadosUsuario.activo,
+    STAUSU: req.body.stausu,
   }
   const movimiento = {
     USUMOV: user.id,

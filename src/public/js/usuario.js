@@ -1,5 +1,3 @@
-import { estadosUsuario } from "./enumeraciones";
-
 // inicializa sort
 document.querySelectorAll(".sortable th").forEach(headerCell => {
   headerCell.addEventListener("click", () => {

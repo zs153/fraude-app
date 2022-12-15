@@ -6,10 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
     <title>Carga csv</title>
     <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
-    <!-- bootstrap -->
-    <link rel="stylesheet" href="/css/bootstrap-icons.css">
-    <!-- custom -->
-    <link rel="stylesheet" href="/css/styles.css">
+    <!-- styles -->
+    <!-- <link rel="stylesheet" href="/css/styles.css"> -->
+    <link rel="stylesheet" href="/css/estilos.css">
+    <link rel="stylesheet" href="/css/navbar.css">
   </head>
   <body class="antialiased">
     <div class="wrapper">
@@ -48,12 +48,12 @@
                   <div class="card-body">
                     <table class="table table-vcenter table-striped sortable" id="tblCargas">
                       <tr class="header">
-                        <th class="w-5"></th>
-                        <th>Fecha</th>
+                        <th class="w-4"></th>
+                        <th class="w-6">Fecha</th>
                         <th>Nombre</th>
                         <th>Fichero</th>
                         <th>Referencia</th>
-                        <th>Registros</th>
+                        <th class="w-6">Registros</th>
                       </tr>
                       </thead>
                       <tbody id="table-body">
@@ -69,48 +69,11 @@
       </div>
       <%- include('../../partials/footer') %>
     </div>
-    
-    <div class="modal modal-blur fade" id="modal-borrar" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          <div class="modal-status bg-danger"></div>
-          <div class="modal-body text-center py-4">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-danger icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-              <path d="M12 9v2m0 4v.01"></path>
-              <path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75"></path>
-            </svg>
-            <h3>¿Desea borrar esta carga?</h3>
-            <div id="msgcar"></div>
-            <div class="text-muted">Lo que vas a hacer no puede ser recuperado.</div>
-          </div>
-          <div class="modal-footer">
-            <div class="w-100">
-              <div class="row">
-                <div class="col">
-                  <a href="#" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
-                </div>
-                <div class="col">
-                  <form action="/admin/cargas/delete" method="POST">
-                    <input type="hidden" id="idcarg" name="idcarg" value="" />
-                    <button type="submit" class="btn btn-danger w-100">
-                      Borrar carga
-                    </button>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <script src="/js/ayuda.min.js"></script>
     <script src="/js/carga.js"></script>
     <script>
       const orgList = <%- datos.cargas %>
-      const estadosCarga = <%- datos.estadosCarga %>
 
       let state = {
         'querySet': orgList,

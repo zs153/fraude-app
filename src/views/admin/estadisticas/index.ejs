@@ -7,8 +7,10 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>Estadística</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
-  <!-- styles -->
-  <link rel="stylesheet" href="/css/styles.css">
+    <!-- styles -->
+    <!-- <link rel="stylesheet" href="/css/styles.css"> -->
+    <link rel="stylesheet" href="/css/estilos.css">
+    <link rel="stylesheet" href="/css/navbar.css">
 </head>
 
 <body class="antialiased">
@@ -20,7 +22,7 @@
         <div class="container-xl">
           <div class="row">
             <div class="col-12">
-              <div class="card mt-3">
+              <div class="card">
                 <form action="/admin/estadisticas" method="POST" onsubmit="return validate();">
                   <input type="hidden" id="reffra" name="reffra">
                   <div class="card-header">
@@ -53,13 +55,17 @@
                       <div class="col-12">
                         <div class="mb-1">
                           <div class="form-label">Carga</div>
-                          <select class="form-select" id="cbocar" name="refcar" value="">
-                            <% datos.cargas.map(element=> { %>
-                            <option value="<%- element.REFCAR %>">
-                              <%- element.DESCAR %>
-                            </option>
-                            <% }) %>
-                          </select>
+                          <div class="input-control">
+                            <select class="form-select" id="cbocar" name="refcar" value="">
+                              <option value="0">SELECCIONE UNA CARGA</option>
+                              <% datos.cargas.map(element=> { %>
+                              <option value="<%- element.REFCAR %>">
+                                <%- element.DESCAR %>
+                              </option>
+                              <% }) %>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -81,21 +87,18 @@
 
   <script src="/js/ayuda.js"></script>
   <script>
-    const cboC = document.getElementById('cbocar');
-
-    document.getElementById('reffra').value = cboC.value
-
-    cboC.addEventListener('change', (e) => {
-      document.getElementById('refdoc').value = e.target.options[e.target.selectedIndex].value
-    })
-  </script>
-  <script>
     const desde = document.getElementById('desde')
     const hasta = document.getElementById('hasta')
+    const cboC = document.getElementById('cbocar');
+
+    cboC.addEventListener('change', (e) => {
+      document.getElementById('cbocar').value = e.target.options[e.target.selectedIndex].value
+    })
 
     const validate = () => {
       const desdeValue = desde.value
       const hastaValue = hasta.value
+      const cbocarValue = cboC.value
 
       if (isNaN(Date.parse(desdeValue))) {
         setError(desde, 'Fecha requerida')
@@ -108,6 +111,13 @@
         setError(hasta, 'Fecha requerida')
         setTimeout(function () {
           setSuccess(hasta)
+        }, 3000)
+        return false
+      }
+      if (cbocarValue === '0') {
+        setError(cboC, 'Carga requrida')
+        setTimeout(function () {
+          setSuccess(cboC)
         }, 3000)
         return false
       }
