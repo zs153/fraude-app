@@ -2,14 +2,14 @@ import oracledb from 'oracledb'
 import { simpleExecute } from '../services/database.js'
 
 const estadisticaSituacionSql = `SELECT 
-  refdoc,
-  SUM(CASE WHEN stadoc = 0 THEN 1 ELSE 0 END) "PEN",
-  SUM(CASE WHEN stadoc = 1 THEN 1 ELSE 0 END) "ASI",
-  SUM(CASE WHEN stadoc = 2 THEN 1 ELSE 0 END) "RES",
+  reffra,
+  SUM(CASE WHEN stafra = 0 THEN 1 ELSE 0 END) "PEN",
+  SUM(CASE WHEN stafra = 1 THEN 1 ELSE 0 END) "ASI",
+  SUM(CASE WHEN stafra = 2 THEN 1 ELSE 0 END) "RES",
   COUNT(*) "TOT"
-FROM documentos
-WHERE refdoc = :refdoc
-GROUP BY refdoc
+FROM fraudes
+WHERE reffra = :reffra
+GROUP BY reffra
 `
 const estadisticaOficinaSql = `SELECT 
   oo.desofi,
@@ -23,14 +23,14 @@ const estadisticaOficinaSql = `SELECT
       )
       SELECT v.idofic as ofi, 0 as pen, 0 as adj, 0 as res
       FROM vOficinas v
-      UNION ALL
-      SELECT dd.ofidoc,
-        SUM(CASE WHEN dd.stadoc = 0 THEN 1 ELSE 0 END) as pen,
-        SUM(CASE WHEN dd.stadoc = 1 THEN 1 ELSE 0 END) as adj,
-        SUM(CASE WHEN dd.stadoc = 2 THEN 1 ELSE 0 END) as res
-        FROM documentos dd
-        WHERE dd.refdoc = :refcar
-        GROUP BY dd.ofidoc
+      UNION
+      SELECT ff.ofifra,
+        SUM(CASE WHEN ff.stafra = 0 THEN 1 ELSE 0 END) as pen,
+        SUM(CASE WHEN ff.stafra = 1 THEN 1 ELSE 0 END) as adj,
+        SUM(CASE WHEN ff.stafra = 2 THEN 1 ELSE 0 END) as res
+        FROM fraudes ff
+        WHERE ff.reffra = :reffra
+        GROUP BY ff.ofifra
   ) p1
 INNER JOIN oficinas oo ON oo.idofic = p1.ofi
 GROUP BY ROLLUP(oo.desofi)
@@ -46,8 +46,8 @@ const estadisticaActuacionSql = `WITH
   UNION ALL
   SELECT 
       TO_CHAR(mm.fecmov, 'YYYY-MM-DD') as fec, 
-      SUM(CASE WHEN mm.tipmov = 15 THEN 1 ELSE 0 END) "ASI",
-      SUM(CASE WHEN mm.tipmov = 16 THEN 1 ELSE 0 END) "RES"
+      SUM(CASE WHEN mm.tipmov = :tipoAsign THEN 1 ELSE 0 END) "ASI",
+      SUM(CASE WHEN mm.tipmov = :tipoResol THEN 1 ELSE 0 END) "RES"
   FROM movimientosdocumento md
   INNER JOIN documentos dd ON dd.iddocu = md.iddocu
   INNER JOIN movimientos mm ON mm.idmovi = md.idmovi

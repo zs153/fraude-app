@@ -31,8 +31,10 @@ export const carga = async (req, res) => {
   }
 };
 export const cargas = async (req, res) => {
+  const context = req.body
+
   try {
-    const result = await DAL.find({});
+    const result = await DAL.find(context);
 
     if (result !== null) {
       res.status(200).json(result);

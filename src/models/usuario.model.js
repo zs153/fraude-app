@@ -2,27 +2,10 @@ import oracledb from "oracledb";
 import { simpleExecute } from "../services/database.js";
 
 const baseQuery = `SELECT 
-    idusua,
-    nomusu,
-    ofiusu,
-    rolusu,
-    userid,
-    emausu,
-    perusu,
-    telusu,
-    pwdusu,
-    stausu
-  FROM usuarios
-`;
-const largeQuery = `SELECT 
-    uu.idusua,
-    uu.nomusu,
-    uu.userid,
-    uu.telusu,
-    uu.stausu,
-    oo.desofi
+  uu.*,
+  oo.desofi
   FROM usuarios uu
-  INNER JOIN oficinas oo ON oo.idofic = ofiusu
+  INNER JOIN oficinas oo ON oo.idofic = uu.ofiusu
 `;
 const insertSql = `BEGIN FRAUDE_PKG.INSERTUSUARIO(
     :nomusu,
@@ -105,15 +88,15 @@ export const find = async (context) => {
 
   if (context.IDUSUA) {
     binds.idusua = context.IDUSUA;
-    query += "WHERE idusua = :idusua";
+    query += "WHERE uu.idusua = :idusua";
   }
   if (context.USERID) {
     binds.userid = context.USERID;
-    query += "WHERE userid = :userid";
+    query += "WHERE uu.userid = :userid";
   }
   if (context.EMAUSU) {
     binds.emausu = context.EMAUSU;
-    query += "WHERE emausu = :emausu";
+    query += "WHERE uu.emausu = :emausu";
   }
 
   const result = await simpleExecute(query, binds);

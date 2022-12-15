@@ -2,11 +2,11 @@ import oracledb from "oracledb";
 import { simpleExecute } from "../services/database.js";
 
 const baseQuery = `SELECT 
-  *,
-  TO_CHAR(feccar, 'DD/MM/YYYY') "STRFEC"
-FROM cargas
+  cc.*,
+  TO_CHAR(cc.feccar, 'DD/MM/YYYY') "STRFEC"
+FROM cargas cc
 `;
-const insertSql = `BEGIN FRAUDES_PKG.INSERTCARGA(
+const insertSql = `BEGIN FRAUDE_PKG.INSERTCARGA(
   :descar,
   :ficcar,
   :refcar,
@@ -23,7 +23,7 @@ export const find = async (context) => {
 
   if (context.IDCARG) {
     binds.idcarg = context.IDCARG
-    query += `WHERE idcarg = :idcarg`
+    query += `WHERE cc.idcarg = :idcarg`
   }
 
   const result = await simpleExecute(query, binds);

@@ -5,14 +5,14 @@ const situacionFromRec = (req) => {
     reffra: req.body.fraude.REFFRA,
   }
 
-  return Object.assign(fraude)
+  return fraude
 }
 const oficinasFromRec = (req) => {
-  const carga = {
-    refcar: req.body.carga.REFCAR,
+  const fraude = {
+    reffra: req.body.fraude.REFFRA,
   }
 
-  return carga
+  return fraude
 }
 const actuacionFromRec = (req) => {
   const periodo = {
