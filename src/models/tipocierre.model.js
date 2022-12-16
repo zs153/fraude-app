@@ -2,26 +2,26 @@ import oracledb from 'oracledb'
 import { simpleExecute } from '../services/database.js'
 
 const baseQuery = `SELECT 
-  st.idsubt,
-  st.dessub
-FROM subtipos st
+  idtipo,
+  destip
+FROM tiposcierre
 `
-const insertSql = `BEGIN FRAUDE_PKG.INSERTSUBTIPO(
-  :dessub,
+const insertSql = `BEGIN FRAUDE_PKG.INSERTTIPOCIERRE(
+  :destip,
   :usumov,
   :tipmov,
-  :idsubt
+  :idtipo
 ); END;
 `
-const updateSql = `BEGIN FRAUDE_PKG.UPDATESUBTIPO(
-  :idsubt,
-  :dessub,
+const updateSql = `BEGIN FRAUDE_PKG.UPDATETIPOCIERRE(
+  :idtipo,
+  :destip,
   :usumov,
   :tipmov
 ); END;
 `
-const removeSql = `BEGIN FRAUDE_PKG.DELETESUBTIPO(
-    :idsubt,
+const removeSql = `BEGIN FRAUDE_PKG.DELETETIPOCIERRE(
+    :idtipo,
     :usumov,
     :tipmov 
   ); END;
@@ -31,24 +31,17 @@ export const find = async (context) => {
   let query = baseQuery
   let binds = {}
 
-  if (context.idsubt) {
-    binds.idsubt = context.idsubt
-    query += `WHERE st.idsubt = :idsubt`
+  if (context.IDTIPO) {
+    binds.idtipo = context.IDTIPO
+    query += `WHERE idtipo = :idtipo`
   }
 
   const result = await simpleExecute(query, binds)
   return result.rows
 }
-export const findAll = async () => {
-  let query = baseQuery
-
-  const result = await simpleExecute(query)
-
-  return result.rows
-}
 
 export const insert = async (bind) => {
-  bind.idsubt = {
+  bind.idtipo = {
     dir: oracledb.BIND_OUT,
     type: oracledb.NUMBER,
   }
@@ -56,7 +49,7 @@ export const insert = async (bind) => {
   try {
     const result = await simpleExecute(insertSql, bind)
 
-    bind.idsubt = await result.outBinds.idsubt
+    bind.idtipo = await result.outBinds.idtipo
   } catch (error) {
     bind = null
   }

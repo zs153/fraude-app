@@ -1,42 +1,42 @@
-import * as DAL from '../models/subtipo.model'
+import * as DAL from '../models/tipocierre.model'
 
 const insertFromRec = (req) => {
-  const subtipo = {
-    dessub: req.body.subtipo.dessub,
+  const tipo = {
+    destip: req.body.tipo.DESTIP,
   }
   const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
   }
 
-  return Object.assign(subtipo, movimiento)
+  return Object.assign(tipo, movimiento)
 }
 const updateFromRec = (req) => {
-  const subtipo = {
-    idsubt: req.body.subtipo.idsubt,
-    dessub: req.body.subtipo.dessub,
+  const tipo = {
+    idtipo: req.body.tipo.IDTIPO,
+    destip: req.body.tipo.DESTIP,
   }
   const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
   }
 
-  return Object.assign(subtipo, movimiento)
+  return Object.assign(tipo, movimiento)
 }
 const deleteFromRec = (req) => {
-  const subtipo = {
-    idsubt: req.body.subtipo.idsubt,
+  const tipo = {
+    idtipo: req.body.tipo.IDTIPO,
   }
   const movimiento = {
-    usumov: req.body.movimiento.usumov,
-    tipmov: req.body.movimiento.tipmov,
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
   }
 
-  return Object.assign(subtipo, movimiento)
+  return Object.assign(tipo, movimiento)
 }
 
-export const subtipo = async (req, res) => {
-  const context = req.body.subtipo
+export const tipo = async (req, res) => {
+  const context = req.body.tipo
 
   try {
     const result = await DAL.find(context)
@@ -50,9 +50,11 @@ export const subtipo = async (req, res) => {
     res.status(500).end()
   }
 }
-export const subtipos = async (req, res) => {
+export const tipos = async (req, res) => {
+  const context = req.body
+
   try {
-    const result = await DAL.findAll()
+    const result = await DAL.find(context)
 
     if (result !== null) {
       res.status(200).json(result)

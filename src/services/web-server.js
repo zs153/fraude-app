@@ -13,7 +13,7 @@ import apiFraudeRouter from '../routes/fraude.router'
 import apiTipoHitoRouter from '../routes/tipohito.router'
 import apiTipoFraudeRouter from '../routes/tipofraude.router'
 import apiTipoEventoRouter from '../routes/tipoevento.router'
-import apiSubtipoRouter from '../routes/subtipo.router'
+import apiTipoCierreRouter from '../routes/tipocierre.router'
 import apiHitoRouter from '../routes/hito.router'
 import apiCargaRouter from '../routes/carga.router'
 import apiEventoRouter from '../routes/evento.router'
@@ -42,7 +42,7 @@ function initialize() {
     app.use('/api', apiTipoHitoRouter)
     app.use('/api', apiTipoEventoRouter)
     app.use('/api', apiTipoFraudeRouter)
-    app.use('/api', apiSubtipoRouter)
+    app.use('/api', apiTipoCierreRouter)
     app.use('/api', apiHitoRouter)
     app.use('/api', apiCargaRouter)
     app.use('/api', apiEventoRouter)
