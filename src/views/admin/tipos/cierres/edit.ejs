@@ -5,36 +5,28 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>Subtipo</title>
+  <title>Cierre</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
-  <!-- bootstrap -->
-  <link rel="stylesheet" href="/css/bootstrap-icons.css">
-  <!-- custom -->
-  <link rel="stylesheet" href="/css/estilos.min.css">
+  <!-- styles -->
+  <!-- <link rel="stylesheet" href="/css/styles.css"> -->
+  <link rel="stylesheet" href="/css/estilos.css">
   <link rel="stylesheet" href="/css/navbar.css">
 </head>
 
 <body class="antialiased">
   <div class="wrapper">
-    <%- include('../../partials/header') %>
-    <%- include('../../partials/navbar', {opcion: 'ADMINISTRACION'}) %>
+    <%- include('../../../partials/header') %>
+    <%- include('../../../partials/navbar', {opcion: 'ADMINISTRACION'}) %>
     <div class="page-wrapper">
       <div class="page-body">
         <div class="container-xl">
-          <div class="row row-deck row-cards">
+          <div class="row">
             <div class="col-12">
               <div class="card">
-                <% if(typeof alerts !='undefined') { %>
-                  <% alerts.map(function (alert){ %>
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                      <%- alert.msg %>
-                    </div>
-                  <% }) %>
-                <% } %>                    
-                <form action="/admin/subtipos/update" method="POST" onsubmit="return validate();">
-                  <input type="hidden" id="idsubt" name="idsubt" value="<%- datos.subtipo.IDSUBT %>">
+                <form action="/admin/tipos/cierres/update" method="POST" onsubmit="return validate();">
+                  <input type="hidden" name="idtipo" id="idtipo" value=<%- datos.tipo.IDTIPO %>>
                   <div class="card-header">
-                    <h3 class="card-title">Subtipo</h3>
+                    <h3 class="card-title">Tipo Cierre</h3>
                   </div>
                   <div class="card-body">
                     <div class="row">
@@ -42,7 +34,8 @@
                         <div class="mb-1">
                           <div class="input-control">
                             <label class="form-label required">Descripción</label>
-                            <input type="text" name="dessub" id="dessub" class="form-control" style="text-transform: uppercase;" value="<%- datos.subtipo.DESSUB %>" autofocus/>
+                            <input type="text" name="destip" id="destip" class="form-control"
+                              value="<%- datos.tipo.DESTIP %>" style="text-transform: uppercase;" autofocus />
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>
@@ -51,35 +44,33 @@
                   </div>
                   <div class="card-footer text-end">
                     <div class="d-flex">
-                      <a href="/admin/subtipos" class="btn btn-link">Cancelar</a>
-                      <button type="submit" class="btn btn-primary ms-auto" id="btnUpdate">Actualizar subtipo</button>
+                      <a href="/admin/tipos/cierres" class="btn btn-link">Cancelar</a>
+                      <button type="submit" class="btn btn-success ms-auto" id="btnUpdate">Actualizar tipo</button>
                     </div>
                   </div>
                 </form>
-              </div>                
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <%- include('../../partials/footer') %>
+    <%- include('../../../partials/footer') %>
   </div>
 
   <script src="/js/ayuda.min.js"></script>
   <script>
-    const dessub = document.getElementById('dessub')
+    const destip = document.getElementById('destip')
 
     const validate = () => {
-      const dessubValue = dessub.value.trim()
+      const destipValue = destip.value.trim()
 
-      if (dessubValue === '') {
-        setError(dessub, 'Descripción requerida')
+      if (destipValue === '') {
+        setError(destip, 'Descripción requerida')
         setTimeout(function () {
-          setSuccess(dessub)
+          setSuccess(destip)
         }, 3000)
         return false
-      } else {
-        setSuccess(dessub)
       }
 
       return true
@@ -103,4 +94,5 @@
     }
   </script>
 </body>
+
 </html>

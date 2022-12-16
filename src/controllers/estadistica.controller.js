@@ -40,13 +40,12 @@ export const generarEstadistica = async (req, res) => {
     REFFRA: req.body.refcar,
   }
 
-  console.log(fraude, periodo)
   try {
     const situacion = await axios.post('http://localhost:8100/api/estadisticas/situacion', {
       fraude,
     })
     const oficinas = await axios.post('http://localhost:8100/api/estadisticas/oficinas', {
-      carga,
+      fraude,
     })
     const actuacion = await axios.post('http://localhost:8100/api/estadisticas/actuacion', {
       fraude,

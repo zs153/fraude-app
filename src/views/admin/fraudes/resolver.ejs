@@ -68,14 +68,14 @@
                           <div class="mb-1">
                             <div class="form-label">Causa cierre</div>
                             <select class="form-select" id="cbotip" name="sitcie">
-                              <% datos.subtipos.map(element => { %> 
-                                <option value="<%- element.IDSUBT %>"><%- element.DESSUB %></option>
+                              <% datos.tipos.map(element => { %> 
+                                <option value="<%- element.IDTIPO %>"><%- element.DESTIP %></option>
                               <% }) %> 
                             </select>
                           </div>
                         </div>
                       </div>
-                    <% } else { %> 
+                    <% } else { %>
                       <div class="row">
                         <input type="hidden" id="sitcie" name="sitcie" value="0">
                       </div>

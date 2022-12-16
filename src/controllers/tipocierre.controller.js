@@ -5,12 +5,12 @@ export const mainPage = async (req, res) => {
   const user = req.user
 
   try {
-    const result = await axios.post('http://localhost:8100/api/subtipos')
+    const result = await axios.post('http://localhost:8100/api/tipos/cierres', {})
     const datos = {
-      subtipos: JSON.stringify(result.data),
+      tipos: JSON.stringify(result.data),
     }
 
-    res.render('admin/subtipos', { user, datos })
+    res.render('admin/tipos/cierres', { user, datos })
   } catch (error) {
     const msg = 'No se ha podido acceder a los datos de la aplicación.'
 
@@ -23,7 +23,7 @@ export const addPage = async (req, res) => {
   const user = req.user
 
   try {
-    res.render('admin/subtipos/add', { user })
+    res.render('admin/tipos/cierres/add', { user })
   } catch (error) {
     const msg = 'No se ha podido acceder a los datos de la aplicación.'
 
@@ -34,19 +34,19 @@ export const addPage = async (req, res) => {
 }
 export const editPage = async (req, res) => {
   const user = req.user
-  const subtipo = {
-    idsubt: req.params.id,
+  const tipo = {
+    IDTIPO: req.params.id,
   }
 
   try {
-    const result = await axios.post('http://localhost:8100/api/subtipo', {
-      subtipo,
+    const result = await axios.post('http://localhost:8100/api/tipos/cierre', {
+      tipo,
     })
     const datos = {
-      subtipo: result.data,
+      tipo: result.data,
     }
 
-    res.render('admin/subtipos/edit', { user, datos })
+    res.render('admin/tipos/cierres/edit', { user, datos })
   } catch (error) {
     const msg = 'No se ha podido acceder a los datos de la aplicación.'
 
@@ -58,27 +58,23 @@ export const editPage = async (req, res) => {
 
 export const insert = async (req, res) => {
   const user = req.user
-  const subtipo = {
-    dessub: req.body.dessub.toUpperCase(),
+  const tipo = {
+    DESTIP: req.body.destip.toUpperCase(),
   }
   const movimiento = {
-    usumov: user.id,
-    tipmov: tiposMovimiento.crearSubtipo,
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.crearTipoCierre,
   }
 
   try {
-    await axios.post('http://localhost:8100/api/subtipos/insert', {
-      subtipo,
+    await axios.post('http://localhost:8100/api/tipos/cierres/insert', {
+      tipo,
       movimiento,
     })
 
-    res.redirect(`/admin/subtipos`)
+    res.redirect(`/admin/tipos/cierres`)
   } catch (error) {
     let msg = 'No se ha podido crear el subtipo.'
-
-    if (error.response.data.errorNum === 20100) {
-      msg = 'El subtipo ya existe.'
-    }
 
     res.render('admin/error400', {
       alerts: [{ msg }],
@@ -87,29 +83,25 @@ export const insert = async (req, res) => {
 }
 export const update = async (req, res) => {
   const user = req.user
-  const subtipo = {
-    idsubt: req.body.idsubt,
-    dessub: req.body.dessub.toUpperCase(),
+  const tipo = {
+    IDTIPO: req.body.idtipo,
+    DESTIP: req.body.destip.toUpperCase(),
   }
   const movimiento = {
-    usumov: user.id,
-    tipmov: tiposMovimiento.modificarSubtipo,
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.modificarTipoCierre,
   }
 
   try {
-    await axios.post('http://localhost:8100/api/subtipos/update', {
-      subtipo,
+    await axios.post('http://localhost:8100/api/tipos/cierres/update', {
+      tipo,
       movimiento,
     })
 
-    res.redirect(`/admin/subtipos`)
+    res.redirect(`/admin/tipos/cierres`)
   } catch (error) {
     let msg =
       'No se han podido modificar los datos del subtipo. Verifique los datos introducidos'
-
-    if (error.response.data.errorNum === 20100) {
-      msg = 'El subtipo ya existe'
-    }
 
     res.render('admin/error400', {
       alerts: [{ msg }],
@@ -118,21 +110,21 @@ export const update = async (req, res) => {
 }
 export const remove = async (req, res) => {
   const user = req.user
-  const subtipo = {
-    idsubt: req.body.idsubt,
+  const tipo = {
+    IDTIPO: req.body.idtipo,
   }
   const movimiento = {
-    usumov: user.id,
-    tipmov: tiposMovimiento.borrarSubtipo,
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.borrarTipoCierre,
   }
 
   try {
-    await axios.post('http://localhost:8100/api/subtipos/delete', {
-      subtipo,
+    await axios.post('http://localhost:8100/api/tipos/cierres/delete', {
+      tipo,
       movimiento,
     })
 
-    res.redirect(`/admin/subtipos`)
+    res.redirect(`/admin/tipos/cierres`)
   } catch (error) {
     const msg = 'No se ha podido elminar el subtipo.'
 

@@ -37,9 +37,6 @@ export const perfilPage = async (req, res) => {
     })
   }
 }
-export const errorPage = async (req, res) => {
-  res.render('admin/error400')
-}
 
 // proc
 export const changePassword = async (req, res) => {

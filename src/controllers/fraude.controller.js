@@ -101,9 +101,6 @@ export const resolverPage = async (req, res) => {
   };
 
   try {
-    const result = await axios.post("http://localhost:8100/api/fraude", {
-      fraude,
-    });
     const hitos = await axios.post("http://localhost:8100/api/fraudes/hitos", {
       fraude,
     });
@@ -153,10 +150,13 @@ export const resolverPage = async (req, res) => {
       }
     }
 
-    const subtipos = await axios.post("http://localhost:8100/api/subtipos", {});
+    const tipos = await axios.post("http://localhost:8100/api/tipos/cierres", {});
+    const result = await axios.post("http://localhost:8100/api/fraude", {
+      fraude,
+    });
     const datos = {
       fraude: result.data,
-      subtipos: subtipos.data,
+      tipos: tipos.data,
       hayLiquidacion,
     };
 
