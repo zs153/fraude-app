@@ -8,7 +8,9 @@
   <title>Estadística</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
   <!-- styles -->
-  <link rel="stylesheet" href="/css/styles.css">
+  <!-- <link rel="stylesheet" href="/css/styles.css"> -->
+  <link rel="stylesheet" href="/css/estilos.css">
+  <link rel="stylesheet" href="/css/navbar.css">
   <!-- apexcharts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.35.3/apexcharts.min.js"></script>
   <script src="/js/easypiechart.min.js"></script>
@@ -21,12 +23,9 @@
       line-height: 1.6;
       color: #626976;
     }
-
     .h1 {
-      font-size: 3.5rem;
-      color: rgb(87, 87, 87)
+      font-size: 1.5rem;
     }
-
     .progress-container {
       display: flex;
       height: 1rem;
@@ -36,7 +35,6 @@
       text-align: center;
       color: #fff;
     }
-
     .chart {
       position: relative;
       display: inline-block;
@@ -46,30 +44,56 @@
       margin-bottom: 10px;
       text-align: center;
     }
-
     .chart canvas {
       position: absolute;
       top: 0;
       left: 0;
     }
-
     .percent {
       display: inline-block;
       line-height: 110px;
       z-index: 2;
     }
-
     .subpercent {
       display: block;
       z-index: 4;
     }
-
     .percent:after {
       content: '%';
-      margin-left: 0;
+      margin-left: 0.1em;
       font-size: .8em;
     }
-
+    .err {
+      width: 10%;
+      height: 100%;
+      float: left;
+    }
+    .efe {
+      width: 10%;
+      height: 100%;
+      float: left;
+    }
+    .tri {
+      width: 10%;
+      height: 100%;
+      float: left;
+    }
+    .pre {
+      width: 10%;
+      height: 100%;
+      float: left;
+    }
+    .otr {
+      width: 10%;
+      height: 100%;        
+      float: left;
+    }
+    .legend {
+      display: inline-block;
+      width: 0.75rem;
+      height: 0.75rem;
+      border-radius: 4px;
+    }
     .subpercent:after {
       margin-left: 0;
       font-size: .8em;
@@ -119,8 +143,8 @@
       <div class="page-body">
         <div class="container-xl">
           <div class="d-flex">
-            <span>Carga: <%- datos.carga.REFCAR %></span>
-            <span class="ms-3">Periodo: <%- datos.strPeriodo.desde %> al <%- datos.strPeriodo.hasta %></span>
+            <span>Referencia: <%- datos.fraude.REFFRA %></span>
+            <span class="ms-3">Periodo: <%- datos.periodo.DESDE.split('-').reverse().join('-') %> al <%- datos.periodo.HASTA.split('-').reverse().join('-') %></span>
             <a href="#" class="ms-auto" data-bs-toggle="modal" data-bs-target="#modal-config">
               <span class="nav-link-icon d-md-none d-lg-inline-block">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24">
@@ -132,15 +156,59 @@
           </div>
           <div class="row row-deck row-cards">
             <div class="col-lg-4">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="d-flex align-items-center">
+                      <div class="subheader">Correctas</div>
+                    </div>
+                    <div class="h1 mb-3"><%- datos.contadores.correctas %></div>
+                    <div class="d-flex">
+                      <div class="subheader">Causas</div>
+                      <div class="ms-auto">
+                        <div class="col-auto">
+                          <span class="legend bg-azure tooltip">
+                            <span class="tooltiptext">Datos cruce erroneos</span>
+                          </span>
+                          <span class="legend bg-purple tooltip">
+                            <span class="tooltiptext">Sin efecto económico</span>
+                          </span>
+                          <span class="legend bg-green tooltip">
+                            <span class="tooltiptext">Tributación correcta</span>
+                          </span>
+                          <span class="legend bg-orange tooltip">
+                            <span class="tooltiptext">Prescrito</span>
+                          </span>
+                          <span class="legend bg-yellow tooltip">
+                            <span class="tooltiptext">Otros casos</span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="progress-container">
+                      <div class="err bg-azure progress-separated">
+                      </div>
+                      <div class="efe bg-purple progress-separated">
+                      </div>
+                      <div class="tri bg-green progress-separated">
+                      </div>
+                      <div class="pre bg-orange progress-separated">
+                      </div>
+                      <div class="otr bg-yellow">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
               <div class="card">
                 <div class="card-body">
                   <div class="d-flex align-items-center">
-                    <div class="subheader">Pendientes</div>
+                    <div class="subheader">Liquidaciones</div>
+                    <div class="subheader ms-auto">Importe</div>
                   </div>
                   <div class="d-flex align-items-center">
-                    <div class="h1 ms-auto">
-                      <%- Intl.NumberFormat('de-DE').format(datos.situacion.PEN) %>
-                    </div>
+                    <div class="h1 mb-3"><%- Intl.NumberFormat('de-DE').format(datos.contadores.liquidadas) %></div>
+                    <div class="h1 ms-auto"><%- Intl.NumberFormat('de-DE').format(datos.importes.liquidado) %></div>
                   </div>
                 </div>
               </div>
@@ -149,25 +217,24 @@
               <div class="card">
                 <div class="card-body">
                   <div class="d-flex align-items-center">
-                    <div class="subheader">Adjudicadas</div>
+                    <div class="subheader">Sanciones</div>
+                    <div class="subheader ms-auto">Importe</div>
                   </div>
                   <div class="d-flex align-items-center">
-                    <div class="h1 ms-auto">
-                      <%- Intl.NumberFormat('de-DE').format(datos.situacion.ASI) %>
+                    <div class="h1 mb-3"><%- Intl.NumberFormat('de-DE').format(datos.contadores.sancionadas) %></div>
+                    <div class="h1 ms-auto"><%- Intl.NumberFormat('de-DE').format(datos.importes.sancionado) %></div>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <div class="subheader">
+                      Anuladas
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-4">
-              <div class="card">
-                <div class="card-body">
                   <div class="d-flex align-items-center">
-                    <div class="subheader">Resueltas</div>
-                  </div>
-                  <div class="d-flex align-items-center">
-                    <div class="h1 ms-auto">
-                      <%- Intl.NumberFormat('de-DE').format(datos.situacion.RES) %>
+                    <div class="h2">
+                      <%- Intl.NumberFormat('de-DE').format(datos.contadores.anuladas) %>
+                    </div>
+                    <div class="ms-auto">
+                      <%- Intl.NumberFormat('de-DE').format(datos.importes.anulado) %>
                     </div>
                   </div>
                 </div>
@@ -195,10 +262,10 @@
                         <thead>
                           <tr class="header">
                             <th>Oficina</th>
-                            <th class="w-5">Pend</th>
-                            <th class="w-5">Adju</th>
-                            <th class="w-5">Resu</th>
-                            <th class="w-6">Total</th>
+                            <th class="w-5 text-end">Pend</th>
+                            <th class="w-5 text-end">Adju</th>
+                            <th class="w-5 text-end">Resu</th>
+                            <th class="w-6 text-end">Total</th>
                           </tr>
                         </thead>
                         <tbody id="table-body">
@@ -217,38 +284,46 @@
                                 </div>
                               </div>
                             </td>
-                            <td class="w-6">
+                            <td class="w-6 text-end">
                               <div class="d-flex align-items-center">
                                 <div class="flex-fill">
                                   <div class="font-weight-medium">
-                                    <%- element.PEN %>
+                                    <% if (element.PEN) { %>
+                                      <%- element.PEN %>                                    
+                                    <% } %>
                                   </div>
                                 </div>
                               </div>
                             </td>
-                            <td class="w-6">
+                            <td class="w-6 text-end">
                               <div class="d-flex align-items-center">
                                 <div class="flex-fill">
                                   <div class="font-weight-medium">
+                                    <% if (element.ADJ) { %>
                                     <%- element.ADJ %>
+                                    <% } %>
                                   </div>
                                 </div>
                               </div>
                             </td>
-                            <td class="w-6">
+                            <td class="w-6 text-end">
                               <div class="d-flex align-items-center">
                                 <div class="flex-fill">
                                   <div class="font-weight-medium">
+                                    <% if (element.RES) { %>
                                     <%- element.RES %>
+                                    <% } %>
                                   </div>
                                 </div>
                               </div>
                             </td>
-                            <td class="w-6">
+                            <td class="w-6 text-end">
                               <div class="d-flex align-items-center">
                                 <div class="flex-fill">
                                   <div class="font-weight-medium">
+                                    <% if (element.TOT) { %>
                                     <%- element.TOT %>
+                                    <% } %>
                                   </div>
                                 </div>
                               </div>
@@ -263,21 +338,21 @@
                 <div class="col-12 mt-1">
                   <div class="card" style="display: -webkit-box;">
                     <div class="col-4 mx-auto w-auto">
-                      <div id="chart-pendientes" class="chart" data-percent="<%- datos.ratios.pendientes %>">
+                      <div id="chart-correc" class="chart" data-percent="<%- datos.ratios.correctas %>">
                         <span class="percent"></span>
-                        <span class="subpercent">Pendiente</span>
+                        <span>Correcto</span>
                       </div>
                     </div>
                     <div class="col-4 mx-auto w-auto">
-                      <div id="chart-asignadas" class="chart" data-percent="<%- datos.ratios.asignadas %>">
+                      <div id="chart-liquid" class="chart" data-percent="<%- datos.ratios.liquidacion %>">
                         <span class="percent"></span>
-                        <span class="subpercent">Adjudicado</span>
+                        <span>Liquida</span>
                       </div>
                     </div>
                     <div class="col-4 mx-auto w-auto">
-                      <div id="chart-resueltas" class="chart" data-percent="<%- datos.ratios.resueltas %>">
+                      <div id="chart-sancio" class="chart" data-percent="<%- datos.ratios.sancion %>">
                         <span class="percent"></span>
-                        <span class="subpercent">Resuelto</span>
+                        <span>Sanción</span>
                       </div>
                     </div>
                   </div>
@@ -306,8 +381,13 @@
                 <div class="col-12">
                   <div class="mb-1">
                     <div class="form-label">Carga</div>
-                    <select class="form-select form-control" id="cbocar" name="refcar" value="">
-                    </select>
+                      <select class="form-select form-control" id="cbocar" name="refcar" value="">
+                        <% datos.cargas.map(element=> { %>
+                        <option value="<%- element.REFCAR %>">
+                          <%- element.DESCAR %>
+                        </option>
+                        <% }) %>
+                      </select>
                   </div>
                 </div>
               </div>
@@ -349,24 +429,43 @@
     const cboC = document.getElementById('cbocar');
 
     cboC.addEventListener('change', (e) => {
-      document.getElementById('refdoc').value = e.target.options[e.target.selectedIndex].value
+      document.getElementById('reffra').value = e.target.options[e.target.selectedIndex].value
     })
-  </script>
-  <script>
+
     const changeProgress = (element, texto, valor, progress) => {
       element.style.width = `${progress}%`;
       element.innerHTML = `<div class="tooltip" style="display: block;">${valor}
-        <span class="tooltiptext">
-          <p>${texto}</p>
-          <p>Total: ${valor}</p>
-          <p>Porcentaje: ${progress}%</p>
-        </span>
-      </div>`
+      <span class="tooltiptext">
+        <p>${texto}</p>
+        <p>Total: ${valor}</p>
+        <p>Porcentaje: ${progress}%</p>
+      </span>
+    </div>`
     };
+
+    changeProgress(document.querySelector(".err"), 'Datos cruce erroneos', <%- datos.causas.cruceError %>, <%- datos.ratios.cruceError %>)
+    changeProgress(document.querySelector(".efe"), 'Sin efectos económicos', <%- datos.causas.sinEfecto %>, <%- datos.ratios.sinEfecto %>)
+    changeProgress(document.querySelector(".tri"), 'Tributación correcta', <%- datos.causas.tributacionCorrecta %>, <%- datos.ratios.tributacionCorrecta %>)
+    changeProgress(document.querySelector(".pre"), 'Prescrito', <%- datos.causas.prescrito %>, <%- datos.ratios.prescrito %>)
+    changeProgress(document.querySelector(".otr"), 'Otros casos', <%- datos.causas.otrosCasos %>, <%- datos.ratios.otrosCasos %>)
   </script>
   <script>
     const options = {
-      colors: ['#f76707', '#74b816'],
+      // colors: ['#4263eb', '#74b816', '#f76707'],
+      series: [
+        {
+          name: 'Correcto',
+          data: <%- datos.serieC %>
+        },
+        {
+          name: 'Liquidaciones',
+          data: <%- datos.serieL %>
+        },
+        {
+          name: 'Sanciones',
+          data: <%- datos.serieS %>
+        }
+      ],
       chart: {
         locales: [{
           "name": "es",
@@ -433,16 +532,6 @@
       dataLabels: {
         enabled: false
       },
-      series: [
-        {
-          name: 'Adjudicado',
-          data: <% - datos.serieA %>
-        },
-        {
-          name: 'Resuelto',
-          data: <% - datos.serieR %>
-        }
-      ],
       xaxis: {
         type: 'datetime',
       }
@@ -452,9 +541,9 @@
     chart.render();   
   </script>
   <script>
-    const element = document.querySelector('#chart-pendientes');
-    const element1 = document.querySelector('#chart-asignadas');
-    const element2 = document.querySelector('#chart-resueltas');
+    const element = document.querySelector('#chart-correc');
+    const element1 = document.querySelector('#chart-liquid');
+    const element2 = document.querySelector('#chart-sancio');
 
     const chartPendientes = new EasyPieChart(element, {
       easing: 'easeOutElastic',
@@ -472,7 +561,7 @@
     const chartAdjudicadas = new EasyPieChart(element1, {
       easing: 'easeOutElastic',
       delay: 3000,
-      barColor: '#f76707',
+      barColor: '#74b816',
       trackColor: '#f2f3f4',
       scaleColor: false,
       lineWidth: 3,
@@ -485,7 +574,7 @@
     const chartResueltas = new EasyPieChart(element2, {
       easing: 'easeOutElastic',
       delay: 3000,
-      barColor: '#74b816',
+      barColor: '#f76707',
       trackColor: '#f2f3f4',
       scaleColor: false,
       lineWidth: 3,
@@ -510,8 +599,6 @@
           setSuccess(desde)
         }, 3000)
         return false
-      } else {
-        setSuccess(desde)
       }
       if (isNaN(Date.parse(hastaValue))) {
         setError(hasta, 'Fecha requerida')
@@ -519,8 +606,6 @@
           setSuccess(hasta)
         }, 3000)
         return false
-      } else {
-        setSuccess(hasta)
       }
 
       return true
@@ -542,32 +627,6 @@
       element.classList.add('is-invalid');
       inputControl.classList.remove('is-valid');
     }
-  </script>
-  <script>
-    const Cargas = () => {
-      const xhr = new XMLHttpRequest();
-
-      xhr.onload = function () {
-        if (xhr.status === 200) {
-          const cargas = JSON.parse(xhr.response)
-          const cbo = document.getElementById('cbocar')
-
-          cargas.map((itm) => {
-            const option = document.createElement('option')
-            option.value = itm.REFCAR
-            option.text = itm.DESCAR
-
-            cbo.appendChild(option)
-          })
-
-          document.getElementById('refdoc').value = cbo.options[cbo.selectedIndex].value
-        }
-      };
-      xhr.open('POST', 'http://localhost:8100/api/cargas', true);
-      xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-      xhr.send()
-    }
-    Cargas();
   </script>
 </body>
 

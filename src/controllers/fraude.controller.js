@@ -747,6 +747,7 @@ export const resolver = async (req, res) => {
     IDFRAU: req.body.idfrau,
   };
   const cierre = {
+    REFFRA: req.body.reffra,
     SITCIE: req.body.sitcie
   }
   const movimiento = {

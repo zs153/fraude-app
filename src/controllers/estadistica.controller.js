@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { connectionClass } from 'oracledb'
 
 // pages
 export const mainPage = async (req, res) => {
@@ -33,59 +34,112 @@ export const mainPage = async (req, res) => {
 export const generarEstadistica = async (req, res) => {
   const user = req.user
   const periodo = {
-    desde: req.body.desde,
-    hasta: req.body.hasta,
+    DESDE: req.body.desde,
+    HASTA: req.body.hasta,
   }
   const fraude = {
     REFFRA: req.body.refcar,
   }
 
   try {
+    const tipos = await axios.post('http://localhost:8100/api/tipos/cierres', {})
+    const cargas = await axios.post('http://localhost:8100/api/cargas', {})
     const situacion = await axios.post('http://localhost:8100/api/estadisticas/situacion', {
       fraude,
+      periodo,
+      tipos: tipos.data,
     })
     const oficinas = await axios.post('http://localhost:8100/api/estadisticas/oficinas', {
       fraude,
     })
     const actuacion = await axios.post('http://localhost:8100/api/estadisticas/actuacion', {
       fraude,
-      tiposMovimiento,
       periodo,
     })
 
+    const serieC = []
     const serieL = []
     const serieS = []
-    const serieC = []
+    let contadores
+    let importes
+    let causas
 
-    actuacion.data.map(itm => {
-      serieC.push({ x: itm.FEC, y: itm.COR })
-      serieL.push({ x: itm.FEC, y: itm.LIQ })
-      serieS.push({ x: itm.FEC, y: itm.SAN })
+    situacion.data.map(itm => {
+      if (itm.FECCIE) {
+        serieC.push({ x: itm.FECCIE.slice(0, 10), y: itm.CORREC })
+      } else {
+        const cruceError = itm.CRUERR
+        const sinEfecto = itm.SINEFE
+        const tributacionCorrecta = itm.TRICOR
+        const prescrito = itm.PRESCR
+        const otrosCasos = itm.OTRCAS
+        const correctas = itm.CORREC
+
+        contadores = {
+          correctas,
+        }
+        causas = {
+          cruceError,
+          sinEfecto,
+          tributacionCorrecta,
+          prescrito,
+          otrosCasos,
+        }
+      }
     })
 
-    const totalSituacion = situacion.data.TOTAL
+    actuacion.data.map(itm => {
+      if (itm.FECCIE) {
+        serieL.push({ x: itm.FECCIE.slice(0, 10), y: itm.LIQUID })
+        serieS.push({ x: itm.FECCIE.slice(0, 10), y: itm.SANCIO })
+      } else {
+        const liquidadas = itm.LIQUID
+        const sancionadas = itm.SANCIO
+        const anuladas = itm.ANULAD
+        const liquidado = itm.IMPLIQ
+        const sancionado = itm.IMPSAN
+        const anulado = itm.IMPANU
+
+        contadores.liquidadas = liquidadas
+        contadores.sancionadas = sancionadas
+        contadores.anuladas = anuladas
+
+        importes = {
+          liquidado,
+          sancionado,
+          anulado,
+        }
+      }
+    })
+
+    const totalActuacion = contadores.correctas + contadores.liquidadas + contadores.sancionadas
+    const totalCausas = causas.cruceError + causas.sinEfecto + causas.tributacionCorrecta + causas.prescrito + causas.otrosCasos
     const ratios = {
-      propuestaLiquidacion: Math.round((hitos.data.PROLIQ * 100 / totalSituacion) * 100) / 100.0,
-      propuestaSancion: Math.round((hitos.data.PROSAN * 100 / totalSituacion) * 100) / 100.0,
-      liquidacion: Math.round((hitos.data.LIQUID * 100 / totalSituacion) * 100) / 100.0,
-      sancion: Math.round((hitos.data.SANCIO * 100 / totalSituacion) * 100) / 100.0,
-      anulacion: Math.round((hitos.data.ANUSAN * 100 / totalSituacion) * 100) / 100.0,
-      correctas: Math.round((situacion.data.CORREC * 100 / totalSituacion) * 100) / 100.0,
+      correctas: Math.round((contadores.correctas * 100 / totalActuacion) * 100) / 100.0,
+      liquidacion: Math.round((contadores.liquidadas * 100 / totalActuacion) * 100) / 100.0,
+      sancion: Math.round((contadores.sancionadas * 100 / totalActuacion) * 100) / 100.0,
+      cruceError: Math.round((causas.cruceError * 100 / totalCausas) * 100) / 100.0,
+      sinEfecto: Math.round((causas.sinEfecto * 100 / totalCausas) * 100) / 100.0,
+      tributacionCorrecta: Math.round((causas.tributacionCorrecta * 100 / totalCausas) * 100) / 100.0,
+      prescrito: Math.round((causas.prescrito * 100 / totalCausas) * 100) / 100.0,
+      otrosCasos: Math.round((causas.otrosCasos * 100 / totalCausas) * 100) / 100.0,
     }
+
     const datos = {
       fraude,
-      periodo,
-      tipo,
-      hitos: hitos.data,
+      cargas: cargas.data,
       oficinas: oficinas.data,
-      situacion: situacion.data,
+      periodo,
+      contadores,
+      importes,
+      causas,
       ratios,
       serieC: JSON.stringify(serieC),
       serieL: JSON.stringify(serieL),
       serieS: JSON.stringify(serieS),
     }
 
-    res.render('admin/estadisticas/fraudes', { user, datos })
+    res.render('admin/estadisticas/resultado', { user, datos })
   } catch (error) {
     const msg = 'No se ha podido acceder a los datos de la aplicación.'
 
