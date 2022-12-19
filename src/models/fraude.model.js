@@ -106,6 +106,7 @@ const cierreSql = `BEGIN FRAUDE_PKG.CIERREFRAUDE(
   :idfrau,
   :liqfra,
   :stafra,
+  :reffra,
   :sitcie,
   :usumov,
   :tipmov 

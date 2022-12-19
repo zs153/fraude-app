@@ -1,11 +1,38 @@
 import * as DAL from '../models/estadistica.model'
 
+const situacionActuacionFromRec = (req) => {
+  const fraude = {
+    reffra: req.body.fraude.REFFRA,
+  }
+  const periodo = {
+    desde: req.body.periodo.DESDE,
+    hasta: req.body.periodo.HASTA,
+  }
+  const tipos = {
+    cruerr: req.body.tipos[0].IDTIPO,
+    sinefe: req.body.tipos[1].IDTIPO,
+    tricor: req.body.tipos[2].IDTIPO,
+    prescr: req.body.tipos[3].IDTIPO,
+  }
+
+  return Object.assign(fraude, periodo, tipos)
+}
 const situacionFromRec = (req) => {
   const fraude = {
     reffra: req.body.fraude.REFFRA,
   }
+  const periodo = {
+    desde: req.body.periodo.DESDE,
+    hasta: req.body.periodo.HASTA,
+  }
+  const tipos = {
+    cruerr: req.body.tipos[0].IDTIPO,
+    sinefe: req.body.tipos[1].IDTIPO,
+    tricor: req.body.tipos[2].IDTIPO,
+    prescr: req.body.tipos[3].IDTIPO,
+  }
 
-  return fraude
+  return Object.assign(fraude, periodo, tipos)
 }
 const oficinasFromRec = (req) => {
   const fraude = {
@@ -15,20 +42,30 @@ const oficinasFromRec = (req) => {
   return fraude
 }
 const actuacionFromRec = (req) => {
-  const periodo = {
-    desfec: req.body.periodo.DESDE,
-    hasfec: req.body.periodo.HASTA,
-  }
   const fraude = {
-    refdoc: req.body.fraude.REFFRA,
+    reffra: req.body.fraude.REFFRA,
   }
-  const tipos = {
-    tipoAsign: req.body.tiposMovimiento.asignarfraude,
-    tipoResol: req.body.tiposMovimiento.resolverfraude,
+  const periodo = {
+    desde: req.body.periodo.DESDE,
+    hasta: req.body.periodo.HASTA,
   }
-  return Object.assign(periodo, fraude, tipos)
+
+  return Object.assign(fraude, periodo)
 }
 
+export const situacionActuacion = async (req, res) => {
+  try {
+    const result = await DAL.sitAct(situacionActuacionFromRec(req))
+
+    if (result !== null) {
+      res.status(200).json(result)
+    } else {
+      res.status(404).end()
+    }
+  } catch (err) {
+    res.status(500).end()
+  }
+}
 export const estadisticasSituacion = async (req, res) => {
   try {
     const result = await DAL.statSituacion(situacionFromRec(req))

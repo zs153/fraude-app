@@ -18,6 +18,7 @@ import apiHitoRouter from '../routes/hito.router'
 import apiCargaRouter from '../routes/carga.router'
 import apiEventoRouter from '../routes/evento.router'
 import apiRelacionRouter from '../routes/relacion.router'
+import apiEstadisticaRouter from '../routes/estadistica.router'
 
 let httpServer
 
@@ -47,6 +48,7 @@ function initialize() {
     app.use('/api', apiCargaRouter)
     app.use('/api', apiEventoRouter)
     app.use('/api', apiRelacionRouter)
+    app.use('/api', apiEstadisticaRouter)
 
     // server
     httpServer

@@ -89,7 +89,8 @@ const cierreFromRec = (req) => {
     stafra: req.body.fraude.STAFRA,
   }
   const cierre = {
-    sitcie: req.body.cierre.SITCIE
+    reffra: req.body.cierre.REFFRA,
+    sitcie: req.body.cierre.SITCIE,
   }
   const movimiento = {
     usumov: req.body.movimiento.USUMOV,
