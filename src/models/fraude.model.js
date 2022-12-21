@@ -44,6 +44,26 @@ INNER JOIN tiposfraude tt ON tt.idtipo = ff.tipfra
 INNER JOIN oficinas oo ON oo.idofic = ff.ofifra
 ORDER BY ff.stafra DESC
 `
+const extendedQuery = `SELECT ff.idfrau, ff.fecfra, ff.nifcon, ff.nomcon, ff.ejefra, ff.obsfra, tf.destip "TIPFRA", 
+  hh.idhito, hh.fechit, hh.imphit, hh.obshit, th.destip "TIPHIT", 
+  ee.ideven, ee.feceve, ee.obseve, te.destip "TIPEVE",
+  oo.desofi
+FROM (
+  SELECT hf.idfrau, hf.idhito, null "IDEVEN" FROM hitosfraude hf 
+  WHERE hf.idfrau = :idfrau
+  UNION
+  SELECT ef.idfrau, null "IDHITO", ef.ideven FROM eventosfraude ef 
+  WHERE ef.idfrau = :idfrau
+) p1
+LEFT JOIN fraudes ff ON ff.idfrau = p1.idfrau
+LEFT JOIN hitos hh ON hh.idhito = p1.idhito
+LEFT JOIN eventos ee ON ee.ideven = p1.ideven
+LEFT JOIN tiposfraude tf ON tf.idtipo = ff.tipfra
+LEFT JOIN tiposhito th ON th.idtipo = hh.tiphit
+LEFT JOIN tiposevento te ON te.idtipo = ee.tipeve
+LEFT JOIN oficinas oo ON oo.idofic = ff.ofifra
+WHERE ff.idfrau = :idfrau
+`
 const insertSql = `BEGIN FRAUDE_PKG.INSERTFRAUDE(
   TO_DATE(:fecfra, 'YYYY-MM-DD'),
   :nifcon,
@@ -309,6 +329,7 @@ WHERE ef.idfrau = :idfrau
 `
 const insertEventoSql = `BEGIN FRAUDE_PKG.INSERTEVENTOFRAUDE(
   :idfrau,
+  :feceve,
   :tipeve,
   :obseve,
   :usumov,
@@ -376,6 +397,18 @@ export const find = async (context) => {
   const result = await simpleExecute(query, binds)
   return result.rows
 }
+export const extended = async (context) => {
+  let query = extendedQuery
+  let binds = {}
+
+  if (context.IDFRAU) {
+    binds.idfrau = context.IDFRAU
+  }
+
+  const result = await simpleExecute(query, binds)
+  return result.rows
+}
+
 export const insert = async (bind) => {
   bind.idfrau = {
     dir: oracledb.BIND_OUT,
@@ -461,6 +494,7 @@ export const cierre = async (bind) => {
 // proc estadistica
 export const statHitos = async (bind) => {
   let result
+
   try {
     result = await simpleExecute(estadisticaHitosSql, bind)
   } catch (error) {

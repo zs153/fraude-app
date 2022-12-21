@@ -1,26 +1,29 @@
-import oracledb from 'oracledb'
 import { simpleExecute } from '../services/database.js'
 
-const estadisticaSitActSql = `SELECT 
-    TO_CHAR(cc.feccie, 'YYYY-MM-DD') "FECCIE",
-    SUM(CASE WHEN cc.sitcie = :cruerr THEN 1 ELSE 0 END) "CRUERR",
-    SUM(CASE WHEN cc.sitcie = :sinefe THEN 1 ELSE 0 END) "SINEFE",
-    SUM(CASE WHEN cc.sitcie = :tricor THEN 1 ELSE 0 END) "TRICOR",
-    SUM(CASE WHEN cc.sitcie = :prescr THEN 1 ELSE 0 END) "PRESCR",
-    SUM(CASE WHEN cc.sitcie > 4 THEN 1 ELSE 0 END) "OTRCAS",
-    SUM(CASE WHEN cc.sitcie > 0 THEN 1 ELSE 0 END) "CORREC",
-    SUM(CASE WHEN hh.stahit = 2 THEN 1 ELSE 0 END) "LIQUID",
-    SUM(CASE WHEN hh.stahit = 4 THEN 1 ELSE 0 END) "SANCIO",
-    SUM(CASE WHEN hh.stahit = -1 THEN 1 ELSE 0 END) "ANULAD",
-    SUM(CASE WHEN hh.stahit = 2 THEN hh.imphit ELSE 0 END) "IMPLIQ",
-    SUM(CASE WHEN hh.stahit = 4 THEN hh.imphit ELSE 0 END) "IMPSAN",
-    SUM(CASE WHEN hh.stahit = -1 THEN hh.imphit ELSE 0 END) "IMPANU"
-  FROM cierres cc
-  LEFT JOIN hitosfraude hf ON hf.idfrau = cc.idfrau
-  LEFT JOIN hitos hh ON hh.idhito = hf.idhito
-  WHERE cc.reffra = :reffra AND
-    feccie BETWEEN TO_DATE(:desde,'YYYY-MM-DD') AND TO_DATE(:hasta,'YYYY-MM-DD') +24/24
-  GROUP BY CUBE(TO_CHAR(cc.feccie, 'YYYY-MM-DD'))
+const estadisticaSitActSql = `WITH 
+vDates AS (
+    SELECT TO_DATE(:desde,'YYYY-MM-DD') + ROWNUM - 1 AS fecha
+FROM dual
+CONNECT BY rownum <= TO_DATE(:hasta,'YYYY-MM-DD') - TO_DATE(:desde,'YYYY-MM-DD') + 1
+)
+SELECT v.fecha "FECHA",
+  SUM(CASE WHEN cc.sitcie = :cruerr THEN 1 ELSE 0 END) "CRUERR",
+  SUM(CASE WHEN cc.sitcie = :sinefe THEN 1 ELSE 0 END) "SINEFE",
+  SUM(CASE WHEN cc.sitcie = :tricor THEN 1 ELSE 0 END) "TRICOR",
+  SUM(CASE WHEN cc.sitcie = :prescr THEN 1 ELSE 0 END) "PRESCR",
+  SUM(CASE WHEN cc.sitcie > 4 THEN 1 ELSE 0 END) "OTRCAS",
+  SUM(CASE WHEN cc.sitcie > 0 AND hh.stahit IS NULL THEN 1 ELSE 0 END) "CORREC",
+  SUM(CASE WHEN hh.stahit = 2 OR hh.stahit = -1 THEN 1 ELSE 0 END) "LIQUID",
+  SUM(CASE WHEN hh.stahit = 4 THEN 1 ELSE 0 END) "SANCIO",
+  SUM(CASE WHEN hh.stahit = -1 THEN 1 ELSE 0 END) "ANULAD",
+  SUM(CASE WHEN hh.stahit = 2 THEN hh.imphit ELSE 0 END) "IMPLIQ",
+  SUM(CASE WHEN hh.stahit = 4 THEN hh.imphit ELSE 0 END) "IMPSAN",
+  SUM(CASE WHEN hh.stahit = -1 THEN hh.imphit ELSE 0 END) "IMPANU"
+FROM vDates v
+LEFT JOIN cierres cc ON TRUNC(cc.feccie) = v.fecha AND cc.reffra = :reffra
+LEFT JOIN hitosfraude hf ON hf.idfrau = cc.idfrau
+LEFT JOIN hitos hh ON hh.idhito = hf.idhito
+GROUP BY CUBE(v.fecha)
 `
 const estadisticaSituacionSql = `SELECT 
   TO_CHAR(cc.feccie, 'YYYY-MM-DD') "FECCIE",

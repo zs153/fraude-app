@@ -185,6 +185,7 @@ const insertEventoFromRec = (req) => {
     idfrau: req.body.fraude.IDFRAU,
   }
   const evento = {
+    feceve: req.body.evento.FECEVE,
     tipeve: req.body.evento.TIPEVE,
     obseve: req.body.evento.OBSEVE,
   }
@@ -334,6 +335,21 @@ export const fraudes = async (req, res) => {
 
   try {
     const result = await DAL.find(context)
+    if (result !== null) {
+      res.status(200).json(result)
+    } else {
+      res.status(404).end()
+    }
+  } catch (err) {
+    res.status(500).end()
+  }
+}
+export const extendedFraudes = async (req, res) => {
+  const context = req.body.fraude
+
+  try {
+    const result = await DAL.extended(context)
+
     if (result !== null) {
       res.status(200).json(result)
     } else {

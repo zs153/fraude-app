@@ -28,6 +28,7 @@ import {
   crearRelacion,
   modificarRelacion,
   borrarRelacion,
+  extendedFraudes,
 } from '../controllers/fraude.controller'
 
 const apiFraudeRouter = express.Router()
@@ -35,6 +36,7 @@ const apiFraudeRouter = express.Router()
 // fraudes
 apiFraudeRouter.post('/fraude', fraude)
 apiFraudeRouter.post('/fraudes', fraudes)
+apiFraudeRouter.post('/fraudes/extended', extendedFraudes)
 apiFraudeRouter.post('/fraudes/insert', crear)
 apiFraudeRouter.post('/fraudes/update', modificar)
 apiFraudeRouter.post('/fraudes/delete', borrar)
