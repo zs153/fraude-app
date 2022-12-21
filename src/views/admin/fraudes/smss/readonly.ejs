@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Sms</title>
+  <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+  <!-- styles -->
+  <!-- <link rel="stylesheet" href="/css/styles.css"> -->
+  <link rel="stylesheet" href="/css/estilos.css">
+  <link rel="stylesheet" href="/css/navbar.css">
+</head>
+
+<body class="antialiased">
+  <div class="wrapper">
+    <%- include('../../../partials/header') %>
+    <%- include('../../../partials/navbar', {opcion: 'FRAUDE' }) %>
+    <div class="page-wrapper">
+      <div class="page-body">
+        <div class="container-xl">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <div>
+                    <h3 class="card-title">Gestión Sms</h3>
+                    <p class="subtitulo">
+                      <span class="text-muted">
+                        <%- datos.fraudeData.NIFCON %>
+                        <%- datos.fraudeData.NOMCON %>
+                      </span>
+                      <span class="ms-2">
+                        Ejercicio: <%- datos.fraudeData.EJEFRA %>
+                      </span>
+                    </p>
+                  </div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-vcenter table-striped" id="tblEventos">
+                      <thead>
+                        <tr class="header">
+                        <th class="w-4"></th>
+                        <th class="w-6">Fecha</th>
+                        <th class="w-8">Movil</th>
+                        <th>Texto</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% datos.smss.map(element => { %>
+                        <tr>
+                          <!-- col1 -->
+                          <td class="w-4">
+                            <div class="py-1 align-items-center">
+                              <% if (element.STASMS === datos.estadosSms.pendiente) {%>
+                              <span class="avatar avatar-rounded bg-red-lt">
+                                <h6>PEN</h6>
+                              </span>
+                              <% } else { %>
+                              <span class="avatar avatar-rounded bg-green-lt">
+                                <h6>ENV</h6>
+                              </span>
+                              <% } %>
+                            </div>
+                          </td>
+                          <!-- col2 -->
+                          <td class="w-6">
+                            <div class="d-flex py-1 align-items-center">
+                              <div class="flex-fill">
+                                <div class="font-weight-medium"><%- element.FECSMS.slice(0,10).split('-').reverse().join('-') %></div>
+                              </div>
+                            </div>
+                          </td>
+                          <!-- col3 -->
+                          <td class="w-15">
+                            <div class="d-flex py-1 align-items-center">
+                              <div class="flex-fill">
+                                <div class="font-weight-medium"><%- element.MOVSMS %></div>
+                              </div>
+                            </div>
+                          </td>
+                          <!-- col4 -->
+                          <td>
+                            <div class="d-flex py-1 align-items-center">
+                              <div class="flex-fill">
+                                <div class="font-weight-medium"><%- element.TEXSMS %></div>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                        <% }) %>
+                      </tbody>
+                    </table>
+                  <div id="pagination-wrapper" class="py-1"></div>
+                  <div class="ms-auto d-flex py-1">
+                    <a href="/admin/fraudes/vertodo" class="btn btn-white">Volver</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%- include('../../../partials/footer') %>
+  </div>
+
+  <script src="/js/ayuda.js"></script>
+</body>
+
+</html>

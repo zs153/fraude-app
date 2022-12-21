@@ -262,7 +262,32 @@ export const hitoseventosPage = async (req, res) => {
       estadosHito,
     };
 
-    res.render("admin/fraudes/hitoseventos/index", { user, datos });
+    res.render("admin/fraudes/hitoseventos", { user, datos });
+  } catch (error) {
+    const msg = "No se ha podido acceder a los hitos del fraude seleccionado.";
+
+    res.render("admin/error400", {
+      alerts: [{ msg }],
+    });
+  }
+};
+export const hitoseventosReadonlyPage = async (req, res) => {
+  const user = req.user;
+  const fraude = {
+    IDFRAU: req.params.id,
+  };
+
+  try {
+    const result = await axios.post("http://localhost:8100/api/fraudes/extended", {
+      fraude,
+    });
+
+    const datos = {
+      detalle: result.data,
+    };
+
+    console.log(datos)
+    res.render("admin/fraudes/hitoseventos/readonly", { user, datos });
   } catch (error) {
     const msg = "No se ha podido acceder a los hitos del fraude seleccionado.";
 
@@ -445,6 +470,42 @@ export const smssPage = async (req, res) => {
     }
 
     res.render("admin/fraudes/smss", { user, datos });
+  } catch (error) {
+    const msg = "No se ha podido acceder a los datos de la aplicación.";
+
+    res.render("admin/error400", {
+      alerts: [{ msg }],
+    });
+  }
+}
+export const smssReadonlyPage = async (req, res) => {
+  const user = req.user;
+  const fraude = {
+    IDFRAU: req.params.id,
+  };
+
+  try {
+    const ret = await axios.post("http://localhost:8100/api/fraude", {
+      fraude,
+    })
+    const smss = await axios.post("http://localhost:8100/api/fraudes/smss", {
+      fraude,
+    })
+
+    const fraudeData = {
+      NIFCON: ret.data.NIFCON,
+      NOMCON: ret.data.NOMCON,
+      EJEFRA: ret.data.EJEFRA,
+    }
+    const datos = {
+      fraude,
+      fraudeData,
+      smss: smss.data,
+      estadosSms,
+    }
+
+    console.log(datos)
+    res.render("admin/fraudes/smss/readonly", { user, datos });
   } catch (error) {
     const msg = "No se ha podido acceder a los datos de la aplicación.";
 

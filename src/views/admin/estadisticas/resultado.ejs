@@ -98,21 +98,17 @@
       margin-left: 0;
       font-size: .8em;
     }
-
     .progress-separated {
       border-right: 2px solid #fff;
     }
-
     .tooltip {
       position: relative;
       display: inline-block;
     }
-
     .tooltip:hover .tooltiptext {
       visibility: visible;
       opacity: 1;
     }
-
     .tooltiptext {
       visibility: hidden;
       width: 180px;
@@ -131,6 +127,21 @@
       background-color: white;
       opacity: 0;
       transition: opacity 1s;
+    }
+    .darkGoldenRod {
+      background-color: #b8860b;
+    }
+    .lightBlue {
+      background-color: #add8e6;
+    }
+    .paleGreen {
+      background-color: #98fb98;
+    }
+    .indianRed {
+      background-color: #cd5c5c;
+    }
+    .peachPuff {
+      background-color: #ffdab9;
     }
   </style>
 </head>
@@ -166,34 +177,34 @@
                       <div class="subheader">Causas</div>
                       <div class="ms-auto">
                         <div class="col-auto">
-                          <span class="legend bg-azure tooltip">
+                          <span class="legend darkGoldenRod tooltip">
                             <span class="tooltiptext">Datos cruce erroneos</span>
                           </span>
-                          <span class="legend bg-purple tooltip">
+                          <span class="legend lightBlue tooltip">
                             <span class="tooltiptext">Sin efecto económico</span>
                           </span>
-                          <span class="legend bg-green tooltip">
+                          <span class="legend paleGreen tooltip">
                             <span class="tooltiptext">Tributación correcta</span>
                           </span>
-                          <span class="legend bg-orange tooltip">
+                          <span class="legend indianRed tooltip">
                             <span class="tooltiptext">Prescrito</span>
                           </span>
-                          <span class="legend bg-yellow tooltip">
+                          <span class="legend peachPuff tooltip">
                             <span class="tooltiptext">Otros casos</span>
                           </span>
                         </div>
                       </div>
                     </div>
                     <div class="progress-container">
-                      <div class="err bg-azure progress-separated">
+                      <div class="err darkGoldenRod progress-separated">
                       </div>
-                      <div class="efe bg-purple progress-separated">
+                      <div class="efe lightBlue progress-separated">
                       </div>
-                      <div class="tri bg-green progress-separated">
+                      <div class="tri paleGreen progress-separated">
                       </div>
-                      <div class="pre bg-orange progress-separated">
+                      <div class="pre indianRed progress-separated">
                       </div>
-                      <div class="otr bg-yellow">
+                      <div class="otr peachPuff">
                       </div>
                     </div>
                   </div>
@@ -451,7 +462,7 @@
   </script>
   <script>
     const options = {
-      // colors: ['#4263eb', '#74b816', '#f76707'],
+      colors: ['#4263eb', '#74b816', '#f76707'],
       series: [
         {
           name: 'Correcto',

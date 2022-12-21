@@ -39,6 +39,8 @@ import {
   updateRelacion,
   removeRelacion,
   cambioSms,
+  hitoseventosReadonlyPage,
+  smssReadonlyPage,
 } from "../controllers/fraude.controller";
 
 const fraudeRouter = express.Router();
@@ -54,6 +56,7 @@ fraudeRouter.get("/fraudes/ejercicio/:id", authRoutes, ejercicioPage);
 fraudeRouter.get("/fraudes/smss/:id", authRoutes, smssPage);
 fraudeRouter.get("/fraudes/smss/add/:id", authRoutes, smssAddPage);
 fraudeRouter.get("/fraudes/smss/edit/:idfra/:idsms", authRoutes, smssEditPage);
+fraudeRouter.get("/fraudes/smss/readonly/:id", authRoutes, smssReadonlyPage);
 
 // pag relacion
 fraudeRouter.get("/fraudes/relaciones/:id", authRoutes, relacionesPage);
@@ -62,6 +65,7 @@ fraudeRouter.get("/fraudes/relaciones/edit/:idfra/:idrel", authRoutes, relacione
 
 // page hitoseventos
 fraudeRouter.get("/fraudes/hitoseventos/:id", authRoutes, hitoseventosPage);
+fraudeRouter.get("/fraudes/hitoseventos/readonly/:id", authRoutes, hitoseventosReadonlyPage);
 
 // page hitos
 fraudeRouter.get("/fraudes/hitos/add/:id", authRoutes, addHitosPage);
