@@ -284,9 +284,9 @@ export const hitoseventosReadonlyPage = async (req, res) => {
 
     const datos = {
       detalle: result.data,
+      estadosHito,
     };
 
-    console.log(datos)
     res.render("admin/fraudes/hitoseventos/readonly", { user, datos });
   } catch (error) {
     const msg = "No se ha podido acceder a los hitos del fraude seleccionado.";
@@ -344,7 +344,7 @@ export const editHitosPage = async (req, res) => {
   const fraude = {
     IDFRAU: req.params.idfra,
   };
-  const hito = {
+  let hito = {
     IDHITO: req.params.idhit,
   };
 
@@ -367,9 +367,12 @@ export const editHitosPage = async (req, res) => {
       arrTipos.push(itm)
     });
 
+    hito = result.data
+    hito.IMPHIT = result.data.IMPHIT.toLocaleString()
+
     const datos = {
       fraude,
-      hito: result.data,
+      hito,
       hitos: arrTipos,
       tipos: arrTipos,
       estadosHito,
@@ -504,7 +507,6 @@ export const smssReadonlyPage = async (req, res) => {
       estadosSms,
     }
 
-    console.log(datos)
     res.render("admin/fraudes/smss/readonly", { user, datos });
   } catch (error) {
     const msg = "No se ha podido acceder a los datos de la aplicación.";
@@ -1056,7 +1058,7 @@ export const updateHito = async (req, res) => {
   const hito = {
     IDHITO: req.body.idhito,
     TIPHIT: req.body.tiphit,
-    IMPHIT: req.body.imphit ? req.body.imphit : 0,
+    IMPHIT: req.body.imphit, //parseFloat(req.body.imphit.replace(/,/g, '.')),
     OBSHIT: req.body.obshit,
   };
   const movimiento = {

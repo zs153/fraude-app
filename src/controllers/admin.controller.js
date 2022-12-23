@@ -14,7 +14,7 @@ export const mainPage = async (req, res) => {
 export const perfilPage = async (req, res) => {
   const user = req.user
   const usuario = {
-    userid: user.userID,
+    USERID: user.userID,
   }
 
   try {

@@ -7,54 +7,10 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>Perfil usuario</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
-  <!-- bootstrap -->
-  <link rel="stylesheet" href="/css/bootstrap-icons.css">
-  <!-- custom -->
-  <link rel="stylesheet" href="/css/estilos.min.css">
+  <!-- styles -->
+  <!-- <link rel="stylesheet" href="/css/styles.css"> -->
+  <link rel="stylesheet" href="/css/estilos.css">
   <link rel="stylesheet" href="/css/navbar.css">
-  <style>
-    #tabs #tabContent1,
-    #tabs #tabContent2 {
-      display: none;
-    }
-    #tabs input[type=radio] {
-      display: none;
-    }
-    #tabs label {
-      display: inline-block;
-      margin: 0;
-      padding: 8px;
-      font-weight: 500;
-      color: #232e3c
-    }
-    #tabs label::before {
-      font-weight: normal;
-      margin-right: 20px;
-    }
-    #tabs label:hover {
-      color: #888;
-      cursor: pointer;
-    }
-    #tabs input:checked + label {
-      color: rgb(35,46,60,0.7);
-      border-bottom: 2px solid #206bc4;
-    }
-    #tab1:checked ~ .contents #tabContent1,
-    #tab2:checked ~ .contents #tabContent2 {
-      display: block;
-    }
-    .hr {
-      border-top: 1px solid rgb(217, 217, 217);
-    }
-    .subtitulo {
-      margin: 0;
-      align-items: center;
-      justify-content: center;
-      color: #656d77;
-      pointer-events: none;
-      font-size: 1em;
-    }
-  </style>
 </head>
 
 <body class="antialiased">
@@ -68,7 +24,7 @@
             <label for="tab1">Perfil de usuario</label>
             <input type="radio" id="tab2" name="tabs">
             <label for="tab2">Cambiar contraseña</label>
-            <div class="contents hr">
+            <div class="contents border-top-wide">
               <div id="tabContent1">
                 <div class="card">
                   <div class="card-header d-inline-block">

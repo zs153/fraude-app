@@ -98,7 +98,7 @@
                             <td class="w-9">
                               <div class="d-flex py-1 align-items-center">
                                 <div class="flex-fill">
-                                  <div class="font-weight-medium"><%- Math.round((element.IMPHIT + Number.EPSILON) * 100) / 100 %></div>
+                                  <div class="font-weight-medium"><%- element.IMPHIT.toLocaleString() %></div>
                                 </div>
                               </div>
                             </td>
@@ -199,7 +199,7 @@
                                         </li>
                                         <li class="nav-item">
                                           <a href="#" class="nav-link"
-                                            onclick="{document.getElementById('idarch').value ='<%- element.IDHITO %>', document.getElementById('msgsan').innerHTML ='<p><%- element.STRFEC %></p><p><%- element.DESTIP %></p><p><%- element.IMPHIT %></p>'}"
+                                            onclick="{document.getElementById('idarch').value ='<%- element.IDHITO %>', document.getElementById('msgsan').innerHTML ='<p><%- element.STRFEC %></p><p><%- element.DESTIP %> (<%- element.IMPHIT.toLocaleString() %>€)</p>'}"
                                             data-bs-toggle="modal" data-bs-target="#modal-archivo">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" width="24" height="24" viewBox="0 0 24 24"
                                               stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">

@@ -5307,3 +5307,8 @@ tabs
   color: rgb(35, 46, 60, 0.7);
   border-bottom: 2px solid #206bc4;
 }
+
+#tab1:checked~.contents #tabContent1,
+#tab2:checked~.contents #tabContent2 {
+  display: block;
+}

@@ -44,15 +44,6 @@ export const generarEstadistica = async (req, res) => {
   try {
     const tipos = await axios.post('http://localhost:8100/api/tipos/cierres', {})
     const cargas = await axios.post('http://localhost:8100/api/cargas', {})
-    // const situacion = await axios.post('http://localhost:8100/api/estadisticas/situacion', {
-    //   fraude,
-    //   periodo,
-    //   tipos: tipos.data,
-    // })
-    // const actuacion = await axios.post('http://localhost:8100/api/estadisticas/actuacion', {
-    //   fraude,
-    //   periodo,
-    // })
     const result = await axios.post('http://localhost:8100/api/estadisticas/sitact', {
       fraude,
       periodo,
@@ -108,56 +99,6 @@ export const generarEstadistica = async (req, res) => {
         }
       }
     })
-    // situacion.data.map(itm => {
-    //   if (itm.FECCIE) {
-    //     // serieC.push({ x: itm.FECCIE.slice(0, 10), y: itm.CORREC })
-    //     serieC.push([new Date(itm.FECHA).getTime(), itm.CORREC])
-    //   } else {
-    //     const cruceError = itm.CRUERR
-    //     const sinEfecto = itm.SINEFE
-    //     const tributacionCorrecta = itm.TRICOR
-    //     const prescrito = itm.PRESCR
-    //     const otrosCasos = itm.OTRCAS
-    //     const correctas = itm.CORREC
-
-    //     contadores = {
-    //       correctas,
-    //     }
-    //     causas = {
-    //       cruceError,
-    //       sinEfecto,
-    //       tributacionCorrecta,
-    //       prescrito,
-    //       otrosCasos,
-    //     }
-    //   }
-    // })
-
-    // actuacion.data.map(itm => {
-    //   if (itm.FECCIE) {
-    //     // serieL.push({ x: itm.FECCIE.slice(0, 10), y: itm.LIQUID })
-    //     // serieS.push({ x: itm.FECCIE.slice(0, 10), y: itm.SANCIO })
-    //     serieL.push([new Date(itm.FECHA).getTime(), itm.LIQUID])
-    //     serieS.push([new Date(itm.FECHA).getTime(), itm.SANCIO])
-    //   } else {
-    //     const liquidadas = itm.LIQUID
-    //     const sancionadas = itm.SANCIO
-    //     const anuladas = itm.ANULAD
-    //     const liquidado = itm.IMPLIQ
-    //     const sancionado = itm.IMPSAN
-    //     const anulado = itm.IMPANU
-
-    //     contadores.liquidadas = liquidadas
-    //     contadores.sancionadas = sancionadas
-    //     contadores.anuladas = anuladas
-
-    //     importes = {
-    //       liquidado,
-    //       sancionado,
-    //       anulado,
-    //     }
-    //   }
-    // })
 
     const totalActuacion = contadores.correctas + contadores.liquidadas + contadores.sancionadas
     const totalCausas = causas.cruceError + causas.sinEfecto + causas.tributacionCorrecta + causas.prescrito + causas.otrosCasos
@@ -186,7 +127,6 @@ export const generarEstadistica = async (req, res) => {
       serieS: JSON.stringify(serieS),
     }
 
-    console.log(serieC, serieL, serieS)
     res.render('admin/estadisticas/resultado', { user, datos })
   } catch (error) {
     const msg = 'No se ha podido acceder a los datos de la aplicación.'

@@ -96,7 +96,7 @@ export const update = async (req, res) => {
     USUMOV: user.id,
     TIPMOV: tiposMovimiento.modificarTipoHito,
   };
-  console.log(tipo)
+
   try {
     axios.post("http://localhost:8100/api/tipos/hitos/update", {
       tipo,
