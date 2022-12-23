@@ -6,10 +6,9 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>Modificar SMS</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
-  <!-- bootstrap -->
-  <link rel="stylesheet" href="/css/bootstrap-icons.css">
-  <!-- custom -->
-  <link rel="stylesheet" href="/css/estilos.min.css">
+  <!-- styles -->
+  <!-- <link rel="stylesheet" href="/css/styles.css"> -->
+  <link rel="stylesheet" href="/css/estilos.css">
   <link rel="stylesheet" href="/css/navbar.css">
 </head>
 
@@ -20,16 +19,9 @@
     <div class="page-wrapper">
       <div class="page-body">
         <div class="container-md">
-          <div class="row row-deck row-cards">
+          <div class="row">
             <div class="col-12">
               <div class="card">
-                <% if(typeof alerts !='undefined') { %>
-                  <% alerts.map(function (alert){ %>
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                      <%- alert.msg %>
-                    </div>
-                  <% }) %>
-                <% } %>   
                 <form action="/admin/smss/update" method="POST" onsubmit="return validate();">
                   <input type="hidden" name="idsmss" id="idsmss" value="<%- datos.sms.IDSMSS %>" />
                   <div class="card-header">
@@ -87,31 +79,25 @@
   </div>
   <script src="/js/ayuda.min.js"></script>
   <script>
-    const refdoc = document.getElementById('refdoc')
+    const movsms = document.getElementById('movsms')
     const texsms = document.getElementById('texsms')
 
     const validate = () => {
-      const refdocValue = refdoc.value.trim()
+      const movsmsValue = movsms.value.trim()
       const texsmsValue = texsms.value.trim()
 
-      if (refdocValue === '') {
-        setError(refdoc, 'Referencia requerida')
+      if (movsmsValue === '') {
+        setError(movsms, 'Móvil requerido')
         setTimeout(function () {
-          setSuccess(refdoc)
+          setSuccess(movsms)
         }, 3000)
         return false
-      } else {
-
-        setSuccess(refdoc)
-      }
       if (texsmsValue === '') {
         setError(texsms, 'Texto requerido')
         setTimeout(function () {
           setSuccess(texsms)
         }, 3000)
         return false
-      } else {
-        setSuccess(texsms)
       }
 
       return true
