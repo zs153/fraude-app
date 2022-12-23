@@ -45,7 +45,7 @@ INNER JOIN oficinas oo ON oo.idofic = ff.ofifra
 ORDER BY ff.stafra DESC
 `
 const extendedQuery = `SELECT ff.idfrau, ff.fecfra, ff.nifcon, ff.nomcon, ff.ejefra, ff.obsfra, tf.destip "TIPFRA", 
-  hh.idhito, hh.fechit, hh.imphit, hh.obshit, th.destip "TIPHIT", 
+  hh.idhito, hh.fechit, hh.imphit, hh.obshit, hh.stahit, th.destip "TIPHIT", 
   ee.ideven, ee.feceve, ee.obseve, te.destip "TIPEVE",
   oo.desofi
 FROM (
