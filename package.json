@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "server": "pm2 start ./dist/bin/www",
+    "server": "pm2 start ./dist/src/index",
     "babel": "babel src -d dist --copy-files",
     "start": "node ./dist/bin/www",
     "startdev": "nodemon --exec babel-node ./src/index"
