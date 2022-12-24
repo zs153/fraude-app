@@ -444,14 +444,18 @@
     })
 
     const changeProgress = (element, texto, valor, progress) => {
-      element.style.width = `${progress}%`;
-      element.innerHTML = `<div class="tooltip" style="display: block;">${valor}
-      <span class="tooltiptext">
-        <p>${texto}</p>
-        <p>Total: ${valor}</p>
-        <p>Porcentaje: ${progress}%</p>
-      </span>
-    </div>`
+      if (progress) {
+        element.style.width = `${progress}%`;
+        element.innerHTML = `<div class="tooltip" style="display: block;">${valor}
+        <span class="tooltiptext">
+          <p>${texto}</p>
+          <p>Total: ${valor}</p>
+          <p>Porcentaje: ${progress}%</p>
+        </span>
+      </div>`
+      } else {
+        element.style.width = 0;
+      }
     };
 
     changeProgress(document.querySelector(".err"), 'Datos cruce erroneos', <%- datos.causas.cruceError %>, <%- datos.ratios.cruceError %>)
