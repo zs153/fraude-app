@@ -29,12 +29,12 @@
     "@babel/preset-env": "^7.20.2",
     "@babel/register": "^7.18.9",
     "@babel/runtime": "^7.20.7",
-    "nodemon": "^2.0.20",
     "cssnano": "^5.1.14",
     "grunt": "^1.5.3",
     "grunt-contrib-clean": "^2.0.1",
     "grunt-contrib-concat": "^2.1.0",
     "grunt-contrib-uglify": "^5.2.2",
+    "nodemon": "^2.0.20",
     "postcss": "^8.4.20",
     "postcss-cli": "^10.1.0"
   }
