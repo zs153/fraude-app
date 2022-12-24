@@ -20,11 +20,8 @@
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: .04em;
-      line-height: 1.6;
+      line-height: 1rem;
       color: #626976;
-    }
-    .h1 {
-      font-size: 1.5rem;
     }
     .progress-container {
       display: flex;
@@ -33,7 +30,7 @@
       border-radius: 0.4rem;
       background: #f2f3f4;
       text-align: center;
-      color: #fff;
+      color: rgb(0 0 0 / 50%);
     }
     .chart {
       position: relative;
@@ -172,7 +169,7 @@
                     <div class="d-flex align-items-center">
                       <div class="subheader">Correctas</div>
                     </div>
-                    <div class="h1 mb-3"><%- datos.contadores.correctas %></div>
+                    <div class="page-title-lg mb-3"><%- datos.contadores.correctas %></div>
                     <div class="d-flex">
                       <div class="subheader">Causas</div>
                       <div class="ms-auto">
@@ -218,8 +215,8 @@
                     <div class="subheader ms-auto">Importe</div>
                   </div>
                   <div class="d-flex align-items-center">
-                    <div class="h1 mb-3"><%- Intl.NumberFormat('de-DE').format(datos.contadores.liquidadas) %></div>
-                    <div class="h1 ms-auto"><%- Intl.NumberFormat('de-DE').format(datos.importes.liquidado) %></div>
+                    <div class="page-title-lg"><%- Intl.NumberFormat('de-DE').format(datos.contadores.liquidadas) %></div>
+                    <div class="page-title-lg ms-auto"><%- Intl.NumberFormat('de-DE').format(datos.importes.liquidado) %></div>
                   </div>
                 </div>
               </div>
@@ -231,14 +228,12 @@
                     <div class="subheader">Sanciones</div>
                     <div class="subheader ms-auto">Importe</div>
                   </div>
-                  <div class="d-flex align-items-center">
-                    <div class="h1 mb-3"><%- Intl.NumberFormat('de-DE').format(datos.contadores.sancionadas) %></div>
-                    <div class="h1 ms-auto"><%- Intl.NumberFormat('de-DE').format(datos.importes.sancionado) %></div>
+                  <div class="d-flex align-items-center mb-3">
+                    <div class="page-title-lg"><%- Intl.NumberFormat('de-DE').format(datos.contadores.sancionadas) %></div>
+                    <div class="page-title-lg ms-auto"><%- Intl.NumberFormat('de-DE').format(datos.importes.sancionado) %></div>
                   </div>
                   <div class="d-flex align-items-center">
-                    <div class="subheader">
-                      Anuladas
-                    </div>
+                    <div class="subheader">Anuladas</div>
                   </div>
                   <div class="d-flex align-items-center">
                     <div class="h2">

@@ -2167,101 +2167,6 @@ th {
   border-width: 0;
 }
 
-.oficina-text {
-  font-size: 0.7rem;
-  height: 1px;
-  color: #0fa6bc;
-  border-style: none;
-}
-
-/* calendario */
-#datepicker {
-  font-size: 11px !important;
-}
-/*
-.ui-datepicker {
-  z-index: 99999 !important;
-  width: 17em !important;  
-}
-*/
-.ui-datepicker {
-  z-index: 99999 !important;
-  width: auto;
-}
-.card-body .ui-datepicker {
-  z-index: 99999 !important;
-  width: 100% !important;
-}
-.trasd a {
-  background-color: #808000 !important;
-  background-image: none !important;
-  color: White !important;
-  font-weight: bold !important;
-}
-.vacas a {
-  background-color: #0d8004 !important;
-  background-image: none !important;
-  color: White !important;
-  font-weight: bold !important;
-}
-.bajas a {
-  background-color: #800209 !important;
-  background-image: none !important;
-  color: White !important;
-  font-weight: bold !important;
-}
-.trasp a {
-  background-color: #803807 !important;
-  background-image: none !important;
-  color: White !important;
-  font-weight: bold !important;
-}
-.forma a {
-  background-color: #063780 !important;
-  background-image: none !important;
-  color: White !important;
-  font-weight: bold !important;
-}
-.conci a {
-  background-color: #ffa80a !important;
-  background-image: none !important;
-  color: White !important;
-  font-weight: bold !important;
-}
-.reuni a {
-  background-color: #dcd20d !important;
-  background-image: none !important;
-  color: White !important;
-  font-weight: bold !important;
-}
-.turno a {
-  background-color: #c1bdc3 !important;
-  background-image: none !important;
-  color: White !important;
-  font-weight: bold !important;
-}
-.horas a {
-  background-color: #05cbf5 !important;
-  background-image: none !important;
-  color: White !important;
-  font-weight: bold !important;
-}
-.famil a {
-  background-color: #c3038f !important;
-  background-image: none !important;
-  color: White !important;
-  font-weight: bold !important;
-}
-.tele a {
-  background-color: #7fb3d5 !important;
-  background-image: none !important;
-  color: White !important;
-  font-weight: bold !important;
-}
-.festivo a {
-  color: red !important;
-}
-
 .ui-state-highlight {
   border: 1px solid #d3d3d3 !important;
   background: #ffffff !important;
@@ -5311,4 +5216,16 @@ tabs
 #tab1:checked~.contents #tabContent1,
 #tab2:checked~.contents #tabContent2 {
   display: block;
+}
+
+/**
+Subheader
+ */
+.subheader {
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 1rem;
+  color: #626976;
 }
