@@ -98,6 +98,7 @@
                         <div class="mb-1">
                           <div class="form-label">Oficina</div>
                             <select class="form-select" id="cboofi" name="ofifra" value="<%- datos.fraude.OFIFRA %>">
+                              <% if (datos.fraude.OFIFRA ) %> 
                               <% datos.oficinas.map(element=> { %>
                                 <option value="<%- element.IDOFIC %>" <%- element.IDOFIC === datos.fraude.OFIFRA ? " selected" :"" %>>
                                   <%- element.DESOFI %>

@@ -11,13 +11,12 @@ import {
 
 export const mainPage = async (req, res) => {
   const user = req.user
-
-  if (user.rol === tiposRol.responsable) {
-    usuario.ofiusu = user.oficina
-  }
+  const usuario = user.rol === tiposRol.admin ? {} : { OFIUSU: user.oficina }
 
   try {
-    const result = await axios.post('http://localhost:8100/api/usuarios', {})
+    const result = await axios.post('http://localhost:8100/api/usuarios', {
+      usuario,
+    })
     const datos = {
       usuarios: JSON.stringify(result.data),
       estadosUsuario: JSON.stringify(estadosUsuario),
@@ -34,19 +33,22 @@ export const mainPage = async (req, res) => {
 }
 export const addPage = async (req, res) => {
   const user = req.user
+  const filteredRol = arrTiposRol.filter(itm => itm.id <= user.rol)
 
   try {
     const oficinas = await axios.post('http://localhost:8100/api/oficinas', {})
+    const filteredOficinas = user.rol === tiposRol.admin ? oficinas.data : oficinas.data.filter(itm => itm.IDOFIC === user.oficina)
     const datos = {
-      oficinas: oficinas.data,
-      arrTiposRol,
+      oficinas: filteredOficinas,
+      filteredRol,
       arrTiposPerfil,
       arrEstadosUsuario,
-      tiposRol,
     }
 
+    console.log(datos)
     res.render('admin/usuarios/add', { user, datos })
   } catch (error) {
+    console.log(error)
     const msg = 'No se ha podido acceder a los datos de la aplicación.'
 
     res.render('admin/error400', {
@@ -56,6 +58,7 @@ export const addPage = async (req, res) => {
 }
 export const editPage = async (req, res) => {
   const user = req.user
+  const filteredRol = arrTiposRol.filter(itm => itm.id <= user.rol)
   const usuario = {
     IDUSUA: req.params.id,
   }
@@ -65,13 +68,13 @@ export const editPage = async (req, res) => {
     const result = await axios.post('http://localhost:8100/api/usuario', {
       usuario,
     })
+    const filteredOficinas = user.rol === tiposRol.admin ? oficinas.data : oficinas.data.filter(itm => itm.IDOFIC === result.data.OFIUSU)
     const datos = {
       usuario: result.data,
-      oficinas: oficinas.data,
-      arrTiposRol,
+      oficinas: filteredOficinas,
+      filteredRol,
       arrTiposPerfil,
       arrEstadosUsuario,
-      tiposRol,
     }
 
     res.render('admin/usuarios/edit', { user, datos })

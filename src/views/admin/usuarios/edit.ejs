@@ -5,22 +5,20 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>Usuario</title>
+  <title>Usuarios</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
   <!-- styles -->
   <link rel="stylesheet" href="/css/styles.css">
-  <!-- <link rel="stylesheet" href="/css/estilos.css">
-  <link rel="stylesheet" href="/css/navbar.css"> -->
 </head>
 
 <body class="antialiased">
   <div class="wrapper">
     <%- include('../../partials/header') %>
-    <%- include('../../partials/navbar', {opcion: 'ADMINISTRACION'}) %>
+    <%- include('../../partials/navbar', {opcion: 'ADMINISTRACION' }) %>
     <div class="page-wrapper">
       <div class="page-body">
         <div class="container-xl">
-          <div class="row">
+          <div class="row row-deck row-cards">
             <div class="col-12">
               <div class="card mt-3">
                 <form action="/admin/usuarios/update" method="POST" onsubmit="return validate();">
@@ -34,7 +32,8 @@
                         <div class="mb-1">
                           <div class="input-control">
                             <label class="form-label required">UserID</label>
-                            <input type="text" name="userid" id="userid" class="form-control" style="text-transform: lowercase;" value="<%- datos.usuario.USERID %>" autofocus/>
+                            <input type="text" name="userid" id="userid" class="form-control"
+                              style="text-transform: lowercase;" value="<%- datos.usuario.USERID %>" autofocus />
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>
@@ -43,7 +42,8 @@
                         <div class="mb-1">
                           <div class="input-control">
                             <label class="form-label required">Nombre</label>
-                            <input type="text" name="nomusu" id="nomusu" class="form-control" style="text-transform: uppercase;" value="<%- datos.usuario.NOMUSU %>" />
+                            <input type="text" name="nomusu" id="nomusu" class="form-control"
+                              style="text-transform: uppercase;" value="<%- datos.usuario.NOMUSU %>" />
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>
@@ -52,9 +52,12 @@
                         <div class="mb-1">
                           <div class="form-label">Estado</div>
                           <select class="form-select" id="cboest" name="stausu" value="<%- datos.usuario.STAUSU %>">
-                            <% datos.arrEstadosUsuario.map(element => { %> 
-                              <option value="<%= element.id %>" <%= element.id === datos.usuario.STAUSU ? " selected":"" %>><%= element.des %></option>
-                            <% }) %> 
+                            <% datos.arrEstadosUsuario.map(element=> { %>
+                            <option value="<%- element.id %>"
+                              <%- element.id === datos.usuario.STAUSU ? " selected" :"" %>>
+                              <%= element.des %>
+                            </option>
+                            <% }) %>
                           </select>
                         </div>
                       </div>
@@ -64,7 +67,8 @@
                         <div class="mb-1">
                           <div class="input-control">
                             <label class="form-label required">Correo electrónico</label>
-                            <input type="text" name="emausu" id="emausu" class="form-control" value="<%- datos.usuario.EMAUSU %>" />
+                            <input type="text" name="emausu" id="emausu" class="form-control"
+                              value="<%- datos.usuario.EMAUSU %>" />
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>
@@ -73,7 +77,8 @@
                         <div class="mb-1">
                           <div class="input-control">
                             <label class="form-label required">Teléfono</label>
-                            <input type="text" name="telusu" id="telusu" class="form-control" value="<%- datos.usuario.TELUSU %>" />
+                            <input type="text" name="telusu" id="telusu" class="form-control"
+                              value="<%- datos.usuario.TELUSU %>" />
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>
@@ -83,9 +88,10 @@
                       <div class="col-4">
                         <div class="mb-1">
                           <div class="form-label">Oficina</div>
-                          <select class="form-select form-control" id="cboofi" name="ofiusu" value="">
-                            <% datos.oficinas.map(element=> { %>
-                            <option value="<%- element.IDOFIC %>" <%- element.IDOFIC === datos.usuario.OFIUSU ? " selected":"" %>>
+                          <select class="form-select" id="cboofi" name="ofiusu" value="<%- datos.usuario.OFIUSU %>">
+                            <% datos.oficinas.map(element => { %>
+                            <option value="<%- element.IDOFIC %>"
+                              <%- element.IDOFIC === datos.usuario.OFIUSU ? " selected" : "" %>>
                               <%- element.DESOFI %>
                             </option>
                             <% }) %>
@@ -96,13 +102,12 @@
                         <div class="mb-1">
                           <div class="form-label">Rol</div>
                           <select class="form-select" id="cborol" name="rolusu" value="<%- datos.usuario.ROLUSU %>">
-                            <% if(user.rol === datos.tiposRol.admin) { %>
-                              <% datos.arrTiposRol.map(element => { %>
-                                <option value="<%- element.id %>" <%- element.id === datos.usuario.ROLUSU ? " selected":"" %>><%= element.des %></option>
-                              <% }) %>                              
-                            <% } else { %>
-                              <option value="<%- datos.arrTiposRol[datos.usuario.ROLUSU].id %>"><%- datos.arrTiposRol[datos.usuario.ROLUSU].des %></option>
-                            <% } %>
+                            <% datos.filteredRol.map(element=> { %>
+                            <option value="<%- element.id %>"
+                              <%- element.id === datos.usuario.ROLUSU ? " selected" :"" %>>
+                              <%- element.des %>
+                            </option>
+                            <% }) %>
                           </select>
                         </div>
                       </div>
@@ -110,9 +115,12 @@
                         <div class="mb-1">
                           <div class="form-label">Perfil</div>
                           <select class="form-select" id="cboper" name="perusu" value="<%- datos.usuario.PERUSU %>">
-                            <% datos.arrTiposPerfil.map(element => { %> 
-                              <option value="<%= element.id %>" <%- element.id === datos.usuario.PERUSU ? " selected":"" %>><%= element.des %></option>
-                            <% }) %>                             
+                            <% datos.arrTiposPerfil.map(element=> { %>
+                            <option value="<%= element.id %>"
+                              <%- element.id === datos.usuario.PERUSU ? " selected" :"" %>>
+                              <%- element.des %>
+                            </option>
+                            <% }) %>
                           </select>
                         </div>
                       </div>
@@ -120,12 +128,12 @@
                   </div>
                   <div class="card-footer text-end">
                     <div class="d-flex">
-                      <a href="/admin/usuarios" class="btn btn-link">Cancelar</a>
-                      <button type="submit" class="btn btn-primary ms-auto" id="btnUpdate">Actualizar usuario</button>
+                      <a href="/admin/usuarios" class="btn btn-white">Cancelar</a>
+                      <button type="submit" class="btn btn-success ms-auto" id="btnUpdate">Actualizar usuario</button>
                     </div>
                   </div>
-                </form>              
-              </div>                
+                </form>
+              </div>
             </div>
           </div>
         </div>
@@ -146,7 +154,6 @@
       const nomusuValue = nomusu.value.trim()
       const emausuValue = emausu.value.trim()
       const telusuValue = telusu.value.trim()
-
       if (useridValue === '') {
         setError(userid, 'UserID requerido')
         setTimeout(function () {
@@ -175,14 +182,11 @@
         }, 3000)
         return false
       }
-
       return true
     }
-
     const setSuccess = (element) => {
       const inputControl = element.parentElement;
       const errorDisplay = inputControl.querySelector('.invalid-feedback');
-
       errorDisplay.innerText = '';
       inputControl.classList.add('is-valid');
       element.classList.remove('is-invalid');
@@ -190,11 +194,11 @@
     const setError = (element, message) => {
       const inputControl = element.parentElement;
       const errorDisplay = inputControl.querySelector('.invalid-feedback');
-
       errorDisplay.innerText = message;
       element.classList.add('is-invalid');
       inputControl.classList.remove('is-valid');
     }
   </script>
 </body>
+
 </html>

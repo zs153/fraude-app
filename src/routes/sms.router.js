@@ -7,7 +7,6 @@ import {
   insertSms,
   updateSms,
   deleteSms,
-  verTodo,
 } from '../controllers/sms.controller'
 
 const smsRouter = express.Router()
@@ -21,6 +20,5 @@ smsRouter.get('/smss/edit/:id', verifyTokenAndAdmin, editPage)
 smsRouter.post('/smss/insert', verifyTokenAndAdmin, insertSms)
 smsRouter.post('/smss/update', verifyTokenAndAdmin, updateSms)
 smsRouter.post('/smss/delete', verifyTokenAndAdmin, deleteSms)
-smsRouter.get('/smss/vertodo', verifyTokenAndAdmin, verTodo)
 
 export default smsRouter

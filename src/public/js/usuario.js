@@ -1,3 +1,6 @@
+// reiniciar vertodo
+localStorage.setItem('vertodo', 'n')
+
 // inicializa sort
 document.querySelectorAll(".sortable th").forEach(headerCell => {
   headerCell.addEventListener("click", () => {
@@ -71,7 +74,7 @@ const pagination = (querySet, page, rows) => {
     'pages': pages,
   }
 }
-const buildTable = (state, estados) => {
+const buildTable = (state, estadosUsuario) => {
   const table = document.getElementById('table-body')
   const data = pagination(state.querySet, state.page, state.rows)
   const myList = data.querySet
@@ -82,7 +85,7 @@ const buildTable = (state, estados) => {
     const row = document.createElement('tr')
     let cell = document.createElement('td')
     cell.classList.add("w-4")
-    if (element.STAUSU === estados.activo) {
+    if (element.STAUSU === estadosUsuario.activo) {
       cell.innerHTML = `<div class="align-items-center py-1">
         <span class="avatar avatar-rounded bg-green-lt">
           <h6>${element.USERID.slice(0, 5)}</h6>
@@ -146,10 +149,9 @@ const buildTable = (state, estados) => {
             </a>
           </li>
         </ul>
-      </li>                              
+      </li>
     </ul>`
     row.appendChild(cell)
-
     table.appendChild(row)
   })
 

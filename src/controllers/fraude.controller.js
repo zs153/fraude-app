@@ -48,10 +48,11 @@ export const addPage = async (req, res) => {
   try {
     const tipos = await axios.post("http://localhost:8100/api/tipos/fraudes", {})
     const oficinas = await axios.post("http://localhost:8100/api/oficinas", {})
+    const filteredOficinas = user.rol === tiposRol.admin ? oficinas.data : oficinas.data.filter(itm => itm.IDOFIC === fraude.OFIFRA)
     const datos = {
       fraude,
       tipos: tipos.data,
-      oficinas: oficinas.data,
+      oficinas: filteredOficinas,
     };
 
     res.render("admin/fraudes/add", { user, datos });
@@ -78,10 +79,11 @@ export const editPage = async (req, res) => {
 
     fraude = result.data
     fraude.ISOFEC = fraude.FECFRA.slice(0, 10)
+    const filteredOficinas = user.rol === tiposRol.admin ? oficinas.data : oficinas.data.filter(itm => itm.IDOFIC === fraude.OFIFRA)
     const datos = {
       fraude,
       tipos: tipos.data,
-      oficinas: oficinas.data,
+      oficinas: filteredOficinas,
       tiposRol,
     };
 
