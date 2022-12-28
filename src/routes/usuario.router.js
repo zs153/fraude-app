@@ -4,7 +4,6 @@ import {
   mainPage,
   addPage,
   editPage,
-  perfilPage,
   insert,
   update,
   remove,
@@ -16,7 +15,6 @@ const usuarioRouter = express.Router()
 usuarioRouter.get('/usuarios', verifyTokenAndResp, mainPage)
 usuarioRouter.get('/usuarios/add', verifyTokenAndResp, addPage)
 usuarioRouter.get('/usuarios/edit/:id', verifyTokenAndResp, editPage)
-usuarioRouter.get('/usuarios/perfil/:id', verifyTokenAndResp, perfilPage)
 
 // procedures
 usuarioRouter.post('/usuarios/insert', verifyTokenAndResp, insert)

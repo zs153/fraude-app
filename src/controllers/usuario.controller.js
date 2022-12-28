@@ -83,38 +83,7 @@ export const editPage = async (req, res) => {
     })
   }
 }
-export const perfilPage = async (req, res) => {
-  const user = req.user
-  let usuario = {
-    userid: req.params.userid,
-  }
 
-  try {
-    const result = await axios.post('http://localhost:8100/api/usuario', {
-      usuario,
-    })
-
-    usuario = {
-      IDUSUA: result.data.IDUSUA,
-      NOMUSU: result.data.NOMUSU,
-      OFIUSU: result.data.OFIUSU,
-      USERID: result.data.USERID,
-      EMAUSU: result.data.EMAUSU,
-      TELUSU: result.data.TELUSU,
-    }
-
-    const datos = {
-      usuario,
-    }
-    res.render('admin/usuarios/perfil', { user, datos })
-  } catch (error) {
-    const msg = 'No se ha podido acceder a los datos de la aplicación.'
-
-    res.render('admin/error400', {
-      alerts: [{ msg }],
-    })
-  }
-}
 export const insert = async (req, res) => {
   const user = req.user
   const randomString = Math.random().toString(36).substring(2, 10);

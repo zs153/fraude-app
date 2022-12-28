@@ -380,7 +380,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <form action="/admin/estadisticas" method="POST" onsubmit="return validate();">
-          <input type="hidden" id="refdoc" name="refdoc">
+          <input type="hidden" id="reffra" name="reffra">
           <div class="modal-body">
             <div class="card-body">
               <div class="row">
@@ -423,7 +423,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-white" data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
-            <button type="submit" class="btn btn-primary ms-auto">Generar estadística</button>
+            <button type="submit" class="btn btn-success ms-auto">Generar estadística</button>
           </div>
         </form>
       </div>
@@ -602,18 +602,28 @@
     const validate = () => {
       const desdeValue = desde.value
       const hastaValue = hasta.value
-
+      const cbocarValue = cboC.value
+      
       if (isNaN(Date.parse(desdeValue))) {
         setError(desde, 'Fecha requerida')
         setTimeout(function () {
           setSuccess(desde)
         }, 3000)
         return false
+        setSuccess(desde)
       }
       if (isNaN(Date.parse(hastaValue))) {
         setError(hasta, 'Fecha requerida')
         setTimeout(function () {
           setSuccess(hasta)
+        }, 3000)
+        return false
+        setSuccess(hasta)
+      }
+      if (cbocarValue === '0') {
+        setError(cboC, 'Carga requerida')
+        setTimeout(function () {
+          setSuccess(cboC)
         }, 3000)
         return false
       }

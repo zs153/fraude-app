@@ -29,9 +29,6 @@
                 <div class="card">
                   <div class="card-header d-inline-block">
                     <h3 class="card-title">Perfil de usuario</h3>
-                      <p class="subtitulo text-muted">
-                        Aviso: La actualización del perfil de usuario implica la finalización de la sesión.
-                      </p>    
                   </div>
                   <form action="/admin/perfil" method="POST" onsubmit="return validate();">
                     <input type="hidden" name="idusua" id="idusua" value="<%- datos.usuario.IDUSUA %>">
@@ -86,7 +83,7 @@
                     <div class="card-footer text-end">                      
                       <div class="d-flex">
                         <input class="btn btn-link" action="action" onclick="window.history.go(-1); return false;" type="submit" value="Cancelar"/>
-                        <button type="submit" class="btn btn-primary ms-auto" id="btnUpdate">Actualizar perfil</button>
+                        <button type="submit" class="btn btn-success ms-auto" id="btnUpdate">Actualizar perfil</button>
                       </div>
                     </div>
                   </form>
@@ -98,7 +95,7 @@
                   <div class="col-6">
                     <div class="card">
                       <div class="card-header d-inline-block">
-                        <h3 class="card-title">Perfil de usuario</h3>
+                        <h3 class="card-title">Cambiar contraseña</h3>
                           <p class="subtitulo text-muted">
                             Aviso: La actualización de la contraseña de usuario implica la finalización de la sesión.
                           </p>    
@@ -218,33 +215,6 @@
       element.classList.add('is-invalid');
       inputControl.classList.remove('is-valid');
     }
-  </script>
-  <script>
-    const Oficinas = () => {
-      const xhr = new XMLHttpRequest();
-
-      xhr.onload = function() {
-        if (xhr.status === 200) {
-          const oficinas = JSON.parse(xhr.response)
-
-          const cbo = document.getElementById('cboofi')
-
-          oficinas.map((itm) => {
-            const option = document.createElement('option')
-            option.value = itm.IDOFIC
-            option.text = itm.DESOFI
-            if (itm.IDOFIC === <%- datos.usuario.OFIUSU %>) {
-              option.selected = true
-            }
-            cbo.appendChild(option)
-          })
-        }
-      };
-      xhr.open('POST', 'http://localhost:8100/api/oficinas', true);
-      xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-      xhr.send()
-    }
-    Oficinas();
   </script>
 </body>
 </html>
