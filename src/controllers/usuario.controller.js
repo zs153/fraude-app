@@ -105,12 +105,16 @@ export const usuario = async (req, res) => {
   }
 }
 export const usuarios = async (req, res) => {
-  const context = req.body
+  const context = req.body.usuario
 
   try {
     const rows = await DAL.find(context)
 
-    res.status(200).json(rows)
+    if (rows.length === 1) {
+      return res.status(200).json(rows[0])
+    } else {
+      return res.status(200).json(rows)
+    }
   } catch (err) {
     res.status(400).end()
   }

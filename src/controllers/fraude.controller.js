@@ -1,5 +1,6 @@
 import * as DAL from '../models/fraude.model'
 
+// fraudes
 const insertFromRec = (req) => {
   const fraude = {
     fecfra: req.body.fraude.FECFRA,
@@ -99,24 +100,8 @@ const cierreFromRec = (req) => {
 
   return Object.assign(fraude, cierre, movimiento)
 }
-const estadisticaFromRec = (req) => {
-  const periodo = {
-    desfec: req.body.periodo.DESDE,
-    hasfec: req.body.periodo.HASTA,
-  }
-  const fraude = {
-    tipfra: req.body.fraude.TIPFRA,
-  }
 
-  return Object.assign(periodo, fraude)
-}
-const cargaFromRec = (req) => {
-  const carga = {
-    refcar: req.body.carga.REFCAR,
-  }
-
-  return carga
-}
+// hitos
 const insertHitoFromRec = (req) => {
   const fraude = {
     idfrau: req.body.fraude.IDFRAU,
@@ -180,6 +165,22 @@ const insertHitoSanFromRec = (req) => {
 
   return Object.assign(fraude, hito, sancion, movimiento)
 }
+const deleteHitoFromRec = (req) => {
+  const fraude = {
+    idfrau: req.body.fraude.IDFRAU,
+  }
+  const hito = {
+    idhito: req.body.hito.IDHITO,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+
+  return Object.assign(fraude, hito, movimiento)
+}
+
+// eventos
 const insertEventoFromRec = (req) => {
   const fraude = {
     idfrau: req.body.fraude.IDFRAU,
@@ -196,20 +197,6 @@ const insertEventoFromRec = (req) => {
 
   return Object.assign(fraude, evento, movimiento)
 }
-const deleteHitoFromRec = (req) => {
-  const fraude = {
-    idfrau: req.body.fraude.IDFRAU,
-  }
-  const hito = {
-    idhito: req.body.hito.IDHITO,
-  }
-  const movimiento = {
-    usumov: req.body.movimiento.USUMOV,
-    tipmov: req.body.movimiento.TIPMOV,
-  }
-
-  return Object.assign(fraude, hito, movimiento)
-}
 const deleteEventoFromRec = (req) => {
   const fraude = {
     idfrau: req.body.fraude.IDFRAU,
@@ -224,6 +211,8 @@ const deleteEventoFromRec = (req) => {
 
   return Object.assign(fraude, evento, movimiento)
 }
+
+// smss
 const insertSmsFromRec = (req) => {
   const fraude = {
     IDFRAU: req.body.fraude.IDFRAU,
@@ -241,20 +230,6 @@ const insertSmsFromRec = (req) => {
 
   return Object.assign(fraude, sms, movimiento)
 }
-const updateSmsFromRec = (req) => {
-  const sms = {
-    idsmss: req.body.sms.IDSMSS,
-    fecsms: req.body.sms.FECSMS,
-    texsms: req.body.sms.TEXSMS,
-    movsms: req.body.sms.MOVSMS,
-  }
-  const movimiento = {
-    usumov: req.body.movimiento.USUMOV,
-    tipmov: req.body.movimiento.TIPMOV,
-  }
-
-  return Object.assign(sms, movimiento)
-}
 const deleteSmsFromRec = (req) => {
   const fraude = {
     IDFRAU: req.body.fraude.IDFRAU,
@@ -269,6 +244,8 @@ const deleteSmsFromRec = (req) => {
 
   return Object.assign(fraude, sms, movimiento)
 }
+
+// relacionados
 const insertRelacionFromRec = (req) => {
   const fraude = {
     IDFRAU: req.body.fraude.IDFRAU,
@@ -284,20 +261,6 @@ const insertRelacionFromRec = (req) => {
   }
 
   return Object.assign(fraude, relacion, movimiento)
-}
-const updateRelacionFromRec = (req) => {
-  const relacion = {
-    idrela: req.body.relacion.IDRELA,
-    fecrel: req.body.relacion.FECREL,
-    nifcon: req.body.relacion.NIFCON,
-    nomcon: req.body.relacion.NOMCON,
-  }
-  const movimiento = {
-    usumov: req.body.movimiento.USUMOV,
-    tipmov: req.body.movimiento.TIPMOV,
-  }
-
-  return Object.assign(relacion, movimiento)
 }
 const deleteRelacionFromRec = (req) => {
   const fraude = {
@@ -438,62 +401,8 @@ export const cierre = async (req, res) => {
   }
 }
 
-// estadistica
-export const estadisticasHitos = async (req, res) => {
-  try {
-    const result = await DAL.statHitos(estadisticaFromRec(req))
-
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
-  } catch (err) {
-    res.status(500).end()
-  }
-}
-export const estadisticasOficinas = async (req, res) => {
-  try {
-    const result = await DAL.statOficinas(cargaFromRec(req))
-
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
-  } catch (err) {
-    res.status(500).end()
-  }
-}
-export const estadisticasSituacion = async (req, res) => {
-  try {
-    const result = await DAL.statSituacion(estadisticaFromRec(req))
-
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
-  } catch (err) {
-    res.status(500).end()
-  }
-}
-export const estadisticasActuacion = async (req, res) => {
-  try {
-    const result = await DAL.statActuacion(estadisticaFromRec(req))
-
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
-  } catch (err) {
-    res.status(500).end()
-  }
-}
-
 // hito
-export const hitosFraude = async (req, res) => {
+export const hitos = async (req, res) => {
   const context = req.body.fraude
 
   try {
@@ -562,7 +471,7 @@ export const borrarHito = async (req, res) => {
 }
 
 // evento
-export const eventosFraude = async (req, res) => {
+export const eventos = async (req, res) => {
   const context = req.body.fraude
 
   try {
@@ -633,19 +542,6 @@ export const crearSms = async (req, res) => {
     res.status(500).end()
   }
 }
-export const modificarSms = async (req, res) => {
-  try {
-    const result = await DAL.updateSms(updateSmsFromRec(req))
-
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
-  } catch (err) {
-    res.status(500).end()
-  }
-}
 export const borrarSms = async (req, res) => {
   try {
     const result = await DAL.removeSms(deleteSmsFromRec(req))
@@ -679,19 +575,6 @@ export const relaciones = async (req, res) => {
 export const crearRelacion = async (req, res) => {
   try {
     const result = await DAL.insertRelacion(insertRelacionFromRec(req))
-
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
-  } catch (err) {
-    res.status(500).end()
-  }
-}
-export const modificarRelacion = async (req, res) => {
-  try {
-    const result = await DAL.updateRelacion(updateRelacionFromRec(req))
 
     if (result !== null) {
       res.status(200).json(result)

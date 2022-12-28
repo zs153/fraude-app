@@ -89,14 +89,15 @@ export const find = async (context) => {
   if (context.IDUSUA) {
     binds.idusua = context.IDUSUA;
     query += "WHERE uu.idusua = :idusua";
-  }
-  if (context.USERID) {
+  } else if (context.USERID) {
     binds.userid = context.USERID;
     query += "WHERE uu.userid = :userid";
-  }
-  if (context.EMAUSU) {
+  } else if (context.EMAUSU) {
     binds.emausu = context.EMAUSU;
     query += "WHERE uu.emausu = :emausu";
+  } if (context.OFIUSU) {
+    binds.ofiusu = context.OFIUSU;
+    query += "WHERE uu.ofiusu = :ofiusu";
   }
 
   const result = await simpleExecute(query, binds);

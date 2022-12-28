@@ -132,107 +132,6 @@ const cierreSql = `BEGIN FRAUDE_PKG.CIERREFRAUDE(
   :tipmov 
 ); END;
 `
-// estadistica
-const estadisticaHitosSql = `SELECT
-    SUM(p1.proliq) "PROLIQ",
-    SUM(p1.prosan) "PROSAN",
-    SUM(p1.liquid) "LIQUID",
-    SUM(p1.sancio) "SANCIO",
-    SUM(p1.anulad) "ANUSAN",
-    SUM(p1.imppli) "IMPPLI",
-    SUM(p1.imppsa) "IMPPSA",
-    SUM(p1.impliq) "IMPLIQ",
-    SUM(p1.impsan) "IMPSAN",
-    SUM(p1.impanu) "IMPANU"
-FROM (SELECT TRUNC(hh.fechit),
-    SUM(CASE WHEN hh.stahit = 1 THEN 1 ELSE 0 END) as proliq,
-    SUM(CASE WHEN hh.stahit = 2 THEN 1 ELSE 0 END) as liquid,
-    SUM(CASE WHEN hh.stahit = 3 THEN 1 ELSE 0 END) as prosan,
-    SUM(CASE WHEN hh.stahit = 4 THEN 1 ELSE 0 END) as sancio,
-    SUM(CASE WHEN hh.stahit = -1 THEN 1 ELSE 0 END) as anulad,
-    SUM(CASE WHEN hh.stahit = 1 THEN hh.imphit ELSE 0 END) as imppli,
-    SUM(CASE WHEN hh.stahit = 2 THEN hh.imphit ELSE 0 END) as impliq,
-    SUM(CASE WHEN hh.stahit = 3 THEN hh.imphit ELSE 0 END) as imppsa,
-    SUM(CASE WHEN hh.stahit = 4 THEN hh.imphit ELSE 0 END) as impsan,
-    SUM(CASE WHEN hh.stahit = -1 THEN hh.imphit ELSE 0 END) as impanu
-    FROM fcierres fc
-    INNER JOIN fraudes ff ON ff.idfrau = fc.idfrau
-    INNER JOIN hitosfraude hf ON hf.idfrau = ff.idfrau
-    INNER JOIN hitos hh ON hh.idhito = hf.idhito
-    WHERE ff.tipfra = :tipfra
-        AND fc.feccie BETWEEN TO_DATE(:desfec, 'YYYY-MM-DD') AND TO_DATE(:hasfec, 'YYYY-MM-DD') +24/24
-    GROUP BY TRUNC(hh.fechit)
-) p1
-`
-const estadisticaOficinaSql = `SELECT 
-  oo.desofi,
-  SUM(pen) "PEN",
-  SUM(adj) "ADJ",
-  SUM(res) "RES",
-  SUM(pen+adj+res) "TOT"
-  FROM (
-      WITH vOficinas AS (
-        SELECT oo.idofic FROM oficinas oo
-      )
-      SELECT v.idofic as ofi, 0 as pen, 0 as adj, 0 as res
-      FROM vOficinas v
-      UNION ALL
-      SELECT ff.ofifra,
-        SUM(CASE WHEN ff.stafra = 0 THEN 1 ELSE 0 END) as pen,
-        SUM(CASE WHEN ff.stafra = 1 THEN 1 ELSE 0 END) as adj,
-        SUM(CASE WHEN ff.stafra = 2 THEN 1 ELSE 0 END) as res
-        FROM fraudes ff
-        WHERE ff.reffra = :refcar
-        GROUP BY ff.ofifra
-  ) p1
-INNER JOIN oficinas oo ON oo.idofic = p1.ofi
-GROUP BY ROLLUP(oo.desofi)
-`
-const estadisticaSituacionSql = `SELECT
-  SUM(CASE WHEN sitcie = 0 THEN 1 ELSE 0 END) "ACTUAC",
-  SUM(CASE WHEN sitcie > 0 THEN 1 ELSE 0 END) "CORREC",
-  SUM(CASE WHEN sitcie = 1 THEN 1 ELSE 0 END) "ACUERR",
-  SUM(CASE WHEN sitcie = 2 THEN 1 ELSE 0 END) "ACUEFE",
-  SUM(CASE WHEN sitcie = 3 THEN 1 ELSE 0 END) "ACUTRI",
-  SUM(CASE WHEN sitcie = 4 THEN 1 ELSE 0 END) "ACUPRE",  
-  SUM(CASE WHEN sitcie > 4 THEN 1 ELSE 0 END) "ACUOTR",
-  COUNT(*) "TOTAL"
-  FROM fcierres fc
-  INNER JOIN fraudes ff ON ff.idfrau = fc.idfrau
-  WHERE ff.tipfra = :tipfra
-    AND fc.feccie BETWEEN TO_DATE(:desfec, 'YYYY-MM-DD') AND TO_DATE(:hasfec, 'YYYY-MM-DD') +24/24
-`
-const estadisticaActuacionSql = `SELECT fec "FEC",
-  SUM(CASE WHEN sta = 2 THEN 1 ELSE 0 END) "LIQ",
-  SUM(CASE WHEN sta = 4 THEN 1 ELSE 0 END) "SAN",
-  SUM(CASE WHEN sit > 0 THEN 1 ELSE 0 END) "COR"
-  FROM
-  (
-  WITH vDates AS (
-    SELECT TO_DATE(:desfec,'YYYY-MM-DD') + ROWNUM - 1 AS fecha
-    FROM dual
-    CONNECT BY rownum <= TO_DATE(:hasfec,'YYYY-MM-DD') - TO_DATE(:desfec,'YYYY-MM-DD') + 1
-  )
-  SELECT v.fecha as fec, -1 as sta, -1 as sit
-  FROM vDates v
-  UNION ALL
-  SELECT TRUNC(fc.feccie) as fec, hh.stahit as sta, 0 AS sit    
-      FROM fcierres fc
-      INNER JOIN fraudes ff ON ff.idfrau = fc.idfrau
-      INNER JOIN hitosfraude hf ON hf.idfrau = ff.idfrau
-      INNER JOIN hitos hh ON hh.idhito = hf.idhito
-      WHERE ff.tipfra = :tipfra
-        AND fc.feccie BETWEEN TO_DATE(:desfec, 'YYYY-MM-DD') AND TO_DATE(:hasfec, 'YYYY-MM-DD') +24/24
-      UNION ALL
-      SELECT TRUNC(fc.feccie) as fec, 0 as sta, sitcie as sit
-      FROM fcierres fc
-      INNER JOIN fraudes ff ON ff.idfrau = fc.idfrau
-      WHERE ff.tipfra = :tipfra
-        AND fc.feccie BETWEEN TO_DATE(:desfec, 'YYYY-MM-DD') AND TO_DATE(:hasfec, 'YYYY-MM-DD') +24/24
-  ) p1
-GROUP BY fec
-ORDER BY fec
-`
 // sms
 const smssFraudeQuery = `SELECT 
   ss.*,
@@ -408,7 +307,6 @@ export const extended = async (context) => {
   const result = await simpleExecute(query, binds)
   return result.rows
 }
-
 export const insert = async (bind) => {
   bind.idfrau = {
     dir: oracledb.BIND_OUT,
@@ -489,54 +387,6 @@ export const cierre = async (bind) => {
   }
 
   return result
-}
-
-// proc estadistica
-export const statHitos = async (bind) => {
-  let result
-
-  try {
-    result = await simpleExecute(estadisticaHitosSql, bind)
-  } catch (error) {
-    result = null
-  }
-
-  return result.rows[0]
-}
-export const statOficinas = async (bind) => {
-  let result
-
-  try {
-    result = await simpleExecute(estadisticaOficinaSql, bind)
-  } catch (error) {
-    result = null
-  }
-
-  return result.rows
-}
-export const statSituacion = async (bind) => {
-  let result
-
-  //delete bind.fecfra
-  try {
-    result = await simpleExecute(estadisticaSituacionSql, bind)
-  } catch (error) {
-    result = null
-  }
-
-  return result.rows[0]
-}
-export const statActuacion = async (bind) => {
-  let result
-
-  delete bind.fecfra
-  try {
-    result = await simpleExecute(estadisticaActuacionSql, bind)
-  } catch (error) {
-    result = null
-  }
-
-  return result.rows
 }
 
 // proc hitos
