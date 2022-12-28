@@ -67,9 +67,9 @@ const cambioSql = `BEGIN FRAUDE_PKG.CHANGEPASSWORD(
 const olvidoSql = `BEGIN FRAUDE_PKG.FORGOTPASSWORD(
   :emausu,
   :pwdusu,
+  :saltus,
   :usumov,
-  :tipmov,
-  :saltus
+  :tipmov
 ); END;
 `;
 const perfilSql = `BEGIN FRAUDE_PKG.UPDATEPERFILUSUARIO(

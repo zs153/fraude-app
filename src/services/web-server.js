@@ -54,7 +54,7 @@ function initialize() {
     httpServer
       .listen(puerto)
       .on('listening', () => {
-        console.log(`Web server listening on localhost:${puerto}`)
+        console.log(`Web server listening on port:${puerto}`)
 
         resolve()
       })
