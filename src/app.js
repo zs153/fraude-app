@@ -4,18 +4,17 @@ import cookieParser from "cookie-parser";
 import path from "path";
 
 // import rutas
-import mainRouter from "./routes/main.router";
 import adminRouter from "./routes/admin.router";
-import loginRouter from "./routes/login.router";
-import usuarioRouter from "./routes/usuario.router";
-import oficinaRouter from "./routes/oficina.router";
+import cargaRouter from "./routes/carga.router";
+import estadisticaRouter from "./routes/estadisticas.router";
 import fraudeRouter from "./routes/fraude.router";
+import mainRouter from "./routes/main.router";
+import oficinaRouter from "./routes/oficina.router";
 import tipoEventoRouter from "./routes/tipoevento.router";
 import tipoFraudeRouter from "./routes/tipofraude.router";
 import tipoHitoRouter from "./routes/tipohito.router";
 import tipoCierreRouter from "./routes/tipocierre.router";
-import cargaRouter from "./routes/carga.router";
-import estadisticaRouter from "./routes/estadisticas.router";
+import usuarioRouter from "./routes/usuario.router";
 
 const app = express();
 
@@ -42,6 +41,5 @@ app.use("/admin", tipoHitoRouter);
 app.use("/admin", tipoCierreRouter);
 app.use("/admin", cargaRouter);
 app.use("/admin", estadisticaRouter);
-app.use("/log", loginRouter);
 
 export default app;

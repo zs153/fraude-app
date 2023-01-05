@@ -67,7 +67,7 @@ const arrayFilter = (value) => {
   state.querySet = trimmedData
   state.page = 1
 
-  buildTable(state, estadosFraude)
+  buildTable(state)
 }
 const pagination = (querySet, page, rows) => {
   const trimStart = (page - 1) * rows
@@ -80,7 +80,7 @@ const pagination = (querySet, page, rows) => {
     'pages': pages,
   }
 }
-const buildTable = (state, estadosFraude) => {
+const buildTable = (state) => {
   const table = document.getElementById('table-body')
   const data = pagination(state.querySet, state.page, state.rows)
   const myList = data.querySet
@@ -422,5 +422,5 @@ const createPagination = (pages, page) => {
 const onclickPage = (pages, page) => {
   createPagination(pages, page)
   state.page = page
-  buildTable(state, estadosFraude)
+  buildTable(state)
 }

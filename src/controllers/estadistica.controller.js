@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { connectionClass } from 'oracledb'
+import { estadosFraude, tiposMovimiento } from '../public/js/enumeraciones'
 
 // pages
 export const mainPage = async (req, res) => {
@@ -8,12 +8,15 @@ export const mainPage = async (req, res) => {
   const currentYear = fecha.getFullYear()
   const currentMonth = fecha.getMonth() + 1
   const lastDayMonth = new Date(currentYear, currentMonth, 0).getDate()
+  const carga = {}
 
   let desde = new Date(yearMonthDayToUTCString(currentYear, currentMonth, 1)).toISOString().slice(0, 10)
   let hasta = new Date(yearMonthDayToUTCString(currentYear, currentMonth, lastDayMonth)).toISOString().slice(0, 10)
 
   try {
-    const cargas = await axios.post('http://localhost:8100/api/cargas', {})
+    const cargas = await axios.post('http://localhost:8100/api/cargas', {
+      carga,
+    })
     const datos = {
       desde,
       hasta,
@@ -37,13 +40,16 @@ export const generarEstadistica = async (req, res) => {
     DESDE: req.body.desde,
     HASTA: req.body.hasta,
   }
+  const carga = {}
   const fraude = {
-    REFFRA: req.body.refcar,
+    REFFRA: req.body.reffra,
   }
 
   try {
     const tipos = await axios.post('http://localhost:8100/api/tipos/cierres', {})
-    const cargas = await axios.post('http://localhost:8100/api/cargas', {})
+    const cargas = await axios.post('http://localhost:8100/api/cargas', {
+      carga,
+    })
     const result = await axios.post('http://localhost:8100/api/estadisticas/sitact', {
       fraude,
       periodo,

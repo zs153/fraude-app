@@ -1,34 +1,47 @@
-import jwt from 'jsonwebtoken'
-import { secreto } from '../config/settings'
+import { createPublicKey } from 'crypto'
+import { V4 } from 'paseto'
 import { tiposRol } from '../public/js/enumeraciones'
+import { publicKey } from '../config/settings'
 
-const authRoutes = (req, res, next) => {
+const authRoutes = async (req, res, next) => {
   const tokenHeader = req.cookies.auth
 
   if (typeof tokenHeader !== 'undefined') {
     try {
-      jwt.verify(
-        tokenHeader,
-        `${secreto}`,
-        (err, user) => {
-          if (err) {
-            throw new Error('Token expirado')
-          }
-
-          req.user = user
-          next()
-        }
-      )
-    } catch (error) {
-      res.render('log/sign-in', {
-        datos: req.body,
-        alerts: [{ msg: 'La contraseña no es correcta' }],
+      // paseto public
+      const key = createPublicKey({
+        'key': publicKey,
+        'format': 'pem',
+        'type': 'spki',
       })
+
+      await V4.verify(tokenHeader, key, {
+        audience: 'urn:client:claim',
+        issuer: 'http://localhost:4200',
+        clockTolerance: '1 min',
+      }).then(r => {
+        req.user = {
+          id: r.id,
+          userID: r.userid,
+          rol: r.rol,
+          oficina: r.oficina,
+        }
+
+        next()
+      }).catch(err => {
+        console.log('Error de clave pública. No se puede verificar la clave pública')
+        res.redirect('/')
+      })
+    } catch {
+      console.log('Error de clave pública. No se puede crear la clave pública')
+      res.redirect('/')
     }
   } else {
-    res.render('log/sign-in', { datos: req.body, alerts: undefined })
+    console.log('Error de clave pública: No se ha generado el token de clave pública')
+    res.redirect('/')
   }
 }
+
 export const verifyTokenAndAdmin = (req, res, next) => {
   authRoutes(req, res, () => {
     if (req.user.rol === tiposRol.admin) {

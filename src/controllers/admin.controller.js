@@ -58,7 +58,7 @@ export const changePassword = async (req, res) => {
       movimiento,
     })
 
-    res.redirect('/log/logout')
+    res.redirect('/')
   } catch (error) {
     res.redirect('/admin')
   }

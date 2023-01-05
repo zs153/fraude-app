@@ -19,7 +19,8 @@
     "express-ejs-layouts": "^2.5.1",
     "jsonwebtoken": "^9.0.0",
     "morgan": "^1.10.0",
-    "oracledb": "^5.5.0"
+    "oracledb": "^5.5.0",
+    "paseto": "^3.1.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.20.7",

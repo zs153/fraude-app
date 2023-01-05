@@ -166,7 +166,7 @@
   <script src="/js/ayuda.min.js"></script>
   <script src="/js/sms.js"></script>
   <script>
-    const orgList = <%- datos.smss %>
+    const orgList = <%- JSON.stringify(datos.smss) %>
     const fraude = <%- JSON.stringify(datos.fraude) %>
     const estadosSms = <%- JSON.stringify(datos.estadosSms) %>
 

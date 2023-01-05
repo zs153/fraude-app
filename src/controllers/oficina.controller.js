@@ -3,11 +3,14 @@ import { tiposMovimiento } from '../public/js/enumeraciones'
 
 export const mainPage = async (req, res) => {
   const user = req.user
+  const oficina = {}
 
   try {
-    const result = await axios.post('http://localhost:8100/api/oficinas', {})
+    const result = await axios.post('http://localhost:8100/api/oficinas', {
+      oficina,
+    })
     const datos = {
-      oficinas: JSON.stringify(result.data),
+      oficinas: result.data,
     }
 
     res.render('admin/oficinas', { user, datos })
@@ -58,7 +61,7 @@ export const insert = async (req, res) => {
   const user = req.user
   const oficina = {
     DESOFI: req.body.desofi.toUpperCase(),
-    CODOFI: req.body.codofi.toUpperCase(),
+    CODOFI: req.body.codofi,
   }
   const movimiento = {
     USUMOV: user.id,
@@ -85,7 +88,7 @@ export const update = async (req, res) => {
   const oficina = {
     IDOFIC: req.body.idofic,
     DESOFI: req.body.desofi.toUpperCase(),
-    CODOFI: req.body.codofi.toUpperCase(),
+    CODOFI: req.body.codofi,
   }
   const movimiento = {
     USUMOV: user.id,

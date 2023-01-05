@@ -18,8 +18,8 @@ export const mainPage = async (req, res) => {
       usuario,
     })
     const datos = {
-      usuarios: JSON.stringify(result.data),
-      estadosUsuario: JSON.stringify(estadosUsuario),
+      usuarios: result.data,
+      estadosUsuario: estadosUsuario,
     }
 
     res.render('admin/usuarios', { user, datos })
@@ -34,12 +34,14 @@ export const mainPage = async (req, res) => {
 export const addPage = async (req, res) => {
   const user = req.user
   const filteredRol = arrTiposRol.filter(itm => itm.id <= user.rol)
+  const oficina = user.rol === tiposRol.admin ? {} : { IDOFIC: user.oficina }
 
   try {
-    const oficinas = await axios.post('http://localhost:8100/api/oficinas', {})
-    const filteredOficinas = user.rol === tiposRol.admin ? oficinas.data : oficinas.data.filter(itm => itm.IDOFIC === user.oficina)
+    const oficinas = await axios.post('http://localhost:8100/api/oficinas', {
+      oficina,
+    })
     const datos = {
-      oficinas: filteredOficinas,
+      oficinas: oficinas.data,
       filteredRol,
       arrTiposPerfil,
       arrEstadosUsuario,
@@ -59,19 +61,21 @@ export const addPage = async (req, res) => {
 export const editPage = async (req, res) => {
   const user = req.user
   const filteredRol = arrTiposRol.filter(itm => itm.id <= user.rol)
+  const oficina = user.rol === tiposRol.admin ? {} : { IDOFIC: user.oficina }
   const usuario = {
     IDUSUA: req.params.id,
   }
 
   try {
-    const oficinas = await axios.post('http://localhost:8100/api/oficinas', {})
+    const oficinas = await axios.post('http://localhost:8100/api/oficinas', {
+      oficina,
+    })
     const result = await axios.post('http://localhost:8100/api/usuario', {
       usuario,
     })
-    const filteredOficinas = user.rol === tiposRol.admin ? oficinas.data : oficinas.data.filter(itm => itm.IDOFIC === result.data.OFIUSU)
     const datos = {
       usuario: result.data,
-      oficinas: filteredOficinas,
+      oficinas: oficinas.data,
       filteredRol,
       arrTiposPerfil,
       arrEstadosUsuario,

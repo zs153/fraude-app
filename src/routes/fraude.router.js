@@ -80,9 +80,9 @@ fraudeRouter.post("/fraudes/insert", authRoutes, insert);
 fraudeRouter.post("/fraudes/update", authRoutes, update);
 fraudeRouter.post("/fraudes/delete", authRoutes, remove);
 fraudeRouter.post("/fraudes/asignar", authRoutes, asignar);
+fraudeRouter.post("/fraudes/desasignar", authRoutes, desasignar);
 fraudeRouter.post("/fraudes/resolver", authRoutes, resolver);
 fraudeRouter.post("/fraudes/ejercicio", authRoutes, ejercicio);
-fraudeRouter.post("/fraudes/desasignar", authRoutes, desasignar);
 
 // hitos
 fraudeRouter.post("/fraudes/hitos/insert", authRoutes, insertHito);

@@ -109,7 +109,7 @@
     <script src="/js/ayuda.min.js"></script>
     <script src="/js/tipofraude.js"></script>
     <script>
-      const orgList = <%- datos.tipos %>
+      const orgList = <%- JSON.stringify(datos.tipos) %>
 
       let state = {
         'querySet': orgList,
@@ -118,14 +118,7 @@
         'window': 3,
       }
 
-      // events
-      const elemBuscar = document.getElementById('buscarTipoBox');
-      elemBuscar.onchange = (event) => {
-        setCookie('filtro', event.target.value, .5) // medio dia
-      }
-      elemBuscar.value = getCookie('filtro')
-
-      arrayFilter(elemBuscar.value)
+      buildTable(state)
     </script>
   </body>
 </html>

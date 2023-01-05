@@ -266,8 +266,8 @@
     }
   </script>
   <script>
-    const orgList = <%- datos.fraudes %>
-    const estadosFraude = <%- datos.estadosFraude %>
+    const orgList = <%- JSON.stringify(datos.fraudes) %>
+    const estadosFraude = <%- JSON.stringify(datos.estadosFraude) %>
 
     let state = {
       'querySet': orgList,

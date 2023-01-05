@@ -3,11 +3,14 @@ import { tiposMovimiento, arrEstadosHito } from "../public/js/enumeraciones";
 
 export const mainPage = async (req, res) => {
   const user = req.user;
+  const tipo = {}
 
   try {
-    const result = await axios.post("http://localhost:8100/api/tipos/hitos", {});
+    const result = await axios.post("http://localhost:8100/api/tipos/hitos", {
+      tipo,
+    });
     const datos = {
-      tipos: JSON.stringify(result.data),
+      tipos: result.data,
     };
 
     res.render("admin/tipos/hitos", { user, datos });
