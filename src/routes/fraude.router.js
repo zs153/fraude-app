@@ -16,12 +16,15 @@ import {
   borrarHito,
   eventos,
   crearEvento,
+  modificarEvento,
   borrarEvento,
   smss,
   crearSms,
+  modificarSms,
   borrarSms,
   relaciones,
   crearRelacion,
+  modificarRelacion,
   borrarRelacion,
 } from '../controllers/fraude.controller'
 
@@ -48,16 +51,19 @@ apiFraudeRouter.post('/fraudes/hitos/delete', borrarHito)
 //eventos
 apiFraudeRouter.post('/fraudes/eventos', eventos)
 apiFraudeRouter.post('/fraudes/eventos/insert', crearEvento)
+apiFraudeRouter.post('/fraudes/eventos/update', modificarEvento)
 apiFraudeRouter.post('/fraudes/eventos/delete', borrarEvento)
 
 // sms
 apiFraudeRouter.post('/fraudes/smss', smss)
 apiFraudeRouter.post('/fraudes/smss/insert', crearSms)
+apiFraudeRouter.post('/fraudes/smss/update', modificarSms)
 apiFraudeRouter.post('/fraudes/smss/delete', borrarSms)
 
 // relacionados
 apiFraudeRouter.post('/fraudes/relaciones', relaciones)
 apiFraudeRouter.post('/fraudes/relaciones/insert', crearRelacion)
+apiFraudeRouter.post('/fraudes/relaciones/update', modificarRelacion)
 apiFraudeRouter.post('/fraudes/relaciones/delete', borrarRelacion)
 
 export default apiFraudeRouter

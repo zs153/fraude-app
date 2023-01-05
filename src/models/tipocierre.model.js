@@ -2,9 +2,8 @@ import oracledb from 'oracledb'
 import { simpleExecute } from '../services/database.js'
 
 const baseQuery = `SELECT 
-  idtipo,
-  destip
-FROM tiposcierre
+  tt.*
+FROM tiposcierre tt
 `
 const insertSql = `BEGIN FRAUDE_PKG.INSERTTIPOCIERRE(
   :destip,
@@ -21,10 +20,10 @@ const updateSql = `BEGIN FRAUDE_PKG.UPDATETIPOCIERRE(
 ); END;
 `
 const removeSql = `BEGIN FRAUDE_PKG.DELETETIPOCIERRE(
-    :idtipo,
-    :usumov,
-    :tipmov 
-  ); END;
+  :idtipo,
+  :usumov,
+  :tipmov 
+); END;
 `
 
 export const find = async (context) => {
@@ -33,7 +32,7 @@ export const find = async (context) => {
 
   if (context.IDTIPO) {
     binds.idtipo = context.IDTIPO
-    query += `WHERE idtipo = :idtipo`
+    query += `WHERE tt.idtipo = :idtipo`
   }
 
   const result = await simpleExecute(query, binds)

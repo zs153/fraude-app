@@ -55,7 +55,7 @@ export const relacion = async (req, res) => {
   }
 }
 export const relaciones = async (req, res) => {
-  const context = req.body
+  const context = req.body.relacion
 
   try {
     const result = await DAL.find(context)

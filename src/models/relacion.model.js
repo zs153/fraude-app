@@ -2,11 +2,8 @@ import oracledb from 'oracledb'
 import { simpleExecute } from '../services/database.js'
 
 const baseQuery = `SELECT 
-  idrela,
-  fecrel,
-  nifcon,
-  nomcon
-FROM relaciones
+  rr.*
+FROM relaciones rr
 `
 const insertSql = `BEGIN FRAUDE_PKG.INSERTRELACION(
   :idfrau,
@@ -40,7 +37,7 @@ export const find = async (context) => {
 
   if (context.IDRELA) {
     binds.idrela = context.IDRELA
-    query += `WHERE idrela = :idrela`
+    query += `WHERE rr.idrela = :idrela`
   }
 
   const result = await simpleExecute(query, binds)

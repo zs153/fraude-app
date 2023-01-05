@@ -2,10 +2,8 @@ import oracledb from "oracledb";
 import { simpleExecute } from "../services/database.js";
 
 const baseQuery = `SELECT 
-  idtipo,
-  destip,
-  anuhit
-FROM tiposhito
+  tt.*
+FROM tiposhito tt
 `;
 const insertSql = `BEGIN FRAUDE_PKG.INSERTTIPOHITO(
   :destip,
@@ -36,7 +34,7 @@ export const find = async (context) => {
 
   if (context.IDTIPO) {
     binds.idtipo = context.IDTIPO;
-    query += `WHERE idtipo = :idtipo`;
+    query += `WHERE tt.idtipo = :idtipo`;
   }
 
   const result = await simpleExecute(query, binds);

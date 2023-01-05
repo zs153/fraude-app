@@ -42,32 +42,9 @@ const removeSql = `BEGIN FRAUDE_PKG.DELETEUSUARIO(
   :tipmov 
 ); END;
 `;
-const registroSql = `BEGIN FRAUDE_PKG.REGISTROUSUARIO(
-  :nomusu, 
-  :ofiusu, 
-  :rolusu, 
-  :userid, 
-  :emausu, 
-  :perusu, 
-  :telusu, 
-  :pwdusu, 
-  :stausu, 
-  :tipmov,
-  :saltus, 
-  :idusua
-); END;
-`;
 const cambioSql = `BEGIN FRAUDE_PKG.CHANGEPASSWORD(
   :idusua,
   :pwdusu, 
-  :usumov,
-  :tipmov
-); END;
-`;
-const olvidoSql = `BEGIN FRAUDE_PKG.FORGOTPASSWORD(
-  :emausu,
-  :pwdusu,
-  :saltus,
   :usumov,
   :tipmov
 ); END;
@@ -150,19 +127,6 @@ export const change = async (bind) => {
 
   try {
     await simpleExecute(cambioSql, bind);
-
-    result = bind;
-  } catch (error) {
-    result = null;
-  }
-
-  return result;
-};
-export const forgot = async (bind) => {
-  let result;
-
-  try {
-    await simpleExecute(olvidoSql, bind);
 
     result = bind;
   } catch (error) {

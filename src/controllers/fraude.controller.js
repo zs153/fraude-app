@@ -197,6 +197,20 @@ const insertEventoFromRec = (req) => {
 
   return Object.assign(fraude, evento, movimiento)
 }
+const updateEventoFromRec = (req) => {
+  const evento = {
+    ideven: req.body.evento.IDEVEN,
+    feceve: req.body.evento.FECEVE,
+    tipeve: req.body.evento.TIPEVE,
+    obseve: req.body.evento.OBSEVE,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+
+  return Object.assign(evento, movimiento)
+}
 const deleteEventoFromRec = (req) => {
   const fraude = {
     idfrau: req.body.fraude.IDFRAU,
@@ -230,6 +244,20 @@ const insertSmsFromRec = (req) => {
 
   return Object.assign(fraude, sms, movimiento)
 }
+const updateSmsFromRec = (req) => {
+  const sms = {
+    idsmss: req.body.sms.IDSMSS,
+    fecsms: req.body.sms.FECSMS,
+    texsms: req.body.sms.TEXSMS,
+    movsms: req.body.sms.MOVSMS,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+
+  return Object.assign(sms, movimiento)
+}
 const deleteSmsFromRec = (req) => {
   const fraude = {
     IDFRAU: req.body.fraude.IDFRAU,
@@ -261,6 +289,19 @@ const insertRelacionFromRec = (req) => {
   }
 
   return Object.assign(fraude, relacion, movimiento)
+}
+const updateRelacionFromRec = (req) => {
+  const relacion = {
+    idrela: req.body.relacion.IDRELA,
+    nifcon: req.body.relacion.NIFCON,
+    nomcon: req.body.relacion.NOMCON,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+
+  return Object.assign(referencia, movimiento)
 }
 const deleteRelacionFromRec = (req) => {
   const fraude = {
@@ -499,6 +540,19 @@ export const crearEvento = async (req, res) => {
     res.status(500).end()
   }
 }
+export const modificarEvento = async (req, res) => {
+  try {
+    const result = await DAL.updateEvento(updateEventoFromRec(req))
+
+    if (result !== null) {
+      res.status(200).json(result)
+    } else {
+      res.status(404).end()
+    }
+  } catch (err) {
+    res.status(500).end()
+  }
+}
 export const borrarEvento = async (req, res) => {
   try {
     const result = await DAL.removeEvento(deleteEventoFromRec(req))
@@ -542,6 +596,19 @@ export const crearSms = async (req, res) => {
     res.status(500).end()
   }
 }
+export const modificarSms = async (req, res) => {
+  try {
+    const result = await DAL.updateSms(updateSmsFromRec(req))
+
+    if (result !== null) {
+      res.status(200).json(result)
+    } else {
+      res.status(404).end()
+    }
+  } catch (err) {
+    res.status(500).end()
+  }
+}
 export const borrarSms = async (req, res) => {
   try {
     const result = await DAL.removeSms(deleteSmsFromRec(req))
@@ -575,6 +642,19 @@ export const relaciones = async (req, res) => {
 export const crearRelacion = async (req, res) => {
   try {
     const result = await DAL.insertRelacion(insertRelacionFromRec(req))
+
+    if (result !== null) {
+      res.status(200).json(result)
+    } else {
+      res.status(404).end()
+    }
+  } catch (err) {
+    res.status(500).end()
+  }
+}
+export const modificarRelacion = async (req, res) => {
+  try {
+    const result = await DAL.updateRelacion(updateRelacionFromRec(req))
 
     if (result !== null) {
       res.status(200).json(result)

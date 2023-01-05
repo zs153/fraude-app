@@ -132,32 +132,6 @@ const cierreSql = `BEGIN FRAUDE_PKG.CIERREFRAUDE(
   :tipmov 
 ); END;
 `
-// sms
-const smssFraudeQuery = `SELECT 
-  ss.*,
-  TO_CHAR(ss.fecsms, 'DD/MM/YYYY') "STRFEC"
-FROM smss ss
-INNER JOIN smssfraude sf ON sf.idsmss = ss.idsmss
-WHERE sf.idfrau = :idfrau
-`
-const insertSmsSql = `BEGIN FRAUDE_PKG.INSERTSMSFRAUDE(
-  :idfrau,
-  TO_DATE(:fecsms, 'YYYY-MM-DD'),
-  :texsms,
-  :movsms,
-  :stasms,
-  :usumov,
-  :tipmov,
-  :idsmss
-); END;
-`
-const removeSmsSql = `BEGIN FRAUDE_PKG.DELETESMSFRAUDE(
-  :idfrau,
-  :idsmss,
-  :usumov,
-  :tipmov 
-); END;
-`
 // hito
 const hitosFraudeQuery = `SELECT 
   th.destip,
@@ -243,6 +217,41 @@ const removeEventoSql = `BEGIN FRAUDE_PKG.DELETEEVENTOFRAUDE(
   :tipmov 
 ); END;
 `
+// sms
+const smssFraudeQuery = `SELECT 
+  ss.*,
+  TO_CHAR(ss.fecsms, 'DD/MM/YYYY') "STRFEC"
+FROM smss ss
+INNER JOIN smssfraude sf ON sf.idsmss = ss.idsmss
+WHERE sf.idfrau = :idfrau
+`
+const insertSmsSql = `BEGIN FRAUDE_PKG.INSERTSMSFRAUDE(
+  :idfrau,
+  TO_DATE(:fecsms, 'YYYY-MM-DD'),
+  :texsms,
+  :movsms,
+  :stasms,
+  :usumov,
+  :tipmov,
+  :idsmss
+); END;
+`
+const updateSmsSql = `BEGIN FORMULARIOS_PKG.UPDATESMSFRAUDE(
+  :idsmss,
+  TO_DATE(:fecsms, 'YYYY-MM-DD'),
+  :texsms,
+  :movsms,
+  :usumov,
+  :tipmov
+); END;
+`
+const removeSmsSql = `BEGIN FRAUDE_PKG.DELETESMSFRAUDE(
+  :idfrau,
+  :idsmss,
+  :usumov,
+  :tipmov 
+); END;
+`
 // relacion
 const relacionesFraudeQuery = `SELECT 
   rr.*,
@@ -259,6 +268,14 @@ const insertRelacionSql = `BEGIN FRAUDE_PKG.INSERTRELACIONFRAUDE(
   :usumov,
   :tipmov,
   :idrela
+); END;
+`
+const updateRelacionSql = `BEGIN FORMULARIOS_PKG.UPDATERELACIONFRAUDE(
+  :idrela,
+  :nifcon,
+  :nomcon,
+  :usumov,
+  :tipmov
 ); END;
 `
 const removeRelacionSql = `BEGIN FRAUDE_PKG.DELETERELACIONFRAUDE(
@@ -522,6 +539,19 @@ export const insertSms = async (bind) => {
 
   return bind
 }
+export const updateSms = async (bind) => {
+  let result
+
+  try {
+    await simpleExecute(updateSmsSql, bind)
+
+    result = bind
+  } catch (error) {
+    result = null
+  }
+
+  return result
+}
 export const removeSms = async (bind) => {
   let result
 
@@ -560,6 +590,19 @@ export const insertRelacion = async (bind) => {
   }
 
   return bind
+}
+export const updateRelacion = async (bind) => {
+  let result
+
+  try {
+    await simpleExecute(updateRelacionSql, bind)
+
+    result = bind
+  } catch (error) {
+    result = null
+  }
+
+  return result
 }
 export const removeRelacion = async (bind) => {
   let result

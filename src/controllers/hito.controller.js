@@ -67,7 +67,7 @@ export const hito = async (req, res) => {
   }
 }
 export const hitos = async (req, res) => {
-  const context = req.body
+  const context = req.body.hito
 
   try {
     const result = await DAL.find(context)

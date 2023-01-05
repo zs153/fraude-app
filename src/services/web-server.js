@@ -6,7 +6,6 @@ import cors from 'cors'
 import { puerto } from '../config/settings'
 // routes
 import apiOficinaRouter from '../routes/oficina.router'
-import apiSmsRouter from '../routes/sms.router'
 import apiGenteRouter from '../routes/gente.router'
 import apiUsuarioRouter from '../routes/usuario.router'
 import apiFraudeRouter from '../routes/fraude.router'
@@ -14,10 +13,7 @@ import apiTipoHitoRouter from '../routes/tipohito.router'
 import apiTipoFraudeRouter from '../routes/tipofraude.router'
 import apiTipoEventoRouter from '../routes/tipoevento.router'
 import apiTipoCierreRouter from '../routes/tipocierre.router'
-import apiHitoRouter from '../routes/hito.router'
 import apiCargaRouter from '../routes/carga.router'
-import apiEventoRouter from '../routes/evento.router'
-import apiRelacionRouter from '../routes/relacion.router'
 import apiEstadisticaRouter from '../routes/estadistica.router'
 
 let httpServer
@@ -36,7 +32,6 @@ function initialize() {
 
     // routes
     app.use('/api', apiOficinaRouter)
-    app.use('/api', apiSmsRouter)
     app.use('/api', apiGenteRouter)
     app.use('/api', apiUsuarioRouter)
     app.use('/api', apiFraudeRouter)
@@ -44,10 +39,7 @@ function initialize() {
     app.use('/api', apiTipoEventoRouter)
     app.use('/api', apiTipoFraudeRouter)
     app.use('/api', apiTipoCierreRouter)
-    app.use('/api', apiHitoRouter)
     app.use('/api', apiCargaRouter)
-    app.use('/api', apiEventoRouter)
-    app.use('/api', apiRelacionRouter)
     app.use('/api', apiEstadisticaRouter)
 
     // server

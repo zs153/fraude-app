@@ -66,9 +66,13 @@ export const eventos = async (req, res) => {
   try {
     const result = await DAL.find(context)
 
-    res.status(200).json(result)
+    if (result !== null) {
+      res.status(200).json(result);
+    } else {
+      res.status(404).end();
+    }
   } catch (err) {
-    res.status(400).end()
+    res.status(500).end()
   }
 }
 

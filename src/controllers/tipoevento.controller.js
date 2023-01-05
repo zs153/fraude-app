@@ -51,7 +51,7 @@ export const tipo = async (req, res) => {
   }
 }
 export const tipos = async (req, res) => {
-  const context = req.body
+  const context = req.body.tipo
 
   try {
     const result = await DAL.find(context)

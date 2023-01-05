@@ -7,12 +7,12 @@ const baseQuery = `SELECT
 FROM eventos ee
 `
 const largeQuery = `SELECT 
-  te.destip,
+  tt.destip,
   ee.*,
   TO_CHAR(ee.feceve, 'DD/MM/YYYY') "STRFEC"
 FROM eventos ee
 INNER JOIN eventosfraude ef ON ef.ideven = ee.ideven
-INNER JOIN tiposevento te ON te.idtipo = ee.tipeve
+INNER JOIN tiposevento tt ON tt.idtipo = ee.tipeve
 WHERE ef.idfrau = :idfrau
 `
 const insertSql = `BEGIN FRAUDE_PKG.INSERTEVENTOFRAUDE(

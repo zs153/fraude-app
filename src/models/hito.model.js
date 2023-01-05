@@ -49,7 +49,6 @@ export const find = async (context) => {
   }
 
   const result = await simpleExecute(query, binds)
-
   return result.rows
 }
 

@@ -15,6 +15,7 @@ const insertFromRec = (req) => {
   return Object.assign(carga, movimiento);
 };
 
+// proc
 export const carga = async (req, res) => {
   const context = req.body.carga;
 
@@ -31,15 +32,15 @@ export const carga = async (req, res) => {
   }
 };
 export const cargas = async (req, res) => {
-  const context = req.body
+  const context = req.body.carga
 
   try {
     const result = await DAL.find(context);
 
     if (result !== null) {
-      res.status(200).json(result);
+      res.status(200).json(result)
     } else {
-      res.status(404).end();
+      res.status(404).end()
     }
   } catch (err) {
     res.status(500).end();
