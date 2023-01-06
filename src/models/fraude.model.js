@@ -44,7 +44,8 @@ INNER JOIN tiposfraude tt ON tt.idtipo = ff.tipfra
 INNER JOIN oficinas oo ON oo.idofic = ff.ofifra
 ORDER BY ff.stafra DESC
 `
-const extendedQuery = `SELECT ff.idfrau, ff.fecfra, ff.nifcon, ff.nomcon, ff.ejefra, ff.obsfra, tf.destip "TIPFRA", 
+const extendedQuery = `SELECT 
+  ff.idfrau, ff.fecfra, ff.nifcon, ff.nomcon, ff.ejefra, ff.obsfra, tf.destip "TIPFRA", 
   hh.idhito, hh.fechit, hh.imphit, hh.obshit, hh.stahit, th.destip "TIPHIT", 
   ee.ideven, ee.feceve, ee.obseve, te.destip "TIPEVE",
   oo.desofi
@@ -133,14 +134,12 @@ const cierreSql = `BEGIN FRAUDE_PKG.CIERREFRAUDE(
 ); END;
 `
 // hito
-const hitosFraudeQuery = `SELECT 
+const hitosQuery = `SELECT 
   th.destip,
   hh.*,
   TO_CHAR(hh.fechit, 'DD/MM/YYYY') "STRFEC"
 FROM hitos hh
-INNER JOIN hitosfraude hf ON hf.idhito = hh.idhito
 INNER JOIN tiposhito th ON th.idtipo = hh.tiphit
-WHERE hf.idfrau = :idfrau
 `
 const insertHitoSql = `BEGIN FRAUDE_PKG.INSERTHITOFRAUDE(
   :idfrau,
@@ -151,6 +150,23 @@ const insertHitoSql = `BEGIN FRAUDE_PKG.INSERTHITOFRAUDE(
   :usumov,
   :tipmov,
   :idhito
+); END;
+`
+const updateHitoSql = `BEGIN FRAUDE_PKG.UPDATEHITO(
+  :idhito,
+  TO_DATE(:fechit, 'YYYY-MM-DD'),
+  :tiphit,
+  :imphit,
+  :obshit,
+  :usumov,
+  :tipmov
+); END;
+`
+const removeHitoSql = `BEGIN FRAUDE_PKG.DELETEHITOFRAUDE(
+  :idfrau,
+  :idhito,
+  :usumov,
+  :tipmov 
 ); END;
 `
 const insertHitoLiquidacionSql = `BEGIN FRAUDE_PKG.INSERTHITOLIQFRAUDE(
@@ -183,31 +199,39 @@ const insertHitoSancionSql = `BEGIN FRAUDE_PKG.INSERTHITOSANFRAUDE(
   :idhito
 ); END;
 `
-const removeHitoSql = `BEGIN FRAUDE_PKG.DELETEHITOFRAUDE(
-  :idfrau,
+const cambioEstadoHitoSql = `BEGIN FRAUDE_PKG.CAMBIOESTADOHITO(
   :idhito,
+  :stahit,
   :usumov,
-  :tipmov 
+  :tipmov
 ); END;
 `
+
 // evento
-const eventosFraudeQuery = `SELECT 
+const eventosQuery = `SELECT 
   tt.destip,
   ee.*,
   TO_CHAR(ee.feceve, 'DD/MM/YYYY') "STRFEC"
 FROM eventos ee
-INNER JOIN eventosfraude ef ON ef.ideven = ee.ideven
 INNER JOIN tiposevento tt ON tt.idtipo = ee.tipeve
-WHERE ef.idfrau = :idfrau
 `
 const insertEventoSql = `BEGIN FRAUDE_PKG.INSERTEVENTOFRAUDE(
   :idfrau,
-  :feceve,
+  TO_DATE(:feceve, 'YYYY-MM-DD'),
   :tipeve,
   :obseve,
   :usumov,
   :tipmov,
   :ideven
+); END;
+`
+const updateEventoSql = `BEGIN FRAUDE_PKG.UPDATEEVENTO(
+  :ideven,
+  TO_DATE(:feceve, 'YYYY-MM-DD'),
+  :tipeve,
+  :obseve,
+  :usumov,
+  :tipmov
 ); END;
 `
 const removeEventoSql = `BEGIN FRAUDE_PKG.DELETEEVENTOFRAUDE(
@@ -218,12 +242,10 @@ const removeEventoSql = `BEGIN FRAUDE_PKG.DELETEEVENTOFRAUDE(
 ); END;
 `
 // sms
-const smssFraudeQuery = `SELECT 
+const smssQuery = `SELECT 
   ss.*,
   TO_CHAR(ss.fecsms, 'DD/MM/YYYY') "STRFEC"
 FROM smss ss
-INNER JOIN smssfraude sf ON sf.idsmss = ss.idsmss
-WHERE sf.idfrau = :idfrau
 `
 const insertSmsSql = `BEGIN FRAUDE_PKG.INSERTSMSFRAUDE(
   :idfrau,
@@ -236,7 +258,7 @@ const insertSmsSql = `BEGIN FRAUDE_PKG.INSERTSMSFRAUDE(
   :idsmss
 ); END;
 `
-const updateSmsSql = `BEGIN FORMULARIOS_PKG.UPDATESMSFRAUDE(
+const updateSmsSql = `BEGIN FRAUDE_PKG.UPDATESMS(
   :idsmss,
   TO_DATE(:fecsms, 'YYYY-MM-DD'),
   :texsms,
@@ -253,12 +275,10 @@ const removeSmsSql = `BEGIN FRAUDE_PKG.DELETESMSFRAUDE(
 ); END;
 `
 // relacion
-const relacionesFraudeQuery = `SELECT 
+const relacionesQuery = `SELECT 
   rr.*,
   TO_CHAR(rr.fecrel, 'DD/MM/YYYY') "STRFEC"
 FROM relaciones rr
-INNER JOIN relacionesfraude rf ON rf.idrela = rr.idrela
-WHERE rf.idfrau = :idfrau
 `
 const insertRelacionSql = `BEGIN FRAUDE_PKG.INSERTRELACIONFRAUDE(
   :idfrau,
@@ -270,8 +290,9 @@ const insertRelacionSql = `BEGIN FRAUDE_PKG.INSERTRELACIONFRAUDE(
   :idrela
 ); END;
 `
-const updateRelacionSql = `BEGIN FORMULARIOS_PKG.UPDATERELACIONFRAUDE(
+const updateRelacionSql = `BEGIN FRAUDE_PKG.UPDATERELACION(
   :idrela,
+  TO_DATE(:fecrel, 'YYYY-MM-DD'),
   :nifcon,
   :nomcon,
   :usumov,
@@ -299,7 +320,7 @@ export const find = async (context) => {
     query += `WHERE ff.reffra = :reffra`
   } else if (context.LIQFRA) {
     binds.liqfra = context.LIQFRA
-    if (context.TIPVIS === 1) {
+    if (context.STAFRA === 1) {
       // mostrar asignados al liquidador y todos los no asignados
       query = largeQuery
     } else {
@@ -408,10 +429,18 @@ export const cierre = async (bind) => {
 
 // proc hitos
 export const findHitos = async (context) => {
-  let query = hitosFraudeQuery
+  let query = hitosQuery
   let binds = {}
 
-  binds.idfrau = context.IDFRAU
+  if (context.IDHITO) {
+    binds.idhito = context.IDHITO
+    query += `WHERE hh.idhito = :idhito`
+  } else if (context.IDFRAU) {
+    binds.idfrau = context.IDFRAU
+    query += `INNER JOIN hitosfraude hf ON hf.idhito = hh.idhito
+      WHERE hf.idfrau = :idfrau`
+  }
+
   const result = await simpleExecute(query, binds)
   return result.rows
 }
@@ -430,6 +459,33 @@ export const insertHito = async (bind) => {
   }
 
   return bind
+}
+export const updateHito = async (bind) => {
+  let result
+
+  console.log(updateHitoSql, bind)
+  try {
+    await simpleExecute(updateHitoSql, bind)
+
+    result = bind
+  } catch (error) {
+    result = null
+  }
+
+  return result
+}
+export const removeHito = async (bind) => {
+  let result
+
+  try {
+    await simpleExecute(removeHitoSql, bind)
+
+    result = bind
+  } catch (error) {
+    result = null
+  }
+
+  return result
 }
 export const insertHitoLiquidacion = async (bind) => {
   bind.idhito = {
@@ -461,11 +517,11 @@ export const insertHitoSancion = async (bind) => {
 
   return bind
 }
-export const removeHito = async (bind) => {
+export const cambioEstadoHito = async (bind) => {
   let result
 
   try {
-    await simpleExecute(removeHitoSql, bind)
+    await simpleExecute(cambioEstadoHitoSql, bind)
 
     result = bind
   } catch (error) {
@@ -477,10 +533,18 @@ export const removeHito = async (bind) => {
 
 // proc evento
 export const findEventos = async (context) => {
-  let query = eventosFraudeQuery
+  let query = eventosQuery
   let binds = {}
 
-  binds.idfrau = context.IDFRAU
+  if (context.IDEVEN) {
+    binds.ideven = context.IDEVEN
+    query += `WHERE ee.ideven = :ideven`
+  } else if (context.IDFRAU) {
+    binds.idfrau = context.IDFRAU
+    query += `INNER JOIN eventosfraude ef ON ef.ideven = ee.ideven
+      WHERE ef.idfrau = :idfrau`
+  }
+
   const result = await simpleExecute(query, binds)
   return result.rows
 }
@@ -500,6 +564,19 @@ export const insertEvento = async (bind) => {
 
   return bind
 }
+export const updateEvento = async (bind) => {
+  let result
+
+  try {
+    await simpleExecute(updateEventoSql, bind)
+
+    result = bind
+  } catch (error) {
+    result = null
+  }
+
+  return result
+}
 export const removeEvento = async (bind) => {
   let result
 
@@ -516,10 +593,18 @@ export const removeEvento = async (bind) => {
 
 // proc sms
 export const findSmss = async (context) => {
-  let query = smssFraudeQuery
+  let query = smssQuery
   let binds = {}
 
-  binds.idfrau = context.IDFRAU
+  if (context.IDFRAU) {
+    binds.idfrau = context.IDFRAU
+    query += `INNER JOIN smssfraude sf ON sf.idsmss = ss.idsmss
+      WHERE sf.idfrau = :idfrau`
+  } else if (context.IDSMSS) {
+    binds.idsmss = context.IDSMSS
+    query += `WHERE ss.idsmss = :idsmss`
+  }
+
   const result = await simpleExecute(query, binds)
   return result.rows
 }
@@ -568,10 +653,18 @@ export const removeSms = async (bind) => {
 
 // proc relacion
 export const findRelaciones = async (context) => {
-  let query = relacionesFraudeQuery
+  let query = relacionesQuery
   let binds = {}
 
-  binds.idfrau = context.IDFRAU
+  if (context.IDFRAU) {
+    binds.idfrau = context.IDFRAU
+    query += `INNER JOIN relacionesfraude rf ON rf.idrela = rr.idrela
+      WHERE rf.idfrau = :idfrau`
+  } else if (context.IDRELA) {
+    binds.idrela = context.IDRELA
+    query += `WHERE rr.idrela = :idrela`
+  }
+
   const result = await simpleExecute(query, binds)
   return result.rows
 }
