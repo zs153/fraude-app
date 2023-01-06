@@ -1,8 +1,5 @@
 import http from 'http'
-import logger from 'morgan'
 import express from 'express'
-import cookieParser from 'cookie-parser'
-import cors from 'cors'
 import { puerto } from '../config/settings'
 // routes
 import apiOficinaRouter from '../routes/oficina.router'
@@ -24,11 +21,7 @@ function initialize() {
     httpServer = http.createServer(app)
 
     // middleware
-    app.use(logger('dev'))
     app.use(express.json())
-    app.use(express.urlencoded({ extended: true }))
-    app.use(cookieParser())
-    app.use(cors())
 
     // routes
     app.use('/api', apiOficinaRouter)
@@ -70,13 +63,3 @@ function close() {
   })
 }
 module.exports.close = close
-
-const iso8601RegExp = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/
-const reviveJson = (key, value) => {
-  // revive ISO 8601 date strings to instances of Date
-  if (typeof value === 'string' && iso8601RegExp.test(value)) {
-    return new Date(value)
-  } else {
-    return value
-  }
-}

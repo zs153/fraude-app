@@ -463,7 +463,6 @@ export const insertHito = async (bind) => {
 export const updateHito = async (bind) => {
   let result
 
-  console.log(updateHitoSql, bind)
   try {
     await simpleExecute(updateHitoSql, bind)
 

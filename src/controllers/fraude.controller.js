@@ -726,7 +726,6 @@ export const borrarSms = async (req, res) => {
 export const relacion = async (req, res) => {
   const context = req.body.relacion
 
-  console.log(context)
   try {
     const result = await DAL.findRelaciones(context)
 
