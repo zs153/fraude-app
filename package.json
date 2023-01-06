@@ -4,9 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "server": "pm2 start ./dist/src/index",
+    "server": "pm2 start ./dist/index",
     "babel": "babel src -d dist --copy-files",
-    "start": "node ./dist/bin/www",
+    "start": "node ./dist/index",
     "startdev": "nodemon --exec babel-node ./src/index"
   },
   "dependencies": {
