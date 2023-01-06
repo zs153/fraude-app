@@ -64,8 +64,8 @@ export const tiposVisualizacion = {
   resueltos: 2,
 }
 export const estadosUsuario = {
-  reserva: 0,
   activo: 1,
+  reserva: 2,
 }
 export const estadosFraude = {
   pendiente: 0,
@@ -110,8 +110,8 @@ export const arrTiposPerfil = [
   { id: 8, des: 'LIQUIDADOR' },
 ]
 export const arrEstadosUsuario = [
-  { id: 0, des: 'RESERVA' },
   { id: 1, des: 'ACTIVO' },
+  { id: 2, des: 'RESERVA' },
 ]
 export const arrEstadosSms = [
   { id: 0, des: 'PENDIENTE' },

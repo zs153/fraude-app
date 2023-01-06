@@ -36,7 +36,7 @@
                           <div class="input-control">
                             <select class="form-select form-control" id="cbotip" name="tipeve" value="<%- datos.evento.TIPEVE %>">
                               <% datos.tipos.map(element=> { %>
-                              <option value="<%- element.IDTIPO %>" <%- element.IDTIPO === datos.evento.TIPEVE ? "select":"" %>>
+                              <option value="<%- element.IDTIPO %>" <%- element.IDTIPO === datos.evento.TIPEVE ? " selected":"" %>>
                                 <%- element.DESTIP %>
                               </option>
                               <% }) %>

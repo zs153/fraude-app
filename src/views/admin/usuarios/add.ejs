@@ -50,7 +50,7 @@
                         <div class="mb-1">
                           <div class="input-control">
                             <div class="form-label required">Estado</div>
-                            <select class="form-select" id="cboest" name="stausu" value="">
+                            <select class="form-select form-control" id="cboest" name="stausu" value="">
                               <option value="0">SELECCIONE ESTADO</option>
                               <% datos.arrEstadosUsuario.map(element=> { %>
                               <option value="<%= element.id %>">
@@ -104,7 +104,7 @@
                         <div class="mb-1">
                           <div class="input-control">
                             <div class="form-label required">Rol</div>
-                            <select class="form-select" id="cborol" name="rolusu" value="">
+                            <select class="form-select form-control" id="cborol" name="rolusu" value="">
                               <option value="0">SELECCIONE ROL</option>
                               <% datos.filteredRol.map(element=> { %>
                               <option value="<%- element.id %>">
@@ -120,7 +120,7 @@
                         <div class="mb-1">
                           <div class="input-control">
                             <div class="form-label required">Perfil</div>
-                            <select class="form-select" id="cboper" name="perusu" value="">
+                            <select class="form-select form-control" id="cboper" name="perusu" value="">
                               <option value="0">SELECCIONE PERFIL</option>
                               <% datos.arrTiposPerfil.map(element=> { %>
                               <option value="<%- element.id %>">

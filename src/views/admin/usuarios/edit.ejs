@@ -51,7 +51,7 @@
                       <div class="col-2">
                         <div class="mb-1">
                           <div class="form-label">Estado</div>
-                          <select class="form-select" id="cboest" name="stausu" value="<%- datos.usuario.STAUSU %>">
+                          <select class="form-select form-control" id="cboest" name="stausu" value="<%- datos.usuario.STAUSU %>">
                             <% datos.arrEstadosUsuario.map(element=> { %>
                             <option value="<%- element.id %>"
                               <%- element.id === datos.usuario.STAUSU ? " selected" :"" %>>
@@ -88,7 +88,7 @@
                       <div class="col-4">
                         <div class="mb-1">
                           <div class="form-label">Oficina</div>
-                          <select class="form-select" id="cboofi" name="ofiusu" value="<%- datos.usuario.OFIUSU %>">
+                          <select class="form-select form-control" id="cboofi" name="ofiusu" value="<%- datos.usuario.OFIUSU %>">
                             <% datos.oficinas.map(element => { %>
                             <option value="<%- element.IDOFIC %>"
                               <%- element.IDOFIC === datos.usuario.OFIUSU ? " selected" : "" %>>
@@ -101,7 +101,7 @@
                       <div class="col-4">
                         <div class="mb-1">
                           <div class="form-label">Rol</div>
-                          <select class="form-select" id="cborol" name="rolusu" value="<%- datos.usuario.ROLUSU %>">
+                          <select class="form-select form-control" id="cborol" name="rolusu" value="<%- datos.usuario.ROLUSU %>">
                             <% datos.filteredRol.map(element=> { %>
                             <option value="<%- element.id %>"
                               <%- element.id === datos.usuario.ROLUSU ? " selected" :"" %>>
@@ -114,7 +114,7 @@
                       <div class="col-4">
                         <div class="mb-1">
                           <div class="form-label">Perfil</div>
-                          <select class="form-select" id="cboper" name="perusu" value="<%- datos.usuario.PERUSU %>">
+                          <select class="form-select form-control" id="cboper" name="perusu" value="<%- datos.usuario.PERUSU %>">
                             <% datos.arrTiposPerfil.map(element=> { %>
                             <option value="<%= element.id %>"
                               <%- element.id === datos.usuario.PERUSU ? " selected" :"" %>>

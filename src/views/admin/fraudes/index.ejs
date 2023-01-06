@@ -247,8 +247,7 @@
               <div class="col">
                 <form action="/admin/fraudes/desasignar" method="POST">
                   <input type="hidden" id="iddesa" name="idfrau" value="">
-                  <input type="hidden" name="verall" id="verall" value="">
-                  <button type="submit" class="btn btn-danger w-100" onclick="checkVer()">Desasignar fraude</button>
+                  <button type="submit" class="btn btn-danger w-100">Desasignar fraude</button>
                 </form>
               </div>
             </div>
@@ -260,11 +259,6 @@
 
   <script src="/js/ayuda.min.js"></script>
   <script src="/js/fraude.js"></script>
-  <script>
-    const checkVer = () => {
-      document.getElementById('verall').value = localStorage.getItem('vertodo')
-    }
-  </script>
   <script>
     const orgList = <%- JSON.stringify(datos.fraudes) %>
     const estadosFraude = <%- JSON.stringify(datos.estadosFraude) %>

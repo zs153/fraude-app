@@ -24,6 +24,7 @@
               <div class="card">
                 <form id="form" action="/admin/fraudes/ejercicio" method="POST" onsubmit="return validate();">
                   <input type="hidden" name="idfrau" id="idfrau" value="<%- datos.fraude.IDFRAU %>">
+                  <input type="hidden" name="reffra" id="reffra" value="<%- datos.fraude.REFFRA %>">
                   <div class="card-header">
                     <h3 class="card-title">Nuevo ejercicio</h3>
                   </div>

@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>Sms</title>
+  <title>Relacionados</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
   <!-- styles -->
   <link rel="stylesheet" href="/css/styles.css">
@@ -25,7 +25,7 @@
               <div class="card">
                 <div class="card-header">
                   <div>
-                    <h3 class="card-title">Gestión Sms</h3>
+                    <h3 class="card-title">Relacionados</h3>
                     <p class="subtitulo">
                       <span class="text-muted">
                         <%- datos.fraudeData.NIFCON %>
@@ -38,37 +38,31 @@
                   </div>
                 </div>
                 <div class="card-body">
-                    <table class="table table-vcenter table-striped" id="tblSms">
+                    <table class="table table-vcenter table-striped" id="tblRela">
                       <thead>
                         <tr class="header">
                         <th class="w-4"></th>
                         <th class="w-6">Fecha</th>
-                        <th class="w-8">Movil</th>
-                        <th>Texto</th>
+                        <th class="w-8">NIF</th>
+                        <th>Nombre</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <% datos.smss.map(element => { %>
+                        <% datos.relaciones.map(element => { %>
                         <tr>
                           <!-- col1 -->
                           <td class="w-4">
                             <div class="py-1 align-items-center">
-                              <% if (element.STASMS === datos.estadosSms.pendiente) {%>
-                              <span class="avatar avatar-rounded bg-red-lt">
-                                <h6>PEN</h6>
-                              </span>
-                              <% } else { %>
                               <span class="avatar avatar-rounded bg-green-lt">
-                                <h6>ENV</h6>
+                                <h6>OK</h6>
                               </span>
-                              <% } %>
                             </div>
                           </td>
                           <!-- col2 -->
                           <td class="w-6">
                             <div class="d-flex py-1 align-items-center">
                               <div class="flex-fill">
-                                <div class="font-weight-medium"><%- element.FECSMS.slice(0,10).split('-').reverse().join('/') %></div>
+                                <div class="font-weight-medium"><%- element.FECREL.slice(0,10).split('-').reverse().join('/') %></div>
                               </div>
                             </div>
                           </td>
@@ -76,7 +70,7 @@
                           <td class="w-8">
                             <div class="d-flex py-1 align-items-center">
                               <div class="flex-fill">
-                                <div class="font-weight-medium"><%- element.MOVSMS %></div>
+                                <div class="font-weight-medium"><%- element.NIFCON %></div>
                               </div>
                             </div>
                           </td>
@@ -84,7 +78,7 @@
                           <td>
                             <div class="d-flex py-1 align-items-center">
                               <div class="flex-fill">
-                                <div class="font-weight-medium"><%- element.TEXSMS %></div>
+                                <div class="font-weight-medium"><%- element.NOMCON %></div>
                               </div>
                             </div>
                           </td>

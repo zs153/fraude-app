@@ -56,7 +56,7 @@
                     <div class="row">
                       <div class="col-9">
                         <div class="mb-1">
-                          <div class="form-label">Tipo</div>
+                          <div class="form-label required">Tipo</div>
                           <div class="input-control">
                             <select class="form-select form-control" id="cbotip" name="tipfra" value="">
                               <option value="0">SELECCIONE UN TIPO</option>
@@ -99,7 +99,7 @@
                       <div class="col-5">
                         <div class="mb-1">
                           <div class="form-label">Oficina</div>
-                          <select class="form-select" id="cboofi" name="ofifra" value="<%- datos.fraude.OFIFRA %>">
+                          <select class="form-select form-control" id="cboofi" name="ofifra" value="<%- datos.fraude.OFIFRA %>">
                             <% datos.oficinas.map(element=> { %>
                               <option value="<%- element.IDOFIC %>" <%- element.IDOFIC === datos.fraude.OFIFRA ? " selected" :"" %>>
                                 <%- element.DESOFI %>
@@ -268,6 +268,9 @@
       errorDisplay.innerText = message;
       element.classList.add('is-invalid');
       inputControl.classList.remove('is-valid');
+    }
+    const checkVer = () => {
+      localStorage.setItem('vertodo', 'n')
     }
   </script>
 </body>

@@ -24,7 +24,6 @@
             <div class="col-12">
               <div class="card">
                 <form action="/admin/estadisticas" method="POST" onsubmit="return validate();">
-                  <input type="hidden" id="reffra" name="reffra">
                   <div class="card-header">
                     <h3 class="card-title">Estadística</h3>
                   </div>
@@ -52,9 +51,9 @@
                     <div class="row">
                       <div class="col-12">
                         <div class="mb-1">
-                          <div class="form-label">Carga</div>
+                          <div class="form-label required">Carga</div>
                           <div class="input-control">
-                            <select class="form-select" id="cbocar" name="refcar" value="">
+                            <select class="form-select form-control" id="cbocar" name="refcar" value="">
                               <option value="0">SELECCIONE UNA CARGA</option>
                               <% datos.cargas.map(element=> { %>
                               <option value="<%- element.REFCAR %>">
@@ -113,7 +112,7 @@
         return false
       }
       if (cbocarValue === '0') {
-        setError(cboC, 'Carga requrida')
+        setError(cboC, 'Carga requerida')
         setTimeout(function () {
           setSuccess(cboC)
         }, 3000)
