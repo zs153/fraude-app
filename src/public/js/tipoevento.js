@@ -1,3 +1,6 @@
+// inicializa vertodo
+localStorage.setItem('vertodo', 'n')
+
 // inicializa sort
 document.querySelectorAll(".sortable th").forEach(headerCell => {
   headerCell.addEventListener("click", () => {

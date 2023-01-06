@@ -229,7 +229,6 @@ export const hitoseventosReadonlyPage = async (req, res) => {
     IDFRAU: req.params.id,
   };
 
-  console.log(fraude)
   try {
     const result = await axios.post("http://localhost:8100/api/fraudes/extended", {
       fraude,

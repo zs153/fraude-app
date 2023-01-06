@@ -29,15 +29,15 @@ const authRoutes = async (req, res, next) => {
 
         next()
       }).catch(err => {
-        console.log('Error de clave pública. No se puede verificar la clave pública')
+        //console.log('Error de clave pública. No se puede verificar la clave pública')
         res.redirect('/')
       })
     } catch {
-      console.log('Error de clave pública. No se puede crear la clave pública')
+      // console.log('Error de clave pública. No se puede crear la clave pública')
       res.redirect('/')
     }
   } else {
-    console.log('Error de clave pública: No se ha generado el token de clave pública')
+    // console.log('Error de clave pública: No se ha generado el token de clave pública')
     res.redirect('/')
   }
 }

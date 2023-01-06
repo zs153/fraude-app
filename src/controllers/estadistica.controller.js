@@ -62,7 +62,6 @@ export const generarEstadistica = async (req, res) => {
       fraude,
     })
 
-    console.log(fraude)
     const serieC = []
     const serieL = []
     const serieS = []

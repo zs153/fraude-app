@@ -47,10 +47,8 @@ export const addPage = async (req, res) => {
       arrEstadosUsuario,
     }
 
-    console.log(datos)
     res.render('admin/usuarios/add', { user, datos })
   } catch (error) {
-    console.log(error)
     const msg = 'No se ha podido acceder a los datos de la aplicación.'
 
     res.render('admin/error400', {
