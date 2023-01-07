@@ -50,9 +50,6 @@ export const generarEstadistica = async (req, res) => {
     const tipos = await axios.post('http://localhost:8100/api/tipos/cierres', {
       tipo,
     })
-    const cargas = await axios.post('http://localhost:8100/api/cargas', {
-      carga,
-    })
     const result = await axios.post('http://localhost:8100/api/estadisticas/sitact', {
       fraude,
       periodo,
@@ -60,6 +57,9 @@ export const generarEstadistica = async (req, res) => {
     })
     const oficinas = await axios.post('http://localhost:8100/api/estadisticas/oficinas', {
       fraude,
+    })
+    const cargas = await axios.post('http://localhost:8100/api/cargas', {
+      carga,
     })
 
     const serieC = []
