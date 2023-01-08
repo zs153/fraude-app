@@ -6,6 +6,7 @@ import {
   tiposRol,
   estadosHito,
 } from "../public/js/enumeraciones";
+import { serverAPI } from '../config/settings'
 
 // pages fraude
 export const mainPage = async (req, res) => {
@@ -16,7 +17,7 @@ export const mainPage = async (req, res) => {
   };
 
   try {
-    const result = await axios.post("http://localhost:8100/api/fraudes", {
+    const result = await axios.post(`http://${serverAPI}:8100/api/fraudes`, {
       fraude,
     });
     const datos = {
@@ -47,10 +48,10 @@ export const addPage = async (req, res) => {
   const tipo = {}
 
   try {
-    const tipos = await axios.post("http://localhost:8100/api/tipos/fraudes", {
+    const tipos = await axios.post(`http://${serverAPI}:8100/api/tipos/fraudes`, {
       tipo,
     })
-    const oficinas = await axios.post("http://localhost:8100/api/oficinas", {
+    const oficinas = await axios.post(`http://${serverAPI}:8100/api/oficinas`, {
       oficina,
     })
     const datos = {
@@ -77,13 +78,13 @@ export const editPage = async (req, res) => {
   const oficina = user.rol === tiposRol.admin ? {} : { IDOFIC: user.oficina }
 
   try {
-    const tipos = await axios.post("http://localhost:8100/api/tipos/fraudes", {
+    const tipos = await axios.post(`http://${serverAPI}:8100/api/tipos/fraudes`, {
       tipo,
     })
-    const oficinas = await axios.post("http://localhost:8100/api/oficinas", {
+    const oficinas = await axios.post(`http://${serverAPI}:8100/api/oficinas`, {
       oficina,
     })
-    const result = await axios.post("http://localhost:8100/api/fraude", {
+    const result = await axios.post(`http://${serverAPI}:8100/api/fraude`, {
       fraude,
     });
 
@@ -113,7 +114,7 @@ export const resolverPage = async (req, res) => {
   const tipo = {}
 
   try {
-    const hitos = await axios.post("http://localhost:8100/api/fraudes/hitos", {
+    const hitos = await axios.post(`http://${serverAPI}:8100/api/fraudes/hitos`, {
       fraude,
     });
 
@@ -162,10 +163,10 @@ export const resolverPage = async (req, res) => {
       }
     }
 
-    const tipos = await axios.post("http://localhost:8100/api/tipos/cierres", {
+    const tipos = await axios.post(`http://${serverAPI}:8100/api/tipos/cierres`, {
       tipo,
     });
-    const result = await axios.post("http://localhost:8100/api/fraude", {
+    const result = await axios.post(`http://${serverAPI}:8100/api/fraude`, {
       fraude,
     });
     const datos = {
@@ -193,16 +194,16 @@ export const hitoseventosPage = async (req, res) => {
   const tipo = {}
 
   try {
-    const result = await axios.post("http://localhost:8100/api/fraude", {
+    const result = await axios.post(`http://${serverAPI}:8100/api/fraude`, {
       fraude,
     });
-    const hitos = await axios.post("http://localhost:8100/api/fraudes/hitos", {
+    const hitos = await axios.post(`http://${serverAPI}:8100/api/fraudes/hitos`, {
       fraude,
     });
-    const eventos = await axios.post("http://localhost:8100/api/fraudes/eventos", {
+    const eventos = await axios.post(`http://${serverAPI}:8100/api/fraudes/eventos`, {
       fraude,
     });
-    const tiposHito = await axios.post("http://localhost:8100/api/tipos/hitos", {
+    const tiposHito = await axios.post(`http://${serverAPI}:8100/api/tipos/hitos`, {
       tipo,
     });
 
@@ -230,7 +231,7 @@ export const hitoseventosReadonlyPage = async (req, res) => {
   };
 
   try {
-    const result = await axios.post("http://localhost:8100/api/fraudes/extended", {
+    const result = await axios.post(`http://${serverAPI}:8100/api/fraudes/extended`, {
       fraude,
     });
 
@@ -259,10 +260,10 @@ export const addHitosPage = async (req, res) => {
   const tipo = {}
 
   try {
-    const hitos = await axios.post("http://localhost:8100/api/fraudes/hitos", {
+    const hitos = await axios.post(`http://${serverAPI}:8100/api/fraudes/hitos`, {
       fraude,
     });
-    const tipos = await axios.post("http://localhost:8100/api/tipos/hitos", {
+    const tipos = await axios.post(`http://${serverAPI}:8100/api/tipos/hitos`, {
       tipo,
     });
 
@@ -304,13 +305,13 @@ export const editHitosPage = async (req, res) => {
   };
 
   try {
-    const result = await axios.post("http://localhost:8100/api/fraudes/hito", {
+    const result = await axios.post(`http://${serverAPI}:8100/api/fraudes/hito`, {
       hito,
     });
-    const hitos = await axios.post("http://localhost:8100/api/fraudes/hitos", {
+    const hitos = await axios.post(`http://${serverAPI}:8100/api/fraudes/hitos`, {
       fraude,
     });
-    const tipos = await axios.post("http://localhost:8100/api/tipos/hitos", {
+    const tipos = await axios.post(`http://${serverAPI}:8100/api/tipos/hitos`, {
       tipo,
     });
 
@@ -354,7 +355,7 @@ export const addEventosPage = async (req, res) => {
   const tipo = {}
 
   try {
-    const tipos = await axios.post("http://localhost:8100/api/tipos/eventos", {
+    const tipos = await axios.post(`http://${serverAPI}:8100/api/tipos/eventos`, {
       tipo,
     });
     const datos = {
@@ -383,10 +384,10 @@ export const editEventosPage = async (req, res) => {
   const tipo = {}
 
   try {
-    const result = await axios.post("http://localhost:8100/api/fraudes/evento", {
+    const result = await axios.post(`http://${serverAPI}:8100/api/fraudes/evento`, {
       evento,
     });
-    const tipos = await axios.post("http://localhost:8100/api/tipos/eventos", {
+    const tipos = await axios.post(`http://${serverAPI}:8100/api/tipos/eventos`, {
       tipo,
     });
 
@@ -415,10 +416,10 @@ export const smssPage = async (req, res) => {
   };
 
   try {
-    const ret = await axios.post("http://localhost:8100/api/fraude", {
+    const ret = await axios.post(`http://${serverAPI}:8100/api/fraude`, {
       fraude,
     })
-    const smss = await axios.post("http://localhost:8100/api/fraudes/smss", {
+    const smss = await axios.post(`http://${serverAPI}:8100/api/fraudes/smss`, {
       fraude,
     })
 
@@ -450,7 +451,7 @@ export const smssAddPage = async (req, res) => {
   };
 
   try {
-    const result = await axios.post("http://localhost:8100/api/fraude", {
+    const result = await axios.post(`http://${serverAPI}:8100/api/fraude`, {
       fraude,
     });
     const sms = {
@@ -481,7 +482,7 @@ export const smssEditPage = async (req, res) => {
   };
 
   try {
-    const result = await axios.post("http://localhost:8100/api/fraudes/sms", {
+    const result = await axios.post(`http://${serverAPI}:8100/api/fraudes/sms`, {
       sms,
     });
     const datos = {
@@ -506,10 +507,10 @@ export const smssReadonlyPage = async (req, res) => {
   };
 
   try {
-    const ret = await axios.post("http://localhost:8100/api/fraude", {
+    const ret = await axios.post(`http://${serverAPI}:8100/api/fraude`, {
       fraude,
     })
-    const smss = await axios.post("http://localhost:8100/api/fraudes/smss", {
+    const smss = await axios.post(`http://${serverAPI}:8100/api/fraudes/smss`, {
       fraude,
     })
 
@@ -543,10 +544,10 @@ export const relacionesPage = async (req, res) => {
   };
 
   try {
-    const ret = await axios.post("http://localhost:8100/api/fraude", {
+    const ret = await axios.post(`http://${serverAPI}:8100/api/fraude`, {
       fraude,
     })
-    const relaciones = await axios.post("http://localhost:8100/api/fraudes/relaciones", {
+    const relaciones = await axios.post(`http://${serverAPI}:8100/api/fraudes/relaciones`, {
       fraude,
     })
 
@@ -575,6 +576,7 @@ export const relacionesAddPage = async (req, res) => {
   let fraude = {
     IDFRAU: req.params.id,
   };
+
   try {
     const datos = {
       fraude,
@@ -600,7 +602,7 @@ export const relacionesEditPage = async (req, res) => {
   };
 
   try {
-    const result = await axios.post("http://localhost:8100/api/fraudes/relacion", {
+    const result = await axios.post(`http://${serverAPI}:8100/api/fraudes/relacion`, {
       relacion,
     });
     const datos = {
@@ -625,10 +627,10 @@ export const relacionesReadonlyPage = async (req, res) => {
   };
 
   try {
-    const ret = await axios.post("http://localhost:8100/api/fraude", {
+    const ret = await axios.post(`http://${serverAPI}:8100/api/fraude`, {
       fraude,
     })
-    const relaciones = await axios.post("http://localhost:8100/api/fraudes/relaciones", {
+    const relaciones = await axios.post(`http://${serverAPI}:8100/api/fraudes/relaciones`, {
       fraude,
     })
 
@@ -663,7 +665,7 @@ export const ejercicioPage = async (req, res) => {
   };
 
   try {
-    const result = await axios.post("http://localhost:8100/api/fraude", {
+    const result = await axios.post(`http://${serverAPI}:8100/api/fraude`, {
       fraude,
     });
 
@@ -711,7 +713,7 @@ export const insert = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8100/api/fraudes/insert", {
+    await axios.post(`http://${serverAPI}:8100/api/fraudes/insert`, {
       fraude,
       movimiento,
     });
@@ -746,13 +748,10 @@ export const update = async (req, res) => {
   };
 
   try {
-    const result = await axios.post(
-      "http://localhost:8100/api/fraudes/update",
-      {
-        fraude,
-        movimiento,
-      }
-    );
+    await axios.post(`http://${serverAPI}:8100/api/fraudes/update`, {
+      fraude,
+      movimiento,
+    });
 
     res.redirect("/admin/fraudes");
   } catch (error) {
@@ -774,7 +773,7 @@ export const remove = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8100/api/fraudes/delete", {
+    await axios.post(`http://${serverAPI}:8100/api/fraudes/delete`, {
       fraude,
       movimiento,
     });
@@ -795,7 +794,7 @@ export const asignar = async (req, res) => {
   };
 
   try {
-    const result = await axios.post("http://localhost:8100/api/fraude", {
+    const result = await axios.post(`http://${serverAPI}:8100/api/fraude`, {
       fraude,
     });
 
@@ -807,7 +806,7 @@ export const asignar = async (req, res) => {
     };
 
     if (result.data.STAFRA === estadosFraude.pendiente) {
-      await axios.post("http://localhost:8100/api/fraudes/asign", {
+      await axios.post(`http://${serverAPI}:8100/api/fraudes/asign`, {
         fraude,
         movimiento,
       });
@@ -837,12 +836,12 @@ export const resolver = async (req, res) => {
   };
 
   try {
-    const result = await axios.post("http://localhost:8100/api/fraude", {
+    const result = await axios.post(`http://${serverAPI}:8100/api/fraude`, {
       fraude,
     });
 
     if (result.data.STAFRA === estadosFraude.asignado) {
-      const hitos = await axios.post("http://localhost:8100/api/fraudes/hitos", {
+      const hitos = await axios.post(`http://${serverAPI}:8100/api/fraudes/hitos`, {
         fraude,
       });
 
@@ -894,7 +893,7 @@ export const resolver = async (req, res) => {
       fraude.LIQFRA = user.userID
       fraude.STAFRA = estadosFraude.resuelto
 
-      await axios.post("http://localhost:8100/api/fraudes/cierre", {
+      await axios.post(`http://${serverAPI}:8100/api/fraudes/cierre`, {
         fraude,
         cierre,
         movimiento,
@@ -917,7 +916,7 @@ export const desasignar = async (req, res) => {
   };
 
   try {
-    const resul = await axios.post("http://localhost:8100/api/fraude", {
+    const resul = await axios.post(`http://${serverAPI}:8100/api/fraude`, {
       fraude,
     });
 
@@ -929,7 +928,7 @@ export const desasignar = async (req, res) => {
         TIPMOV: tiposMovimiento.desasignarFraude,
       };
 
-      await axios.post("http://localhost:8100/api/fraudes/unasign", {
+      await axios.post(`http://${serverAPI}:8100/api/fraudes/unasign`, {
         fraude,
         movimiento,
       });
@@ -969,7 +968,7 @@ export const ejercicio = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8100/api/fraudes/insert", {
+    await axios.post(`http://${serverAPI}:8100/api/fraudes/insert`, {
       fraude,
       movimiento,
     });
@@ -1008,7 +1007,7 @@ export const insertHito = async (req, res) => {
       const tipo = {
         IDTIPO: estadosHito.liquidacion,
       }
-      const tipoHito = await axios.post('http://localhost:8100/api/tipos/hito', {
+      const tipoHito = await axios.post(`http://${serverAPI}:8100/api/tipos/hito`, {
         tipo,
       });
       const liquidacion = {
@@ -1018,7 +1017,7 @@ export const insertHito = async (req, res) => {
         STALIQ: tipoHito.data.ANUHIT,
       }
 
-      await axios.post("http://localhost:8100/api/fraudes/hitos/insertliq", {
+      await axios.post(`http://${serverAPI}:8100/api/fraudes/hitos/insertliq`, {
         fraude,
         hito,
         liquidacion,
@@ -1028,7 +1027,7 @@ export const insertHito = async (req, res) => {
       const tipo = {
         IDTIPO: estadosHito.sancion,
       }
-      const tipoHito = await axios.post('http://localhost:8100/api/tipos/hito', {
+      const tipoHito = await axios.post(`http://${serverAPI}:8100/api/tipos/hito`, {
         tipo,
       });
       const sancion = {
@@ -1037,21 +1036,21 @@ export const insertHito = async (req, res) => {
         OBSSAN: '',
         STASAN: tipoHito.data.ANUHIT,
       }
-      await axios.post("http://localhost:8100/api/fraudes/hitos/insertsan", {
+      await axios.post(`http://${serverAPI}:8100/api/fraudes/hitos/insertsan`, {
         fraude,
         hito,
         sancion,
         movimiento,
       });
     } else {
-      await axios.post("http://localhost:8100/api/fraudes/hitos/insert", {
+      await axios.post(`http://${serverAPI}:8100/api/fraudes/hitos/insert`, {
         fraude,
         hito,
         movimiento,
       });
     }
 
-    res.redirect(`/admin/fraudes/hitoseventos/${fraude.IDFRAU}`);
+    res.redirect(`/ admin / fraudes / hitoseventos / ${fraude.IDFRAU}`);
   } catch (error) {
     const msg = "No se ha podido insertar el hito.";
 
@@ -1078,12 +1077,12 @@ export const updateHito = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8100/api/fraudes/hitos/update", {
+    await axios.post(`http://${serverAPI}:8100/api/fraudes/hitos/update`, {
       hito,
       movimiento,
     });
 
-    res.redirect(`/admin/fraudes/hitoseventos/${fraude.IDFRAU}`);
+    res.redirect(`/ admin / fraudes / hitoseventos / ${fraude.IDFRAU}`);
   } catch (error) {
     const msg = "No se ha podido actualizar el hito.";
 
@@ -1106,13 +1105,13 @@ export const removeHito = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8100/api/fraudes/hitos/delete", {
+    await axios.post(`http://${serverAPI}:8100/api/fraudes/hitos/delete`, {
       fraude,
       hito,
       movimiento,
     });
 
-    res.redirect(`/admin/fraudes/hitoseventos/${fraude.IDFRAU}`);
+    res.redirect(`/ admin / fraudes / hitoseventos / ${fraude.IDFRAU}`);
   } catch (error) {
     const msg = "No se ha podido acceder borrar el hito.";
 
@@ -1136,12 +1135,12 @@ export const archivoHito = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8100/api/fraudes/hitos/archivado", {
+    await axios.post(`http://${serverAPI}:8100/api/fraudes/hitos/archivado`, {
       hito,
       movimiento,
     });
 
-    res.redirect(`/admin/fraudes/hitoseventos/${fraude.IDFRAU}`);
+    res.redirect(`/ admin / fraudes / hitoseventos / ${fraude.IDFRAU}`);
   } catch (error) {
     const msg = "No se ha podido acceder borrar el hito.";
 
@@ -1168,13 +1167,13 @@ export const insertEvento = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8100/api/fraudes/eventos/insert", {
+    await axios.post(`http://${serverAPI}:8100/api/fraudes/eventos/insert`, {
       fraude,
       evento,
       movimiento,
     });
 
-    res.redirect(`/admin/fraudes/hitoseventos/${fraude.IDFRAU}`);
+    res.redirect(`/ admin / fraudes / hitoseventos / ${fraude.IDFRAU}`);
   } catch (error) {
     const msg = "No se ha podido insertar el evento.";
 
@@ -1200,12 +1199,12 @@ export const updateEvento = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8100/api/fraudes/eventos/update", {
+    await axios.post(`http://${serverAPI}:8100/api/fraudes/eventos/update`, {
       evento,
       movimiento,
     });
 
-    res.redirect(`/admin/fraudes/hitoseventos/${fraude.IDFRAU}`);
+    res.redirect(`/ admin / fraudes / hitoseventos / ${fraude.IDFRAU}`);
   } catch (error) {
     const msg = "No se ha podido actualizar el evento.";
 
@@ -1228,13 +1227,13 @@ export const removeEvento = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8100/api/fraudes/eventos/delete", {
+    await axios.post(`http://${serverAPI}:8100/api/fraudes/eventos/delete`, {
       fraude,
       evento,
       movimiento,
     });
 
-    res.redirect(`/admin/fraudes/hitoseventos/${fraude.IDFRAU}`);
+    res.redirect(`/ admin / fraudes / hitoseventos / ${fraude.IDFRAU}`);
   } catch (error) {
     const msg = "No se ha podido acceder borrar el evento.";
 
@@ -1263,13 +1262,13 @@ export const insertSms = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8100/api/fraudes/smss/insert", {
+    await axios.post(`http://${serverAPI}:8100/api/fraudes/smss/insert`, {
       fraude,
       sms,
       movimiento,
     });
 
-    res.redirect(`/admin/fraudes/smss/${fraude.IDFRAU}`);
+    res.redirect(`/ admin / fraudes / smss / ${fraude.IDFRAU}`);
   } catch (error) {
     const msg = "No se ha podido insertar el ejercicio.";
 
@@ -1295,12 +1294,12 @@ export const updateSms = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8100/api/fraudes/smss/update", {
+    await axios.post(`http://${serverAPI}:8100/api/fraudes/smss/update`, {
       sms,
       movimiento,
     });
 
-    res.redirect(`/admin/fraudes/smss/${fraude.IDFRAU}`);
+    res.redirect(`/ admin / fraudes / smss / ${fraude.IDFRAU}`);
   } catch (error) {
     const msg = "No se ha podido actualizar el sms.";
 
@@ -1323,13 +1322,13 @@ export const removeSms = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8100/api/fraudes/smss/delete", {
+    await axios.post(`http://${serverAPI}:8100/api/fraudes/smss/delete`, {
       fraude,
       sms,
       movimiento,
     });
 
-    res.redirect(`/admin/fraudes/smss/${fraude.IDFRAU}`);
+    res.redirect(`/ admin / fraudes / smss / ${fraude.IDFRAU}`);
   } catch (error) {
     const msg = "No se ha podido borrar el sms.";
 
@@ -1357,13 +1356,13 @@ export const insertRelacion = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8100/api/fraudes/relaciones/insert", {
+    await axios.post(`http://${serverAPI}:8100/api/fraudes/relaciones/insert`, {
       fraude,
       relacion,
       movimiento,
     });
 
-    res.redirect(`/admin/fraudes/relaciones/${fraude.IDFRAU}`);
+    res.redirect(`/ admin / fraudes / relaciones / ${fraude.IDFRAU}`);
   } catch (error) {
     const msg = "No se ha podido insertar el ejercicio.";
 
@@ -1389,12 +1388,12 @@ export const updateRelacion = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8100/api/fraudes/relaciones/update", {
+    await axios.post(`http://${serverAPI}:8100/api/fraudes/relaciones/update`, {
       relacion,
       movimiento,
     });
 
-    res.redirect(`/admin/fraudes/relaciones/${fraude.IDFRAU}`);
+    res.redirect(`/ admin / fraudes / relaciones / ${fraude.IDFRAU}`);
   } catch (error) {
     const msg = "No se ha podido actualizar la relación.";
 
@@ -1417,13 +1416,13 @@ export const removeRelacion = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8100/api/fraudes/relaciones/delete", {
+    await axios.post(`http://${serverAPI}:8100/api/fraudes/relaciones/delete`, {
       fraude,
       relacion,
       movimiento,
     });
 
-    res.redirect(`/admin/fraudes/relaciones/${fraude.IDFRAU}`);
+    res.redirect(`/ admin / fraudes / relaciones / ${fraude.IDFRAU}`);
   } catch (error) {
     const msg = "No se ha podido enviar el sms.";
 
@@ -1442,7 +1441,7 @@ export const verTodo = async (req, res) => {
   };
 
   try {
-    const result = await axios.post("http://localhost:8100/api/fraudes", {
+    const result = await axios.post(`http://${serverAPI}:8100/api/fraudes`, {
       fraude,
     });
     const datos = {

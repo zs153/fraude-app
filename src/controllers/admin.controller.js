@@ -5,6 +5,7 @@ import {
   arrTiposPerfil,
   tiposMovimiento,
 } from '../public/js/enumeraciones'
+import { serverAPI } from '../config/settings'
 
 export const mainPage = async (req, res) => {
   const user = req.user
@@ -18,7 +19,7 @@ export const perfilPage = async (req, res) => {
   }
 
   try {
-    const result = await axios.post("http://localhost:8100/api/usuario", {
+    const result = await axios.post(`http://${serverAPI}:8100/api/usuario`, {
       usuario,
     })
 
@@ -53,7 +54,7 @@ export const changePassword = async (req, res) => {
   }
 
   try {
-    await axios.post("http://localhost:8100/api/usuarios/cambio", {
+    await axios.post(`http://${serverAPI}:8100/api/usuarios/cambio`, {
       usuario,
       movimiento,
     })
@@ -77,7 +78,7 @@ export const updatePerfil = async (req, res) => {
   }
 
   try {
-    await axios.post("http://localhost:8100/api/usuarios/perfil", {
+    await axios.post(`http://${serverAPI}:8100/api/usuarios/perfil`, {
       usuario,
       movimiento,
     })

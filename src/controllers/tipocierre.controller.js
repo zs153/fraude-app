@@ -1,12 +1,13 @@
 import axios from 'axios'
 import { tiposMovimiento } from '../public/js/enumeraciones'
+import { serverAPI } from '../config/settings'
 
 export const mainPage = async (req, res) => {
   const user = req.user
   const tipo = {}
 
   try {
-    const result = await axios.post('http://localhost:8100/api/tipos/cierres', {
+    const result = await axios.post(`http://${serverAPI}:8100/api/tipos/cierres`, {
       tipo,
     })
     const datos = {
@@ -42,7 +43,7 @@ export const editPage = async (req, res) => {
   }
 
   try {
-    const result = await axios.post('http://localhost:8100/api/tipos/cierre', {
+    const result = await axios.post(`http://${serverAPI}:8100/api/tipos/cierre`, {
       tipo,
     })
     const datos = {
@@ -70,7 +71,7 @@ export const insert = async (req, res) => {
   }
 
   try {
-    await axios.post('http://localhost:8100/api/tipos/cierres/insert', {
+    await axios.post(`http://${serverAPI}:8100/api/tipos/cierres/insert`, {
       tipo,
       movimiento,
     })
@@ -96,7 +97,7 @@ export const update = async (req, res) => {
   }
 
   try {
-    await axios.post('http://localhost:8100/api/tipos/cierres/update', {
+    await axios.post(`http://${serverAPI}:8100/api/tipos/cierres/update`, {
       tipo,
       movimiento,
     })
@@ -122,7 +123,7 @@ export const remove = async (req, res) => {
   }
 
   try {
-    await axios.post('http://localhost:8100/api/tipos/cierres/delete', {
+    await axios.post(`http://${serverAPI}:8100/api/tipos/cierres/delete`, {
       tipo,
       movimiento,
     })

@@ -1,12 +1,13 @@
 import axios from "axios";
 import { tiposMovimiento, arrEstadosHito } from "../public/js/enumeraciones";
+import { serverAPI } from "../config/settings";
 
 export const mainPage = async (req, res) => {
   const user = req.user;
   const tipo = {}
 
   try {
-    const result = await axios.post("http://localhost:8100/api/tipos/hitos", {
+    const result = await axios.post(`http://${serverAPI}:8100/api/tipos/hitos`, {
       tipo,
     });
     const datos = {
@@ -44,7 +45,7 @@ export const editPage = async (req, res) => {
   };
 
   try {
-    const result = await axios.post("http://localhost:8100/api/tipos/hito", {
+    const result = await axios.post(`http://${serverAPI}:8100/api/tipos/hito`, {
       tipo,
     });
     const datos = {
@@ -74,12 +75,12 @@ export const insert = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8100/api/tipos/hitos/insert", {
+    await axios.post(`http://${serverAPI}:8100/api/tipos/hitos/insert`, {
       tipo,
       movimiento,
     });
 
-    res.redirect(`/admin/tipos/hitos`);
+    res.redirect(`/ admin / tipos / hitos`);
   } catch (error) {
     let msg = "No se ha podido crear el tipo.";
 
@@ -101,7 +102,7 @@ export const update = async (req, res) => {
   };
 
   try {
-    axios.post("http://localhost:8100/api/tipos/hitos/update", {
+    axios.post(`http://${serverAPI}:8100/api/tipos/hitos/update`, {
       tipo,
       movimiento,
     });
@@ -127,12 +128,12 @@ export const remove = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8100/api/tipos/hitos/delete", {
+    await axios.post(`http://${serverAPI}:8100/api/tipos/hitos/delete`, {
       tipo,
       movimiento,
     });
 
-    res.redirect(`/admin/tipos/hitos`);
+    res.redirect(`/ admin / tipos / hitos`);
   } catch (error) {
     const msg = "No se ha podido elminar el tipo.";
 

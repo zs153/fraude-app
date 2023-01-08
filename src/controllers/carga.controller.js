@@ -1,12 +1,13 @@
 import axios from "axios";
 import { tiposMovimiento, estadosCarga } from "../public/js/enumeraciones";
+import { serverAPI } from "../config/settings";
 
 export const mainPage = async (req, res) => {
   const user = req.user;
   const carga = {}
 
   try {
-    const result = await axios.post("http://localhost:8100/api/cargas", {
+    const result = await axios.post(`http://${serverAPI}:8100/api/cargas`, {
       carga,
     });
     const datos = {
@@ -50,7 +51,7 @@ export const insert = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8100/api/cargas/insert", {
+    await axios.post(`http://${serverAPI}:8100/api/cargas/insert`, {
       carga,
       movimiento,
     });

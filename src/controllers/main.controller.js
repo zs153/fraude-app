@@ -1,6 +1,8 @@
+import { serverAUTH } from "../config/settings";
+
 // pages
 export const mainPage = async (req, res) => {
-  res.redirect('http://localhost:9000/auth')
+  res.redirect(`http://${serverAUTH}:9000/auth`)
 };
 
 // proc

@@ -1,12 +1,13 @@
 import axios from "axios";
 import { tiposMovimiento } from "../public/js/enumeraciones";
+import { serverAPI } from '../config/settings'
 
 export const mainPage = async (req, res) => {
   const user = req.user;
   const tipo = {}
 
   try {
-    const result = await axios.post("http://localhost:8100/api/tipos/fraudes", {
+    const result = await axios.post(`http://${serverAPI}:8100/api/tipos/fraudes`, {
       tipo,
     });
     const datos = {
@@ -41,7 +42,7 @@ export const editPage = async (req, res) => {
   };
 
   try {
-    const result = await axios.post("http://localhost:8100/api/tipos/fraude", {
+    const result = await axios.post(`http://${serverAPI}:8100/api/tipos/fraude`, {
       tipo,
     });
     const datos = {
@@ -69,12 +70,12 @@ export const insert = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8100/api/tipos/fraudes/insert", {
+    await axios.post(`http://${serverAPI}:8100/api/tipos/fraudes/insert`, {
       tipo,
       movimiento,
     });
 
-    res.redirect(`/admin/tipos/fraudes`);
+    res.redirect(`/ admin / tipos / fraudes`);
   } catch (error) {
     let msg = "No se ha podido crear el tipo.";
 
@@ -95,7 +96,7 @@ export const update = async (req, res) => {
   };
 
   try {
-    axios.post("http://localhost:8100/api/tipos/fraudes/update", {
+    axios.post(`http://${serverAPI}:8100/api/tipos/fraudes/update`, {
       tipo,
       movimiento,
     });
@@ -121,12 +122,12 @@ export const remove = async (req, res) => {
   };
 
   try {
-    await axios.post("http://localhost:8100/api/tipos/fraudes/delete", {
+    await axios.post(`http://${serverAPI}:8100/api/tipos/fraudes/delete`, {
       tipo,
       movimiento,
     });
 
-    res.redirect(`/admin/tipos/fraudes`);
+    res.redirect(`/ admin / tipos / fraudes`);
   } catch (error) {
     const msg = "No se ha podido elminar el tipo.";
 

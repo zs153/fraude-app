@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { estadosFraude, tiposMovimiento } from '../public/js/enumeraciones'
+import { serverAPI } from '../config/settings'
 
 // pages
 export const mainPage = async (req, res) => {
@@ -14,7 +14,7 @@ export const mainPage = async (req, res) => {
   let hasta = new Date(yearMonthDayToUTCString(currentYear, currentMonth, lastDayMonth)).toISOString().slice(0, 10)
 
   try {
-    const cargas = await axios.post('http://localhost:8100/api/cargas', {
+    const cargas = await axios.post(`http://${serverAPI}:8100/api/cargas`, {
       carga,
     })
     const datos = {
@@ -47,18 +47,18 @@ export const generarEstadistica = async (req, res) => {
   }
 
   try {
-    const tipos = await axios.post('http://localhost:8100/api/tipos/cierres', {
+    const tipos = await axios.post(`http://${serverAPI}:8100/api/tipos/cierres`, {
       tipo,
     })
-    const result = await axios.post('http://localhost:8100/api/estadisticas/sitact', {
+    const result = await axios.post(`http://${serverAPI}:8100/api/estadisticas/sitact`, {
       fraude,
       periodo,
       tipos: tipos.data,
     })
-    const oficinas = await axios.post('http://localhost:8100/api/estadisticas/oficinas', {
+    const oficinas = await axios.post(`http://${serverAPI}:8100/api/estadisticas/oficinas`, {
       fraude,
     })
-    const cargas = await axios.post('http://localhost:8100/api/cargas', {
+    const cargas = await axios.post(`http://${serverAPI}:8100/api/cargas`, {
       carga,
     })
 
