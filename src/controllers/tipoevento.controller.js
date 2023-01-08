@@ -76,7 +76,7 @@ export const insert = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/ admin / tipos / eventos`);
+    res.redirect(`/admin/tipos/eventos`);
   } catch (error) {
     let msg = "No se ha podido crear el tipo.";
 
@@ -128,7 +128,7 @@ export const remove = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/ admin / tipos / eventos`);
+    res.redirect(`/admin/tipos/eventos`);
   } catch (error) {
     const msg = "No se ha podido elminar el tipo.";
 

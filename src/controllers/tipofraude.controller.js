@@ -75,7 +75,7 @@ export const insert = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/ admin / tipos / fraudes`);
+    res.redirect(`/admin/tipos/`);
   } catch (error) {
     let msg = "No se ha podido crear el tipo.";
 
@@ -127,7 +127,7 @@ export const remove = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/ admin / tipos / fraudes`);
+    res.redirect(`/admin/tipos/fraudes`);
   } catch (error) {
     const msg = "No se ha podido elminar el tipo.";
 

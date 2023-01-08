@@ -1050,7 +1050,7 @@ export const insertHito = async (req, res) => {
       });
     }
 
-    res.redirect(`/ admin / fraudes / hitoseventos / ${fraude.IDFRAU}`);
+    res.redirect(`/admin/fraudes/hitoseventos/${fraude.IDFRAU}`);
   } catch (error) {
     const msg = "No se ha podido insertar el hito.";
 
@@ -1082,7 +1082,7 @@ export const updateHito = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/ admin / fraudes / hitoseventos / ${fraude.IDFRAU}`);
+    res.redirect(`/admin/fraudes/hitoseventos/${fraude.IDFRAU}`);
   } catch (error) {
     const msg = "No se ha podido actualizar el hito.";
 
@@ -1111,7 +1111,7 @@ export const removeHito = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/ admin / fraudes / hitoseventos / ${fraude.IDFRAU}`);
+    res.redirect(`/admin/fraudes/hitoseventos/${fraude.IDFRAU}`);
   } catch (error) {
     const msg = "No se ha podido acceder borrar el hito.";
 
@@ -1140,7 +1140,7 @@ export const archivoHito = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/ admin / fraudes / hitoseventos / ${fraude.IDFRAU}`);
+    res.redirect(`/admin/fraudes/hitoseventos/${fraude.IDFRAU}`);
   } catch (error) {
     const msg = "No se ha podido acceder borrar el hito.";
 
@@ -1173,7 +1173,7 @@ export const insertEvento = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/ admin / fraudes / hitoseventos / ${fraude.IDFRAU}`);
+    res.redirect(`/admin/fraudes/hitoseventos/${fraude.IDFRAU}`);
   } catch (error) {
     const msg = "No se ha podido insertar el evento.";
 
@@ -1204,7 +1204,7 @@ export const updateEvento = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/ admin / fraudes / hitoseventos / ${fraude.IDFRAU}`);
+    res.redirect(`/admin/fraudes/hitoseventos/${fraude.IDFRAU}`);
   } catch (error) {
     const msg = "No se ha podido actualizar el evento.";
 
@@ -1233,7 +1233,7 @@ export const removeEvento = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/ admin / fraudes / hitoseventos / ${fraude.IDFRAU}`);
+    res.redirect(`/admin/fraudes/hitoseventos/${fraude.IDFRAU}`);
   } catch (error) {
     const msg = "No se ha podido acceder borrar el evento.";
 
@@ -1268,7 +1268,7 @@ export const insertSms = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/ admin / fraudes / smss / ${fraude.IDFRAU}`);
+    res.redirect(`/admin/fraudes/smss/${fraude.IDFRAU}`);
   } catch (error) {
     const msg = "No se ha podido insertar el ejercicio.";
 
@@ -1299,7 +1299,7 @@ export const updateSms = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/ admin / fraudes / smss / ${fraude.IDFRAU}`);
+    res.redirect(`/admin/fraudes/smss/${fraude.IDFRAU}`);
   } catch (error) {
     const msg = "No se ha podido actualizar el sms.";
 
@@ -1328,7 +1328,7 @@ export const removeSms = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/ admin / fraudes / smss / ${fraude.IDFRAU}`);
+    res.redirect(`/admin/fraudes/smss/${fraude.IDFRAU}`);
   } catch (error) {
     const msg = "No se ha podido borrar el sms.";
 
@@ -1362,7 +1362,7 @@ export const insertRelacion = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/ admin / fraudes / relaciones / ${fraude.IDFRAU}`);
+    res.redirect(`/admin/fraudes/relaciones/${fraude.IDFRAU}`);
   } catch (error) {
     const msg = "No se ha podido insertar el ejercicio.";
 
@@ -1393,7 +1393,7 @@ export const updateRelacion = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/ admin / fraudes / relaciones / ${fraude.IDFRAU}`);
+    res.redirect(`/admin/fraudes/relaciones/${fraude.IDFRAU}`);
   } catch (error) {
     const msg = "No se ha podido actualizar la relación.";
 
@@ -1422,7 +1422,7 @@ export const removeRelacion = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/ admin / fraudes / relaciones / ${fraude.IDFRAU}`);
+    res.redirect(`/admin/fraudes/relaciones/${fraude.IDFRAU}`);
   } catch (error) {
     const msg = "No se ha podido enviar el sms.";
 

@@ -80,7 +80,7 @@ export const insert = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/ admin / tipos / hitos`);
+    res.redirect(`/admin/tipos/hitos`);
   } catch (error) {
     let msg = "No se ha podido crear el tipo.";
 
@@ -133,7 +133,7 @@ export const remove = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/ admin / tipos / hitos`);
+    res.redirect(`/admin/tipos/hitos`);
   } catch (error) {
     const msg = "No se ha podido elminar el tipo.";
 
