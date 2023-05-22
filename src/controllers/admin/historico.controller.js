@@ -1,7 +1,8 @@
 import axios from 'axios'
 import { serverAPI,puertoAPI } from '../../config/settings'
-import { arrTiposRol,arrTiposPerfil,arrEstadosUsuario,estadosUsuario,tiposMovimiento,tiposRol } from '../../public/js/enumeraciones'
+import { tiposMovimiento,arrTiposRol,arrTiposPerfil } from '../../public/js/enumeraciones'
 
+// pages
 export const mainPage = async (req, res) => {
   const user = req.user
 
@@ -15,7 +16,6 @@ export const mainPage = async (req, res) => {
 
   if (cursor) {
     context = {
-      oficina: user.rol === tiposRol.admin ? 0 : user.oficina,
       limit: limit + 1,
       direction: dir,
       cursor: JSON.parse(convertCursorToNode(JSON.stringify(cursor))),
@@ -23,7 +23,6 @@ export const mainPage = async (req, res) => {
     }
   } else {
     context = {
-      oficina: user.rol === tiposRol.admin ? 0 : user.oficina,
       limit: limit + 1,
       direction: dir,
       cursor: {
@@ -35,7 +34,7 @@ export const mainPage = async (req, res) => {
   }
 
   try {
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/usuarios`, {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/historicos`, {
       context,
     })
 
@@ -45,7 +44,7 @@ export const mainPage = async (req, res) => {
     let prevCursor = ''
     
     if (hasNextUsers) {
-      nextCursor= dir === 'next' ? usuarios[limit - 1].NOMUSU : usuarios[0].NOMUSU
+      nextCursor = dir === 'next' ? usuarios[limit - 1].NOMUSU : usuarios[0].NOMUSU
       prevCursor = dir === 'next' ? usuarios[0].NOMUSU : usuarios[limit - 1].NOMUSU
 
       usuarios.pop()
@@ -69,44 +68,15 @@ export const mainPage = async (req, res) => {
     cursor = {
       next: nextCursor,
       prev: prevCursor,
-    }    
+    }
     const datos = {
       usuarios,
-      hasPrevUsers,
       hasNextUsers,
+      hasPrevUsers,
       cursor: convertNodeToCursor(JSON.stringify(cursor)),
-      estadosUsuario,
     }
 
-    res.render('admin/usuarios', { user, datos })
-  } catch (error) {
-    if (error.response?.status === 400) {
-      res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
-      });
-    } else {
-      res.render("admin/error500", {
-        alerts: [{ msg: error }],
-      });
-    }
-  }
-}
-export const addPage = async (req, res) => {
-  const user = req.user
-  const filteredRol = arrTiposRol.filter(itm => itm.id <= user.rol)
-
-  try {
-    const oficinas = await axios.post(`http://${serverAPI}:${puertoAPI}/api/oficina`, {
-      context: {},
-    })
-    const datos = {
-      oficinas: oficinas.data.data,
-      filteredRol,
-      arrTiposPerfil,
-      arrEstadosUsuario,
-    }
-
-    res.render('admin/usuarios/add', { user, datos })
+    res.render('admin/historicos', { user, datos })
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
@@ -127,7 +97,7 @@ export const editPage = async (req, res) => {
     const oficinas = await axios.post(`http://${serverAPI}:${puertoAPI}/api/oficina`, {
       context: {}
     })
-    const usuario = await axios.post(`http://${serverAPI}:${puertoAPI}/api/usuario`, {
+    const usuario = await axios.post(`http://${serverAPI}:${puertoAPI}/api/historico`, {
       context: {
         IDUSUA: req.params.id,
       },
@@ -137,10 +107,9 @@ export const editPage = async (req, res) => {
       oficinas: oficinas.data.data,
       filteredRol,
       arrTiposPerfil,
-      arrEstadosUsuario,
     }
 
-    res.render('admin/usuarios/edit', { user, datos })
+    res.render('admin/historicos/edit', { user, datos })
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
@@ -155,68 +124,30 @@ export const editPage = async (req, res) => {
 }
 
 // proc
-
-export const insert = async (req, res) => {
-  const user = req.user
-
-  try {
-    const usuario = {
-      NOMUSU: req.body.nomusu.toUpperCase(),
-      OFIUSU: req.body.ofiusu,
-      ROLUSU: req.body.rolusu,
-      USERID: req.body.userid.toLowerCase(),
-      EMAUSU: req.body.emausu,
-      PERUSU: req.body.perusu,
-      TELUSU: req.body.telusu,
-      STAUSU: req.body.stausu,
-    }
-    const movimiento = {
-      USUMOV: user.id,
-      TIPMOV: tiposMovimiento.crearUsuario,
-    }
-
-    await axios.post(`http://${serverAPI}:${puertoAPI}/api/usuarios/insert`, {
-      usuario,
-      movimiento,
-    })
-
-    res.redirect(`/admin/usuarios?part=${req.query.part}`)
-  } catch (error) {
-    if (error.response?.status === 400) {
-      res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.data }],
-      });
-    } else {
-      res.render("admin/error500", {
-        alerts: [{ msg: error }],
-      });
-    }
-  }
-}
 export const update = async (req, res) => {
   const user = req.user
   const usuario = {
     IDUSUA: req.body.idusua,
-    NOMUSU: req.body.nomusu.toUpperCase(),
+    NOMUSU: req.body.nomusu,
     OFIUSU: req.body.ofiusu,
     ROLUSU: req.body.rolusu,
+    USERID: req.body.userid,
     EMAUSU: req.body.emausu,
     PERUSU: req.body.perusu,
     TELUSU: req.body.telusu,
-    STAUSU: req.body.stausu,
   }
   const movimiento = {
     USUMOV: user.id,
-    TIPMOV: tiposMovimiento.modificarUsuario,
+    TIPMOV: tiposMovimiento.modificarHistorico,
   }
 
   try {
-    await axios.post(`http://${serverAPI}:${puertoAPI}/api/usuarios/update`, {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/historicos/update`, {
       usuario,
       movimiento,
     })
 
-    res.redirect(`/admin/usuarios?part=${req.query.part}`)
+    res.redirect(`/admin/historicos?part=${req.query.part}`)
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
@@ -229,23 +160,24 @@ export const update = async (req, res) => {
     }
   }
 }
-export const remove = async (req, res) => {
+export const activar = async (req, res) => {
   const user = req.user
-  const usuario = {
-    IDUSUA: req.body.idusua,
-  }
-  const movimiento = {
-    USUMOV: user.id,
-    TIPMOV: tiposMovimiento.borrarUsuario,
-  }
 
   try {
-    await axios.post(`http://${serverAPI}:${puertoAPI}/api/usuarios/delete`, {
+    const usuario = {
+      IDUSUA: req.body.idusua,
+    }
+    const movimiento = {
+      USUMOV: user.id,
+      TIPMOV: tiposMovimiento.activarHistorico,
+    }
+
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/historicos/activar`, {
       usuario,
       movimiento,
     })
-
-    res.redirect(`/admin/usuarios?part=${req.query.part}`)
+    
+    res.redirect(`/admin/historicos?part=${req.query.part}`)
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {

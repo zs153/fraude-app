@@ -6,7 +6,7 @@ import path from "path";
 // import main ruta
 import mainRouter from "./routes/main.router";
 // import main ruta
-// import adminRouter from "./routes/admin.router";
+import adminRouter from "./routes/admin.router";
 // import cargaRouter from "./routes/carga.router";
 // import estadisticaRouter from "./routes/estadisticas.router";
 // import fraudeRouter from "./routes/fraude.router";
@@ -35,7 +35,7 @@ app.use(express.static(path.join(__dirname, "/public")));
 // main route
 app.use("/", mainRouter);
 // admin routes
-// app.use("/admin", adminRouter);
+app.use("/admin", adminRouter);
 // app.use("/admin", usuarioRouter);
 // app.use("/admin", oficinaRouter);
 // app.use("/admin", fraudeRouter);

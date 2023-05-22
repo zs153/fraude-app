@@ -3,3 +3,4 @@ dist/
 .vscode/
 .env
 dist.tar.gz
+Gruntfile.js
