@@ -334,6 +334,33 @@ export const find = async (context) => {
   const result = await simpleExecute(query, binds)
   return result.rows
 }
+export const findAll = async (context) => {
+  // bind
+  let query = '';
+  let bind = {
+    liqfra: context.liquidador,
+    ofifra: context.oficina,
+    limit: context.limit,
+    part: context.part,
+  };
+
+  if (context.direction === 'next') {
+    bind.idfrau = context.cursor.next;
+    query = "WITH datos AS (SELECT ff.idfrau,ff.fecfra,ff.ejefra,ff.nifcon,ff.nomcon,ff.obsfra,oo.desofi,tf.destip FROM fraudes ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifra INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra WHERE (ff.ofifra = :ofifra AND ff.stafra = 0) OR ff.liqfra = :liqfra AND (ff.nifcon LIKE '%' || :part || '%' OR ff.nomcon LIKE '%' || :part || '%' OR ff.ejefra LIKE '%' || :part || '%' OR ff.fecfra LIKE '%' || :part || '%' OR tf.destip LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%' OR :part IS NULL)) SELECT * FROM datos WHERE idfrau > :idfrau ORDER BY idfrau ASC FETCH NEXT :limit ROWS ONLY"
+  } else {
+    bind.idfrau = context.cursor.prev;
+    query = "WITH datos AS (SELECT ff.idfrau,ff.fecfra,ff.ejefra,ff.nifcon,ff.nomcon,ff.obsfra,oo.desofi,tf.destip FROM fraudes ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifra INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra WHERE (ff.ofifra = :ofifra AND ff.stafra = 0) OR ff.liqfra = :liqfra AND (ff.nifcon LIKE '%' || :part || '%' OR ff.nomcon LIKE '%' || :part || '%' OR ff.ejefra LIKE '%' || :part || '%' OR ff.fecfra LIKE '%' || :part || '%' OR tf.destip LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%' OR :part IS NULL)) SELECT * FROM datos WHERE idfrau < :idfrau ORDER BY idfrau DESC FETCH NEXT :limit ROWS ONLY"
+  }
+
+  // proc
+  const ret = await simpleExecute(query, bind)
+
+  if (ret) {
+    return ({ stat: ret.rows.length, data: ret.rows })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+};
 export const extended = async (context) => {
   let query = extendedQuery
   let binds = {}

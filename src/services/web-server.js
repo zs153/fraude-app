@@ -1,6 +1,7 @@
 import http from 'http'
 import express from 'express'
-import { puerto } from '../config/settings'
+import cors from 'cors'
+import { port } from '../config/settings'
 // routes
 import apiOficinaRouter from '../routes/oficina.router'
 import apiGenteRouter from '../routes/gente.router'
@@ -22,6 +23,7 @@ function initialize() {
 
     // middleware
     app.use(express.json())
+    app.use(cors())
 
     // routes
     app.use('/api', apiOficinaRouter)
@@ -37,9 +39,9 @@ function initialize() {
 
     // server
     httpServer
-      .listen(puerto)
+      .listen(port)
       .on('listening', () => {
-        console.log(`Web server listening on port:${puerto}`)
+        console.log(`Web server listening on conexion: port:${port} `)
 
         resolve()
       })

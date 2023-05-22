@@ -363,17 +363,16 @@ export const fraude = async (req, res) => {
   }
 }
 export const fraudes = async (req, res) => {
-  const context = req.body.fraude
+  // context
+  const context = req.body.context
 
+  // proc
   try {
-    const result = await DAL.find(context)
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
+    const result = await DAL.findAll(context)
+
+    res.status(200).json(result)
   } catch (err) {
-    res.status(500).end()
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
 export const extendedFraudes = async (req, res) => {
