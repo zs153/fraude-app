@@ -20,7 +20,7 @@ export const find = async (context) => {
     query += " WHERE uu.emausu = :emausu";
   } else if (context.OFIUSU) {
     query += " WHERE uu.ofiusu = :ofiusu";
-  }
+  } 
 
   // proc
   const ret = await simpleExecute(query, bind)
@@ -63,6 +63,7 @@ export const findAll = async (context) => {
     return ({ stat: 0, data: [] })
   }
 };
+
 export const insert = async (context) => {
   // bind
   let bind = context

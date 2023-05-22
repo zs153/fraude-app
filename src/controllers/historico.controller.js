@@ -1,6 +1,6 @@
-import * as DAL from '../models/oficina.model'
+import * as DAL from '../models/historico.model'
 
-export const oficina = async (req, res) => {
+export const historico = async (req, res) => {
   // context
   const context = req.body.context
 
@@ -13,7 +13,7 @@ export const oficina = async (req, res) => {
     res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
-export const oficinas = async (req, res) => {
+export const historicos = async (req, res) => {
   // context
   const context = req.body.context
 
@@ -26,40 +26,23 @@ export const oficinas = async (req, res) => {
     res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
-
-export const crear = async (req, res) => {
-  // context
-  const oficina = {
-    DESOFI: req.body.oficina.DESOFI,
-    CODOFI: req.body.oficina.CODOFI,
-  }
-  const movimiento = {
-    USUMOV: req.body.movimiento.USUMOV,
-    TIPMOV: req.body.movimiento.TIPMOV,
-  }
-  const context = Object.assign(oficina, movimiento)
-
-  // proc
-  try {
-    const result = await DAL.insert(context)
-
-    res.status(200).json(result)
-  } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
-  }
-}
 export const modificar = async (req, res) => {
   // context
-  const oficina = {
-    IDOFIC: req.body.oficina.IDOFIC,
-    DESOFI: req.body.oficina.DESOFI,
-    CODOFI: req.body.oficina.CODOFI,
+  const usuario = {
+    IDUSUA: req.body.usuario.IDUSUA,
+    NOMUSU: req.body.usuario.NOMUSU,
+    OFIUSU: req.body.usuario.OFIUSU,
+    ROLUSU: req.body.usuario.ROLUSU,
+    USERID: req.body.usuario.USERID,
+    EMAUSU: req.body.usuario.EMAUSU,
+    PERUSU: req.body.usuario.PERUSU,
+    TELUSU: req.body.usuario.TELUSU,
   }
   const movimiento = {
     USUMOV: req.body.movimiento.USUMOV,
     TIPMOV: req.body.movimiento.TIPMOV,
   }
-  const context = Object.assign(oficina, movimiento)
+  const context = Object.assign(usuario, movimiento)
 
   // proc
   try {
@@ -70,20 +53,20 @@ export const modificar = async (req, res) => {
     res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
-export const borrar = async (req, res) => {
+export const activar = async (req, res) => {
   // context
-  const oficina = {
-    IDOFIC: req.body.oficina.IDOFIC,
+  const usuario = {
+    IDUSUA: req.body.usuario.IDUSUA,
   }
   const movimiento = {
     USUMOV: req.body.movimiento.USUMOV,
     TIPMOV: req.body.movimiento.TIPMOV,
   }
-  const context = Object.assign(oficina, movimiento)
+  const context = Object.assign(usuario, movimiento)
 
   // proc
   try {
-    const result = await DAL.remove(context)
+    const result = await DAL.activar(context)
 
     res.status(200).json(result)
   } catch (err) {

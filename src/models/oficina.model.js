@@ -1,89 +1,97 @@
-import oracledb from 'oracledb'
+import { BIND_OUT, NUMBER } from "oracledb";
 import { simpleExecute } from '../services/database.js'
 
-const baseQuery = `SELECT 
-  oo.*
-FROM oficinas oo
-`
-const insertSql = `BEGIN FRAUDE_PKG.INSERTOFICINA(
-  :desofi, 
-  :codofi,
-  :usumov,
-  :tipmov,
-  :idofic
-); END;
-`
-const updateSql = `BEGIN FRAUDE_PKG.UPDATEOFICINA(
-  :idofic,
-  :desofi, 
-  :codofi,
-  :usumov,
-  :tipmov
-); END;
-`
-const deleteSql = `BEGIN FRAUDE_PKG.DELETEOFICINA(
-  :idofic,
-  :usumov,
-  :tipmov 
-); END;
-`
+const baseQuery = "SELECT * FROM oficinas oo"
+const insertSql = "BEGIN FRAUDE_PKG.INSERTOFICINA(:desofi, :codofi,:usumov,:tipmov,:idofic); END;"
+const updateSql = "BEGIN FRAUDE_PKG.UPDATEOFICINA(:idofic,:desofi, :codofi,:usumov,:tipmov); END;"
+const removeSql = "BEGIN FRAUDE_PKG.DELETEOFICINA(:idofic,:usumov,:tipmov ); END;"
 
 export const find = async (context) => {
+  // bind
   let query = baseQuery
-  let binds = {}
+  const bind = context
 
   if (context.IDOFIC) {
-    binds.idofic = context.IDOFIC
-    query += `WHERE oo.idofic = :idofic`
+    query += " WHERE idofic = :idofic"
   }
   if (context.CODOFI) {
-    binds.codofi = context.CODOFI
-    query += `WHERE oo.codofi = :codofi`
+    query += " WHERE codofi = :codofi"
   }
+  
+  // proc
+  const ret = await simpleExecute(query, bind)
 
-  const result = await simpleExecute(query, binds)
-  return result.rows
+  if (ret) {
+    return ({ stat: ret.rows.length, data: ret.rows })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
 }
+export const findAll = async (context) => {
+  // bind
+  let query = '';
+  let bind = {
+    limit: context.limit,
+    part: context.part,
+  };
 
-export const insert = async (bind) => {
-  bind.idofic = {
-    dir: oracledb.BIND_OUT,
-    type: oracledb.NUMBER,
+  if (context.direction === 'next') {
+    bind.idofic = context.cursor.next;
+    query = "WITH datos AS (SELECT * FROM oficinas WHERE desofi LIKE '%' || :part || '%' OR :part IS NULL) SELECT * FROM datos WHERE idofic > :idofic ORDER BY idofic ASC FETCH NEXT :limit ROWS ONLY"
+  } else {
+    bind.idofic = context.cursor.prev;
+    query = "WITH datos AS (SELECT * FROM oficinas WHERE desofi LIKE '%' || :part || '%' OR :part IS NULL) SELECT * FROM datos WHERE idofic < :idofic ORDER BY idofic DESC FETCH NEXT :limit ROWS ONLY"
   }
 
-  try {
-    const result = await simpleExecute(insertSql, bind)
+  // proc
+  const ret = await simpleExecute(query, bind)
 
-    bind.idofic = await result.outBinds.idofic
-  } catch (error) {
-    bind = null
+  if (ret) {
+    return ({ stat: ret.rows.length, data: ret.rows })
+  } else {
+    return ({ stat: 0, data: [] })
   }
+};
+export const insert = async (context) => {
+  // bind
+  let bind = context
+  bind.IDOFIC = {
+    dir: BIND_OUT,
+    type: NUMBER,
+  };
 
-  return bind
+  // proc
+  const ret = await simpleExecute(insertSql, bind)
+
+  if (ret) {
+    bind.IDOFIC = ret.outBinds.IDOFIC
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
 }
-export const update = async (bind) => {
-  let result
+export const update = async (context) => {
+  // bind
+  const bind = context
+  
+  // proc
+  const ret = await simpleExecute(updateSql, bind)
 
-  try {
-    await simpleExecute(updateSql, bind)
-
-    result = bind
-  } catch (error) {
-    result = null
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
   }
-
-  return result
 }
-export const remove = async (bind) => {
-  let result
+export const remove = async (context) => {
+  // bind
+  const bind = context
+  // proc
+  const ret = await simpleExecute(removeSql, bind)
 
-  try {
-    await simpleExecute(deleteSql, bind)
-
-    result = bind
-  } catch (error) {
-    result = null
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
   }
-
-  return result
 }

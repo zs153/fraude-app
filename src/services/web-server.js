@@ -4,8 +4,9 @@ import cors from 'cors'
 import { port } from '../config/settings'
 // routes
 import apiOficinaRouter from '../routes/oficina.router'
-import apiGenteRouter from '../routes/gente.router'
 import apiUsuarioRouter from '../routes/usuario.router'
+import apiHistoricoRouter from '../routes/historico.router'
+import apiGenteRouter from '../routes/gente.router'
 import apiFraudeRouter from '../routes/fraude.router'
 import apiTipoHitoRouter from '../routes/tipohito.router'
 import apiTipoFraudeRouter from '../routes/tipofraude.router'
@@ -27,8 +28,9 @@ function initialize() {
 
     // routes
     app.use('/api', apiOficinaRouter)
-    app.use('/api', apiGenteRouter)
     app.use('/api', apiUsuarioRouter)
+    app.use('/api', apiHistoricoRouter)
+    app.use('/api', apiGenteRouter)
     app.use('/api', apiFraudeRouter)
     app.use('/api', apiTipoHitoRouter)
     app.use('/api', apiTipoFraudeRouter)

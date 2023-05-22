@@ -26,7 +26,6 @@ export const usuarios = async (req, res) => {
     res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
-
 export const crear = async (req, res) => {
   // context
   const usuario = {
