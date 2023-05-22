@@ -1,10 +1,11 @@
 import express from "express";
-import { mainPage, logout } from "../controllers/main.controller";
+import authRoutes from '../middleware/auth'
+import { cleanPage, mainPage } from "../controllers/main.controller";
 
 const mainRouter = express.Router();
 
-// acciones
+// paginas
 mainRouter.get("/", mainPage);
-mainRouter.get("/logout", logout);
+mainRouter.get('/clean', authRoutes, cleanPage)
 
 export default mainRouter;

@@ -4,7 +4,7 @@ import {
   perfilPage,
   changePassword,
   updatePerfil,
-} from '../controllers/admin.controller'
+} from '../controllers/admin/admin.controller'
 import authRoutes from '../middleware/auth'
 
 const adminRouter = express.Router()

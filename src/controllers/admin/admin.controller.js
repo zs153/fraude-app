@@ -4,8 +4,8 @@ import {
   arrTiposRol,
   arrTiposPerfil,
   tiposMovimiento,
-} from '../public/js/enumeraciones'
-import { serverAPI } from '../config/settings'
+} from '../../public/js/enumeraciones'
+import { serverAPI } from '../../config/settings'
 
 export const mainPage = async (req, res) => {
   const user = req.user

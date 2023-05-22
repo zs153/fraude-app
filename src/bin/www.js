@@ -2,7 +2,6 @@
 /**
  * Module dependencies.
  */
-import debug from "debug";
 import http from "http";
 import app from "../app";
 import { puerto } from '../config/settings'
@@ -26,7 +25,7 @@ const normalizePort = (val) => {
 /**
  * Get port from environment and store in Express.
  */
-const port = normalizePort(puerto || "4000");
+const port = normalizePort(puerto || "4200");
 app.set("port", port);
 
 /**
@@ -63,8 +62,7 @@ const onError = (error) => {
 const onListening = () => {
   const addr = server.address();
   const bind = typeof addr === "string" ? `pipe ${addr}` : `port ${addr.port}`;
-  debug(`Listening on ${bind}`);
-
+  // debug(`Listening on ${bind}`);
   console.log(`Listening on ${bind}`)
 };
 

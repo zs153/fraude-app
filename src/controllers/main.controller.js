@@ -1,21 +1,16 @@
-import { serverAUTH } from "../config/settings";
+import { serverWEB, puertoWEB, serverAUTH, puertoAUTH } from '../config/settings'
 
-// pages
 export const mainPage = async (req, res) => {
-  res.redirect(`http://${serverAUTH}:9000/auth`)
+  const strUrl = encodeURIComponent(`${serverWEB}:${puertoWEB}`);
+
+  res.redirect(`http://${serverAUTH}:${puertoAUTH}/log/login/?valid=${strUrl}`)
 };
+export const cleanPage = async (req, res) => {
+  const user = req.user
+  const datos = {
+    serverWEB,
+    puertoWEB,
+  }
 
-// proc
-export const logout = async (req, res) => {
-  const options = {
-    path: "/",
-    sameSite: true,
-    maxAge: 1,
-    httpOnly: true,
-  };
-
-  res.clearCookie("x-access_token");
-  res.cookie("auth", undefined, options);
-
-  res.redirect('/')
-};
+  res.render('clean', { user, datos })
+}
