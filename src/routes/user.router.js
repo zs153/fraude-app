@@ -14,6 +14,7 @@ userRouter.get('/perfil/:userid', authRoutes, usuario.perfilPage)
 
 // fraude
 userRouter.get("/fraudes", authRoutes,fraude.mainPage);
+userRouter.get("/fraudes/resueltos", authRoutes, fraude.resueltosPage);
 userRouter.get("/fraudes/add", authRoutes, fraude.addPage);
 userRouter.get("/fraudes/edit/:id", authRoutes, fraude.editPage);
 userRouter.get("/fraudes/resolver/:id", authRoutes, fraude.resolverPage);

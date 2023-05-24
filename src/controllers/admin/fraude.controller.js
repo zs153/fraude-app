@@ -5,8 +5,8 @@ import {
   tiposMovimiento,
   tiposRol,
   estadosHito,
-} from "../public/js/enumeraciones";
-import { serverAPI } from '../config/settings'
+} from "../../public/js/enumeraciones";
+import { serverAPI } from '../../config/settings'
 
 // pages fraude
 export const mainPage = async (req, res) => {

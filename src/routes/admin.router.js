@@ -4,6 +4,7 @@ import { verifyTokenAndAdmin,verifyTokenAndResp } from "../middleware/auth";
 import * as oficina from '../controllers/admin/oficina.controller'
 import * as usuario from '../controllers/admin/usuario.controller'
 import * as historico from '../controllers/admin/historico.controller'
+import * as fraude from '../controllers/admin/fraude.controller'
 
 const adminRouter = express.Router()
 
@@ -14,13 +15,20 @@ adminRouter.get('/oficinas/add', verifyTokenAndAdmin, oficina.addPage)
 adminRouter.get('/oficinas/edit/:id', verifyTokenAndAdmin, oficina.editPage)
 
 // historico
-adminRouter.get('/historicos', verifyTokenAndResp, historico.mainPage)
-adminRouter.get('/historicos/edit/:id', verifyTokenAndResp, historico.editPage)
+adminRouter.get('/historicos', verifyTokenAndAdmin, historico.mainPage)
+adminRouter.get('/historicos/edit/:id', verifyTokenAndAdmin, historico.editPage)
 
 // usuarios
 adminRouter.get('/usuarios', verifyTokenAndResp, usuario.mainPage)
 adminRouter.get('/usuarios/add', verifyTokenAndResp, usuario.addPage)
 adminRouter.get('/usuarios/edit/:id', verifyTokenAndResp, usuario.editPage)
+
+// fraudes
+adminRouter.get("/fraudes", verifyTokenAndResp, fraude.mainPage);
+adminRouter.get("/fraudes/add", verifyTokenAndResp, fraude.addPage);
+adminRouter.get("/fraudes/edit/:id", verifyTokenAndResp, fraude.editPage);
+adminRouter.get("/fraudes/resolver/:id", verifyTokenAndResp, fraude.resolverPage);
+adminRouter.get("/fraudes/ejercicio/:id", verifyTokenAndResp, fraude.ejercicioPage);
 
 //--------------- procedures
 // oficinas
