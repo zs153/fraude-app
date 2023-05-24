@@ -348,18 +348,16 @@ const deleteRelacionFromRec = (req) => {
 
 // fraude
 export const fraude = async (req, res) => {
-  const context = req.body.fraude
+  // context
+  const context = req.body.context
 
+  // proc
   try {
     const result = await DAL.find(context)
 
-    if (result.length === 1) {
-      return res.status(200).json(result[0])
-    } else {
-      res.status(404).end()
-    }
+    res.status(200).json(result)
   } catch (err) {
-    res.status(500).end()
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
 export const fraudes = async (req, res) => {
@@ -391,16 +389,36 @@ export const extendedFraudes = async (req, res) => {
   }
 }
 export const crear = async (req, res) => {
-  try {
-    const result = await DAL.insert(insertFromRec(req))
+  // context
+  const fraude = {
+    FECFRA: req.body.fraude.FECFRA,
+    NIFCON: req.body.fraude.NIFCON,
+    NOMCOM: req.body.fraude.NOMCOM,
+    EMACON: req.body.fraude.EMACON,
+    TELCON: req.body.fraude.TELCON,
+    MOVCON: req.body.fraude.MOVCON,
+    REFFRA: req.body.fraude.REFFRA,
+    TIPFRA: req.body.fraude.TIPFRA,
+    EJEFRA: req.body.fraude.EJEFRA,
+    OFIFRA: req.body.fraude.OFIFRA,
+    OBSFRA: req.body.fraude.OBSFRA,
+    FUNFRA: req.body.fraude.FUNFRA,
+    LIQFRA: req.body.fraude.LIQFRA,
+    STAFRA: req.body.fraude.STAFRA,
+  }
+  const movimiento = {
+    USUMOV: req.body.movimiento.USUMOV,
+    TIPMOV: req.body.movimiento.TIPMOV,
+  }
+  const context = Object.assign(fraude, movimiento)
 
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
+  // proc
+  try {
+    const result = await DAL.insert(context)
+
+    res.status(200).json(result)
   } catch (err) {
-    res.status(500).end()
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
 export const modificar = async (req, res) => {

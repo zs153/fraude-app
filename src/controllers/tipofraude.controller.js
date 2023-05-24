@@ -36,72 +36,87 @@ const deleteFromRec = (req) => {
 };
 
 export const tipo = async (req, res) => {
-  const context = req.body.tipo;
+  const context = req.body.context;
 
   try {
     const result = await DAL.find(context);
 
-    if (result.length === 1) {
-      return res.status(200).json(result[0]);
-    } else {
-      res.status(404).end();
-    }
+    res.status(200).json(result)
   } catch (err) {
     res.status(500).end();
   }
 };
 export const tipos = async (req, res) => {
-  const context = req.body.tipo
+  // context
+  const context = req.body.context
 
+  // proc
   try {
-    const result = await DAL.find(context);
+    const result = await DAL.findAll(context)
 
-    if (result !== null) {
-      res.status(200).json(result);
-    } else {
-      res.status(404).end();
-    }
+    res.status(200).json(result)
   } catch (err) {
-    res.status(500).end();
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
-};
-
+}
 export const crear = async (req, res) => {
-  try {
-    const result = await DAL.insert(insertFromRec(req));
+  // context
+  const tipo = {
+    DESTIP: req.body.tipo.DESTIP,
+  }
+  const movimiento = {
+    USUMOV: req.body.movimiento.USUMOV,
+    TIPMOV: req.body.movimiento.TIPMOV,
+  }
+  const context = Object.assign(tipo, movimiento)
 
-    if (result !== null) {
-      res.status(200).json(result);
-    } else {
-      res.status(404).end();
-    }
+  // proc
+  try {
+    const result = await DAL.insert(context)
+
+    res.status(200).json(result)
   } catch (err) {
-    res.status(500).end();
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 };
 export const modificar = async (req, res) => {
-  try {
-    const result = await DAL.update(updateFromRec(req));
+  // context
+  const tipo = {
+    IDTIPO: req.body.tipo.IDTIPO,
+    DESOFI: req.body.tipo.DESTIP,
+  }
+  const movimiento = {
+    USUMOV: req.body.movimiento.USUMOV,
+    TIPMOV: req.body.movimiento.TIPMOV,
+  }
+  const context = Object.assign(tipo, movimiento)
 
-    if (result !== null) {
-      res.status(200).json(result);
-    } else {
-      res.status(404).end();
-    }
+  // proc
+  try {
+    const result = await DAL.update(context)
+
+    res.status(200).json(result)
   } catch (err) {
-    res.status(500).end();
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 };
 export const borrar = async (req, res) => {
-  try {
-    const result = await DAL.remove(deleteFromRec(req));
+  // context
+  const tipo = {
+    IDTIPO: req.body.tipo.IDTIPO,
+  }
+  const movimiento = {
+    USUMOV: req.body.movimiento.USUMOV,
+    TIPMOV: req.body.movimiento.TIPMOV,
+  }
+  const context = Object.assign(tipo, movimiento)
 
-    if (result !== null) {
-      res.status(200).json(result);
-    } else {
-      res.status(404).end();
-    }
+  // proc
+  try {
+    const result = await DAL.remove(context)
+
+    res.status(200).json(result)
   } catch (err) {
-    res.status(500).end();
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 };
