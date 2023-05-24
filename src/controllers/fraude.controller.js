@@ -1,7 +1,47 @@
 import * as DAL from '../models/fraude.model'
 
-// fraudes
-const insertFromRec = (req) => {
+// fraude
+export const fraude = async (req, res) => {
+  // context
+  const context = req.body.context
+
+  // proc
+  try {
+    const result = await DAL.fraude(context)
+
+    res.status(200).json(result)
+  } catch (err) {
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+  }
+}
+export const fraudes = async (req, res) => {
+  // context
+  const context = req.body.context
+
+  // proc
+  try {
+    const result = await DAL.fraudes(context)
+
+    res.status(200).json(result)
+  } catch (err) {
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+  }
+}
+export const extended = async (req, res) => {
+  // context
+  const context = req.body.context
+
+  // proc
+  try {
+    const result = await DAL.extended(context)
+
+    res.status(200).json(result)
+  } catch (err) {
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+  }
+}
+export const crearFraude = async (req, res) => {
+  // context
   const fraude = {
     fecfra: req.body.fraude.FECFRA,
     nifcon: req.body.fraude.NIFCON,
@@ -22,10 +62,21 @@ const insertFromRec = (req) => {
     usumov: req.body.movimiento.USUMOV,
     tipmov: req.body.movimiento.TIPMOV,
   }
+  const context = Object.assign(fraude, movimiento)
 
-  return Object.assign(fraude, movimiento)
+  console.log(context);
+  // proc
+  try {
+    const result = await DAL.insert(context)
+
+    res.status(200).json(result)
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+  }
 }
-const updateFromRec = (req) => {
+export const modificarFraude = async (req, res) => {
+  // context
   const fraude = {
     idfrau: req.body.fraude.IDFRAU,
     fecfra: req.body.fraude.FECFRA,
@@ -43,10 +94,19 @@ const updateFromRec = (req) => {
     usumov: req.body.movimiento.USUMOV,
     tipmov: req.body.movimiento.TIPMOV,
   }
+  const context = Object.assign(fraude, movimiento)
 
-  return Object.assign(fraude, movimiento)
+  // proc
+  try {
+    const result = await DAL.update(context)
+
+    res.status(200).json(result)
+  } catch (err) {
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+  }  
 }
-const deleteFromRec = (req) => {
+export const borrarFraude = async (req, res) => {
+  // context
   const fraude = {
     idfrau: req.body.fraude.IDFRAU,
   }
@@ -54,10 +114,19 @@ const deleteFromRec = (req) => {
     usumov: req.body.movimiento.USUMOV,
     tipmov: req.body.movimiento.TIPMOV,
   }
+  const context = Object.assign(fraude, movimiento)
 
-  return Object.assign(fraude, movimiento)
+  // proc
+  try {
+    const result = await DAL.remove(context)
+
+    res.status(200).json(result)
+  } catch (err) {
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+  }
 }
-const asignFromRec = (req) => {
+export const asignarFraude = async (req, res) => {
+  // context
   const fraude = {
     idfrau: req.body.fraude.IDFRAU,
     liqfra: req.body.fraude.LIQFRA,
@@ -67,10 +136,19 @@ const asignFromRec = (req) => {
     usumov: req.body.movimiento.USUMOV,
     tipmov: req.body.movimiento.TIPMOV,
   }
+  const context = Object.assign(fraude, movimiento)
 
-  return Object.assign(fraude, movimiento)
+  // proc
+  try {
+    const result = await DAL.change(context)
+
+    res.status(200).json(result)
+  } catch (err) {
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+  }
 }
-const unasignFromRec = (req) => {
+export const desasignarFraude = async (req, res) => {
+  // context
   const fraude = {
     idfrau: req.body.fraude.IDFRAU,
     liqfra: req.body.fraude.LIQFRA,
@@ -80,10 +158,19 @@ const unasignFromRec = (req) => {
     usumov: req.body.movimiento.USUMOV,
     tipmov: req.body.movimiento.TIPMOV,
   }
+  const context = Object.assign(fraude, movimiento)
 
-  return Object.assign(fraude, movimiento)
+  // proc
+  try {
+    const result = await DAL.unasing(context)
+
+    res.status(200).json(result)
+  } catch (err) {
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+  }
 }
-const cierreFromRec = (req) => {
+export const cierreFraude = async (req, res) => {
+  // context
   const fraude = {
     idfrau: req.body.fraude.IDFRAU,
     liqfra: req.body.fraude.LIQFRA,
@@ -97,12 +184,47 @@ const cierreFromRec = (req) => {
     usumov: req.body.movimiento.USUMOV,
     tipmov: req.body.movimiento.TIPMOV,
   }
+  const context = Object.assign(fraude, cierre, movimiento)
 
-  return Object.assign(fraude, cierre, movimiento)
+  // proc
+  try {
+    const result = await DAL.close(context)
+
+    res.status(200).json(result)
+  } catch (err) {
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+  }
 }
 
-// hitos
-const insertHitoFromRec = (req) => {
+// hito
+export const hito = async (req, res) => {
+  // context
+  const context = req.body.context
+
+  // proc
+  try {
+    const result = await DAL.hito(context)
+
+    res.status(200).json(result)
+  } catch (err) {
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+  }
+}
+export const hitos = async (req, res) => {
+  // context
+  const context = req.body.context
+
+  // proc
+  try {
+    const result = await DAL.hitos(context)
+
+    res.status(200).json(result)
+  } catch (err) {
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+  }
+}
+export const crearHito = async (req, res) => {
+  // context
   const fraude = {
     idfrau: req.body.fraude.IDFRAU,
   }
@@ -116,10 +238,19 @@ const insertHitoFromRec = (req) => {
     usumov: req.body.movimiento.USUMOV,
     tipmov: req.body.movimiento.TIPMOV,
   }
+  const context = Object.assign(fraude, hito, movimiento)
 
-  return Object.assign(fraude, hito, movimiento)
+  // proc
+  try {
+    const result = await DAL.insertHito(context)
+
+    res.status(200).json(result)
+  } catch (err) {
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+  }
 }
-const updateHitoFromRec = (req) => {
+export const modificarHito = async (req, res) => {
+  // context
   const hito = {
     idhito: req.body.hito.IDHITO,
     fechit: req.body.hito.FECHIT,
@@ -131,10 +262,42 @@ const updateHitoFromRec = (req) => {
     usumov: req.body.movimiento.USUMOV,
     tipmov: req.body.movimiento.TIPMOV,
   }
+  const context = Object.assign(hito, movimiento)
 
-  return Object.assign(hito, movimiento)
+  // proc
+  try {
+    const result = await DAL.updateHito(context)
+
+    res.status(200).json(result)
+  } catch (err) {
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+  }
 }
-const insertHitoLiqFromRec = (req) => {
+export const borrarHito = async (req, res) => {
+  // context
+  const fraude = {
+    idfrau: req.body.fraude.IDFRAU,
+  }
+  const hito = {
+    idhito: req.body.hito.IDHITO,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+  const context = Object.assign(fraude, hito, movimiento)
+
+  // proc
+  try {
+    const result = await DAL.removeHito(context)
+
+    res.status(200).json(result)
+  } catch (err) {
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+  }
+}
+export const crearHitoLiquidacion = async (req, res) => {
+  // context
   const fraude = {
     idfrau: req.body.fraude.IDFRAU,
   }
@@ -154,10 +317,19 @@ const insertHitoLiqFromRec = (req) => {
     usumov: req.body.movimiento.USUMOV,
     tipmov: req.body.movimiento.TIPMOV,
   }
+  const context = Object.assign(fraude, hito, liquidacion, movimiento)
 
-  return Object.assign(fraude, hito, liquidacion, movimiento)
+  // proc
+  try {
+    const result = await DAL.insertHitoLiquidacion(context)
+
+    res.status(200).json(result)
+  } catch (err) {
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+  }
 }
-const insertHitoSanFromRec = (req) => {
+export const crearHitoSancion = async (req, res) => {
+  // context
   const fraude = {
     idfrau: req.body.fraude.IDFRAU,
   }
@@ -177,24 +349,19 @@ const insertHitoSanFromRec = (req) => {
     usumov: req.body.movimiento.USUMOV,
     tipmov: req.body.movimiento.TIPMOV,
   }
+  const context = Object.assign(fraude, hito, sancion, movimiento)
 
-  return Object.assign(fraude, hito, sancion, movimiento)
-}
-const deleteHitoFromRec = (req) => {
-  const fraude = {
-    idfrau: req.body.fraude.IDFRAU,
-  }
-  const hito = {
-    idhito: req.body.hito.IDHITO,
-  }
-  const movimiento = {
-    usumov: req.body.movimiento.USUMOV,
-    tipmov: req.body.movimiento.TIPMOV,
-  }
+  // proc
+  try {
+    const result = await DAL.insertHitoSancion(context)
 
-  return Object.assign(fraude, hito, movimiento)
+    res.status(200).json(result)
+  } catch (err) {
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+  }
 }
-const cambioEstadoHitoFromRec = (req) => {
+export const cambioEstadoHito = async (req, res) => {
+  // context
   const hito = {
     idhito: req.body.hito.IDHITO,
     stahit: req.body.hito.STAHIT,
@@ -203,397 +370,15 @@ const cambioEstadoHitoFromRec = (req) => {
     usumov: req.body.movimiento.USUMOV,
     tipmov: req.body.movimiento.TIPMOV,
   }
-
-  return Object.assign(hito, movimiento)
-}
-
-// eventos
-const insertEventoFromRec = (req) => {
-  const fraude = {
-    idfrau: req.body.fraude.IDFRAU,
-  }
-  const evento = {
-    feceve: req.body.evento.FECEVE,
-    tipeve: req.body.evento.TIPEVE,
-    obseve: req.body.evento.OBSEVE,
-  }
-  const movimiento = {
-    usumov: req.body.movimiento.USUMOV,
-    tipmov: req.body.movimiento.TIPMOV,
-  }
-
-  return Object.assign(fraude, evento, movimiento)
-}
-const updateEventoFromRec = (req) => {
-  const evento = {
-    ideven: req.body.evento.IDEVEN,
-    feceve: req.body.evento.FECEVE,
-    tipeve: req.body.evento.TIPEVE,
-    obseve: req.body.evento.OBSEVE,
-  }
-  const movimiento = {
-    usumov: req.body.movimiento.USUMOV,
-    tipmov: req.body.movimiento.TIPMOV,
-  }
-
-  return Object.assign(evento, movimiento)
-}
-const deleteEventoFromRec = (req) => {
-  const fraude = {
-    idfrau: req.body.fraude.IDFRAU,
-  }
-  const evento = {
-    ideven: req.body.evento.IDEVEN,
-  }
-  const movimiento = {
-    usumov: req.body.movimiento.USUMOV,
-    tipmov: req.body.movimiento.TIPMOV,
-  }
-
-  return Object.assign(fraude, evento, movimiento)
-}
-
-// smss
-const insertSmsFromRec = (req) => {
-  const fraude = {
-    IDFRAU: req.body.fraude.IDFRAU,
-  }
-  const sms = {
-    fecsms: req.body.sms.FECSMS,
-    texsms: req.body.sms.TEXSMS,
-    movsms: req.body.sms.MOVSMS,
-    stasms: req.body.sms.STASMS,
-  }
-  const movimiento = {
-    usumov: req.body.movimiento.USUMOV,
-    tipmov: req.body.movimiento.TIPMOV,
-  }
-
-  return Object.assign(fraude, sms, movimiento)
-}
-const updateSmsFromRec = (req) => {
-  const sms = {
-    idsmss: req.body.sms.IDSMSS,
-    fecsms: req.body.sms.FECSMS,
-    texsms: req.body.sms.TEXSMS,
-    movsms: req.body.sms.MOVSMS,
-  }
-  const movimiento = {
-    usumov: req.body.movimiento.USUMOV,
-    tipmov: req.body.movimiento.TIPMOV,
-  }
-
-  return Object.assign(sms, movimiento)
-}
-const deleteSmsFromRec = (req) => {
-  const fraude = {
-    IDFRAU: req.body.fraude.IDFRAU,
-  }
-  const sms = {
-    idsmss: req.body.sms.IDSMSS,
-  }
-  const movimiento = {
-    usumov: req.body.movimiento.USUMOV,
-    tipmov: req.body.movimiento.TIPMOV,
-  }
-
-  return Object.assign(fraude, sms, movimiento)
-}
-
-// relacionados
-const insertRelacionFromRec = (req) => {
-  const fraude = {
-    IDFRAU: req.body.fraude.IDFRAU,
-  }
-  const relacion = {
-    fecrel: req.body.relacion.FECREL,
-    nifcon: req.body.relacion.NIFCON,
-    nomcon: req.body.relacion.NOMCON,
-  }
-  const movimiento = {
-    usumov: req.body.movimiento.USUMOV,
-    tipmov: req.body.movimiento.TIPMOV,
-  }
-
-  return Object.assign(fraude, relacion, movimiento)
-}
-const updateRelacionFromRec = (req) => {
-  const relacion = {
-    idrela: req.body.relacion.IDRELA,
-    fecrel: req.body.relacion.FECREL,
-    nifcon: req.body.relacion.NIFCON,
-    nomcon: req.body.relacion.NOMCON,
-  }
-  const movimiento = {
-    usumov: req.body.movimiento.USUMOV,
-    tipmov: req.body.movimiento.TIPMOV,
-  }
-
-  return Object.assign(relacion, movimiento)
-}
-const deleteRelacionFromRec = (req) => {
-  const fraude = {
-    IDFRAU: req.body.fraude.IDFRAU,
-  }
-  const relacion = {
-    idrela: req.body.relacion.IDRELA,
-  }
-  const movimiento = {
-    usumov: req.body.movimiento.USUMOV,
-    tipmov: req.body.movimiento.TIPMOV,
-  }
-
-  return Object.assign(fraude, relacion, movimiento)
-}
-
-// fraude
-export const fraude = async (req, res) => {
-  // context
-  const context = req.body.context
+  const context = Object.assign(hito, movimiento)
 
   // proc
   try {
-    const result = await DAL.find(context)
+    const result = await DAL.close(context)
 
     res.status(200).json(result)
   } catch (err) {
     res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
-  }
-}
-export const fraudes = async (req, res) => {
-  // context
-  const context = req.body.context
-
-  // proc
-  try {
-    const result = await DAL.findAll(context)
-
-    res.status(200).json(result)
-  } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
-  }
-}
-export const extendedFraudes = async (req, res) => {
-  const context = req.body.fraude
-
-  try {
-    const result = await DAL.extended(context)
-
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
-  } catch (err) {
-    res.status(500).end()
-  }
-}
-export const crear = async (req, res) => {
-  // context
-  const fraude = {
-    FECFRA: req.body.fraude.FECFRA,
-    NIFCON: req.body.fraude.NIFCON,
-    NOMCOM: req.body.fraude.NOMCOM,
-    EMACON: req.body.fraude.EMACON,
-    TELCON: req.body.fraude.TELCON,
-    MOVCON: req.body.fraude.MOVCON,
-    REFFRA: req.body.fraude.REFFRA,
-    TIPFRA: req.body.fraude.TIPFRA,
-    EJEFRA: req.body.fraude.EJEFRA,
-    OFIFRA: req.body.fraude.OFIFRA,
-    OBSFRA: req.body.fraude.OBSFRA,
-    FUNFRA: req.body.fraude.FUNFRA,
-    LIQFRA: req.body.fraude.LIQFRA,
-    STAFRA: req.body.fraude.STAFRA,
-  }
-  const movimiento = {
-    USUMOV: req.body.movimiento.USUMOV,
-    TIPMOV: req.body.movimiento.TIPMOV,
-  }
-  const context = Object.assign(fraude, movimiento)
-
-  // proc
-  try {
-    const result = await DAL.insert(context)
-
-    res.status(200).json(result)
-  } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
-  }
-}
-export const modificar = async (req, res) => {
-  try {
-    const result = await DAL.update(updateFromRec(req))
-
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
-  } catch (err) {
-    res.status(500).end()
-  }
-}
-export const borrar = async (req, res) => {
-  try {
-    const result = await DAL.remove(deleteFromRec(req))
-
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
-  } catch (err) {
-    res.status(500).end()
-  }
-}
-export const asignar = async (req, res) => {
-  try {
-    const result = await DAL.change(asignFromRec(req))
-
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
-  } catch (err) {
-    res.status(500).end()
-  }
-}
-export const desasignar = async (req, res) => {
-  try {
-    const result = await DAL.unasing(unasignFromRec(req))
-
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
-  } catch (err) {
-    res.status(500).end()
-  }
-}
-export const cierre = async (req, res) => {
-  try {
-    const result = await DAL.cierre(cierreFromRec(req))
-
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
-  } catch (err) {
-    res.status(500).end()
-  }
-}
-
-// hito
-export const hito = async (req, res) => {
-  const context = req.body.hito
-
-  try {
-    const result = await DAL.findHitos(context)
-
-    if (result.length === 1) {
-      res.status(200).json(result[0])
-    } else {
-      res.status(404).end()
-    }
-  } catch (err) {
-    res.status(500).end()
-  }
-}
-export const hitos = async (req, res) => {
-  const context = req.body.fraude
-
-  try {
-    const result = await DAL.findHitos(context)
-
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(400).end()
-    }
-  } catch (err) {
-    res.status(500).end()
-  }
-}
-export const crearHito = async (req, res) => {
-  try {
-    const result = await DAL.insertHito(insertHitoFromRec(req))
-
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
-  } catch (err) {
-    res.status(500).end()
-  }
-}
-export const modificarHito = async (req, res) => {
-  try {
-    const result = await DAL.updateHito(updateHitoFromRec(req))
-
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
-  } catch (err) {
-    res.status(500).end()
-  }
-}
-export const borrarHito = async (req, res) => {
-  try {
-    const result = await DAL.removeHito(deleteHitoFromRec(req))
-
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
-  } catch (err) {
-    res.status(500).end()
-  }
-}
-export const crearHitoLiquidacion = async (req, res) => {
-  try {
-    const result = await DAL.insertHitoLiquidacion(insertHitoLiqFromRec(req))
-
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
-  } catch (err) {
-    res.status(500).end()
-  }
-}
-export const crearHitoSancion = async (req, res) => {
-  try {
-    const result = await DAL.insertHitoSancion(insertHitoSanFromRec(req))
-
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
-  } catch (err) {
-    res.status(500).end()
-  }
-}
-export const cambioEstadoHito = async (req, res) => {
-  try {
-    const result = await DAL.cambioEstadoHito(cambioEstadoHitoFromRec(req))
-
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
-  } catch (err) {
-    res.status(500).end()
   }
 }
 
@@ -629,42 +414,74 @@ export const eventos = async (req, res) => {
   }
 }
 export const crearEvento = async (req, res) => {
-  try {
-    const result = await DAL.insertEvento(insertEventoFromRec(req))
+  // context
+  const fraude = {
+    idfrau: req.body.fraude.IDFRAU,
+  }
+  const evento = {
+    feceve: req.body.evento.FECEVE,
+    tipeve: req.body.evento.TIPEVE,
+    obseve: req.body.evento.OBSEVE,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+  const context = Object.assign(fraude, evento, movimiento)
 
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
+  // proc
+  try {
+    const result = await DAL.update(context)
+
+    res.status(200).json(result)
   } catch (err) {
-    res.status(500).end()
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
 export const modificarEvento = async (req, res) => {
-  try {
-    const result = await DAL.updateEvento(updateEventoFromRec(req))
+  // context
+  const evento = {
+    ideven: req.body.evento.IDEVEN,
+    feceve: req.body.evento.FECEVE,
+    tipeve: req.body.evento.TIPEVE,
+    obseve: req.body.evento.OBSEVE,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+  const context = Object.assign(evento, movimiento)
 
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
+  // proc
+  try {
+    const result = await DAL.update(context)
+
+    res.status(200).json(result)
   } catch (err) {
-    res.status(500).end()
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
 export const borrarEvento = async (req, res) => {
-  try {
-    const result = await DAL.removeEvento(deleteEventoFromRec(req))
+  // context
+  const fraude = {
+    idfrau: req.body.fraude.IDFRAU,
+  }
+  const evento = {
+    ideven: req.body.evento.IDEVEN,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+  const context = Object.assign(fraude, evento, movimiento)
 
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
+  // proc
+  try {
+    const result = await DAL.update(context)
+
+    res.status(200).json(result)
   } catch (err) {
-    res.status(500).end()
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
 
@@ -700,42 +517,75 @@ export const smss = async (req, res) => {
   }
 }
 export const crearSms = async (req, res) => {
-  try {
-    const result = await DAL.insertSms(insertSmsFromRec(req))
+  // context
+  const fraude = {
+    IDFRAU: req.body.fraude.IDFRAU,
+  }
+  const sms = {
+    fecsms: req.body.sms.FECSMS,
+    texsms: req.body.sms.TEXSMS,
+    movsms: req.body.sms.MOVSMS,
+    stasms: req.body.sms.STASMS,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+  const context = Object.assign(fraude, sms, movimiento)
 
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
+  // proc
+  try {
+    const result = await DAL.update(context)
+
+    res.status(200).json(result)
   } catch (err) {
-    res.status(500).end()
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
 export const modificarSms = async (req, res) => {
-  try {
-    const result = await DAL.updateSms(updateSmsFromRec(req))
+  // context
+  const sms = {
+    idsmss: req.body.sms.IDSMSS,
+    fecsms: req.body.sms.FECSMS,
+    texsms: req.body.sms.TEXSMS,
+    movsms: req.body.sms.MOVSMS,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+  const context = Object.assign(sms, movimiento)
 
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
+  // proc
+  try {
+    const result = await DAL.update(context)
+
+    res.status(200).json(result)
   } catch (err) {
-    res.status(500).end()
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
 export const borrarSms = async (req, res) => {
-  try {
-    const result = await DAL.removeSms(deleteSmsFromRec(req))
+  // context
+  const fraude = {
+    IDFRAU: req.body.fraude.IDFRAU,
+  }
+  const sms = {
+    idsmss: req.body.sms.IDSMSS,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+  const context = Object.assign(fraude, sms, movimiento)
 
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
+  // proc
+  try {
+    const result = await DAL.update(context)
+
+    res.status(200).json(result)
   } catch (err) {
-    res.status(500).end()
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
 
@@ -771,41 +621,73 @@ export const relaciones = async (req, res) => {
   }
 }
 export const crearRelacion = async (req, res) => {
-  try {
-    const result = await DAL.insertRelacion(insertRelacionFromRec(req))
+  // context
+  const fraude = {
+    IDFRAU: req.body.fraude.IDFRAU,
+  }
+  const relacion = {
+    fecrel: req.body.relacion.FECREL,
+    nifcon: req.body.relacion.NIFCON,
+    nomcon: req.body.relacion.NOMCON,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+  const context = Object.assign(fraude, relacion, movimiento)
 
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
+  // proc
+  try {
+    const result = await DAL.update(context)
+
+    res.status(200).json(result)
   } catch (err) {
-    res.status(500).end()
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
 export const modificarRelacion = async (req, res) => {
-  try {
-    const result = await DAL.updateRelacion(updateRelacionFromRec(req))
+  // context
+  const relacion = {
+    idrela: req.body.relacion.IDRELA,
+    fecrel: req.body.relacion.FECREL,
+    nifcon: req.body.relacion.NIFCON,
+    nomcon: req.body.relacion.NOMCON,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+  const context = Object.assign(relacion, movimiento)
 
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
+  // proc
+  try {
+    const result = await DAL.update(context)
+
+    res.status(200).json(result)
   } catch (err) {
-    res.status(500).end()
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
 export const borrarRelacion = async (req, res) => {
-  try {
-    const result = await DAL.removeRelacion(deleteRelacionFromRec(req))
+  // context
+  const fraude = {
+    IDFRAU: req.body.fraude.IDFRAU,
+  }
+  const relacion = {
+    idrela: req.body.relacion.IDRELA,
+  }
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  }
+  const context = Object.assign(fraude, relacion, movimiento)
 
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
+  // proc
+  try {
+    const result = await DAL.update(context)
+
+    res.status(200).json(result)
   } catch (err) {
-    res.status(500).end()
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }

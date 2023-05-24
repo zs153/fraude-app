@@ -1,4 +1,4 @@
-import oracledb from 'oracledb';
+import { BIND_OUT, NUMBER } from "oracledb";
 import { simpleExecute } from '../services/database.js';
 
 // fraude
@@ -37,7 +37,7 @@ const updateRelacionSql = "BEGIN FRAUDE_PKG.UPDATERELACION(:idrela,TO_DATE(:fecr
 const removeRelacionSql = "BEGIN FRAUDE_PKG.DELETERELACIONFRAUDE(:idfrau,:idrela,:usumov,:tipmov ); END;"
 
 // proc fraude
-export const find = async (context) => {
+export const fraude = async (context) => {
   let query = baseQuery
   let bind = context
 
@@ -64,8 +64,301 @@ export const find = async (context) => {
     return ({ stat: 0, data: [] })
   }
 }
-export const findAll = async (context) => {
+export const fraudes = async (context) => {
   // bind
+  let query = "WITH datos AS (SELECT ff.idfrau,ff.fecfra,ff.ejefra,ff.nifcon,ff.nomcon,ff.obsfra,ff.liqfra,ff.stafra,oo.desofi,tf.destip FROM fraudes ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifra INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra"
+  let bind = {
+    liqfra: context.liquidador,
+    stafra: context.estado,
+    limit: context.limit,
+    part: context.part,
+  };
+
+  if (context.oficina) {
+    bind.ofifra = context.oficina
+    query += " WHERE (ff.nifcon LIKE '%' || :part || '%' OR ff.nomcon LIKE '%' || :part || '%' OR ff.ejefra LIKE '%' || :part || '%' OR ff.fecfra LIKE '%' || :part || '%' OR tf.destip LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%' OR :part IS NULL) OR (ff.ofifra = :ofifra AND ff.stafra = 0) AND (ff.liqfra = :liqfra AND ff.stafra = :stafra))"
+  } else {
+    query += " WHERE (ff.nifcon LIKE '%' || :part || '%' OR ff.nomcon LIKE '%' || :part || '%' OR ff.ejefra LIKE '%' || :part || '%' OR ff.fecfra LIKE '%' || :part || '%' OR tf.destip LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%' OR :part IS NULL) AND (ff.liqfra = :liqfra AND ff.stafra = :stafra))"
+  }  
+  if (context.direction === 'next') {
+    bind.idfrau = context.cursor.next;
+    query += " SELECT * FROM datos WHERE idfrau > :idfrau ORDER BY idfrau ASC FETCH NEXT :limit ROWS ONLY"
+  } else {
+    bind.idfrau = context.cursor.prev;
+    query += " SELECT * FROM datos WHERE idfrau < :idfrau ORDER BY idfrau DESC FETCH NEXT :limit ROWS ONLY"
+  }
+
+  // proc
+  const ret = await simpleExecute(query, bind)
+
+  if (ret) {
+    return ({ stat: ret.rows.length, data: ret.rows })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+};
+export const extended = async (context) => {
+  let query = extendedQuery
+  let bind = {}
+
+  if (context.IDFRAU) {
+    bind.idfrau = context.IDFRAU
+  }
+
+  const result = await simpleExecute(query, bind)
+  return result.rows
+}
+export const insert = async (context) => {
+  // bind
+  let bind = context
+  bind.idfrau = {
+    dir: BIND_OUT,
+    type: NUMBER,
+  };
+
+  console.log(insertSql,bind);
+  // proc
+  const ret = await simpleExecute(insertSql, bind)
+
+  if (ret) {
+    bind.idfrau = ret.outBinds.idfrau
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+}
+export const update = async (context) => {
+  // bind
+  const bind = context
+  // proc
+  const ret = await simpleExecute(updateSql, bind)
+
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+}
+export const remove = async (context) => {
+  // bind
+  const bind = context
+  // proc
+  const ret = await simpleExecute(removeSql, bind)
+
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+}
+export const change = async (context) => {
+  // bind
+  const bind = context
+  // proc
+  const ret = await simpleExecute(cambioSql, bind)
+
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+}
+export const unasing = async (context) => {
+  // bind
+  const bind = context
+  // proc
+  const ret = await simpleExecute(unasignSql, bind)
+
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+}
+export const close = async (context) => {
+  // bind
+  const bind = context
+  // proc
+  const ret = await simpleExecute(cierreSql, bind)
+
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+}
+
+// proc hitos
+export const hito = async (context) => {
+  // bind
+  let query = hitosQuery
+  let bind = context
+
+  if (context.IDHITO) {
+    query += " WHERE hh.idhito = :idhito"
+  } else if (context.IDFRAU) {
+    query += " INNER JOIN hitosfraude hf ON hf.idhito = hh.idhito WHERE hf.idfrau = :idfrau"
+  }
+
+  // proc
+  const ret = await simpleExecute(query, bind)
+
+  if (ret) {
+    return ({ stat: ret.rows.length, data: ret.rows })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+}
+export const hitos = async (context) => {
+  // bind
+  // TODO
+  let query = "WITH datos AS (SELECT ff.idfrau,ff.fecfra,ff.ejefra,ff.nifcon,ff.nomcon,ff.obsfra,ff.liqfra,ff.stafra,oo.desofi,tf.destip FROM fraudes ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifra INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra"
+  let bind = {
+    liqfra: context.liquidador,
+    stafra: context.estado,
+    limit: context.limit,
+    part: context.part,
+  };
+
+  //TODO
+  if (context.oficina) {
+    bind.ofifra = context.oficina
+    query += " WHERE (ff.ofifra = :ofifra AND ff.stafra = 0) OR (ff.liqfra = :liqfra AND ff.stafra = :stafra) AND (ff.nifcon LIKE '%' || :part || '%' OR ff.nomcon LIKE '%' || :part || '%' OR ff.ejefra LIKE '%' || :part || '%' OR ff.fecfra LIKE '%' || :part || '%' OR tf.destip LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%' OR :part IS NULL))"
+  } else {
+    query += " WHERE (ff.liqfra = :liqfra AND ff.stafra = :stafra) AND (ff.nifcon LIKE '%' || :part || '%' OR ff.nomcon LIKE '%' || :part || '%' OR ff.ejefra LIKE '%' || :part || '%' OR ff.fecfra LIKE '%' || :part || '%' OR tf.destip LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%' OR :part IS NULL))"
+  }  
+  if (context.direction === 'next') {
+    bind.idfrau = context.cursor.next;
+    query += " SELECT * FROM datos WHERE idfrau > :idfrau ORDER BY idfrau ASC FETCH NEXT :limit ROWS ONLY"
+  } else {
+    bind.idfrau = context.cursor.prev;
+    query += " SELECT * FROM datos WHERE idfrau < :idfrau ORDER BY idfrau DESC FETCH NEXT :limit ROWS ONLY"
+  }
+
+  // proc
+  const ret = await simpleExecute(query, bind)
+
+  if (ret) {
+    return ({ stat: ret.rows.length, data: ret.rows })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+};
+export const insertHito = async (context) => {
+  // bind
+  let bind = context
+  bind.IDHITO = {
+    dir: oracledb.BIND_OUT,
+    type: oracledb.NUMBER,
+  }
+
+  // proc
+  const ret = await simpleExecute(insertHitoSql, bind)
+
+  if (ret) {
+    bind.IDUSUA = ret.outBinds.IDUSUA
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+}
+export const updateHito = async (context) => {
+  // bind
+  const bind = context
+  // proc
+  const ret = await simpleExecute(updateHitoSql, bind)
+
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+}
+export const removeHito = async (context) => {
+  // bind
+  const bind = context
+  // proc
+  const ret = await simpleExecute(removeHitoSql, bind)
+
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+}
+export const insertHitoLiquidacion = async (context) => {
+  // bind
+  let bind = context
+  bind.IDHITO = {
+    dir: oracledb.BIND_OUT,
+    type: oracledb.NUMBER,
+  }
+
+  // proc
+  const ret = await simpleExecute(insertHitoLiquidacionSql, bind)
+
+  if (ret) {
+    bind.IDHITO = ret.outBinds.IDHITO
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+}
+export const insertHitoSancion = async (context) => {
+  // bind
+  let bind = context
+  bind.IDHITO = {
+    dir: oracledb.BIND_OUT,
+    type: oracledb.NUMBER,
+  }
+
+  // proc
+  const ret = await simpleExecute(insertHitoSancionSql, bind)
+
+  if (ret) {
+    bind.IDHITO = ret.outBinds.IDHITO
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+}
+export const cambioEstadoHito = async (context) => {
+  // bind
+  const bind = context
+  // proc
+  const ret = await simpleExecute(cambioEstadoHitoSql, bind)
+
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+}
+
+// proc evento
+export const evento = async (context) => {
+  // bind
+  let query = eventosQuery
+  let bind = context
+
+  if (context.IDEVEN) {
+    query += " WHERE ee.ideven = :ideven"
+  } else if (context.IDFRAU) {
+    query += " INNER JOIN eventosfraude ef ON ef.ideven = ee.ideven WHERE ef.idfrau = :idfrau"
+  }
+
+  // proc
+  const ret = await simpleExecute(query, bind)
+
+  if (ret) {
+    return ({ stat: ret.rows.length, data: ret.rows })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+}
+export const eventos = async (context) => {
+  // bind
+  //TODO
   let query = "WITH datos AS (SELECT ff.idfrau,ff.fecfra,ff.ejefra,ff.nifcon,ff.nomcon,ff.obsfra,ff.liqfra,ff.stafra,oo.desofi,tf.destip FROM fraudes ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifra INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra"
   let bind = {
     liqfra: context.liquidador,
@@ -97,376 +390,241 @@ export const findAll = async (context) => {
     return ({ stat: 0, data: [] })
   }
 };
-export const extended = async (context) => {
-  let query = extendedQuery
-  let binds = {}
-
-  if (context.IDFRAU) {
-    binds.idfrau = context.IDFRAU
-  }
-
-  const result = await simpleExecute(query, binds)
-  return result.rows
-}
-export const insert = async (bind) => {
+export const insertEvento = async (context) => {
   // bind
   let bind = context
-  bind.IDOFIC = {
-    dir: BIND_OUT,
-    type: NUMBER,
-  };
+  bind.IDEVEN = {
+    dir: oracledb.BIND_OUT,
+    type: oracledb.NUMBER,
+  }
 
   // proc
-  const ret = await simpleExecute(insertSql, bind)
+  const ret = await simpleExecute(insertEventoSql, bind)
 
   if (ret) {
-    bind.IDOFIC = ret.outBinds.IDOFIC
+    bind.IDEVEN = ret.outBinds.IDEVEN
     return ({ stat: 1, data: bind })
   } else {
     return ({ stat: 0, data: [] })
   }
 }
-export const update = async (bind) => {
-  let result
+export const updateEvento = async (context) => {
+  // bind
+  const bind = context
+  // proc
+  const ret = await simpleExecute(updateEventoSql, bind)
 
-  try {
-    await simpleExecute(updateSql, bind)
-
-    result = bind
-  } catch (error) {
-    result = null
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
   }
-
-  return result
 }
-export const remove = async (bind) => {
-  let result
+export const removeEvento = async (context) => {
+  // bind
+  const bind = context
+  // proc
+  const ret = await simpleExecute(removeEventoSql, bind)
 
-  try {
-    await simpleExecute(removeSql, bind)
-
-    result = bind
-  } catch (error) {
-    result = null
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
   }
-
-  return result
-}
-export const change = async (bind) => {
-  let result
-
-  try {
-    await simpleExecute(cambioSql, bind)
-
-    result = bind
-  } catch (error) {
-    result = null
-  }
-
-  return result
-}
-export const unasing = async (bind) => {
-  let result
-
-  try {
-    await simpleExecute(unasignSql, bind)
-
-    result = bind
-  } catch (error) {
-    result = null
-  }
-
-  return result
-}
-export const cierre = async (bind) => {
-  let result
-
-  try {
-    await simpleExecute(cierreSql, bind)
-
-    result = bind
-  } catch (error) {
-    result = null
-  }
-
-  return result
-}
-
-// proc hitos
-export const findHitos = async (context) => {
-  let query = hitosQuery
-  let binds = {}
-
-  if (context.IDHITO) {
-    binds.idhito = context.IDHITO
-    query += " WHERE hh.idhito = :idhito"
-  } else if (context.IDFRAU) {
-    binds.idfrau = context.IDFRAU
-    query += " INNER JOIN hitosfraude hf ON hf.idhito = hh.idhito WHERE hf.idfrau = :idfrau"
-  }
-
-  const result = await simpleExecute(query, binds)
-  return result.rows
-}
-export const insertHito = async (bind) => {
-  bind.idhito = {
-    dir: oracledb.BIND_OUT,
-    type: oracledb.NUMBER,
-  }
-
-  try {
-    const result = await simpleExecute(insertHitoSql, bind)
-
-    bind.idhito = await result.outBinds.idhito
-  } catch (error) {
-    bind = null
-  }
-
-  return bind
-}
-export const updateHito = async (bind) => {
-  let result
-
-  try {
-    await simpleExecute(updateHitoSql, bind)
-
-    result = bind
-  } catch (error) {
-    result = null
-  }
-
-  return result
-}
-export const removeHito = async (bind) => {
-  let result
-
-  try {
-    await simpleExecute(removeHitoSql, bind)
-
-    result = bind
-  } catch (error) {
-    result = null
-  }
-
-  return result
-}
-export const insertHitoLiquidacion = async (bind) => {
-  bind.idhito = {
-    dir: oracledb.BIND_OUT,
-    type: oracledb.NUMBER,
-  }
-
-  try {
-    const result = await simpleExecute(insertHitoLiquidacionSql, bind)
-    bind.idhito = await result.outBinds.idhito
-  } catch (error) {
-    bind = null
-  }
-
-  return bind
-}
-export const insertHitoSancion = async (bind) => {
-  bind.idhito = {
-    dir: oracledb.BIND_OUT,
-    type: oracledb.NUMBER,
-  }
-
-  try {
-    const result = await simpleExecute(insertHitoSancionSql, bind)
-    bind.idhito = await result.outBinds.idhito
-  } catch (error) {
-    bind = null
-  }
-
-  return bind
-}
-export const cambioEstadoHito = async (bind) => {
-  let result
-
-  try {
-    await simpleExecute(cambioEstadoHitoSql, bind)
-
-    result = bind
-  } catch (error) {
-    result = null
-  }
-
-  return result
-}
-
-// proc evento
-export const findEventos = async (context) => {
-  let query = eventosQuery
-  let binds = {}
-
-  if (context.IDEVEN) {
-    binds.ideven = context.IDEVEN
-    query += " WHERE ee.ideven = :ideven"
-  } else if (context.IDFRAU) {
-    binds.idfrau = context.IDFRAU
-    query += " INNER JOIN eventosfraude ef ON ef.ideven = ee.ideven WHERE ef.idfrau = :idfrau"
-  }
-
-  const result = await simpleExecute(query, binds)
-  return result.rows
-}
-export const insertEvento = async (bind) => {
-  bind.ideven = {
-    dir: oracledb.BIND_OUT,
-    type: oracledb.NUMBER,
-  }
-
-  try {
-    const result = await simpleExecute(insertEventoSql, bind)
-
-    bind.ideven = await result.outBinds.ideven
-  } catch (error) {
-    bind = null
-  }
-
-  return bind
-}
-export const updateEvento = async (bind) => {
-  let result
-
-  try {
-    await simpleExecute(updateEventoSql, bind)
-
-    result = bind
-  } catch (error) {
-    result = null
-  }
-
-  return result
-}
-export const removeEvento = async (bind) => {
-  let result
-
-  try {
-    await simpleExecute(removeEventoSql, bind)
-
-    result = bind
-  } catch (error) {
-    result = null
-  }
-
-  return result
 }
 
 // proc sms
-export const findSmss = async (context) => {
+export const sms = async (context) => {
+  // bind
   let query = smssQuery
-  let binds = {}
+  let bind = context
 
   if (context.IDFRAU) {
-    binds.idfrau = context.IDFRAU
     query += " INNER JOIN smssfraude sf ON sf.idsmss = ss.idsmss WHERE sf.idfrau = :idfrau"
   } else if (context.IDSMSS) {
-    binds.idsmss = context.IDSMSS
     query += " WHERE ss.idsmss = :idsmss"
   }
 
-  const result = await simpleExecute(query, binds)
-  return result.rows
+  // proc
+  const ret = await simpleExecute(query, bind)
+
+  if (ret) {
+    return ({ stat: ret.rows.length, data: ret.rows })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
 }
-export const insertSms = async (bind) => {
-  bind.idsmss = {
+export const smss = async (context) => {
+  // bind
+  //TODO
+  let query = "WITH datos AS (SELECT ff.idfrau,ff.fecfra,ff.ejefra,ff.nifcon,ff.nomcon,ff.obsfra,ff.liqfra,ff.stafra,oo.desofi,tf.destip FROM fraudes ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifra INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra"
+  let bind = {
+    liqfra: context.liquidador,
+    stafra: context.estado,
+    limit: context.limit,
+    part: context.part,
+  };
+
+  if (context.oficina) {
+    bind.ofifra = context.oficina
+    query += " WHERE (ff.ofifra = :ofifra AND ff.stafra = 0) OR (ff.liqfra = :liqfra AND ff.stafra = :stafra) AND (ff.nifcon LIKE '%' || :part || '%' OR ff.nomcon LIKE '%' || :part || '%' OR ff.ejefra LIKE '%' || :part || '%' OR ff.fecfra LIKE '%' || :part || '%' OR tf.destip LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%' OR :part IS NULL))"
+  } else {
+    query += " WHERE (ff.liqfra = :liqfra AND ff.stafra = :stafra) AND (ff.nifcon LIKE '%' || :part || '%' OR ff.nomcon LIKE '%' || :part || '%' OR ff.ejefra LIKE '%' || :part || '%' OR ff.fecfra LIKE '%' || :part || '%' OR tf.destip LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%' OR :part IS NULL))"
+  }  
+  if (context.direction === 'next') {
+    bind.idfrau = context.cursor.next;
+    query += " SELECT * FROM datos WHERE idfrau > :idfrau ORDER BY idfrau ASC FETCH NEXT :limit ROWS ONLY"
+  } else {
+    bind.idfrau = context.cursor.prev;
+    query += " SELECT * FROM datos WHERE idfrau < :idfrau ORDER BY idfrau DESC FETCH NEXT :limit ROWS ONLY"
+  }
+
+  // proc
+  const ret = await simpleExecute(query, bind)
+
+  if (ret) {
+    return ({ stat: ret.rows.length, data: ret.rows })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+};
+export const insertSms = async (context) => {
+  // bind
+  let bind = context
+  bind.IDSMSS = {
     dir: oracledb.BIND_OUT,
     type: oracledb.NUMBER,
   }
 
-  try {
-    const result = await simpleExecute(insertSmsSql, bind)
+  // proc
+  const ret = await simpleExecute(insertSmsSql, bind)
 
-    bind.idsmss = await result.outBinds.idsmss
-  } catch (error) {
-    bind = null
+  if (ret) {
+    bind.IDSMSS = ret.outBinds.IDSMSS
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
   }
-
-  return bind
 }
-export const updateSms = async (bind) => {
-  let result
+export const updateSms = async (context) => {
+  // bind
+  const bind = context
+  // proc
+  const ret = await simpleExecute(updateSmsSql, bind)
 
-  try {
-    await simpleExecute(updateSmsSql, bind)
-
-    result = bind
-  } catch (error) {
-    result = null
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
   }
-
-  return result
 }
-export const removeSms = async (bind) => {
-  let result
+export const removeSms = async (context) => {
+  // bind
+  const bind = context
+  // proc
+  const ret = await simpleExecute(removeSmsSql, bind)
 
-  try {
-    await simpleExecute(removeSmsSql, bind)
-
-    result = bind
-  } catch (error) {
-    result = null
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
   }
-
-  return result
 }
 
 // proc relacion
-export const findRelaciones = async (context) => {
+export const relacion = async (context) => {
+  // bind
   let query = relacionesQuery
-  let binds = {}
+  let bind = context
 
   if (context.IDFRAU) {
-    binds.idfrau = context.IDFRAU
     query += " INNER JOIN relacionesfraude rf ON rf.idrela = rr.idrela WHERE rf.idfrau = :idfrau"
   } else if (context.IDRELA) {
-    binds.idrela = context.IDRELA
     query += " WHERE rr.idrela = :idrela"
   }
 
-  const result = await simpleExecute(query, binds)
-  return result.rows
+  // proc
+  const ret = await simpleExecute(query, bind)
+
+  if (ret) {
+    return ({ stat: ret.rows.length, data: ret.rows })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
 }
-export const insertRelacion = async (bind) => {
-  bind.idrela = {
+export const relaciones = async (context) => {
+  // bind
+  // TODO
+  let query = "WITH datos AS (SELECT ff.idfrau,ff.fecfra,ff.ejefra,ff.nifcon,ff.nomcon,ff.obsfra,ff.liqfra,ff.stafra,oo.desofi,tf.destip FROM fraudes ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifra INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra"
+  let bind = {
+    liqfra: context.liquidador,
+    stafra: context.estado,
+    limit: context.limit,
+    part: context.part,
+  };
+
+  if (context.oficina) {
+    bind.ofifra = context.oficina
+    query += " WHERE (ff.ofifra = :ofifra AND ff.stafra = 0) OR (ff.liqfra = :liqfra AND ff.stafra = :stafra) AND (ff.nifcon LIKE '%' || :part || '%' OR ff.nomcon LIKE '%' || :part || '%' OR ff.ejefra LIKE '%' || :part || '%' OR ff.fecfra LIKE '%' || :part || '%' OR tf.destip LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%' OR :part IS NULL))"
+  } else {
+    query += " WHERE (ff.liqfra = :liqfra AND ff.stafra = :stafra) AND (ff.nifcon LIKE '%' || :part || '%' OR ff.nomcon LIKE '%' || :part || '%' OR ff.ejefra LIKE '%' || :part || '%' OR ff.fecfra LIKE '%' || :part || '%' OR tf.destip LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%' OR :part IS NULL))"
+  }  
+  if (context.direction === 'next') {
+    bind.idfrau = context.cursor.next;
+    query += " SELECT * FROM datos WHERE idfrau > :idfrau ORDER BY idfrau ASC FETCH NEXT :limit ROWS ONLY"
+  } else {
+    bind.idfrau = context.cursor.prev;
+    query += " SELECT * FROM datos WHERE idfrau < :idfrau ORDER BY idfrau DESC FETCH NEXT :limit ROWS ONLY"
+  }
+
+  // proc
+  const ret = await simpleExecute(query, bind)
+
+  if (ret) {
+    return ({ stat: ret.rows.length, data: ret.rows })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+};
+export const insertRelacion = async (context) => {
+  // bind
+  let bind = context
+  bind.IDRELA = {
     dir: oracledb.BIND_OUT,
     type: oracledb.NUMBER,
   }
 
-  try {
-    const result = await simpleExecute(insertRelacionSql, bind)
+  // proc
+  const ret = await simpleExecute(insertRelacionSql, bind)
 
-    bind.idrela = await result.outBinds.idrela
-  } catch (error) {
-    bind = null
+  if (ret) {
+    bind.IDRELA = ret.outBinds.IDRELA
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
   }
-
-  return bind
 }
-export const updateRelacion = async (bind) => {
-  let result
+export const updateRelacion = async (context) => {
+  // bind
+  const bind = context
+  // proc
+  const ret = await simpleExecute(updateRelacionSql, bind)
 
-  try {
-    await simpleExecute(updateRelacionSql, bind)
-
-    result = bind
-  } catch (error) {
-    result = null
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
   }
-
-  return result
 }
-export const removeRelacion = async (bind) => {
-  let result
+export const removeRelacion = async (context) => {
+  // bind
+  const bind = context
+  // proc
+  const ret = await simpleExecute(removeRelacionSql, bind)
 
-  try {
-    await simpleExecute(removeRelacionSql, bind)
-
-    result = bind
-  } catch (error) {
-    result = null
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
   }
-
-  return result
 }

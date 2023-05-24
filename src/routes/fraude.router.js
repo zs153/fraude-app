@@ -2,13 +2,13 @@ import express from 'express'
 import {
   fraude,
   fraudes,
-  extendedFraudes,
-  asignar,
-  crear,
-  modificar,
-  borrar,
-  desasignar,
-  cierre,
+  extended,
+  asignarFraude,
+  crearFraude,
+  modificarFraude,
+  borrarFraude,
+  desasignarFraude,
+  cierreFraude,
   hito,
   hitos,
   crearHito,
@@ -39,13 +39,13 @@ const apiFraudeRouter = express.Router()
 // fraudes
 apiFraudeRouter.post('/fraude', fraude)
 apiFraudeRouter.post('/fraudes', fraudes)
-apiFraudeRouter.post('/fraudes/extended', extendedFraudes)
-apiFraudeRouter.post('/fraudes/insert', crear)
-apiFraudeRouter.post('/fraudes/update', modificar)
-apiFraudeRouter.post('/fraudes/delete', borrar)
-apiFraudeRouter.post('/fraudes/asign', asignar)
-apiFraudeRouter.post('/fraudes/unasign', desasignar)
-apiFraudeRouter.post('/fraudes/cierre', cierre)
+apiFraudeRouter.post('/fraudes/extended', extended)
+apiFraudeRouter.post('/fraudes/insert', crearFraude)
+apiFraudeRouter.post('/fraudes/update', modificarFraude)
+apiFraudeRouter.post('/fraudes/delete', borrarFraude)
+apiFraudeRouter.post('/fraudes/asign', asignarFraude)
+apiFraudeRouter.post('/fraudes/unasign', desasignarFraude)
+apiFraudeRouter.post('/fraudes/cierre', cierreFraude)
 
 //hitos
 apiFraudeRouter.post('/fraudes/hito', hito)
