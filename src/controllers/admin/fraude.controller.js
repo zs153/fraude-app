@@ -12,7 +12,7 @@ import { serverAPI } from '../../config/settings'
 export const mainPage = async (req, res) => {
   const user = req.user;
   const fraude = {
-    LIQFRA: user.userID,
+    LIQFRA: user.userid,
     STAFRA: estadosFraude.pendiente + estadosFraude.asignado,
   };
 
@@ -42,7 +42,7 @@ export const addPage = async (req, res) => {
     ISOFEC: fecha.toISOString().slice(0, 10),
     EJEFRA: fecha.getFullYear() - 1,
     OFIFRA: user.oficina,
-    FUNFRA: user.userID,
+    FUNFRA: userid,
   };
   const oficina = user.rol === tiposRol.admin ? {} : { IDOFIC: user.oficina }
   const tipo = {}
@@ -704,7 +704,7 @@ export const insert = async (req, res) => {
     OFIFRA: req.body.ofifra,
     OBSFRA: req.body.obsfra,
     FUNFRA: req.body.funfra,
-    LIQFRA: user.userID,
+    LIQFRA: user.userid,
     STAFRA: estadosFraude.asignado,
   };
   const movimiento = {
@@ -798,7 +798,7 @@ export const asignar = async (req, res) => {
       fraude,
     });
 
-    fraude.LIQFRA = user.userID
+    fraude.LIQFRA = user.userid
     fraude.STAFRA = estadosFraude.asignado
     const movimiento = {
       USUMOV: user.id,
@@ -890,7 +890,7 @@ export const resolver = async (req, res) => {
         }
       }
 
-      fraude.LIQFRA = user.userID
+      fraude.LIQFRA = user.userid
       fraude.STAFRA = estadosFraude.resuelto
 
       await axios.post(`http://${serverAPI}:8100/api/fraudes/cierre`, {
@@ -958,8 +958,8 @@ export const ejercicio = async (req, res) => {
     EJEFRA: req.body.ejefra,
     OFIFRA: user.oficina,
     OBSFRA: req.body.obsfra,
-    FUNFRA: user.userID,
-    LIQFRA: user.userID,
+    FUNFRA: user.userid,
+    LIQFRA: user.userid,
     STAFRA: estadosFraude.asignado,
   };
   const movimiento = {
@@ -1436,7 +1436,7 @@ export const removeRelacion = async (req, res) => {
 export const verTodo = async (req, res) => {
   const user = req.user;
   const fraude = {
-    LIQFRA: user.userID,
+    LIQFRA: user.userid,
     STAFRA: estadosFraude.resuelto,
   };
 

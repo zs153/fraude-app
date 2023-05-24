@@ -371,5 +371,8 @@ elemNew.setAttribute('href', `/user/fraudes/add?part=${getCookie('filtro')}`)
 const elemDel = document.getElementById('del');
 elemDel.setAttribute('action', `/user/fraudes/delete?part=${getCookie('filtro')}`)
 
+const elemRes = document.getElementById('res');
+elemRes.setAttribute('href', `/user/fraudes/resueltos?part=${getCookie('filtro')}`)
+
 // tabla
 buildTable(orgList)

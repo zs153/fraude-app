@@ -131,7 +131,6 @@ export const addPage = async (req, res) => {
 
     res.render("user/fraudes/add", { user, datos });
   } catch (error) {
-    console.log(error);
     if (error.response?.status === 400) {
       res.render("user/error400", {
         alerts: [{ msg: error.response.data.msg }],
@@ -872,7 +871,7 @@ export const insert = async (req, res) => {
     OFIFRA: req.body.ofifra,
     OBSFRA: req.body.obsfra,
     FUNFRA: req.body.funfra,
-    LIQFRA: user.userID,
+    LIQFRA: user.userid,
     STAFRA: estadosFraude.asignado,
   };
   const movimiento = {
@@ -966,7 +965,7 @@ export const asignar = async (req, res) => {
       fraude,
     });
 
-    fraude.LIQFRA = user.userID
+    fraude.LIQFRA = user.userid
     fraude.STAFRA = estadosFraude.asignado
     const movimiento = {
       USUMOV: user.id,
@@ -1058,7 +1057,7 @@ export const resolver = async (req, res) => {
         }
       }
 
-      fraude.LIQFRA = user.userID
+      fraude.LIQFRA = user.userid
       fraude.STAFRA = estadosFraude.resuelto
 
       await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/cierre`, {
@@ -1126,8 +1125,8 @@ export const ejercicio = async (req, res) => {
     EJEFRA: req.body.ejefra,
     OFIFRA: user.oficina,
     OBSFRA: req.body.obsfra,
-    FUNFRA: user.userID,
-    LIQFRA: user.userID,
+    FUNFRA: user.userid,
+    LIQFRA: user.userid,
     STAFRA: estadosFraude.asignado,
   };
   const movimiento = {
@@ -1604,7 +1603,7 @@ export const removeRelacion = async (req, res) => {
 export const verTodo = async (req, res) => {
   const user = req.user;
   const fraude = {
-    LIQFRA: user.userID,
+    LIQFRA: user.userid,
     STAFRA: estadosFraude.resuelto,
   };
 

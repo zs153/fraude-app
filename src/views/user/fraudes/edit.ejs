@@ -22,6 +22,7 @@
                 <div class="col-12">
                   <div class="card">
                     <form action="#" id="upd" method="POST" onsubmit="return validate();">
+                      <input type="hidden" name="idfrau" value="<%= datos.fraude.IDFRAU %>">
                       <div class="card-header">
                         <h3 class="card-title">Fraude</h3>
                       </div>
@@ -62,7 +63,7 @@
                                 <select class="form-select form-control" id="cbotip" name="tipfra" value="<%- datos.fraude.TIPFRA %>">
                                   <option value="0">SELECCIONE UN TIPO</option>
                                   <% datos.tipos.map(element=> { %>
-                                    <option value="<%- element.IDTIPO %>">
+                                    <option value="<%- element.IDTIPO %>" <%- element.IDTIPO===datos.fraude.TIPFRA ? "selected" :"" %>>
                                       <%- element.DESTIP %>
                                     </option>
                                     <% }) %>
@@ -102,8 +103,7 @@
                               <div class="form-label">Oficina</div>
                               <select class="form-select form-control" id="cboofi" name="ofifra" value="<%- datos.fraude.OFIFRA %>">
                                 <% datos.oficinas.map(element=> { %>
-                                  <option value="<%- element.IDOFIC %>" <%- element.IDOFIC===datos.fraude.OFIFRA
-                                    ? "selected" :"" %>>
+                                  <option value="<%- element.IDOFIC %>" <%- element.IDOFIC===datos.fraude.OFIFRA ? "selected" :"" %>>
                                     <%- element.DESOFI %>
                                   </option>
                                 <% }) %>

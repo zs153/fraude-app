@@ -364,5 +364,9 @@ elemBuscar.onchange = (event) => {
 }
 elemBuscar.value = getCookie('filtro')
 
+// incializacion
+const elemPen = document.getElementById('pen');
+elemPen.setAttribute('href', `/user/fraudes?part=${getCookie('filtro')}`)
+
 // tabla
 buildTable(orgList)
