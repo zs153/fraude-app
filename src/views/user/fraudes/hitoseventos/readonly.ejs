@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>Hitos/Eventos</title>
+    <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/styles.css">
+    <!-- <link rel="stylesheet" href="/css/estilos.css">
+    <link rel="stylesheet" href="/css/navbar.css"> -->
+  </head>
+  <body class="antialiased">
+    <div class="wrapper">
+      <%- include('../../../partials/header') %>
+      <%- include('../../../partials/navbar', {opcion: 'FRAUDE'}) %>
+      <div class="page-wrapper">
+        <div class="container-xl">
+          <div class="page-body">
+            <div class="row row-deck row-cards">
+              <div class="col-12">
+                <div class="card" style="height: 35vh;">
+                  <div class="card-header">
+                    <div>
+                      <h3 class="card-title">Hitos</h3>
+                      <p class="subtitulo">
+                        <% if(datos.detalle[0]) { %> 
+                        <%- datos.detalle[0].NIFCON %> <%- datos.detalle[0].NOMCON %>
+                        <% } %> 
+                      </p>                    
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <table class="table table-vcenter table-striped" id="tblHitos">
+                      <thead>
+                      <tr class="header">
+                        <th class="w-4">Fecha</th>
+                        <th class="w-6">Fecha</th>
+                        <th class="w-15">Tipo</th>
+                        <th>Observaciones</th>
+                        <th class="w-8">Valor</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                        <% datos.detalle.map(element => { %>
+                          <% if (element.IDHITO) { %>                            
+                          <tr>
+                            <td class="w4">
+                              <% if (element.STAHIT === datos.estadosHito.sancionAnulada) { %>
+                              <div class="align-items-center py-1">
+                                <span class="avatar avatar-rounded bg-red-lt">
+                                  <h6>ANU</h6>
+                                </span>
+                              </div>
+                              <% } else { %>
+                              <div class="align-items-center py-1">
+                                <span class="avatar avatar-rounded bg-green-lt">
+                                  <h6>OK</h6>
+                                </span>
+                              </div>
+                              <% } %>
+                            </td>
+                            <!-- col2 -->
+                            <td class="w-6">
+                              <div class="d-flex py-1 align-items-center">
+                                <div class="flex-fill">
+                                  <div class="font-weight-medium"><%- element.FECHIT.slice(0,10).split('-').reverse().join('/') %></div>
+                                </div>
+                              </div>
+                            </td>
+                            <!-- col3 -->
+                            <td class="w-15">
+                              <div div class="d-flex py-1 align-items-center">
+                                <div class="flex-fill">
+                                  <div class="font-weight-medium"><%- element.TIPHIT %></div>
+                                </div>
+                              </div>
+                            </td>
+                            <!-- col4 -->
+                            <td>
+                              <div class="d-flex py-1 align-items-center">
+                                <div class="flex-fill">
+                                  <div class="font-weight-medium"><%- element.OBSHIT %></div>
+                                </div>
+                              </div>
+                            </td>
+                            <!-- col5 -->
+                            <td class="w-8">
+                              <div class="d-flex py-1 align-items-center">
+                                <div class="flex-fill">
+                                  <div class="font-weight-medium"><%- element.IMPHIT.toLocaleString() %></div>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                          <% } %>
+                        <% }) %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 mt-0">
+                <div class="card">
+                  <div class="card-header">
+                    <div>
+                      <h3 class="card-title">Eventos</h3>
+                      <p class="subtitulo">
+                        <% if(datos.detalle[0]) { %>
+                        <%- datos.detalle[0].NIFCON %> <%- datos.detalle[0].NOMCON %>
+                        <% } %>
+                      </p>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <table class="table table-vcenter table-striped" id="tblEventos">
+                      <thead>
+                      <tr class="header">
+                        <th class="w-6">Fecha</th>
+                        <th class="w-15">Tipo</th>
+                        <th>Observaciones</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                        <% datos.detalle.map(element => { %>
+                          <% if (element.IDEVEN) { %> 
+                          <tr>
+                            <!-- col1 -->
+                            <td class="w-6">
+                              <div class="d-flex py-1 align-items-center">
+                                <div class="flex-fill">
+                                  <div class="font-weight-medium"><%- element.FECEVE.slice(0,10).split('-').reverse().join('/') %></div>
+                                </div>
+                              </div>
+                            </td>
+                            <!-- col2 -->
+                            <td class="w-15">                              
+                              <div class="d-flex py-1 align-items-center">
+                                <div class="flex-fill">
+                                  <div class="font-weight-medium"><%- element.TIPEVE %></div>
+                                </div>
+                              </div>
+                            </td>
+                            <!-- col3 -->
+                            <td>
+                              <div class="d-flex py-1 align-items-center">
+                                <div class="flex-fill">
+                                  <div class="font-weight-medium"><%- element.OBSEVE %></div>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                          <% } %> 
+                        <% }) %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 mt-0">
+                <a href="/admin/fraudes/vertodo" class="btn btn-link">Volver</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <%- include('../../../partials/footer') %>
+    </div>
+
+    <script src="/js/ayuda.min.js"></script>
+  </body>
+</html>

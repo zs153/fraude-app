@@ -20,6 +20,18 @@ userRouter.get("/fraudes/edit/:id", authRoutes, fraude.editPage);
 userRouter.get("/fraudes/resolver/:id", authRoutes, fraude.resolverPage);
 userRouter.get("/fraudes/ejercicio/:id", authRoutes, fraude.ejercicioPage);
 
+// page hitoseventos
+userRouter.get("/fraudes/hitoseventos/:id", authRoutes, fraude.hitoseventosPage);
+userRouter.get("/fraudes/hitoseventos/readonly/:id", authRoutes, fraude.hitoseventosReadonlyPage);
+
+// page hitos
+userRouter.get("/fraudes/hitos/add/:id", authRoutes, fraude.addHitosPage);
+userRouter.get("/fraudes/hitos/edit/:idfra/:idhit", authRoutes, fraude.editHitosPage);
+
+// page eventos
+userRouter.get("/fraudes/eventos/add/:id", authRoutes, fraude.addEventosPage);
+userRouter.get("/fraudes/eventos/edit/:idfra/:ideve", authRoutes, fraude.editEventosPage);
+
 //--------------- procedures
 // perfil
 userRouter.post('/perfil', authRoutes, usuario.updatePerfil)
