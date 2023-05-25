@@ -374,7 +374,7 @@ export const cambioEstadoHito = async (req, res) => {
 
   // proc
   try {
-    const result = await DAL.close(context)
+    const result = await DAL.cambioEstadoHito(context)
 
     res.status(200).json(result)
   } catch (err) {
@@ -427,7 +427,7 @@ export const crearEvento = async (req, res) => {
 
   // proc
   try {
-    const result = await DAL.update(context)
+    const result = await DAL.insertEvento(context)
 
     res.status(200).json(result)
   } catch (err) {
@@ -450,7 +450,7 @@ export const modificarEvento = async (req, res) => {
 
   // proc
   try {
-    const result = await DAL.update(context)
+    const result = await DAL.updateEvento(context)
 
     res.status(200).json(result)
   } catch (err) {
@@ -473,7 +473,7 @@ export const borrarEvento = async (req, res) => {
 
   // proc
   try {
-    const result = await DAL.update(context)
+    const result = await DAL.removeEvento(context)
 
     res.status(200).json(result)
   } catch (err) {

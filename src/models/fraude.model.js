@@ -243,8 +243,8 @@ export const insertHito = async (context) => {
   // bind
   let bind = context
   bind.IDHITO = {
-    dir: oracledb.BIND_OUT,
-    type: oracledb.NUMBER,
+    dir: BIND_OUT,
+    type: NUMBER,
   }
 
   // proc
@@ -303,8 +303,8 @@ export const insertHitoSancion = async (context) => {
   // bind
   let bind = context
   bind.IDHITO = {
-    dir: oracledb.BIND_OUT,
-    type: oracledb.NUMBER,
+    dir: BIND_OUT,
+    type: NUMBER,
   }
 
   // proc
@@ -389,8 +389,8 @@ export const insertEvento = async (context) => {
   // bind
   let bind = context
   bind.IDEVEN = {
-    dir: oracledb.BIND_OUT,
-    type: oracledb.NUMBER,
+    dir: BIND_OUT,
+    type: NUMBER,
   }
 
   // proc
@@ -427,7 +427,7 @@ export const removeEvento = async (context) => {
     return ({ stat: 0, data: [] })
   }
 }
-
+  
 // proc sms
 export const sms = async (context) => {
   // bind
@@ -487,8 +487,8 @@ export const insertSms = async (context) => {
   // bind
   let bind = context
   bind.IDSMSS = {
-    dir: oracledb.BIND_OUT,
-    type: oracledb.NUMBER,
+    dir: BIND_OUT,
+    type: NUMBER,
   }
 
   // proc
@@ -585,8 +585,8 @@ export const insertRelacion = async (context) => {
   // bind
   let bind = context
   bind.IDRELA = {
-    dir: oracledb.BIND_OUT,
-    type: oracledb.NUMBER,
+    dir: BIND_OUT,
+    type: NUMBER,
   }
 
   // proc
