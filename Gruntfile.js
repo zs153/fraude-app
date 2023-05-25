@@ -24,8 +24,8 @@ module.exports = function (grunt) {
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
       },
       js: {
-        src: ['./src/views/user/fraudes/hitos/addHito.js'],
-        dest: './src/public/js/addHito.min.js'
+        src: ['./src/views/user/fraudes/eventos/addEditEvento.js'],
+        dest: './src/public/js/addEditEvento.min.js'
       },
       css: {
         src: 'src/public/css/styles.css',

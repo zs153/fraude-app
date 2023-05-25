@@ -39,6 +39,26 @@ userRouter.post('/perfil', authRoutes, usuario.updatePerfil)
 // cambio password
 userRouter.post('/cambio', authRoutes, usuario.changePassword)
 
+// fraudes
+userRouter.post("/fraudes/insert", authRoutes, fraude.insert);
+userRouter.post("/fraudes/update", authRoutes, fraude.update);
+userRouter.post("/fraudes/delete", authRoutes, fraude.remove);
+userRouter.post("/fraudes/asignar", authRoutes, fraude.asignar);
+userRouter.post("/fraudes/desasignar", authRoutes, fraude.desasignar);
+userRouter.post("/fraudes/resolver", authRoutes, fraude.resolver);
+userRouter.post("/fraudes/ejercicio", authRoutes, fraude.ejercicio);
+
+// hitos
+userRouter.post("/fraudes/hitos/insert", authRoutes, fraude.insertHito);
+userRouter.post("/fraudes/hitos/update", authRoutes, fraude.updateHito);
+userRouter.post("/fraudes/hitos/delete", authRoutes, fraude.removeHito);
+userRouter.post("/fraudes/hitos/archivado", authRoutes, fraude.archivoHito);
+
+// eventos
+userRouter.post("/fraudes/eventos/insert", authRoutes, fraude.insertEvento);
+userRouter.post("/fraudes/eventos/update", authRoutes, fraude.updateEvento);
+userRouter.post("/fraudes/eventos/delete", authRoutes, fraude.removeEvento);
+
 // estados
 userRouter.post("/fraudes/insert", authRoutes, fraude.insert);
 userRouter.post("/fraudes/update", authRoutes, fraude.update);

@@ -2121,7 +2121,7 @@ table {
 
 .table-fixHead tbody {
   overflow-y: scroll;
-  height: 16vh;
+  height: 10vh;
   white-space: nowrap;
   /* overflow: auto;
   overflow-x: hidden; */

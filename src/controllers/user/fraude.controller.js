@@ -400,11 +400,15 @@ export const hitoseventosPage = async (req, res) => {
 
     res.render("user/fraudes/hitoseventos", { user, datos });
   } catch (error) {
-    const msg = "No se ha podido acceder a los hitos del fraude seleccionado.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const hitoseventosReadonlyPage = async (req, res) => {
@@ -425,11 +429,15 @@ export const hitoseventosReadonlyPage = async (req, res) => {
 
     res.render("user/fraudes/hitoseventos/readonly", { user, datos });
   } catch (error) {
-    const msg = "No se ha podido acceder a los hitos del fraude seleccionado.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 
@@ -483,27 +491,27 @@ export const addHitosPage = async (req, res) => {
 export const editHitosPage = async (req, res) => {
   const user = req.user;
   const arrTipos = []
-  const tipo = {}
   const fraude = {
     IDFRAU: req.params.idfra,
-  };
-  let hito = {
-    IDHITO: req.params.idhit,
   };
 
   try {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/hito`, {
-      hito,
+      context: {
+        IDHITO: req.params.idhit,
+      },
     });
-    const hitos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/hitos`, {
-      fraude,
+    const hitos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/hito`, {
+      context: {
+        IDFRAU: req.params.idfra,
+      },
     });
-    const tipos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/hitos`, {
-      tipo,
+    const tipos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/hito`, {
+      context: {},
     });
 
-    tipos.data.map((itm) => {
-      if (hitos.data.find(ele => ele.TIPHIT === itm.IDTIPO)) {
+    tipos.data.data.map((itm) => {
+      if (hitos.data.data.find(ele => ele.TIPHIT === itm.IDTIPO)) {
         itm.DISABLED = true
       } else {
         itm.DISABLED = false
@@ -512,8 +520,8 @@ export const editHitosPage = async (req, res) => {
       arrTipos.push(itm)
     });
 
-    hito = result.data
-    hito.IMPHIT = result.data.IMPHIT.toLocaleString()
+    let hito = result.data.data[0]
+    hito.IMPHIT = hito.IMPHIT.toLocaleString()
 
     const datos = {
       fraude,
@@ -524,12 +532,15 @@ export const editHitosPage = async (req, res) => {
 
     res.render("user/fraudes/hitos/edit", { user, datos });
   } catch (error) {
-    const msg =
-      "No se ha podido acceder a los datos de la aplicación. Si persiste el error solicite asistencia.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 
@@ -552,12 +563,15 @@ export const addEventosPage = async (req, res) => {
 
     res.render("user/fraudes/eventos/add", { user, datos });
   } catch (error) {
-    const msg =
-      "No se ha podido acceder a los datos de la aplicación. Si persiste el error solicite asistencia.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const editEventosPage = async (req, res) => {
@@ -565,33 +579,34 @@ export const editEventosPage = async (req, res) => {
   const fraude = {
     IDFRAU: req.params.idfra,
   };
-  const evento = {
-    IDEVEN: req.params.ideve,
-  };
-  const tipo = {}
 
   try {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/evento`, {
-      evento,
+      context: {
+        IDEVEN: req.params.ideve,
+      },
     });
-    const tipos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/eventos`, {
-      tipo,
+    const tipos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/evento`, {
+      context: {},
     });
 
     const datos = {
       fraude,
-      evento: result.data,
-      tipos: tipos.data,
+      evento: result.data.data[0],
+      tipos: tipos.data.data,
     };
 
     res.render("user/fraudes/eventos/edit", { user, datos });
   } catch (error) {
-    const msg =
-      "No se ha podido acceder a los datos de la aplicación. Si persiste el error solicite asistencia.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 
@@ -624,11 +639,15 @@ export const smssPage = async (req, res) => {
 
     res.render("user/fraudes/smss", { user, datos });
   } catch (error) {
-    const msg = "No se ha podido acceder a los datos de la aplicación.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 }
 export const smssAddPage = async (req, res) => {
@@ -651,12 +670,15 @@ export const smssAddPage = async (req, res) => {
 
     res.render("user/fraudes/smss/add", { user, datos });
   } catch (error) {
-    const msg =
-      "No se ha podido acceder a los datos de la aplicación. Si persiste el error solicite asistencia.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 }
 export const smssEditPage = async (req, res) => {
@@ -679,12 +701,15 @@ export const smssEditPage = async (req, res) => {
 
     res.render("user/fraudes/smss/edit", { user, datos });
   } catch (error) {
-    const msg =
-      "No se ha podido acceder a los datos de la aplicación. Si persiste el error solicite asistencia.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 }
 export const smssReadonlyPage = async (req, res) => {
@@ -715,11 +740,15 @@ export const smssReadonlyPage = async (req, res) => {
 
     res.render("user/fraudes/smss/readonly", { user, datos });
   } catch (error) {
-    const msg = "No se ha podido acceder a los datos de la aplicación.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 }
 
@@ -751,11 +780,15 @@ export const relacionesPage = async (req, res) => {
 
     res.render("user/fraudes/relaciones", { user, datos });
   } catch (error) {
-    const msg = "No se ha podido acceder a los datos de la aplicación.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 }
 export const relacionesAddPage = async (req, res) => {
@@ -771,12 +804,15 @@ export const relacionesAddPage = async (req, res) => {
 
     res.render("user/fraudes/relaciones/add", { user, datos });
   } catch (error) {
-    const msg =
-      "No se ha podido acceder a los datos de la aplicación. Si persiste el error solicite asistencia.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 }
 export const relacionesEditPage = async (req, res) => {
@@ -799,12 +835,15 @@ export const relacionesEditPage = async (req, res) => {
 
     res.render("user/fraudes/relaciones/edit", { user, datos });
   } catch (error) {
-    const msg =
-      "No se ha podido acceder a los datos de la aplicación. Si persiste el error solicite asistencia.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 }
 export const relacionesReadonlyPage = async (req, res) => {
@@ -835,11 +874,15 @@ export const relacionesReadonlyPage = async (req, res) => {
 
     res.render("user/fraudes/relaciones/readonly", { user, datos });
   } catch (error) {
-    const msg = "No se ha podido acceder a los datos de la aplicación.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 }
 
@@ -865,12 +908,15 @@ export const ejercicioPage = async (req, res) => {
 
     res.render("user/fraudes/ejercicio", { user, datos });
   } catch (error) {
-    const msg =
-      "No se ha podido acceder a los datos de la aplicación. Si persiste el error solicite asistencia.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 
@@ -907,11 +953,15 @@ export const insert = async (req, res) => {
 
     res.redirect("/user/fraudes");
   } catch (error) {
-    let msg = "No se ha podido crear el documento.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const update = async (req, res) => {
@@ -942,11 +992,15 @@ export const update = async (req, res) => {
 
     res.redirect("/user/fraudes");
   } catch (error) {
-    let msg = "No se ha podido actualizar el documento.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const remove = async (req, res) => {
@@ -967,11 +1021,15 @@ export const remove = async (req, res) => {
 
     res.redirect("/user/fraudes");
   } catch (error) {
-    const msg = "No se ha podido elminar el documento.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const asignar = async (req, res) => {
@@ -1001,11 +1059,15 @@ export const asignar = async (req, res) => {
       res.redirect("/user/fraudes");
     }
   } catch (error) {
-    const msg = "No se ha podido asignar el documento.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const resolver = async (req, res) => {
@@ -1089,11 +1151,15 @@ export const resolver = async (req, res) => {
 
     res.redirect("/user/fraudes");
   } catch (error) {
-    const msg = "No se ha podido resolver el documento.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const desasignar = async (req, res) => {
@@ -1123,11 +1189,15 @@ export const desasignar = async (req, res) => {
 
     res.redirect("/user/fraudes");
   } catch (error) {
-    const msg = "No se ha podido desasignar el documento.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const ejercicio = async (req, res) => {
@@ -1162,11 +1232,15 @@ export const ejercicio = async (req, res) => {
 
     res.redirect("/user/fraudes");
   } catch (error) {
-    const msg = "No se ha podido insertar el ejercicio.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 
@@ -1191,17 +1265,16 @@ export const insertHito = async (req, res) => {
 
   try {
     if (parseInt(generaLiq) === 1) {
-      const tipo = {
-        IDTIPO: estadosHito.liquidacion,
-      }
       const tipoHito = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/hito`, {
-        tipo,
+        context: {
+          IDTIPO: estadosHito.liquidacion,
+        },
       });
       const liquidacion = {
-        TIPLIQ: tipoHito.data.IDTIPO,
+        TIPLIQ: tipoHito.data.data[0].IDTIPO,
         IMPLIQ: hito.IMPHIT,
         OBSLIQ: '',
-        STALIQ: tipoHito.data.ANUHIT,
+        STALIQ: tipoHito.data.data[0].ANUHIT,
       }
 
       await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/hitos/insertliq`, {
@@ -1211,17 +1284,16 @@ export const insertHito = async (req, res) => {
         movimiento,
       });
     } else if (parseInt(generaSan) === 1) {
-      const tipo = {
-        IDTIPO: estadosHito.sancion,
-      }
       const tipoHito = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/hito`, {
-        tipo,
+        context: {
+          IDTIPO: estadosHito.sancion,
+        },
       });
       const sancion = {
-        TIPSAN: tipoHito.data.IDTIPO,
+        TIPSAN: tipoHito.data.data[0].IDTIPO,
         IMPSAN: hito.IMPHIT,
         OBSSAN: '',
-        STASAN: tipoHito.data.ANUHIT,
+        STASAN: tipoHito.data.data[0].ANUHIT,
       }
       await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/hitos/insertsan`, {
         fraude,
@@ -1239,11 +1311,15 @@ export const insertHito = async (req, res) => {
 
     res.redirect(`/user/fraudes/hitoseventos/${fraude.IDFRAU}`);
   } catch (error) {
-    const msg = "No se ha podido insertar el hito.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const updateHito = async (req, res) => {
@@ -1271,11 +1347,15 @@ export const updateHito = async (req, res) => {
 
     res.redirect(`/user/fraudes/hitoseventos/${fraude.IDFRAU}`);
   } catch (error) {
-    const msg = "No se ha podido actualizar el hito.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const removeHito = async (req, res) => {
@@ -1300,11 +1380,15 @@ export const removeHito = async (req, res) => {
 
     res.redirect(`/user/fraudes/hitoseventos/${fraude.IDFRAU}`);
   } catch (error) {
-    const msg = "No se ha podido acceder borrar el hito.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const archivoHito = async (req, res) => {
@@ -1329,11 +1413,15 @@ export const archivoHito = async (req, res) => {
 
     res.redirect(`/user/fraudes/hitoseventos/${fraude.IDFRAU}`);
   } catch (error) {
-    const msg = "No se ha podido acceder borrar el hito.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 
@@ -1362,11 +1450,15 @@ export const insertEvento = async (req, res) => {
 
     res.redirect(`/user/fraudes/hitoseventos/${fraude.IDFRAU}`);
   } catch (error) {
-    const msg = "No se ha podido insertar el evento.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const updateEvento = async (req, res) => {
@@ -1393,11 +1485,15 @@ export const updateEvento = async (req, res) => {
 
     res.redirect(`/user/fraudes/hitoseventos/${fraude.IDFRAU}`);
   } catch (error) {
-    const msg = "No se ha podido actualizar el evento.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const removeEvento = async (req, res) => {
@@ -1422,11 +1518,15 @@ export const removeEvento = async (req, res) => {
 
     res.redirect(`/user/fraudes/hitoseventos/${fraude.IDFRAU}`);
   } catch (error) {
-    const msg = "No se ha podido acceder borrar el evento.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 
@@ -1457,11 +1557,15 @@ export const insertSms = async (req, res) => {
 
     res.redirect(`/user/fraudes/smss/${fraude.IDFRAU}`);
   } catch (error) {
-    const msg = "No se ha podido insertar el ejercicio.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 }
 export const updateSms = async (req, res) => {
@@ -1488,11 +1592,15 @@ export const updateSms = async (req, res) => {
 
     res.redirect(`/user/fraudes/smss/${fraude.IDFRAU}`);
   } catch (error) {
-    const msg = "No se ha podido actualizar el sms.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 }
 export const removeSms = async (req, res) => {
@@ -1517,11 +1625,15 @@ export const removeSms = async (req, res) => {
 
     res.redirect(`/user/fraudes/smss/${fraude.IDFRAU}`);
   } catch (error) {
-    const msg = "No se ha podido borrar el sms.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 }
 
@@ -1551,11 +1663,15 @@ export const insertRelacion = async (req, res) => {
 
     res.redirect(`/user/fraudes/relaciones/${fraude.IDFRAU}`);
   } catch (error) {
-    const msg = "No se ha podido insertar el ejercicio.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const updateRelacion = async (req, res) => {
@@ -1582,11 +1698,15 @@ export const updateRelacion = async (req, res) => {
 
     res.redirect(`/user/fraudes/relaciones/${fraude.IDFRAU}`);
   } catch (error) {
-    const msg = "No se ha podido actualizar la relación.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const removeRelacion = async (req, res) => {
@@ -1611,41 +1731,17 @@ export const removeRelacion = async (req, res) => {
 
     res.redirect(`/user/fraudes/relaciones/${fraude.IDFRAU}`);
   } catch (error) {
-    const msg = "No se ha podido enviar el sms.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 }
-
-// proc otros
-export const verTodo = async (req, res) => {
-  const user = req.user;
-  const fraude = {
-    LIQFRA: user.userid,
-    STAFRA: estadosFraude.resuelto,
-  };
-
-  try {
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes`, {
-      fraude,
-    });
-    const datos = {
-      fraudes: result.data,
-      estadosFraude,
-      verTodo: true,
-    };
-
-    res.render("user/fraudes", { user, datos });
-  } catch (error) {
-    const msg = "No se ha podido acceder a los datos de la aplicación.";
-
-    res.render("user/error400", {
-      alerts: [{ msg }],
-    });
-  }
-};
 
 // helpers
 const convertNodeToCursor = (node) => {

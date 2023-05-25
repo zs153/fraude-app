@@ -37,7 +37,7 @@
                 </div>
                 <div class="col-auto ms-auto">
                   <div class="d-flex">
-                    <a href="/user/fraudes/hitos/add/<%- datos.fraude.IDFRAU %>" class="btn">
+                    <a href="/user/fraudes/hitos/add/<%- datos.fraude.IDFRAU %>" class="btn me-1">
                       <svg xmlns="http://www.w3.org/2000/svg" class="icon" height="24" width="24" viewBox="0 0 24 24">
                         <path d="M11.25 18.75v-6h-6v-1.5h6v-6h1.5v6h6v1.5h-6v6Z" />
                       </svg>
@@ -55,7 +55,7 @@
               <div class="card-body">
                 <div class="row row-deck row-cards">
                   <div class="col-12">
-                    <div class="card" style="height: 30vh;">
+                    <div class="card" style="height: 27vh;">
                       <div class="card-header h-1">
                         <div>
                           <h3 class="card-title p-0">Hitos</h3>
@@ -139,7 +139,7 @@
                                       <ul>
                                         <% if (element.TIPHIT===datos.estadosHito.propuestaLiquidacion) { %>
                                           <li class="nav-item">
-                                            <a href="/admin/fraudes/hitos/edit/<%- datos.fraude.IDFRAU %>/<%- element.IDHITO %>"
+                                            <a href="/user/fraudes/hitos/edit/<%- datos.fraude.IDFRAU %>/<%- element.IDHITO %>"
                                               class="nav-link">
                                               <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" width="24"
                                                 height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round"
@@ -167,7 +167,7 @@
                                           <% } %>
                                         <% } else if (element.TIPHIT===datos.estadosHito.propuestaSancion) { %>
                                           <li class="nav-item">
-                                            <a href="/admin/fraudes/hitos/edit/<%- datos.fraude.IDFRAU %>/<%- element.IDHITO %>"
+                                            <a href="/user/fraudes/hitos/edit/<%- datos.fraude.IDFRAU %>/<%- element.IDHITO %>"
                                               class="nav-link">
                                               <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" width="24"
                                                 height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none"
@@ -195,7 +195,7 @@
                                           <% } %>
                                         <% } else if (element.TIPHIT===datos.estadosHito.liquidacion) { %>
                                           <li class="nav-item">
-                                            <a href="/admin/fraudes/hitos/edit/<%- datos.fraude.IDFRAU %>/<%- element.IDHITO %>"
+                                            <a href="/user/fraudes/hitos/edit/<%- datos.fraude.IDFRAU %>/<%- element.IDHITO %>"
                                               class="nav-link">
                                               <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2"
                                                 width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none"
@@ -222,7 +222,7 @@
                                         <% } else { %>
                                           <% if (element.STAHIT !==datos.estadosHito.sancionAnulada) {%>
                                             <li class="nav-item">
-                                              <a href="/admin/fraudes/hitos/edit/<%- datos.fraude.IDFRAU %>/<%- element.IDHITO %>"
+                                              <a href="/user/fraudes/hitos/edit/<%- datos.fraude.IDFRAU %>/<%- element.IDHITO %>"
                                                 class="nav-link">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2"
                                                   width="24" height="24" viewBox="0 0 24 24" stroke="currentColor"
@@ -341,7 +341,7 @@
                                       </a>
                                       <ul>
                                         <li class="nav-item">
-                                          <a href="/admin/fraudes/eventos/edit/<%- datos.fraude.IDFRAU %>/<%- element.IDEVEN %>"
+                                          <a href="/user/fraudes/eventos/edit/<%- datos.fraude.IDFRAU %>/<%- element.IDEVEN %>"
                                             class="nav-link">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" width="24" height="24"
                                               viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round"
@@ -412,10 +412,10 @@
             <div class="w-100">
               <div class="row">
                 <div class="col">
-                  <a href="/admin/fraudes/hitos/<%- datos.fraude.IDFRAU %>" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
+                  <a href="/user/fraudes/hitos/<%- datos.fraude.IDFRAU %>" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
                 </div>
                 <div class="col">
-                  <form action="/admin/fraudes/hitos/delete" method="POST">
+                  <form action="/user/fraudes/hitos/delete" method="POST">
                     <input type="hidden" id="hitbor" name="idhito" value="">
                     <input type="hidden" id="idbohf" name="idfrau" value="<%- datos.fraude.IDFRAU %>">
                     <button type="submit" class="btn btn-danger w-100" id="btnBorrarHito">Borrar hito</button>
@@ -446,10 +446,10 @@
             <div class="w-100">
               <div class="row">
                 <div class="col">
-                  <a href="/admin/fraudes/hitos/<%- datos.fraude.IDFRAU %>" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
+                  <a href="/user/fraudes/hitos/<%- datos.fraude.IDFRAU %>" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
                 </div>
                 <div class="col">
-                  <form action="/admin/fraudes/eventos/delete" method="POST">
+                  <form action="/user/fraudes/eventos/delete" method="POST">
                     <input type="hidden" id="evebor" name="ideven" value="">
                     <input type="hidden" id="idboef" name="idfrau" value="<%- datos.fraude.IDFRAU %>">
                     <button type="submit" class="btn btn-danger w-100" id="btnBorrarEvento">Borrar evento</button>
@@ -481,11 +481,11 @@
             <div class="w-100">
               <div class="row">
                 <div class="col">
-                  <a href="/admin/fraudes/hitos/<%- datos.fraude.IDFRAU %>" class="btn btn-white w-100"
+                  <a href="/user/fraudes/hitos/<%- datos.fraude.IDFRAU %>" class="btn btn-white w-100"
                     data-bs-dismiss="modal">Cancelar</a>
                 </div>
                 <div class="col">
-                  <form action="/admin/fraudes/hitos/archivado" method="POST">
+                  <form action="/user/fraudes/hitos/archivado" method="POST">
                     <input type="hidden" id="idarch" name="idhito" value="">
                     <input type="hidden" id="idarcf" name="idfrau" value="<%- datos.fraude.IDFRAU %>">
                     <button type="submit" class="btn btn-primary w-100">Archivado de sanción</button>
