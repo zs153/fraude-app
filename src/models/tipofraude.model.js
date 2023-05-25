@@ -1,4 +1,3 @@
-import oracledb from "oracledb";
 import { simpleExecute } from "../services/database.js";
 
 const baseQuery = "SELECT * FROM tiposfraude";

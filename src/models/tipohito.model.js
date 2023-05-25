@@ -1,85 +1,93 @@
-import oracledb from "oracledb";
 import { simpleExecute } from "../services/database.js";
 
-const baseQuery = `SELECT 
-  tt.*
-FROM tiposhito tt
-`;
-const insertSql = `BEGIN FRAUDE_PKG.INSERTTIPOHITO(
-  :destip,
-  :anuhit,
-  :usumov,
-  :tipmov,
-  :idtipo
-); END;
-`;
-const updateSql = `BEGIN FRAUDE_PKG.UPDATETIPOHITO(
-  :idtipo,
-  :destip,
-  :anuhit,
-  :usumov,
-  :tipmov
-); END;
-`;
-const removeSql = `BEGIN FRAUDE_PKG.DELETETIPOHITO(
-  :idtipo,
-  :usumov,
-  :tipmov 
-); END;
-`;
+const baseQuery = "SELECT * FROM tiposhito";
+const insertSql = "BEGIN FRAUDE_PKG.INSERTTIPOHITO(:destip,:usumov,:tipmov,:idtipo); END;";
+const updateSql = "BEGIN FRAUDE_PKG.UPDATETIPOHITO(:idtipo,:destip,:usumov,:tipmov); END;";
+const removeSql = "BEGIN FRAUDE_PKG.DELETETIPOHITO(:idtipo,:usumov,:tipmov ); END;";
 
 export const find = async (context) => {
+  // bind
   let query = baseQuery;
-  let binds = {};
+  const bind = {};
 
   if (context.IDTIPO) {
-    binds.idtipo = context.IDTIPO;
-    query += `WHERE tt.idtipo = :idtipo`;
+    query += " WHERE idtipo = :idtipo";
   }
 
-  const result = await simpleExecute(query, binds);
-  return result.rows;
-};
+  // proc
+  const ret = await simpleExecute(query, bind)
 
-export const insert = async (bind) => {
-  bind.idtipo = {
-    dir: oracledb.BIND_OUT,
-    type: oracledb.NUMBER,
+  if (ret) {
+    return ({ stat: ret.rows.length, data: ret.rows })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+};
+export const findAll = async (context) => {
+  // bind
+  let query = '';
+  let bind = {
+    limit: context.limit,
+    part: context.part,
   };
 
-  try {
-    const result = await simpleExecute(insertSql, bind);
-
-    bind.idtipo = await result.outBinds.idtipo;
-  } catch (error) {
-    bind = null;
+  if (context.direction === 'next') {
+    bind.idofic = context.cursor.next;
+    query = "WITH datos AS (SELECT * FROM tiposFraude WHERE destip LIKE '%' || :part || '%' OR :part IS NULL) SELECT * FROM datos WHERE idtipo > :idtipo ORDER BY idtipo ASC FETCH NEXT :limit ROWS ONLY"
+  } else {
+    bind.idofic = context.cursor.prev;
+    query = "WITH datos AS (SELECT * FROM tiposFraude WHERE destip LIKE '%' || :part || '%' OR :part IS NULL) SELECT * FROM datos WHERE idtipo < :idtipo ORDER BY idtipo DESC FETCH NEXT :limit ROWS ONLY"
   }
 
-  return bind;
+  // proc
+  const ret = await simpleExecute(query, bind)
+
+  if (ret) {
+    return ({ stat: ret.rows.length, data: ret.rows })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
 };
-export const update = async (bind) => {
-  let result;
+export const insert = async (context) => {
+  // bind
+  let bind = context
+  bind.IDTIPO = {
+    dir: BIND_OUT,
+    type: NUMBER,
+  };
 
-  try {
-    await simpleExecute(updateSql, bind);
+  // proc
+  const ret = await simpleExecute(insertSql, bind)
 
-    result = bind;
-  } catch (error) {
-    result = null;
+  if (ret) {
+    bind.IDTIPO = ret.outBinds.IDTIPO
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
   }
-
-  return result;
 };
-export const remove = async (bind) => {
-  let result;
+export const update = async (context) => {
+  // bind
+  const bind = context
 
-  try {
-    await simpleExecute(removeSql, bind);
+  // proc
+  const ret = await simpleExecute(updateSql, bind)
 
-    result = bind;
-  } catch (error) {
-    result = null;
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
   }
+};
+export const remove = async (context) => {
+  // bind
+  const bind = context
+  // proc
+  const ret = await simpleExecute(removeSql, bind)
 
-  return result;
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
 };

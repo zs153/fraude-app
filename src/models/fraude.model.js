@@ -12,7 +12,7 @@ const cambioSql = "BEGIN FRAUDE_PKG.CAMBIOESTADOFRAUDE(:idfrau,:liqfra,:stafra,:
 const unasignSql = "BEGIN FRAUDE_PKG.UNASIGNFRAUDE(:idfrau,:liqfra,:stafra,:usumov,:tipmov ); END;"
 const cierreSql = "BEGIN FRAUDE_PKG.CIERREFRAUDE(:idfrau,:liqfra,:stafra,:reffra,:sitcie,:usumov,:tipmov ); END;"
 // hito
-const hitosQuery = "SELECT th.destip,hh.*,TO_CHAR(hh.fechit, 'DD/MM/YYYY') STRFEC FROM hitos hh INNER JOIN tiposhito th ON th.idtipo = hh.tiphit"
+const hitosQuery = "SELECT hh.*,th.destip FROM hitos hh INNER JOIN tiposhito th ON th.idtipo = hh.tiphit"
 const insertHitoSql = "BEGIN FRAUDE_PKG.INSERTHITOFRAUDE(:idfrau,:tiphit,:imphit,:obshit,:stahit,:usumov,:tipmov,:idhito); END;"
 const updateHitoSql = "BEGIN FRAUDE_PKG.UPDATEHITO(:idhito,TO_DATE(:fechit, 'YYYY-MM-DD'),:tiphit,:imphit,:obshit,:usumov,:tipmov); END;"
 const removeHitoSql = "BEGIN FRAUDE_PKG.DELETEHITOFRAUDE(:idfrau,:idhito,:usumov,:tipmov ); END;"
@@ -21,7 +21,7 @@ const insertHitoSancionSql = "BEGIN FRAUDE_PKG.INSERTHITOSANFRAUDE(:idfrau,:tiph
 const cambioEstadoHitoSql = "BEGIN FRAUDE_PKG.CAMBIOESTADOHITO(:idhito,:stahit,:usumov,:tipmov); END;"
 
 // evento
-const eventosQuery = "SELECT tt.destip,ee.*,TO_CHAR(ee.feceve, 'DD/MM/YYYY') STRFEC FROM eventos ee INNER JOIN tiposevento tt ON tt.idtipo = ee.tipeve"
+const eventosQuery = "SELECT ee.*,tt.destip FROM eventos ee INNER JOIN tiposevento tt ON tt.idtipo = ee.tipeve"
 const insertEventoSql = "BEGIN FRAUDE_PKG.INSERTEVENTOFRAUDE(:idfrau,TO_DATE(:feceve, 'YYYY-MM-DD'),:tipeve,:obseve,:usumov,:tipmov,:ideven); END;"
 const updateEventoSql = "BEGIN FRAUDE_PKG.UPDATEEVENTO(:ideven,TO_DATE(:feceve, 'YYYY-MM-DD'),:tipeve,:obseve,:usumov,:tipmov); END;"
 const removeEventoSql = "BEGIN FRAUDE_PKG.DELETEEVENTOFRAUDE(:idfrau,:ideven,:usumov,:tipmov ); END;"
@@ -66,26 +66,21 @@ export const fraude = async (context) => {
 }
 export const fraudes = async (context) => {
   // bind
-  let query = "WITH datos AS (SELECT ff.idfrau,ff.fecfra,ff.ejefra,ff.nifcon,ff.nomcon,ff.obsfra,ff.liqfra,ff.stafra,oo.desofi,tf.destip FROM fraudes ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifra INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra"
+  let query = "WITH datos AS (SELECT ff.idfrau,ff.fecfra,ff.ejefra,ff.nifcon,ff.nomcon,ff.obsfra,ff.ofifra,ff.liqfra,ff.stafra,oo.desofi,tf.destip FROM fraudes ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifra INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra WHERE (ff.nifcon LIKE '%' || :part || '%' OR ff.nomcon LIKE '%' || :part || '%' OR ff.ejefra LIKE '%' || :part || '%' OR ff.fecfra LIKE '%' || :part || '%' OR tf.destip LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%' OR :part IS NULL))"
   let bind = {
     liqfra: context.liquidador,
     stafra: context.estado,
+    ofifra: context.oficina,
     limit: context.limit,
     part: context.part,
   };
 
-  if (context.oficina) {
-    bind.ofifra = context.oficina
-    query += " WHERE (ff.nifcon LIKE '%' || :part || '%' OR ff.nomcon LIKE '%' || :part || '%' OR ff.ejefra LIKE '%' || :part || '%' OR ff.fecfra LIKE '%' || :part || '%' OR tf.destip LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%' OR :part IS NULL) OR (ff.ofifra = :ofifra AND ff.stafra = 0) AND (ff.liqfra = :liqfra AND ff.stafra = :stafra))"
-  } else {
-    query += " WHERE (ff.nifcon LIKE '%' || :part || '%' OR ff.nomcon LIKE '%' || :part || '%' OR ff.ejefra LIKE '%' || :part || '%' OR ff.fecfra LIKE '%' || :part || '%' OR tf.destip LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%' OR :part IS NULL) AND (ff.liqfra = :liqfra AND ff.stafra = :stafra))"
-  }  
   if (context.direction === 'next') {
     bind.idfrau = context.cursor.next;
-    query += " SELECT * FROM datos WHERE idfrau > :idfrau ORDER BY idfrau ASC FETCH NEXT :limit ROWS ONLY"
+    query += "SELECT * FROM datos WHERE idfrau > :idfrau AND (liqfra = :liqfra AND stafra = :stafra) OR (ofifra = :ofifra AND stafra = 0) ORDER BY idfrau ASC FETCH NEXT :limit ROWS ONLY"
   } else {
     bind.idfrau = context.cursor.prev;
-    query += " SELECT * FROM datos WHERE idfrau < :idfrau ORDER BY idfrau DESC FETCH NEXT :limit ROWS ONLY"
+    query += "SELECT * FROM datos WHERE idfrau < :idfrau AND (liqfra = :liqfra AND stafra = :stafra) OR (ofifra = :ofifra AND stafra = 0) ORDER BY idfrau DESC FETCH NEXT :limit ROWS ONLY"
   }
 
   // proc

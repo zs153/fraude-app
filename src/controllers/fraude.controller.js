@@ -384,33 +384,29 @@ export const cambioEstadoHito = async (req, res) => {
 
 // evento
 export const evento = async (req, res) => {
-  const context = req.body.evento
+  // context
+  const context = req.body.context
 
+  // proc
   try {
-    const result = await DAL.findEventos(context)
+    const result = await DAL.evento(context)
 
-    if (result.length === 1) {
-      res.status(200).json(result[0])
-    } else {
-      res.status(404).end()
-    }
+    res.status(200).json(result)
   } catch (err) {
-    res.status(500).end()
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
 export const eventos = async (req, res) => {
-  const context = req.body.fraude
+  // context
+  const context = req.body.context
 
+  // proc
   try {
-    const result = await DAL.findEventos(context)
+    const result = await DAL.eventos(context)
 
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(400).end()
-    }
+    res.status(200).json(result)
   } catch (err) {
-    res.status(500).end()
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
 export const crearEvento = async (req, res) => {
