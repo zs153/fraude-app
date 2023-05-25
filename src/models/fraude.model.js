@@ -285,10 +285,10 @@ export const insertHitoLiquidacion = async (context) => {
   // bind
   let bind = context
   bind.IDHITO = {
-    dir: oracledb.BIND_OUT,
-    type: oracledb.NUMBER,
+    dir: BIND_OUT,
+    type: NUMBER,
   }
-
+  
   // proc
   const ret = await simpleExecute(insertHitoLiquidacionSql, bind)
 

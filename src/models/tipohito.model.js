@@ -8,7 +8,7 @@ const removeSql = "BEGIN FRAUDE_PKG.DELETETIPOHITO(:idtipo,:usumov,:tipmov ); EN
 export const find = async (context) => {
   // bind
   let query = baseQuery;
-  const bind = {};
+  const bind = context;
 
   if (context.IDTIPO) {
     query += " WHERE idtipo = :idtipo";
