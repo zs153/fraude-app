@@ -1,4 +1,4 @@
-import * as DAL from "../models/tipohito.model";
+import * as DAL from "../models/tipoevento.model";
 
 export const tipo = async (req, res) => {
   const context = req.body.context;

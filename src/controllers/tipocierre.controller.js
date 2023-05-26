@@ -1,107 +1,87 @@
-import * as DAL from '../models/tipocierre.model'
-
-const insertFromRec = (req) => {
-  const tipo = {
-    destip: req.body.tipo.DESTIP,
-  }
-  const movimiento = {
-    usumov: req.body.movimiento.USUMOV,
-    tipmov: req.body.movimiento.TIPMOV,
-  }
-
-  return Object.assign(tipo, movimiento)
-}
-const updateFromRec = (req) => {
-  const tipo = {
-    idtipo: req.body.tipo.IDTIPO,
-    destip: req.body.tipo.DESTIP,
-  }
-  const movimiento = {
-    usumov: req.body.movimiento.USUMOV,
-    tipmov: req.body.movimiento.TIPMOV,
-  }
-
-  return Object.assign(tipo, movimiento)
-}
-const deleteFromRec = (req) => {
-  const tipo = {
-    idtipo: req.body.tipo.IDTIPO,
-  }
-  const movimiento = {
-    usumov: req.body.movimiento.USUMOV,
-    tipmov: req.body.movimiento.TIPMOV,
-  }
-
-  return Object.assign(tipo, movimiento)
-}
+import * as DAL from "../models/tipocierre.model";
 
 export const tipo = async (req, res) => {
-  const context = req.body.tipo
+  const context = req.body.context;
 
   try {
-    const result = await DAL.find(context)
+    const result = await DAL.find(context);
 
-    if (result.length === 1) {
-      return res.status(200).json(result[0])
-    } else {
-      res.status(404).end()
-    }
+    res.status(200).json(result)
   } catch (err) {
-    res.status(500).end()
+    res.status(500).end();
   }
-}
+};
 export const tipos = async (req, res) => {
-  const context = req.body.tipo
+  // context
+  const context = req.body.context
 
+  // proc
   try {
-    const result = await DAL.find(context)
+    const result = await DAL.findAll(context)
 
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
+    res.status(200).json(result)
   } catch (err) {
-    res.status(500).end()
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
-
 export const crear = async (req, res) => {
-  try {
-    const result = await DAL.insert(insertFromRec(req))
+  // context
+  const tipo = {
+    destip: req.body.tipo.DESTIP,
+  };
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  };
+  const context = Object.assign(tipo, movimiento)
 
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
+  // proc
+  try {
+    const result = await DAL.insert(context)
+
+    res.status(200).json(result)
   } catch (err) {
-    res.status(500).end()
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
-}
+};
 export const modificar = async (req, res) => {
-  try {
-    const result = await DAL.update(updateFromRec(req))
+  // context
+  const tipo = {
+    idtipo: req.body.tipo.IDTIPO,
+    destip: req.body.tipo.DESTIP,
+  };
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  };
+  const context = Object.assign(tipo, movimiento)
 
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
+  // proc
+  try {
+    const result = await DAL.update(context)
+
+    res.status(200).json(result)
   } catch (err) {
-    res.status(500).end()
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
-}
+};
 export const borrar = async (req, res) => {
-  try {
-    const result = await DAL.remove(deleteFromRec(req))
+  // context
+  const tipo = {
+    idtipo: req.body.tipo.IDTIPO,
+  };
+  const movimiento = {
+    usumov: req.body.movimiento.USUMOV,
+    tipmov: req.body.movimiento.TIPMOV,
+  };
+  const context = Object.assign(tipo, movimiento)
 
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
+  // proc
+  try {
+    const result = await DAL.remove(context)
+
+    res.status(200).json(result)
   } catch (err) {
-    res.status(500).end()
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
-}
+};

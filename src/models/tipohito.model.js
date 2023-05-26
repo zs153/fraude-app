@@ -33,10 +33,10 @@ export const findAll = async (context) => {
 
   if (context.direction === 'next') {
     bind.idofic = context.cursor.next;
-    query = "WITH datos AS (SELECT * FROM tiposFraude WHERE destip LIKE '%' || :part || '%' OR :part IS NULL) SELECT * FROM datos WHERE idtipo > :idtipo ORDER BY idtipo ASC FETCH NEXT :limit ROWS ONLY"
+    query = "WITH datos AS (SELECT * FROM tiposhito WHERE destip LIKE '%' || :part || '%' OR :part IS NULL) SELECT * FROM datos WHERE idtipo > :idtipo ORDER BY idtipo ASC FETCH NEXT :limit ROWS ONLY"
   } else {
     bind.idofic = context.cursor.prev;
-    query = "WITH datos AS (SELECT * FROM tiposFraude WHERE destip LIKE '%' || :part || '%' OR :part IS NULL) SELECT * FROM datos WHERE idtipo < :idtipo ORDER BY idtipo DESC FETCH NEXT :limit ROWS ONLY"
+    query = "WITH datos AS (SELECT * FROM tiposhito WHERE destip LIKE '%' || :part || '%' OR :part IS NULL) SELECT * FROM datos WHERE idtipo < :idtipo ORDER BY idtipo DESC FETCH NEXT :limit ROWS ONLY"
   }
 
   // proc

@@ -483,33 +483,29 @@ export const borrarEvento = async (req, res) => {
 
 // sms
 export const sms = async (req, res) => {
-  const context = req.body.sms
+  // context
+  const context = req.body.context
 
+  // proc
   try {
-    const result = await DAL.findSmss(context)
+    const result = await DAL.sms(context)
 
-    if (result.length === 1) {
-      res.status(200).json(result[0])
-    } else {
-      res.status(404).end()
-    }
+    res.status(200).json(result)
   } catch (err) {
-    res.status(500).end()
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
 export const smss = async (req, res) => {
-  const context = req.body.fraude
+  // context
+  const context = req.body.context
 
+  // proc
   try {
-    const result = await DAL.findSmss(context)
+    const result = await DAL.smss(context)
 
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
+    res.status(200).json(result)
   } catch (err) {
-    res.status(500).end()
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
 export const crearSms = async (req, res) => {
@@ -531,7 +527,7 @@ export const crearSms = async (req, res) => {
 
   // proc
   try {
-    const result = await DAL.update(context)
+    const result = await DAL.insertSms(context)
 
     res.status(200).json(result)
   } catch (err) {
@@ -554,7 +550,7 @@ export const modificarSms = async (req, res) => {
 
   // proc
   try {
-    const result = await DAL.update(context)
+    const result = await DAL.updateSms(context)
 
     res.status(200).json(result)
   } catch (err) {
@@ -577,7 +573,7 @@ export const borrarSms = async (req, res) => {
 
   // proc
   try {
-    const result = await DAL.update(context)
+    const result = await DAL.removeSms(context)
 
     res.status(200).json(result)
   } catch (err) {
@@ -587,33 +583,29 @@ export const borrarSms = async (req, res) => {
 
 // relaciones
 export const relacion = async (req, res) => {
-  const context = req.body.relacion
+  // context
+  const context = req.body.context
 
+  // proc
   try {
-    const result = await DAL.findRelaciones(context)
+    const result = await DAL.relacion(context)
 
-    if (result.length === 1) {
-      res.status(200).json(result[0])
-    } else {
-      res.status(404).end()
-    }
+    res.status(200).json(result)
   } catch (err) {
-    res.status(500).end()
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
 export const relaciones = async (req, res) => {
-  const context = req.body.fraude
+  // context
+  const context = req.body.context
 
+  // proc
   try {
-    const result = await DAL.findRelaciones(context)
+    const result = await DAL.relaciones(context)
 
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
+    res.status(200).json(result)
   } catch (err) {
-    res.status(500).end()
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
 export const crearRelacion = async (req, res) => {
@@ -634,7 +626,7 @@ export const crearRelacion = async (req, res) => {
 
   // proc
   try {
-    const result = await DAL.update(context)
+    const result = await DAL.insertRelacion(context)
 
     res.status(200).json(result)
   } catch (err) {
@@ -657,7 +649,7 @@ export const modificarRelacion = async (req, res) => {
 
   // proc
   try {
-    const result = await DAL.update(context)
+    const result = await DAL.updateRelacion(context)
 
     res.status(200).json(result)
   } catch (err) {
@@ -680,7 +672,7 @@ export const borrarRelacion = async (req, res) => {
 
   // proc
   try {
-    const result = await DAL.update(context)
+    const result = await DAL.removeRelacion(context)
 
     res.status(200).json(result)
   } catch (err) {

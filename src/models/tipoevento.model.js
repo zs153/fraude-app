@@ -1,6 +1,6 @@
 import { simpleExecute } from "../services/database.js";
 
-const baseQuery = "SELECT * FROM tiposhito";
+const baseQuery = "SELECT * FROM tiposevento";
 const insertSql = "BEGIN FRAUDE_PKG.INSERTTIPOEVENTO(:destip,:usumov,:tipmov,:idtipo); END;";
 const updateSql = "BEGIN FRAUDE_PKG.UPDATETIPOEVENTO(:idtipo,:destip,:usumov,:tipmov); END;";
 const removeSql = "BEGIN FRAUDE_PKG.DELETETIPOEVENTO(:idtipo,:usumov,:tipmov ); END;";
@@ -33,10 +33,10 @@ export const findAll = async (context) => {
 
   if (context.direction === 'next') {
     bind.idofic = context.cursor.next;
-    query = "WITH datos AS (SELECT * FROM tiposEvento WHERE destip LIKE '%' || :part || '%' OR :part IS NULL) SELECT * FROM datos WHERE idtipo > :idtipo ORDER BY idtipo ASC FETCH NEXT :limit ROWS ONLY"
+    query = "WITH datos AS (SELECT * FROM tiposevento WHERE destip LIKE '%' || :part || '%' OR :part IS NULL) SELECT * FROM datos WHERE idtipo > :idtipo ORDER BY idtipo ASC FETCH NEXT :limit ROWS ONLY"
   } else {
     bind.idofic = context.cursor.prev;
-    query = "WITH datos AS (SELECT * FROM tiposEvento WHERE destip LIKE '%' || :part || '%' OR :part IS NULL) SELECT * FROM datos WHERE idtipo < :idtipo ORDER BY idtipo DESC FETCH NEXT :limit ROWS ONLY"
+    query = "WITH datos AS (SELECT * FROM tiposevento WHERE destip LIKE '%' || :part || '%' OR :part IS NULL) SELECT * FROM datos WHERE idtipo < :idtipo ORDER BY idtipo DESC FETCH NEXT :limit ROWS ONLY"
   }
 
   // proc
