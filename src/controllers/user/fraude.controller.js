@@ -182,19 +182,17 @@ export const editPage = async (req, res) => {
 };
 export const resolverPage = async (req, res) => {
   const user = req.user;
-  const fraude = {
-    IDFRAU: req.params.id,
-  };
-  const tipo = {}
-
+  let hayLiquidacion = false;
+  
   try {
-    const hitos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/hito`, {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/hito`, {
       context: {
         IDFRAU: req.params.id,
       },
     });
 
-    if (hitos.data.stat) {
+    let hitos = result.data
+    if (hitos.stat) {
       const hayPropuestaLiquidacion = hitos.data.some((itm) => itm.STAHIT === estadosHito.propuestaLiquidacion);
       if (hayPropuestaLiquidacion) {
         if (!hitos.data.some((itm) => itm.STAHIT === estadosHito.liquidacion)) {
@@ -206,7 +204,7 @@ export const resolverPage = async (req, res) => {
           });
         }
       }
-      const hayLiquidacion = hitos.data.some((itm) => itm.STAHIT === estadosHito.liquidacion);
+      hayLiquidacion = hitos.data.some((itm) => itm.STAHIT === estadosHito.liquidacion);
       if (hayLiquidacion) {
         if (!hitos.data.some((itm) => itm.STAHIT === estadosHito.propuestaLiquidacion)) {
           const msg =
@@ -239,19 +237,19 @@ export const resolverPage = async (req, res) => {
           });
         }
       }
-    } else {
-      throw "No se puede resolver sin hito de cierre"
     }
 
-    const tipos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/cierres`, {
-      tipo,
+    const tipos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/cierre`, {
+      context: {},
     });
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
-      fraude,
+    const fraude = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
+      context: {
+        IDFRAU: req.params.id,
+      },
     });
     const datos = {
-      fraude: result.data,
-      tipos: tipos.data,
+      fraude: fraude.data.data[0],
+      tipos: tipos.data.data,
       hayLiquidacion,
     };
 
@@ -550,15 +548,14 @@ export const addEventosPage = async (req, res) => {
   const fraude = {
     IDFRAU: req.params.id,
   };
-  const tipo = {}
 
   try {
-    const tipos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/eventos`, {
-      tipo,
+    const tipos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/evento`, {
+      context: {},
     });
     const datos = {
       fraude,
-      tipos: tipos.data,
+      tipos: tipos.data.data,
     };
 
     res.render("user/fraudes/eventos/add", { user, datos });
@@ -755,27 +752,82 @@ export const smssReadonlyPage = async (req, res) => {
 // pag relacionados
 export const relacionesPage = async (req, res) => {
   const user = req.user;
-  const fraude = {
-    IDFRAU: req.params.id,
-  };
+
+  const dir = req.query.dir ? req.query.dir : 'next'
+  const limit = req.query.limit ? req.query.limit : 9
+  const part = req.query.part ? req.query.part.toUpperCase() : ''
+
+  let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
+  let hasPrevRela = cursor ? true : false
+  let context = {}
+
+  if (cursor) {
+    context = {
+      fraude: req.params.id,
+      limit: limit + 1,
+      direction: dir,
+      cursor: JSON.parse(convertCursorToNode(JSON.stringify(cursor))),
+      part,
+    }
+  } else {
+    context = {
+      fraude: req.params.id,
+      limit: limit + 1,
+      direction: dir,
+      cursor: {
+        next: 0,
+        prev: 0,
+      },
+      part,
+    }
+  }
 
   try {
-    const ret = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
-      fraude,
-    })
-    const relaciones = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/relaciones`, {
-      fraude,
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/relaciones`, {
+      context,
     })
 
-    const fraudeData = {
-      NIFCON: ret.data.NIFCON,
-      NOMCON: ret.data.NOMCON,
-      EJEFRA: ret.data.EJEFRA,
+    let relaciones = result.data.data
+    let hasNextRela = relaciones.length === limit + 1
+    let nextCursor = 0
+    let prevCursor = 0
+
+    if (hasNextRela) {
+      nextCursor = dir === 'next' ? relaciones[limit - 1].IDRELA : relaciones[0].IDRELA
+      prevCursor = dir === 'next' ? relaciones[0].IDFRAU : relaciones[limit - 1].IDFRAU
+
+      relaciones.pop()
+    } else {
+      nextCursor = dir === 'next' ? 0 : relaciones[0]?.IDRELA
+      prevCursor = dir === 'next' ? relaciones[0]?.IDRELA : 0
+
+      if (cursor) {
+        hasNextRela = nextCursor === 0 ? false : true
+        hasPrevRela = prevCursor === 0 ? false : true
+      } else {
+        hasNextRela = false
+        hasPrevRela = false
+      }
     }
+
+    if (dir === 'prev') {
+      relaciones = relaciones.reverse()
+    }
+
+    cursor = {
+      next: nextCursor,
+      prev: prevCursor,
+    }
+    const fraude = {
+      IDFRAU: req.params.id,
+    };
+
     const datos = {
       fraude,
-      fraudeData,
-      relaciones: relaciones.data,
+      relaciones,
+      hasNextRela,
+      hasPrevRela,
+      cursor: convertNodeToCursor(JSON.stringify(cursor)),
     }
 
     res.render("user/fraudes/relaciones", { user, datos });
@@ -887,26 +939,25 @@ export const relacionesReadonlyPage = async (req, res) => {
 }
 
 // pages otros
-export const ejercicioPage = async (req, res) => {
+export const addEjercicioPage = async (req, res) => {
   const user = req.user;
   const fecha = new Date();
-  let fraude = {
-    IDFRAU: req.params.id,
-  };
 
   try {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
-      fraude,
+      context: {
+        IDFRAU: req.params.id,
+      },
     });
 
-    fraude = result.data
+    let fraude = result.data.data[0]
     fraude.EJEFRA = fecha.getFullYear()
 
     const datos = {
       fraude,
     };
 
-    res.render("user/fraudes/ejercicio", { user, datos });
+    res.render("user/fraudes/ejercicios/add", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {
@@ -1034,30 +1085,30 @@ export const remove = async (req, res) => {
 };
 export const asignar = async (req, res) => {
   const user = req.user;
-  let fraude = {
-    IDFRAU: req.body.idfrau,
+  const movimiento = {
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.asignarFraude,
   };
 
   try {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
-      fraude,
+      context: {
+        IDFRAU: req.body.idfrau,
+      },
     });
 
-    fraude.LIQFRA = user.userid
-    fraude.STAFRA = estadosFraude.asignado
-    const movimiento = {
-      USUMOV: user.id,
-      TIPMOV: tiposMovimiento.asignarFraude,
-    };
-
-    if (result.data.STAFRA === estadosFraude.pendiente) {
+    let fraude = result.data.data[0]
+    if (fraude.STAFRA === estadosFraude.pendiente) {
+      fraude.LIQFRA = user.userid
+      fraude.STAFRA = estadosFraude.asignado
+        
       await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/asign`, {
         fraude,
         movimiento,
       });
-
-      res.redirect("/user/fraudes");
     }
+
+    res.redirect("/user/fraudes");
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {
@@ -1072,31 +1123,26 @@ export const asignar = async (req, res) => {
 };
 export const resolver = async (req, res) => {
   const user = req.user;
-  let fraude = {
-    IDFRAU: req.body.idfrau,
-  };
-  const cierre = {
-    REFFRA: req.body.reffra,
-    SITCIE: req.body.sitcie
-  }
-  const movimiento = {
-    USUMOV: user.id,
-    TIPMOV: tiposMovimiento.resolverFraude,
-  };
 
   try {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
-      fraude,
+      context: {
+        IDFRAU: req.body.idfrau,
+      },
     });
 
-    if (result.data.STAFRA === estadosFraude.asignado) {
-      const hitos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/hitos`, {
-        fraude,
+    let fraude = result.data.data[0]
+    if (fraude.STAFRA === estadosFraude.asignado) {
+      const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/hito`, {
+        context: {
+          IDFRAU: req.body.idfrau,
+        }
       });
 
-      const hayPropuestaLiquidacion = hitos.data.some((itm) => itm.STAHIT === estadosHito.propuestaLiquidacion);
+      const hitos = result.data.data
+      const hayPropuestaLiquidacion = hitos.some((itm) => itm.STAHIT === estadosHito.propuestaLiquidacion);
       if (hayPropuestaLiquidacion) {
-        if (!hitos.data.some((itm) => itm.STAHIT === estadosHito.liquidacion)) {
+        if (!hitos.some((itm) => itm.STAHIT === estadosHito.liquidacion)) {
           const msg =
             "Existe propuesta de liquidación sin su correspondiente liquidación.\nNo se puede resolver el fraude.";
 
@@ -1105,9 +1151,9 @@ export const resolver = async (req, res) => {
           });
         }
       }
-      const hayLiquidacion = hitos.data.some((itm) => itm.STAHIT === estadosHito.liquidacion);
+      const hayLiquidacion = hitos.some((itm) => itm.STAHIT === estadosHito.liquidacion);
       if (hayLiquidacion) {
-        if (!hitos.data.some((itm) => itm.STAHIT === estadosHito.propuestaLiquidacion)) {
+        if (!hitos.some((itm) => itm.STAHIT === estadosHito.propuestaLiquidacion)) {
           const msg =
             "Existe liquidación/es sin su correspondiente propuesta de liquidación.\nNo se puede resolver el fraude.";
 
@@ -1116,9 +1162,9 @@ export const resolver = async (req, res) => {
           });
         }
       }
-      const hayPropuestaSancion = hitos.data.some((itm) => itm.STAHIT === estadosHito.propuestaSancion);
+      const hayPropuestaSancion = hitos.some((itm) => itm.STAHIT === estadosHito.propuestaSancion);
       if (hayPropuestaSancion) {
-        if (!hitos.data.some((itm) => itm.STAHIT === estadosHito.sancion || itm.STAHIT === estadosHito.sancionAnulada)) {
+        if (!hitos.some((itm) => itm.STAHIT === estadosHito.sancion || itm.STAHIT === estadosHito.sancionAnulada)) {
           const msg =
             "Existe propuesta de sanción sin su correspondiente sanción o sanción anulada.\nNo se puede resolver el fraude.";
 
@@ -1127,9 +1173,9 @@ export const resolver = async (req, res) => {
           });
         }
       }
-      const haySancion = hitos.data.some((itm) => itm.STAHIT === estadosHito.sancion);
+      const haySancion = hitos.some((itm) => itm.STAHIT === estadosHito.sancion);
       if (haySancion) {
-        if (!hitos.data.some((itm) => itm.STAHIT === estadosHito.propuestaSancion)) {
+        if (!hitos.some((itm) => itm.STAHIT === estadosHito.propuestaSancion)) {
           const msg =
             "Existe sanción sin su correspondiente propuesta de sanción.\nNo se puede resolver el fraude.";
 
@@ -1141,7 +1187,15 @@ export const resolver = async (req, res) => {
 
       fraude.LIQFRA = user.userid
       fraude.STAFRA = estadosFraude.resuelto
-
+      const cierre = {
+        REFFRA: fraude.REFFRA,
+        SITCIE: req.body.sitcie
+      }
+      const movimiento = {
+        USUMOV: user.id,
+        TIPMOV: tiposMovimiento.resolverFraude,
+      };
+    
       await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/cierre`, {
         fraude,
         cierre,
@@ -1164,18 +1218,19 @@ export const resolver = async (req, res) => {
 };
 export const desasignar = async (req, res) => {
   const user = req.user;
-  let fraude = {
-    IDFRAU: req.body.idfrau,
-  };
 
   try {
-    const resul = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
-      fraude,
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
+      context : {
+        IDFRAU: req.body.idfrau,
+      },
     });
 
-    if (resul.data.STAFRA === estadosFraude.asignado) {
+    let fraude = result.data.data[0]
+    if (fraude.STAFRA === estadosFraude.asignado) {
       fraude.LIQFRA = "PEND"
       fraude.STAFRA = estadosFraude.pendiente
+
       const movimiento = {
         USUMOV: user.id,
         TIPMOV: tiposMovimiento.desasignarFraude,
@@ -1186,49 +1241,6 @@ export const desasignar = async (req, res) => {
         movimiento,
       });
     }
-
-    res.redirect("/user/fraudes");
-  } catch (error) {
-    if (error.response?.status === 400) {
-      res.render("user/error400", {
-        alerts: [{ msg: error.response.data.msg }],
-      });
-    } else {
-      res.render("user/error500", {
-        alerts: [{ msg: error }],
-      });
-    }
-  }
-};
-export const ejercicio = async (req, res) => {
-  const user = req.user;
-  const fecha = new Date()
-  const fraude = {
-    FECFRA: fecha.toISOString().substring(0, 10),
-    NIFCON: req.body.nifcon,
-    NOMCON: req.body.nomcon,
-    EMACON: req.body.emacon,
-    TELCON: req.body.telcon,
-    MOVCON: req.body.movcon,
-    REFFRA: req.body.reffra,
-    TIPFRA: req.body.tipfra,
-    EJEFRA: req.body.ejefra,
-    OFIFRA: user.oficina,
-    OBSFRA: req.body.obsfra,
-    FUNFRA: user.userid,
-    LIQFRA: user.userid,
-    STAFRA: estadosFraude.asignado,
-  };
-  const movimiento = {
-    USUMOV: user.id,
-    TIPMOV: tiposMovimiento.crearEjercicio,
-  };
-
-  try {
-    await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/insert`, {
-      fraude,
-      movimiento,
-    });
 
     res.redirect("/user/fraudes");
   } catch (error) {
@@ -1517,6 +1529,51 @@ export const removeEvento = async (req, res) => {
     });
 
     res.redirect(`/user/fraudes/hitoseventos/${fraude.IDFRAU}`);
+  } catch (error) {
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
+  }
+};
+
+// proc ejercicio
+export const insertEjercicio = async (req, res) => {
+  const user = req.user;
+  const fecha = new Date()
+  const fraude = {
+    FECFRA: fecha.toISOString().substring(0, 10),
+    NIFCON: req.body.nifcon,
+    NOMCON: req.body.nomcon,
+    EMACON: req.body.emacon,
+    TELCON: req.body.telcon,
+    MOVCON: req.body.movcon,
+    REFFRA: req.body.reffra,
+    TIPFRA: req.body.tipfra,
+    EJEFRA: req.body.ejefra,
+    OFIFRA: user.oficina,
+    OBSFRA: req.body.obsfra,
+    FUNFRA: user.userid,
+    LIQFRA: user.userid,
+    STAFRA: estadosFraude.asignado,
+  };
+  const movimiento = {
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.crearEjercicio,
+  };
+
+  try {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/insert`, {
+      fraude,
+      movimiento,
+    });
+
+    res.redirect("/user/fraudes");
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {

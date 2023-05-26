@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Fraude</title>
+  <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
+  <!-- styles -->
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body class="antialiased">
+  <div class="wrapper">
+    <%- include('../../../partials/header') %>
+    <%- include('../../../partials/navbar', {opcion: 'FRAUDE'}) %>
+    <div class="page-wrapper">
+      <div class="page-body">
+        <div class="container-xl">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <form id="form" action="/user/fraudes/ejercicios/insert" method="POST" onsubmit="return validate();">
+                  <input type="hidden" name="idfrau" id="idfrau" value="<%- datos.fraude.IDFRAU %>">
+                  <input type="hidden" name="reffra" id="reffra" value="<%- datos.fraude.REFFRA %>">
+                  <div class="card-header">
+                    <h3 class="card-title">Ejercicio</h3>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-2">
+                        <div class="mb-1">
+                          <div class="input-control">
+                            <label class="form-label required">NIF/NIE</label>
+                            <input type="text" name="nifcon" id="nifcon" class="form-control" style="text-transform: uppercase;" value="<%- datos.fraude.NIFCON %>" readonly/>
+                            <div class="invalid-feedback"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="mb-1">
+                          <div class="input-control">
+                            <label class="form-label required">Nombre</label>
+                            <input type="text" name="nomcon" id="nomcon" class="form-control" style="text-transform: uppercase;" value="<%- datos.fraude.NOMCON %>" readonly/>
+                            <div class="invalid-feedback"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="mb-1">
+                          <label class="form-label">Correo electrónico</label>
+                          <input type="text" name="emacon" id="emacon" class="form-control" value="<%- datos.fraude.EMACON %>" readonly/>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="mb-1">
+                          <div class="form-label">Tipo</div>
+                            <input type="hidden" name="tipfra" id="tipfra" class="form-control" value="<%- datos.fraude.TIPFRA %>" readonly />
+                            <input type="text" name="destip" id="destip" class="form-control" value="<%- datos.fraude.DESTIP %>" readonly />
+                          </div>
+                      </div>
+                      <div class="col-2">
+                        <div class="mb-1">
+                          <div class="input-control">
+                            <label class="form-label required">Ejercicio</label>
+                            <input type="number" name="ejefra" id="ejefra" class="form-control" value="<%- datos.fraude.EJEFRA %>" autofocus />
+                            <div class="invalid-feedback"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-2">
+                        <div class="mb-1">
+                          <label class="form-label">Teléfono</label>
+                          <input type="text" name="telcon" id="telcon" class="form-control" value="<%- datos.fraude.TELCON %>" readonly/>
+                        </div>
+                      </div>
+                      <div class="col-2">
+                        <div class="mb-1">
+                          <label class="form-label">Movil</label>
+                          <input type="text" name="movcon" id="movcon" class="form-control" value="<%- datos.fraude.MOVCON %>" readonly/>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="mb-1">
+                          <label class="form-label">Observaciones</label>
+                            <textarea type="text" name="obsfra" id="obsfra" class="form-control" rows="3" style="resize: vertical"><%- datos.fraude.OBSFRA %></textarea>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer text-end">
+                    <div class="d-flex">
+                      <a href="/admin/fraudes" class="btn btn-white">Cancelar</a>
+                      <button type="submit" class="btn btn-success ms-auto" id="btnInsert">Crear nuevo ejercicio</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%- include('../../../partials/footer') %>
+  </div>
+  <script src="/js/ayuda.min.js"></script>
+  <script src="/js/addEjercicio.min.js"></script>
+</body>
+</html>

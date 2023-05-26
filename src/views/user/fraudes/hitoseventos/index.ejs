@@ -322,7 +322,7 @@
                                   <div class="d-flex py-0 align-items-center">
                                     <div class="flex-fill">
                                       <div class="font-weight-medium">
-                                        <%- element.OBSEVE.length> 30 ? element.OBSEVE.slice(0, 30) + '...' : element.OBSEVE %>
+                                        <%- element.OBSEVE?.length> 30 ? element.OBSEVE?.slice(0, 30) + '...' : element.OBSEVE %>
                                       </div>
                                     </div>
                                   </div>
@@ -379,7 +379,7 @@
                 </div>
               </div>
               <div class="card-footer text-end">
-                <form action="#" id="upd" method="POST">
+                <form action="#" id="upd" method="GET">
                   <div class="d-flex">
                     <input class="btn btn-white" action="action" onclick="window.history.go(-1); return false;" type="submit" value="Cancelar" />
                     <button type="submit" class="btn btn-success ms-auto" id="btnUpdate">Resolver fraude</button>
