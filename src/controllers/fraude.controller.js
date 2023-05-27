@@ -611,7 +611,7 @@ export const relaciones = async (req, res) => {
 export const crearRelacion = async (req, res) => {
   // context
   const fraude = {
-    IDFRAU: req.body.fraude.IDFRAU,
+    idfrau: req.body.fraude.IDFRAU,
   }
   const relacion = {
     fecrel: req.body.relacion.FECREL,
@@ -659,7 +659,7 @@ export const modificarRelacion = async (req, res) => {
 export const borrarRelacion = async (req, res) => {
   // context
   const fraude = {
-    IDFRAU: req.body.fraude.IDFRAU,
+    idfrau: req.body.fraude.IDFRAU,
   }
   const relacion = {
     idrela: req.body.relacion.IDRELA,

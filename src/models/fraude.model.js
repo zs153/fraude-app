@@ -533,7 +533,8 @@ export const relacion = async (context) => {
 
   if (context.IDFRAU) {
     query += " INNER JOIN relacionesfraude rf ON rf.idrela = rr.idrela WHERE rf.idfrau = :idfrau"
-  } else if (context.IDRELA) {
+  } 
+  if (context.IDRELA) {
     query += " WHERE rr.idrela = :idrela"
   }
 
@@ -554,14 +555,13 @@ export const relaciones = async (context) => {
     limit: context.limit,
     part: context.part,
   };
-  console.log(query,bind);
 
   if (context.direction === 'next') {
     bind.idrela = context.cursor.next;
-    query = "SELECT rr.* FROM relaciones rr INNER JOIN relacionesfraude rf ON rf.idrela = rr.idrela AND rf.idfrau = :idfrau WHERE rr.idrela > :idrela AND (rr.nifcon LIKE '%' || :part || '%' OR rr.nomcon LIKE '%' || :part OR rr.fecrel LIKE '%' || :part || '%' OR :part IS NULL) ORDER BY rr.idrela ASC FETCH NEXT :limit ROWS ONLY"
+    query = "SELECT rr.*,rf.idfrau FROM relaciones rr INNER JOIN relacionesfraude rf ON rf.idrela = rr.idrela AND rf.idfrau = :idfrau WHERE rr.idrela > :idrela AND (rr.nifcon LIKE '%' || :part || '%' OR rr.nomcon LIKE '%' || :part OR rr.fecrel LIKE '%' || :part || '%' OR :part IS NULL) ORDER BY rr.idrela ASC FETCH NEXT :limit ROWS ONLY"
   } else {
     bind.idrela = context.cursor.prev;
-    query = "SELECT rr.* FROM relaciones rr INNER JOIN relacionesfraude rf ON rf.idrela = rr.idrela AND rf.idfrau = :idfrau WHERE rr.idrela < :idrela AND (rr.nifcon LIKE '%' || :part || '%' OR rr.nomcon LIKE '%' || :part OR rr.fecrel LIKE '%' || :part || '%' OR :part IS NULL) ORDER BY rr.idrela DESC FETCH NEXT :limit ROWS ONLY"
+    query = "SELECT rr.*,rf.idfrau FROM relaciones rr INNER JOIN relacionesfraude rf ON rf.idrela = rr.idrela AND rf.idfrau = :idfrau WHERE rr.idrela < :idrela AND (rr.nifcon LIKE '%' || :part || '%' OR rr.nomcon LIKE '%' || :part OR rr.fecrel LIKE '%' || :part || '%' OR :part IS NULL) ORDER BY rr.idrela DESC FETCH NEXT :limit ROWS ONLY"
   }
 
   // proc
@@ -583,7 +583,7 @@ export const insertRelacion = async (context) => {
 
   // proc
   const ret = await simpleExecute(insertRelacionSql, bind)
-
+  
   if (ret) {
     bind.IDRELA = ret.outBinds.IDRELA
     return ({ stat: 1, data: bind })
