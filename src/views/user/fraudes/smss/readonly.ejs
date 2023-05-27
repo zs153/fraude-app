@@ -23,28 +23,39 @@
               <div class="card">
                 <div class="card-header">
                   <div>
-                    <h3 class="card-title">Relacionados</h3>
+                    <h3 class="card-title">SMS</h3>
                   </div>
                 </div>
                 <div class="card-body">
                   <div class="list-group list-group-flush overflow-auto" style="max-height: 50vh">
-                    <% datos.relaciones.map(itm=> { %>
+                    <% datos.smss.map(itm=> { %>
                       <div class="list-group-item py-1">
                         <div class="row">
+                          <div class="col-auto">
+                            <% if(itm.STASMS === datos.estadosSms.enviado) {%>
+                              <span class="avatar avatar-rounded bg-green-lt">
+                                <h6>ENV</h6>
+                              </span>
+                            <% }  else {%>
+                              <span class="avatar avatar-rounded bg-red-lt">
+                                <h6>PEN</h6>
+                              </span>
+                            <% } %>
+                          </div>                            
                           <div class="col text-truncate">
                             <span style="font-size: .7rem;">
-                              Contribuyente: <%- itm.NIFCON %> <%- itm.NOMCON %>
+                              Fecha: <%- itm.FECSMS.slice(0,10).split("-").reverse().join("/") %> Móvil: <%- itm.MOVSMS %>
                             </span>
                             <div class="text-muted text-truncate">
                               <span style="font-size: .7rem;">
-                                Fecha: <%- itm.FECREL.slice(0,10).split("-").reverse().join("/") %>
+                                Texto: <%- itm.TEXSMS %>
                               </span>
                             </div>
                           </div>                            
                         </div>
                       </div>
                     <% }) %>
-                  </div>
+                  </div>                  
                 </div>
                 <div class="card-footer">                  
                   <div class="ms-auto d-flex py-1">

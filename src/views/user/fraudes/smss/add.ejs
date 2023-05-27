@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>Fraude</title>
+  <title>SMS</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
   <!-- styles -->
   <link rel="stylesheet" href="/css/styles.css">
@@ -21,19 +21,19 @@
           <div class="row">
             <div class="col-12">
               <div class="card">
-                <form action="/user/fraudes/relaciones/update" method="POST" onsubmit="return validate();">
-                  <input type="hidden" id="idrela" name="idrela" value="<%- datos.relacion.IDRELA %>">
+                <form action="/user/fraudes/smss/insert" method="POST" onsubmit="return validate();">
                   <input type="hidden" id="idfrau" name="idfrau" value="<%- datos.fraude.IDFRAU %>">
                   <div class="card-header">
-                    <h3 class="card-title">Relacionado</h3>
+                    <h3 class="card-title">SMS</h3>
                   </div>
                   <div class="card-body">
                     <div class="row">
                       <div class="col-4">
                         <div class="mb-1">
                           <div class="input-control required">
-                            <label class="form-label required">NIF</label>
-                            <input type="text" name="nifcon" id="nifcon" class="form-control" style="text-transform: uppercase;" value="<%- datos.relacion.NIFCON %>" />
+                            <label class="form-label required">Movil</label>
+                            <input type="text" name="movsms" id="movsms" class="form-control"
+                              style="text-transform: uppercase;" value="<%- datos.sms.MOVSMS %>" readonly />
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>
@@ -41,8 +41,8 @@
                       <div class="col-8">
                         <div class="mb-1">
                           <div class="input-control required">
-                            <label class="form-label required">Nombre</label>
-                            <input type="text" name="nomcon" id="nomcon" class="form-control" style="text-transform: uppercase;" value="<%- datos.relacion.NOMCON %>" />
+                            <label class="form-label required">Texto</label>
+                            <textarea type="text" name="texsms" id="texsms" class="form-control" maxlength="140" rows="3" style="resize: vertical"></textarea>
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>
@@ -52,7 +52,7 @@
                   <div class="card-footer text-end">
                     <div class="d-flex">
                       <input class="btn btn-white" action="action" onclick="window.history.go(-1); return false;" type="submit" value="Volver" />
-                      <button type="submit" class="btn btn-success ms-auto" id="btnUpdate">Actualizar relación</button>
+                      <button type="submit" class="btn btn-success ms-auto" id="btnInsert">Crear nuevo Sms</button>
                     </div>
                   </div>
                 </form>
@@ -66,7 +66,7 @@
   </div>
 
   <script src="/js/ayuda.min.js"></script>
-  <script src="/js/addEditRelacion.min.js"></script>
+  <script src="/js/addEditSms.min.js"></script>
 </body>
 
 </html>

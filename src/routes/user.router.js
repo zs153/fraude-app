@@ -6,13 +6,14 @@ import * as fraude from '../controllers/user/fraude.controller'
 const userRouter = express.Router()
 
 //--------------- paginas
+// page main
 userRouter.get('/', authRoutes, usuario.mainPage)
 userRouter.get("/logout", usuario.logoutPage)
 
-// perfil
+// page perfil
 userRouter.get('/perfil/:userid', authRoutes, usuario.perfilPage)
 
-// fraude
+// page fraude
 userRouter.get("/fraudes", authRoutes,fraude.mainPage);
 userRouter.get("/fraudes/resueltos", authRoutes, fraude.resueltosPage);
 userRouter.get("/fraudes/add", authRoutes, fraude.addPage);
@@ -34,11 +35,17 @@ userRouter.get("/fraudes/eventos/edit/:idfra/:ideve", authRoutes, fraude.editEve
 // page ejercios
 userRouter.get("/fraudes/ejercicios/add/:id", authRoutes, fraude.addEjercicioPage);
 
-// pag relacion
+// page relacion
 userRouter.get("/fraudes/relaciones/:id", authRoutes, fraude.relacionesPage);
 userRouter.get("/fraudes/relaciones/add/:id", authRoutes, fraude.relacionesAddPage);
 userRouter.get("/fraudes/relaciones/edit/:idfra/:idrel", authRoutes, fraude.relacionesEditPage);
 userRouter.get("/fraudes/relaciones/readonly/:id", authRoutes, fraude.relacionesReadonlyPage);
+
+// page smss
+userRouter.get("/fraudes/smss/:id", authRoutes, fraude.smssPage);
+userRouter.get("/fraudes/smss/add/:id", authRoutes, fraude.smssAddPage);
+userRouter.get("/fraudes/smss/edit/:idfra/:idsms", authRoutes, fraude.smssEditPage);
+userRouter.get("/fraudes/smss/readonly/:id", authRoutes, fraude.smssReadonlyPage);
 
 //--------------- procedures
 // perfil
@@ -73,6 +80,11 @@ userRouter.post("/fraudes/ejercicios/insert", authRoutes, fraude.insertEjercicio
 userRouter.post("/fraudes/relaciones/insert", authRoutes, fraude.insertRelacion);
 userRouter.post("/fraudes/relaciones/update", authRoutes, fraude.updateRelacion);
 userRouter.post("/fraudes/relaciones/delete", authRoutes, fraude.removeRelacion);
+
+// sms
+userRouter.post("/fraudes/smss/insert", authRoutes, fraude.insertSms);
+userRouter.post("/fraudes/smss/update", authRoutes, fraude.updateSms);
+userRouter.post("/fraudes/smss/delete", authRoutes, fraude.removeSms);
 
 // estados
 

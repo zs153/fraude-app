@@ -165,6 +165,7 @@ const createPages = () => {
 // incializacion
 const elemDel = document.getElementById('del');
 elemDel.setAttribute('action', `/user/fraudes/relaciones/delete?part=${getCookie('filtro')}`)
+
 const elemVol = document.getElementById('vol');
 elemVol.setAttribute('href', `/user/fraudes/?part=${getCookie('filtro')}`)
 

@@ -416,12 +416,26 @@ export const hitoseventosReadonlyPage = async (req, res) => {
   };
 
   try {
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/extended`, {
-      fraude,
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
+      context: {
+        IDFRAU: req.params.id,
+      },
+    });
+    const hitos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/hito`, {
+      context: {
+        IDFRAU: req.params.id,
+      },
+    });
+    const eventos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/evento`, {
+      context: {
+        IDFRAU: req.params.id,
+      },
     });
 
     const datos = {
-      detalle: result.data,
+      fraude: result.data.data[0],
+      hitos: hitos.data.data,
+      eventos: eventos.data.data,
       estadosHito,
     };
 
@@ -610,30 +624,86 @@ export const editEventosPage = async (req, res) => {
 // pages sms
 export const smssPage = async (req, res) => {
   const user = req.user;
-  const fraude = {
-    IDFRAU: req.params.id,
-  };
+
+  const dir = req.query.dir ? req.query.dir : 'next'
+  const limit = req.query.limit ? req.query.limit : 9
+  const part = req.query.part ? req.query.part.toUpperCase() : ''
+
+  let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
+  let hasPrevSms = cursor ? true : false
+  let context = {}
+
+  if (cursor) {
+    context = {
+      fraude: req.params.id,
+      limit: limit + 1,
+      direction: dir,
+      cursor: JSON.parse(convertCursorToNode(JSON.stringify(cursor))),
+      part,
+    }
+  } else {
+    context = {
+      fraude: req.params.id,
+      limit: limit + 1,
+      direction: dir,
+      cursor: {
+        next: 0,
+        prev: 0,
+      },
+      part,
+    }
+  }
 
   try {
-    const ret = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
-      fraude,
-    })
-    const smss = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/smss`, {
-      fraude,
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/smss`, {
+      context,
     })
 
-    const fraudeData = {
-      NIFCON: ret.data.NIFCON,
-      NOMCON: ret.data.NOMCON,
-      EJEFRA: ret.data.EJEFRA,
+    let smss = result.data.data
+    let hasNextSms = smss.length === limit + 1
+    let nextCursor = 0
+    let prevCursor = 0
+
+    if (hasNextSms) {
+      nextCursor = dir === 'next' ? smss[limit - 1].IDSMSS : smss[0].IDSMSS
+      prevCursor = dir === 'next' ? smss[0].IDSMSS : smss[limit - 1].IDSMSS
+
+      smss.pop()
+    } else {
+      nextCursor = dir === 'next' ? 0 : smss[0]?.IDSMSS
+      prevCursor = dir === 'next' ? smss[0]?.IDSMSS : 0
+
+      if (cursor) {
+        hasNextSms = nextCursor === 0 ? false : true
+        hasPrevSms = prevCursor === 0 ? false : true
+      } else {
+        hasNextSms = false
+        hasPrevSms = false
+      }
     }
+
+    if (dir === 'prev') {
+      smss = smss.reverse()
+    }
+
+    cursor = {
+      next: nextCursor,
+      prev: prevCursor,
+    }
+
+    const fraude = {
+      IDFRAU: req.params.id,
+    };
     const datos = {
       fraude,
-      fraudeData,
-      smss: smss.data,
+      smss,
+      hasNextSms,
+      hasPrevSms,
+      cursor: convertNodeToCursor(JSON.stringify(cursor)),      
       estadosSms,
     }
 
+    console.log(smss);
     res.render("user/fraudes/smss", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {
@@ -649,16 +719,16 @@ export const smssPage = async (req, res) => {
 }
 export const smssAddPage = async (req, res) => {
   const user = req.user;
-  let fraude = {
-    IDFRAU: req.params.id,
-  };
 
   try {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
-      fraude,
+      context: {
+        IDFRAU: req.params.id,
+      },
     });
+    const fraude = result.data.data[0]
     const sms = {
-      MOVSMS: result.data.MOVCON,
+      MOVSMS: fraude.MOVCON,
     }
     const datos = {
       fraude,
@@ -683,17 +753,17 @@ export const smssEditPage = async (req, res) => {
   const fraude = {
     IDFRAU: req.params.idfra,
   }
-  const sms = {
-    IDSMSS: req.params.idsms,
-  };
 
   try {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/sms`, {
-      sms,
+      context: {
+        IDSMSS: req.params.idsms,
+      },
     });
+    const sms = result.data.data[0]
     const datos = {
       fraude,
-      sms: result.data,
+      sms,
     };
 
     res.render("user/fraudes/smss/edit", { user, datos });
@@ -716,22 +786,15 @@ export const smssReadonlyPage = async (req, res) => {
   };
 
   try {
-    const ret = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
-      fraude,
-    })
-    const smss = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/smss`, {
-      fraude,
+    const smss = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/sms`, {
+      context: {
+        IDFRAU: req.params.id,
+      },
     })
 
-    const fraudeData = {
-      NIFCON: ret.data.NIFCON,
-      NOMCON: ret.data.NOMCON,
-      EJEFRA: ret.data.EJEFRA,
-    }
     const datos = {
       fraude,
-      fraudeData,
-      smss: smss.data,
+      smss: smss.data.data,
       estadosSms,
     }
 
@@ -794,7 +857,7 @@ export const relacionesPage = async (req, res) => {
 
     if (hasNextRela) {
       nextCursor = dir === 'next' ? relaciones[limit - 1].IDRELA : relaciones[0].IDRELA
-      prevCursor = dir === 'next' ? relaciones[0].IDFRAU : relaciones[limit - 1].IDFRAU
+      prevCursor = dir === 'next' ? relaciones[0].IDRELA : relaciones[limit - 1].IDRELA
 
       relaciones.pop()
     } else {
@@ -905,23 +968,15 @@ export const relacionesReadonlyPage = async (req, res) => {
   };
 
   try {
-    const ret = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
-      fraude,
-    })
-    const relaciones = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/relaciones`, {
-      fraude,
+    const relaciones = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/relacion`, {
+      context: {
+        IDFRAU: req.params.id,
+      },
     })
 
-    const fraudeData = {
-      NIFCON: ret.data.NIFCON,
-      NOMCON: ret.data.NOMCON,
-      EJEFRA: ret.data.EJEFRA,
-    }
     const datos = {
       fraude,
-      fraudeData,
-      relaciones: relaciones.data,
-      estadosSms,
+      relaciones: relaciones.data.data,
     }
 
     res.render("user/fraudes/relaciones/readonly", { user, datos });
@@ -1002,7 +1057,7 @@ export const insert = async (req, res) => {
       movimiento,
     });
 
-    res.redirect("/user/fraudes");
+    res.redirect(`/user/fraudes?part=${req.query.part}`);
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {
@@ -1041,7 +1096,7 @@ export const update = async (req, res) => {
       movimiento,
     });
 
-    res.redirect("/user/fraudes");
+    res.redirect(`/user/fraudes?part=${req.query.part}`);
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {
@@ -1054,7 +1109,7 @@ export const update = async (req, res) => {
     }
   }
 };
-export const remove = async (req, res) => {
+export const remove = async (req, res) => { 
   const user = req.user;
   const fraude = {
     IDFRAU: req.body.idfrau,
@@ -1065,12 +1120,26 @@ export const remove = async (req, res) => {
   };
 
   try {
-    await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/delete`, {
-      fraude,
-      movimiento,
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
+      context: {
+        IDFRAU: req.body.idfrau,
+      }
     });
 
-    res.redirect("/user/fraudes");
+    if (result.data.stat) {
+      if (result.data.data[0].FUNFRA === user.userid) {
+        await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/delete`, {
+          fraude,
+          movimiento,
+        });
+    
+        res.redirect(`/user/fraudes?part=${req.query.part}`);
+      } else {
+        throw "El documento no puede ser borrado."
+      }
+    } else {
+      throw "El documento no existe."
+    }
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {
