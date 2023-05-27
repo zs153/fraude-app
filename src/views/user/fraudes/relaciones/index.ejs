@@ -41,7 +41,7 @@
                             aria-label="Buscar en relacionados">
                         </div>
                       </form>
-                      <a href="#" id="new" class="btn">
+                      <a href="/user/fraudes/relaciones/add/<%= datos.fraude.IDFRAU %>" class="btn">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" height="24" width="24" viewBox="0 0 24 24">
                           <path d="M11.25 18.75v-6h-6v-1.5h6v-6h1.5v6h6v1.5h-6v6Z" />
                         </svg>
@@ -66,7 +66,7 @@
                   </table>
                   <div id="pagination-wrapper" class="py-1"></div>
                   <div class="ms-auto d-flex py-1">
-                    <a href="/user/fraudes/relaciones" class="btn btn-white">Volver</a>
+                    <a href="#" id="vol" class="btn btn-white">Volver</a>
                   </div>
                 </div>
               </div>
@@ -104,7 +104,7 @@
               <div class="col">
                 <form action="#" id="del" method="POST">
                   <input type="hidden" id="idrela" name="idrela" value="">
-                  <input type="hidden" id="idfrau" name="idfrau" value="<%= datos.fraude %>">
+                  <input type="hidden" id="idfrau" name="idfrau" value="<%= datos.fraude.IDFRAU %>">
                   <button type="submit" class="btn btn-danger w-100">Borrar relación</button>
                 </form>
               </div>

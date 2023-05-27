@@ -818,10 +818,10 @@ export const relacionesPage = async (req, res) => {
       next: nextCursor,
       prev: prevCursor,
     }
+
     const fraude = {
       IDFRAU: req.params.id,
     };
-
     const datos = {
       fraude,
       relaciones,
@@ -872,17 +872,17 @@ export const relacionesEditPage = async (req, res) => {
   const fraude = {
     IDFRAU: req.params.idfra,
   }
-  const relacion = {
-    IDRELA: req.params.idrel,
-  };
 
   try {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/relacion`, {
-      relacion,
+      context: {
+        IDRELA: req.params.idrel,
+      },
     });
+
     const datos = {
       fraude,
-      relacion: result.data,
+      relacion: result.data.data[0],
     };
 
     res.render("user/fraudes/relaciones/edit", { user, datos });
@@ -1108,7 +1108,7 @@ export const asignar = async (req, res) => {
       });
     }
 
-    res.redirect("/user/fraudes");
+    res.redirect(`/user/fraudes?part=${req.query.part}`);
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {
@@ -1203,7 +1203,7 @@ export const resolver = async (req, res) => {
       });
     }
 
-    res.redirect("/user/fraudes");
+    res.redirect(`/user/fraudes?part=${req.query.part}`);
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {
@@ -1242,7 +1242,7 @@ export const desasignar = async (req, res) => {
       });
     }
 
-    res.redirect("/user/fraudes");
+    res.redirect(`/user/fraudes?part=${req.query.part}`);
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {

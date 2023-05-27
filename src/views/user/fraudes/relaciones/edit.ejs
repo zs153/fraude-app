@@ -5,12 +5,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>Relacionados</title>
+  <title>Fraude</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
   <!-- styles -->
   <link rel="stylesheet" href="/css/styles.css">
-  <!-- <link rel="stylesheet" href="/css/estilos.css">
-  <link rel="stylesheet" href="/css/navbar.css"> -->
 </head>
 
 <body class="antialiased">
@@ -23,7 +21,7 @@
           <div class="row">
             <div class="col-12">
               <div class="card">
-                <form action="/admin/fraudes/relaciones/update" method="POST" onsubmit="return validate();">
+                <form action="/user/fraudes/relaciones/update" method="POST" onsubmit="return validate();">
                   <input type="hidden" id="idrela" name="idrela" value="<%- datos.relacion.IDRELA %>">
                   <input type="hidden" id="idfrau" name="idfrau" value="<%- datos.fraude.IDFRAU %>">
                   <div class="card-header">
@@ -53,7 +51,7 @@
                   </div>
                   <div class="card-footer text-end">
                     <div class="d-flex">
-                      <a href="/admin/fraudes/relaciones/<%- datos.fraude.IDFRAU %>" class="btn btn-link">Cancelar</a>
+                      <input class="btn btn-white" action="action" onclick="window.history.go(-1); return false;" type="submit" value="Volver" />
                       <button type="submit" class="btn btn-success ms-auto" id="btnUpdate">Actualizar relación</button>
                     </div>
                   </div>

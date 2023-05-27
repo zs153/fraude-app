@@ -61,3 +61,7 @@ const validate = () => {
 
   return true
 }
+
+// inicializar
+const elemVol = document.getElementById('vol');
+elemVol.setAttribute('href', `/user/fraudes/?part=${getCookie('filtro')}`)

@@ -50,7 +50,7 @@
                   </div>
                   <div class="card-footer text-end">
                     <div class="d-flex">
-                      <a href="/user/fraudes/relaciones/<%- datos.fraude.IDFRAU %>" class="btn btn-link">Cancelar</a>
+                      <input class="btn btn-white" action="action" onclick="window.history.go(-1); return false;" type="submit" value="Volver" />
                       <button type="submit" class="btn btn-success ms-auto" id="btnInsert">Crear nueva relación</button>
                     </div>
                   </div>
@@ -65,7 +65,7 @@
   </div>
 
   <script src="/js/ayuda.min.js"></script>
-  <script src="/js/addEditRelaciones.min.js"></script>
+  <script src="/js/addEditRelacion.min.js"></script>
 </body>
 
 </html>

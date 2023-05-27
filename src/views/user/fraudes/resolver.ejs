@@ -81,7 +81,7 @@
                   </div>
                   <div class="card-footer text-end">
                     <div class="d-flex">
-                      <a href="/user/fraudes" class="btn btn-link">Cancelar</a>
+                      <a href="#" id="vol" class="btn btn-white">Cancelar</a>
                       <button type="submit" class="btn btn-success ms-auto">Resolver fraude</button>
                     </div>
                   </div>
@@ -95,5 +95,20 @@
     <%- include('../../partials/footer') %>
   </div>
   <script src="/js/ayuda.min.js"></script>
+  <script>
+    const getCookie = (key) => {
+      let value = ''
+      document.cookie.split(';').forEach((e) => {
+        if (e.includes(key)) {
+          value = e.split('=')[1]
+        }
+      })
+      return value
+    }
+    
+    // inicializar
+    const elemVol = document.getElementById('vol');
+    elemVol.setAttribute('href', `/user/fraudes/?part=${getCookie('filtro')}`)
+  </script>
 </body>
 </html>
