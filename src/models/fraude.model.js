@@ -25,7 +25,7 @@ const insertEventoSql = "BEGIN FRAUDE_PKG.INSERTEVENTOFRAUDE(:idfrau,TO_DATE(:fe
 const updateEventoSql = "BEGIN FRAUDE_PKG.UPDATEEVENTO(:ideven,TO_DATE(:feceve, 'YYYY-MM-DD'),:tipeve,:obseve,:usumov,:tipmov); END;"
 const removeEventoSql = "BEGIN FRAUDE_PKG.DELETEEVENTOFRAUDE(:idfrau,:ideven,:usumov,:tipmov ); END;"
 // sms
-const smssQuery = "SELECT ss.*,TO_CHAR(ss.fecsms, 'DD/MM/YYYY') STRFEC FROM smss ss"
+const smssQuery = "SELECT ss.* FROM smss ss"
 const insertSmsSql = "BEGIN FRAUDE_PKG.INSERTSMSFRAUDE(:idfrau,TO_DATE(:fecsms, 'YYYY-MM-DD'),:texsms,:movsms,:stasms,:usumov,:tipmov,:idsmss); END;"
 const updateSmsSql = "BEGIN FRAUDE_PKG.UPDATESMS(:idsmss,TO_DATE(:fecsms, 'YYYY-MM-DD'),:texsms,:movsms,:usumov,:tipmov); END;"
 const removeSmsSql = "BEGIN FRAUDE_PKG.DELETESMSFRAUDE(:idfrau,:idsmss,:usumov,:tipmov ); END;"
@@ -431,7 +431,7 @@ export const removeEvento = async (context) => {
 export const sms = async (context) => {
   // bind
   let query = smssQuery
-  let bind = context
+  const bind = context
 
   if (context.IDFRAU) {
     query += " INNER JOIN smssfraude sf ON sf.idsmss = ss.idsmss WHERE sf.idfrau = :idfrau"
@@ -450,27 +450,20 @@ export const sms = async (context) => {
 }
 export const smss = async (context) => {
   // bind
-  //TODO
-  let query = "WITH datos AS (SELECT ff.idfrau,ff.fecfra,ff.ejefra,ff.nifcon,ff.nomcon,ff.obsfra,ff.liqfra,ff.stafra,oo.desofi,tf.destip FROM fraudes ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifra INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra"
+  let query = ""
   let bind = {
-    liqfra: context.liquidador,
-    stafra: context.estado,
+    idfrau: context.fraude,
     limit: context.limit,
     part: context.part,
   };
 
-  if (context.oficina) {
-    bind.ofifra = context.oficina
-    query += " WHERE (ff.ofifra = :ofifra AND ff.stafra = 0) OR (ff.liqfra = :liqfra AND ff.stafra = :stafra) AND (ff.nifcon LIKE '%' || :part || '%' OR ff.nomcon LIKE '%' || :part || '%' OR ff.ejefra LIKE '%' || :part || '%' OR ff.fecfra LIKE '%' || :part || '%' OR tf.destip LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%' OR :part IS NULL))"
-  } else {
-    query += " WHERE (ff.liqfra = :liqfra AND ff.stafra = :stafra) AND (ff.nifcon LIKE '%' || :part || '%' OR ff.nomcon LIKE '%' || :part || '%' OR ff.ejefra LIKE '%' || :part || '%' OR ff.fecfra LIKE '%' || :part || '%' OR tf.destip LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%' OR :part IS NULL))"
-  }  
+  console.log(bind);
   if (context.direction === 'next') {
-    bind.idfrau = context.cursor.next;
-    query += " SELECT * FROM datos WHERE idfrau > :idfrau ORDER BY idfrau ASC FETCH NEXT :limit ROWS ONLY"
+    bind.idsmss = context.cursor.next;
+    query = "SELECT ss.*,sf.idfrau FROM smss ss INNER JOIN smssfraude sf ON sf.idsmss = ss.idsmss AND sf.idfrau = :idfrau WHERE ss.idsmss > :idsmss AND (ss.movsms LIKE '%' || :part OR ss.fecsms LIKE '%' || :part || '%' OR :part IS NULL) ORDER BY ss.idsmss ASC FETCH NEXT :limit ROWS ONLY"
   } else {
-    bind.idfrau = context.cursor.prev;
-    query += " SELECT * FROM datos WHERE idfrau < :idfrau ORDER BY idfrau DESC FETCH NEXT :limit ROWS ONLY"
+    bind.idsmss = context.cursor.prev;
+    query = "SELECT ss.*,sf.idfrau FROM smss ss INNER JOIN smssfraude sf ON sf.idsmss = ss.idsmss AND sf.idfrau = :idfrau WHERE ss.idsmss < :idsmss AND (ss.movsms LIKE '%' || :part OR ss.fecsms LIKE '%' || :part || '%' OR :part IS NULL) ORDER BY ss.idsmss DESC FETCH NEXT :limit ROWS ONLY"
   }
 
   // proc
