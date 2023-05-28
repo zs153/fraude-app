@@ -15,7 +15,7 @@
           </a>
         </li>
         <li class="nav-item <%- opcion === 'FRAUDE' ? 'active':'' %>">
-          <a class="nav-link" href="/user/fraudes">
+          <a class="nav-link" href="/user/fraudes" onclick="document.cookie='filtro=;Path=/;Expires=Thu, 01 Jan 1970 00:00:01 GMT;';">
             <span class="nav-link-icon d-md-none d-lg-inline-block">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon" height="20" width="20" viewBox="0 0 20 20">
                 <path
@@ -57,25 +57,25 @@
                 Tipos
               </a>
               <div class="dropdown-menu">
-                <a href="/admin/tipos/fraudes" class="dropdown-item">
+                <a href="/admin/tipos/fraudes" class="dropdown-item" onclick="document.cookie='filtro=;Path=/;Expires=Thu, 01 Jan 1970 00:00:01 GMT;';">
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke-width=".4" fill="none" d="M8.025 8.75q.3 0 .513-.225.212-.225.212-.5t-.225-.5Q8.3 7.3 8.05 7.3q-.3 0-.513.225-.212.225-.212.5t.212.5q.213.225.488.225Zm0 3.95q.275 0 .5-.213.225-.212.225-.487 0-.3-.225-.513-.225-.212-.475-.212-.3 0-.513.212-.212.213-.212.513 0 .275.212.487.213.213.488.213Zm0 3.975q.3 0 .513-.213.212-.212.212-.487 0-.3-.225-.513-.225-.212-.475-.212-.3 0-.513.225-.212.225-.212.475 0 .3.212.512.213.213.488.213Zm-2.175 2.9q-.6 0-1.012-.412-.413-.413-.413-1.013V5.85q0-.6.413-1.025Q5.25 4.4 5.85 4.4h9.55l4.2 4.2v9.55q0 .6-.425 1.013-.425.412-1.025.412Zm0-.625h12.3q.35 0 .575-.225.225-.225.225-.575V9.025h-3.975V5.05H5.85q-.35 0-.575.225-.225.225-.225.575v12.3q0 .35.225.575.225.225.575.225Zm-.8-13.9v3.975V5.05 18.95 5.05Z" />
                   </svg>
                   Tipos de Fraude
                 </a>
-                <a href="/admin/tipos/hitos" class="dropdown-item">
+                <a href="/admin/tipos/hitos" class="dropdown-item" onclick="document.cookie='filtro=;Path=/;Expires=Thu, 01 Jan 1970 00:00:01 GMT;';">
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke-width=".4" fill="none" d="M15 17.95q-.825 0-1.387-.575-.563-.575-.563-1.4 0-.8.563-1.375.562-.575 1.387-.575t1.4.575q.575.575.575 1.375 0 .825-.575 1.4t-1.4.575Zm-9.15 2.625q-.6 0-1.012-.412-.413-.413-.413-1.013V6.825q0-.6.413-1.013Q5.25 5.4 5.85 5.4h2.075V3.1h.725v2.3h6.8V3.1h.65v2.3h2.05q.6 0 1.025.412.425.413.425 1.013V19.15q0 .6-.425 1.013-.425.412-1.025.412Zm0-.65h12.3q.3 0 .55-.25.25-.25.25-.55v-8.3H5.05v8.3q0 .3.25.55.25.25.55.25Zm-.8-9.75h13.9v-3.35q0-.3-.25-.55-.25-.25-.55-.25H5.85q-.3 0-.55.25-.25.25-.25.55Zm0 0v-4.15 4.15Z" />
                   </svg>
                   Tipos de Hito
                 </a>
-                <a href="/admin/tipos/eventos" class="dropdown-item">
+                <a href="/admin/tipos/eventos" class="dropdown-item" onclick="document.cookie='filtro=;Path=/;Expires=Thu, 01 Jan 1970 00:00:01 GMT;';">
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke-width=".4" fill="none" d="m10.975 17.3-2.6-2.6.45-.45 2.15 2.15 4.225-4.225.45.45ZM5.85 20.575q-.6 0-1.012-.412-.413-.413-.413-1.013V6.825q0-.6.413-1.013Q5.25 5.4 5.85 5.4h2.075V3.1h.725v2.3h6.8V3.1h.65v2.3h2.05q.6 0 1.025.412.425.413.425 1.013V19.15q0 .6-.425 1.013-.425.412-1.025.412Zm0-.65h12.3q.3 0 .55-.25.25-.25.25-.55v-8.3H5.05v8.3q0 .3.25.55.25.25.55.25Zm-.8-9.75h13.9v-3.35q0-.3-.25-.55-.25-.25-.55-.25H5.85q-.3 0-.55.25-.25.25-.25.55Zm0 0v-4.15 4.15Z" />
                   </svg>
                   Tipos de Evento
                 </a>
-                <a href="/admin/tipos/cierres" class="dropdown-item">
+                <a href="/admin/tipos/cierres" class="dropdown-item" onclick="document.cookie='filtro=;Path=/;Expires=Thu, 01 Jan 1970 00:00:01 GMT;';">
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" width="24" height="24" viewBox="0 0 24 24"
                     stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke-width=".4" fill="none"
@@ -97,7 +97,7 @@
               </svg>
               Históricos
             </a>
-            <a href="/admin/cargas" class="dropdown-item">
+            <a href="/admin/cargas" class="dropdown-item" onclick="document.cookie='filtro=;Path=/;Expires=Thu, 01 Jan 1970 00:00:01 GMT;';">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" width="24" height="24"
                 viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke-width=".4"

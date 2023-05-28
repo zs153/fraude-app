@@ -1642,7 +1642,7 @@ export const insertEjercicio = async (req, res) => {
       movimiento,
     });
 
-    res.redirect("/user/fraudes");
+    res.redirect(`/user/fraudes?part=${req.query.part}`);
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {

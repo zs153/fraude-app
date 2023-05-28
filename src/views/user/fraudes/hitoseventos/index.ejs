@@ -381,7 +381,7 @@
               <div class="card-footer text-end">
                 <form action="#" id="upd" method="GET">
                   <div class="d-flex">
-                    <input class="btn btn-white" action="action" onclick="window.history.go(-1); return false;" type="submit" value="Cancelar" />
+                    <a href="#" id="vol" class="btn btn-white">Volver</a>                    
                     <button type="submit" class="btn btn-success ms-auto" id="btnUpdate">Resolver fraude</button>
                   </div>
                 </form>
@@ -501,7 +501,9 @@
     <script src="/js/ayuda.min.js"></script>
     <script>
       const elemUpd = document.getElementById('upd');
-      elemUpd.setAttribute('action', `/user/fraudes/resolver/<%= datos.fraude.IDFRAU %>?part=${getCookie('filtro')}`)
+      elemUpd.setAttribute('action', `/user/fraudes?part=${getCookie('filtro')}`)
+      const elemVol = document.getElementById('vol');
+      elemUpd.setAttribute('action', `/user/fraudes?part=${getCookie('filtro')}`)
     </script>
   </body>
 </html>

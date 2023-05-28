@@ -89,19 +89,10 @@ const buildTable = (state) => {
             </a>
             <ul class='ms-4'>
               <li>
-                <h4 class='m-0'>Propuesta liquidación: ${element.PROLIQ === 0 ? 'No' : 'Sí'}</h4>
+                <h4 class='m-0'>Hitos: ${element.NUMHIT > 0 ? 'Sí' : 'No'}</h4>
               </li>
               <li>
-                <h4 class='m-0'>Liquidación: ${element.LIQUID === 0 ? 'No' : 'Sí'}</h4>
-              </li>
-              <li>
-                <h4 class='m-0'>Propuesta sanción: ${element.PROSAN === 0 ? 'No' : 'Sí'}</h4>
-              </li>
-              <li>
-                <h4 class='m-0'>Sanción: ${element.SANCIO === 0 ? 'No' : 'Sí'}</h4>
-              </li>
-              <li>
-                <h4 class='m-0'>Nº de eventos: ${element.NUMEVE}</h4>
+                <h4 class='m-0'>Eventos: ${element.NUMEVE > 0 ? 'Sí' : 'No'}</h4>
               </li>
             </ul>
           </li>
