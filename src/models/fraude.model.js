@@ -46,9 +46,11 @@ export const fraude = async (context) => {
     query += " WHERE ff.reffra = :reffra"
   } else if (context.LIQFRA) {
     if (context.STAFRA === 1) {
+      //TODO
       // mostrar asignados al liquidador y todos los no asignados
       query = largeQuery
     } else {
+      //TODO
       // mostrar los resueltos por el liquidador
       query += " WHERE ff.liqfra = :liqfra AND stafra = 2"
     }
@@ -65,7 +67,7 @@ export const fraude = async (context) => {
 }
 export const fraudes = async (context) => {
   // bind
-  let query = "WITH datos AS (SELECT ff.idfrau,ff.fecfra,ff.ejefra,ff.nifcon,ff.nomcon,ff.obsfra,ff.ofifra,ff.liqfra,ff.stafra,oo.desofi,tf.destip FROM fraudes ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifra INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra WHERE (liqfra = :liqfra AND stafra = :stafra) OR (ofifra = :ofifra AND stafra = 0))"
+  let query = "WITH datos AS (SELECT ff.idfrau,ff.fecfra,ff.ejefra,ff.nifcon,ff.nomcon,ff.obsfra,ff.ofifra,ff.liqfra,ff.stafra,oo.desofi,tf.destip,numhit,numeve FROM (SELECT ff.idfrau,count(hf.idhito) numhit,count(ef.ideven) numeve FROM fraudes ff LEFT JOIN hitosfraude hf ON hf.idfrau= ff.idfrau LEFT JOIN eventosfraude ef ON ef.idfrau = ff.idfrau GROUP BY ff.idfrau) p1 RIGHT JOIN fraudes ff ON ff.idfrau = p1.idfrau INNER JOIN oficinas oo ON oo.idofic = ff.ofifra INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra WHERE (liqfra = :liqfra AND stafra = :stafra) OR (ofifra = :ofifra AND stafra = 0))"
   let bind = {
     liqfra: context.liquidador,
     stafra: context.estado,
