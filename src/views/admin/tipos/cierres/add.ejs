@@ -9,8 +9,6 @@
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
   <!-- styles -->
   <link rel="stylesheet" href="/css/styles.css">
-  <!-- <link rel="stylesheet" href="/css/estilos.css">
-  <link rel="stylesheet" href="/css/navbar.css"> -->
 </head>
 
 <body class="antialiased">
@@ -41,7 +39,7 @@
                   </div>
                   <div class="card-footer text-end">
                     <div class="d-flex">
-                      <a href="/admin/tipos/cierres" class="btn btn-link">Cancelar</a>
+                      <input class="btn btn-white" action="action" onclick="window.history.go(-1); return false;" type="submit" value="Volver" />
                       <button type="submit" class="btn btn-success ms-auto" id="btnInsert">Crear nuevo tipo</button>
                     </div>
                   </div>
@@ -56,40 +54,7 @@
   </div>
 
   <script src="/js/ayuda.min.js"></script>
-  <script>
-    const destip = document.getElementById('destip')
-
-    const validate = () => {
-      const destipValue = destip.value.trim()
-
-      if (destipValue === '') {
-        setError(destip, 'Descripción requerida')
-        setTimeout(function () {
-          setSuccess(destip)
-        }, 3000)
-        return false
-      }
-
-      return true
-    }
-
-    const setSuccess = (element) => {
-      const inputControl = element.parentElement;
-      const errorDisplay = inputControl.querySelector('.invalid-feedback');
-
-      errorDisplay.innerText = '';
-      inputControl.classList.add('is-valid');
-      element.classList.remove('is-invalid');
-    }
-    const setError = (element, message) => {
-      const inputControl = element.parentElement;
-      const errorDisplay = inputControl.querySelector('.invalid-feedback');
-
-      errorDisplay.innerText = message;
-      element.classList.add('is-invalid');
-      inputControl.classList.remove('is-valid');
-    }
-  </script>
+  <script src="/js/addEditTipoCierre.min.js"></script>
 </body>
 
 </html>

@@ -1513,7 +1513,6 @@ export const insertEvento = async (req, res) => {
     IDFRAU: req.body.idfrau,
   };
   const evento = {
-    FECEVE: new Date().toISOString().slice(0, 10),
     TIPEVE: req.body.tipeve,
     OBSEVE: req.body.obseve,
   };
@@ -1549,7 +1548,6 @@ export const updateEvento = async (req, res) => {
   };
   const evento = {
     IDEVEN: req.body.ideven,
-    FECEVE: new Date().toISOString().slice(0, 10),
     TIPEVE: req.body.tipeve,
     OBSEVE: req.body.obseve,
   };
@@ -1883,4 +1881,3 @@ const randomString = (long, chars) => {
   }
   return result;
 }
-

@@ -86,6 +86,4 @@ userRouter.post("/fraudes/smss/insert", authRoutes, fraude.insertSms);
 userRouter.post("/fraudes/smss/update", authRoutes, fraude.updateSms);
 userRouter.post("/fraudes/smss/delete", authRoutes, fraude.removeSms);
 
-// estados
-
 export default userRouter

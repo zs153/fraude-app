@@ -10,29 +10,98 @@ import { serverAPI } from '../../config/settings'
 
 // pages fraude
 export const mainPage = async (req, res) => {
-  const user = req.user;
-  const fraude = {
-    LIQFRA: user.userid,
-    STAFRA: estadosFraude.pendiente + estadosFraude.asignado,
-  };
+  const user = req.user
+
+  const dir = req.query.dir ? req.query.dir : 'next'
+  const limit = req.query.limit ? req.query.limit : 9
+  const part = req.query.part ? req.query.part.toUpperCase() : ''
+
+  let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
+  let hasPrevFras = cursor ? true : false
+  let context = {}
+
+  if (cursor) {
+    context = {
+      liquidador: user.userid,
+      oficina: user.oficina,
+      estado: estadosFraude.asignado,
+      limit: limit + 1,
+      direction: dir,
+      cursor: JSON.parse(convertCursorToNode(JSON.stringify(cursor))),
+      part,
+    }
+  } else {
+    context = {
+      liquidador: user.userid,
+      oficina: user.oficina,
+      estado: estadosFraude.asignado,
+      limit: limit + 1,
+      direction: dir,
+      cursor: {
+        next: 0,
+        prev: 0,
+      },
+      part,
+    }
+  }
 
   try {
-    const result = await axios.post(`http://${serverAPI}:8100/api/fraudes`, {
-      fraude,
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes`, {
+      context,
     });
+
+    let fraudes = result.data.data
+    let hasNextFras = fraudes.length === limit + 1
+    let nextCursor = 0
+    let prevCursor = 0
+
+    if (hasNextFras) {
+      nextCursor = dir === 'next' ? fraudes[limit - 1].IDFRAU : fraudes[0].IDFRAU
+      prevCursor = dir === 'next' ? fraudes[0].IDFRAU : fraudes[limit - 1].IDFRAU
+
+      fraudes.pop()
+    } else {
+      nextCursor = dir === 'next' ? 0 : fraudes[0]?.IDFRAU
+      prevCursor = dir === 'next' ? fraudes[0]?.IDFRAU : 0
+
+      if (cursor) {
+        hasNextFras = nextCursor === 0 ? false : true
+        hasPrevFras = prevCursor === 0 ? false : true
+      } else {
+        hasNextFras = false
+        hasPrevFras = false
+      }
+    }
+
+    if (dir === 'prev') {
+      fraudes = fraudes.reverse()
+    }
+
+    cursor = {
+      next: nextCursor,
+      prev: prevCursor,
+    }
+
     const datos = {
-      fraudes: result.data,
+      fraudes,
+      hasNextFras,
+      hasPrevFras,
+      cursor: convertNodeToCursor(JSON.stringify(cursor)),
       estadosFraude,
       verTodo: false,
     };
 
-    res.render("admin/fraudes", { user, datos });
+    res.render("user/fraudes", { user, datos });
   } catch (error) {
-    const msg = "No se ha podido acceder a los datos de la aplicación.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const addPage = async (req, res) => {
@@ -42,146 +111,252 @@ export const addPage = async (req, res) => {
     ISOFEC: fecha.toISOString().slice(0, 10),
     EJEFRA: fecha.getFullYear() - 1,
     OFIFRA: user.oficina,
-    FUNFRA: userid,
+    FUNFRA: user.userid,
   };
-  const oficina = user.rol === tiposRol.admin ? {} : { IDOFIC: user.oficina }
-  const tipo = {}
 
   try {
-    const tipos = await axios.post(`http://${serverAPI}:8100/api/tipos/fraudes`, {
-      tipo,
+    const tipos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/fraude`, {
+      context: {},
     })
-    const oficinas = await axios.post(`http://${serverAPI}:8100/api/oficinas`, {
-      oficina,
+    const oficinas = await axios.post(`http://${serverAPI}:${puertoAPI}/api/oficina`, {
+      context: {
+        IDOFIC: user.oficina,
+      },
     })
     const datos = {
       fraude,
-      tipos: tipos.data,
-      oficinas: oficinas.data,
+      tipos: tipos.data.data,
+      oficinas: oficinas.data.data,
     };
 
-    res.render("admin/fraudes/add", { user, datos });
+    res.render("user/fraudes/add", { user, datos });
   } catch (error) {
-    const msg = "No se ha podido acceder a los datos de la aplicación.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const editPage = async (req, res) => {
   const user = req.user;
-  let fraude = {
-    IDFRAU: req.params.id,
-  };
-  const tipo = {}
-  const oficina = user.rol === tiposRol.admin ? {} : { IDOFIC: user.oficina }
 
   try {
-    const tipos = await axios.post(`http://${serverAPI}:8100/api/tipos/fraudes`, {
-      tipo,
+    const tipos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/fraude`, {
+      context: {},
     })
-    const oficinas = await axios.post(`http://${serverAPI}:8100/api/oficinas`, {
-      oficina,
+    const oficinas = await axios.post(`http://${serverAPI}:${puertoAPI}/api/oficina`, {
+      context: {},
     })
-    const result = await axios.post(`http://${serverAPI}:8100/api/fraude`, {
-      fraude,
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
+      context: {
+        IDFRAU: req.params.id,
+      },
     });
 
-    fraude = result.data
-    fraude.ISOFEC = fraude.FECFRA.slice(0, 10)
+    let fraude = result.data.data[0]
+    fraude.FECFRA = fraude.FECFRA.slice(0, 10)
     const datos = {
       fraude,
-      tipos: tipos.data,
-      oficinas: oficinas.data,
+      tipos: tipos.data.data,
+      oficinas: oficinas.data.data,
       tiposRol,
     };
 
-    res.render("admin/fraudes/edit", { user, datos });
+    res.render("user/fraudes/edit", { user, datos });
   } catch (error) {
-    const msg = "No se ha podido acceder a los datos de la aplicación.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const resolverPage = async (req, res) => {
   const user = req.user;
-  const fraude = {
-    IDFRAU: req.params.id,
-  };
-  const tipo = {}
+  let hayLiquidacion = false;
 
   try {
-    const hitos = await axios.post(`http://${serverAPI}:8100/api/fraudes/hitos`, {
-      fraude,
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/hito`, {
+      context: {
+        IDFRAU: req.params.id,
+      },
     });
 
-    const hayPropuestaLiquidacion = hitos.data.some((itm) => itm.STAHIT === estadosHito.propuestaLiquidacion);
-    if (hayPropuestaLiquidacion) {
-      if (!hitos.data.some((itm) => itm.STAHIT === estadosHito.liquidacion)) {
-        const msg =
-          "Existe propuesta de liquidación sin su correspondiente liquidación.\nNo se puede resolver el fraude.";
+    let hitos = result.data
+    if (hitos.stat) {
+      const hayPropuestaLiquidacion = hitos.data.some((itm) => itm.STAHIT === estadosHito.propuestaLiquidacion);
+      if (hayPropuestaLiquidacion) {
+        if (!hitos.data.some((itm) => itm.STAHIT === estadosHito.liquidacion)) {
+          const msg =
+            "Existe propuesta de liquidación sin su correspondiente liquidación.\nNo se puede resolver el fraude.";
 
-        return res.render("admin/error400", {
-          alerts: [{ msg }],
-        });
+          return res.render("user/error400", {
+            alerts: [{ msg }],
+          });
+        }
+      }
+      hayLiquidacion = hitos.data.some((itm) => itm.STAHIT === estadosHito.liquidacion);
+      if (hayLiquidacion) {
+        if (!hitos.data.some((itm) => itm.STAHIT === estadosHito.propuestaLiquidacion)) {
+          const msg =
+            "Existe liquidación sin su correspondiente propuesta de liquidación.\nNo se puede resolver el fraude.";
+
+          return res.render("user/error400", {
+            alerts: [{ msg }],
+          });
+        }
+      }
+      const hayPropuestaSancion = hitos.data.some((itm) => itm.STAHIT === estadosHito.propuestaSancion);
+      if (hayPropuestaSancion) {
+        if (!hitos.data.some((itm) => itm.STAHIT === estadosHito.sancion || itm.STAHIT === estadosHito.sancionAnulada)) {
+          const msg =
+            "Existe propuesta de sanción sin su correspondiente sanción o sanción anulada.\nNo se puede resolver el fraude.";
+
+          return res.render("user/error400", {
+            alerts: [{ msg }],
+          });
+        }
+      }
+      const haySancion = hitos.data.some((itm) => itm.STAHIT === estadosHito.sancion);
+      if (haySancion) {
+        if (!hitos.data.some((itm) => itm.STAHIT === estadosHito.propuestaSancion)) {
+          const msg =
+            "Existe sanción sin su correspondiente propuesta de sanción.\nNo se puede resolver el fraude.";
+
+          return res.render("user/error400", {
+            alerts: [{ msg }],
+          });
+        }
       }
     }
-    const hayLiquidacion = hitos.data.some((itm) => itm.STAHIT === estadosHito.liquidacion);
-    if (hayLiquidacion) {
-      if (!hitos.data.some((itm) => itm.STAHIT === estadosHito.propuestaLiquidacion)) {
-        const msg =
-          "Existe liquidación sin su correspondiente propuesta de liquidación.\nNo se puede resolver el fraude.";
 
-        return res.render("admin/error400", {
-          alerts: [{ msg }],
-        });
-      }
-    }
-    const hayPropuestaSancion = hitos.data.some((itm) => itm.STAHIT === estadosHito.propuestaSancion);
-    if (hayPropuestaSancion) {
-      if (!hitos.data.some((itm) => itm.STAHIT === estadosHito.sancion || itm.STAHIT === estadosHito.sancionAnulada)) {
-        const msg =
-          "Existe propuesta de sanción sin su correspondiente sanción o sanción anulada.\nNo se puede resolver el fraude.";
-
-        return res.render("admin/error400", {
-          alerts: [{ msg }],
-        });
-      }
-    }
-    const haySancion = hitos.data.some((itm) => itm.STAHIT === estadosHito.sancion);
-    if (haySancion) {
-      if (!hitos.data.some((itm) => itm.STAHIT === estadosHito.propuestaSancion)) {
-        const msg =
-          "Existe sanción sin su correspondiente propuesta de sanción.\nNo se puede resolver el fraude.";
-
-        return res.render("admin/error400", {
-          alerts: [{ msg }],
-        });
-      }
-    }
-
-    const tipos = await axios.post(`http://${serverAPI}:8100/api/tipos/cierres`, {
-      tipo,
+    const tipos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/cierre`, {
+      context: {},
     });
-    const result = await axios.post(`http://${serverAPI}:8100/api/fraude`, {
-      fraude,
+    const fraude = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
+      context: {
+        IDFRAU: req.params.id,
+      },
     });
     const datos = {
-      fraude: result.data,
-      tipos: tipos.data,
+      fraude: fraude.data.data[0],
+      tipos: tipos.data.data,
       hayLiquidacion,
     };
 
-    res.render("admin/fraudes/resolver", { user, datos });
+    res.render("user/fraudes/resolver", { user, datos });
   } catch (error) {
-    const msg = "No se ha podido acceder a los datos de la aplicación.";
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
+  }
+};
+export const resueltosPage = async (req, res) => {
+  const user = req.user
 
-    res.render("admin/error400", {
-      alerts: [{ msg }],
+  const dir = req.query.dir ? req.query.dir : 'next'
+  const limit = req.query.limit ? req.query.limit : 9
+  const part = req.query.part ? req.query.part.toUpperCase() : ''
+
+  let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
+  let hasPrevFras = cursor ? true : false
+  let context = {}
+
+  if (cursor) {
+    context = {
+      liquidador: user.userid,
+      estado: estadosFraude.resuelto,
+      limit: limit + 1,
+      direction: dir,
+      cursor: JSON.parse(convertCursorToNode(JSON.stringify(cursor))),
+      part,
+    }
+  } else {
+    context = {
+      liquidador: user.userid,
+      estado: estadosFraude.resuelto,
+      limit: limit + 1,
+      direction: dir,
+      cursor: {
+        next: 0,
+        prev: 0,
+      },
+      part,
+    }
+  }
+
+  try {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes`, {
+      context,
     });
+
+    let fraudes = result.data.data
+    let hasNextFras = fraudes.length === limit + 1
+    let nextCursor = 0
+    let prevCursor = 0
+
+    if (hasNextFras) {
+      nextCursor = dir === 'next' ? fraudes[limit - 1].IDFRAU : fraudes[0].IDFRAU
+      prevCursor = dir === 'next' ? fraudes[0].IDFRAU : fraudes[limit - 1].IDFRAU
+
+      fraudes.pop()
+    } else {
+      nextCursor = dir === 'next' ? 0 : fraudes[0]?.IDFRAU
+      prevCursor = dir === 'next' ? fraudes[0]?.IDFRAU : 0
+
+      if (cursor) {
+        hasNextFras = nextCursor === 0 ? false : true
+        hasPrevFras = prevCursor === 0 ? false : true
+      } else {
+        hasNextFras = false
+        hasPrevFras = false
+      }
+    }
+
+    if (dir === 'prev') {
+      fraudes = fraudes.reverse()
+    }
+
+    cursor = {
+      next: nextCursor,
+      prev: prevCursor,
+    }
+
+    const datos = {
+      fraudes,
+      hasNextFras,
+      hasPrevFras,
+      cursor: convertNodeToCursor(JSON.stringify(cursor)),
+      estadosFraude,
+      verTodo: false,
+    };
+
+    res.render("user/fraudes/resueltos", { user, datos });
+  } catch (error) {
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 
@@ -194,34 +369,44 @@ export const hitoseventosPage = async (req, res) => {
   const tipo = {}
 
   try {
-    const result = await axios.post(`http://${serverAPI}:8100/api/fraude`, {
-      fraude,
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
+      context: {
+        IDFRAU: req.params.id,
+      },
     });
-    const hitos = await axios.post(`http://${serverAPI}:8100/api/fraudes/hitos`, {
-      fraude,
+    const hitos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/hito`, {
+      context: {
+        IDFRAU: req.params.id,
+      },
     });
-    const eventos = await axios.post(`http://${serverAPI}:8100/api/fraudes/eventos`, {
-      fraude,
+    const eventos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/evento`, {
+      context: {
+        IDFRAU: req.params.id,
+      },
     });
-    const tiposHito = await axios.post(`http://${serverAPI}:8100/api/tipos/hitos`, {
-      tipo,
+    const tiposHito = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/hito`, {
+      context: {},
     });
 
     const datos = {
-      fraude: result.data,
-      hitos: hitos.data,
-      eventos: eventos.data,
-      tiposHito: tiposHito.data,
+      fraude: result.data.data[0],
+      hitos: hitos.data.data,
+      eventos: eventos.data.data,
+      tiposHito: tiposHito.data.data,
       estadosHito,
     };
 
-    res.render("admin/fraudes/hitoseventos", { user, datos });
+    res.render("user/fraudes/hitoseventos", { user, datos });
   } catch (error) {
-    const msg = "No se ha podido acceder a los hitos del fraude seleccionado.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const hitoseventosReadonlyPage = async (req, res) => {
@@ -231,22 +416,40 @@ export const hitoseventosReadonlyPage = async (req, res) => {
   };
 
   try {
-    const result = await axios.post(`http://${serverAPI}:8100/api/fraudes/extended`, {
-      fraude,
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
+      context: {
+        IDFRAU: req.params.id,
+      },
+    });
+    const hitos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/hito`, {
+      context: {
+        IDFRAU: req.params.id,
+      },
+    });
+    const eventos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/evento`, {
+      context: {
+        IDFRAU: req.params.id,
+      },
     });
 
     const datos = {
-      detalle: result.data,
+      fraude: result.data.data[0],
+      hitos: hitos.data.data,
+      eventos: eventos.data.data,
       estadosHito,
     };
 
-    res.render("admin/fraudes/hitoseventos/readonly", { user, datos });
+    res.render("user/fraudes/hitoseventos/readonly", { user, datos });
   } catch (error) {
-    const msg = "No se ha podido acceder a los hitos del fraude seleccionado.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 
@@ -257,18 +460,19 @@ export const addHitosPage = async (req, res) => {
   const fraude = {
     IDFRAU: req.params.id,
   };
-  const tipo = {}
 
   try {
-    const hitos = await axios.post(`http://${serverAPI}:8100/api/fraudes/hitos`, {
-      fraude,
+    const hitos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/hito`, {
+      context: {
+        IDFRAU: req.params.id,
+      },
     });
-    const tipos = await axios.post(`http://${serverAPI}:8100/api/tipos/hitos`, {
-      tipo,
+    const tipos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/hito`, {
+      context: {},
     });
 
-    tipos.data.map((itm) => {
-      if (hitos.data.find(ele => ele.TIPHIT === itm.IDTIPO)) {
+    tipos.data.data.map((itm) => {
+      if (hitos.data.data.find(ele => ele.TIPHIT === itm.IDTIPO)) {
         itm.DISABLED = true
       } else {
         itm.DISABLED = false
@@ -283,40 +487,43 @@ export const addHitosPage = async (req, res) => {
       estadosHito,
     };
 
-    res.render("admin/fraudes/hitos/add", { user, datos });
+    res.render("user/fraudes/hitos/add", { user, datos });
   } catch (error) {
-    const msg =
-      "No se ha podido acceder a los datos de la aplicación. Si persiste el error solicite asistencia.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const editHitosPage = async (req, res) => {
   const user = req.user;
   const arrTipos = []
-  const tipo = {}
   const fraude = {
     IDFRAU: req.params.idfra,
   };
-  let hito = {
-    IDHITO: req.params.idhit,
-  };
 
   try {
-    const result = await axios.post(`http://${serverAPI}:8100/api/fraudes/hito`, {
-      hito,
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/hito`, {
+      context: {
+        IDHITO: req.params.idhit,
+      },
     });
-    const hitos = await axios.post(`http://${serverAPI}:8100/api/fraudes/hitos`, {
-      fraude,
+    const hitos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/hito`, {
+      context: {
+        IDFRAU: req.params.idfra,
+      },
     });
-    const tipos = await axios.post(`http://${serverAPI}:8100/api/tipos/hitos`, {
-      tipo,
+    const tipos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/hito`, {
+      context: {},
     });
 
-    tipos.data.map((itm) => {
-      if (hitos.data.find(ele => ele.TIPHIT === itm.IDTIPO)) {
+    tipos.data.data.map((itm) => {
+      if (hitos.data.data.find(ele => ele.TIPHIT === itm.IDTIPO)) {
         itm.DISABLED = true
       } else {
         itm.DISABLED = false
@@ -325,8 +532,8 @@ export const editHitosPage = async (req, res) => {
       arrTipos.push(itm)
     });
 
-    hito = result.data
-    hito.IMPHIT = result.data.IMPHIT.toLocaleString()
+    let hito = result.data.data[0]
+    hito.IMPHIT = hito.IMPHIT.toLocaleString()
 
     const datos = {
       fraude,
@@ -335,14 +542,17 @@ export const editHitosPage = async (req, res) => {
       estadosHito,
     };
 
-    res.render("admin/fraudes/hitos/edit", { user, datos });
+    res.render("user/fraudes/hitos/edit", { user, datos });
   } catch (error) {
-    const msg =
-      "No se ha podido acceder a los datos de la aplicación. Si persiste el error solicite asistencia.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 
@@ -352,25 +562,27 @@ export const addEventosPage = async (req, res) => {
   const fraude = {
     IDFRAU: req.params.id,
   };
-  const tipo = {}
 
   try {
-    const tipos = await axios.post(`http://${serverAPI}:8100/api/tipos/eventos`, {
-      tipo,
+    const tipos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/evento`, {
+      context: {},
     });
     const datos = {
       fraude,
-      tipos: tipos.data,
+      tipos: tipos.data.data,
     };
 
-    res.render("admin/fraudes/eventos/add", { user, datos });
+    res.render("user/fraudes/eventos/add", { user, datos });
   } catch (error) {
-    const msg =
-      "No se ha podido acceder a los datos de la aplicación. Si persiste el error solicite asistencia.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const editEventosPage = async (req, res) => {
@@ -378,98 +590,162 @@ export const editEventosPage = async (req, res) => {
   const fraude = {
     IDFRAU: req.params.idfra,
   };
-  const evento = {
-    IDEVEN: req.params.ideve,
-  };
-  const tipo = {}
 
   try {
-    const result = await axios.post(`http://${serverAPI}:8100/api/fraudes/evento`, {
-      evento,
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/evento`, {
+      context: {
+        IDEVEN: req.params.ideve,
+      },
     });
-    const tipos = await axios.post(`http://${serverAPI}:8100/api/tipos/eventos`, {
-      tipo,
+    const tipos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/evento`, {
+      context: {},
     });
 
     const datos = {
       fraude,
-      evento: result.data,
-      tipos: tipos.data,
+      evento: result.data.data[0],
+      tipos: tipos.data.data,
     };
 
-    res.render("admin/fraudes/eventos/edit", { user, datos });
+    res.render("user/fraudes/eventos/edit", { user, datos });
   } catch (error) {
-    const msg =
-      "No se ha podido acceder a los datos de la aplicación. Si persiste el error solicite asistencia.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 
 // pages sms
 export const smssPage = async (req, res) => {
   const user = req.user;
-  const fraude = {
-    IDFRAU: req.params.id,
-  };
+
+  const dir = req.query.dir ? req.query.dir : 'next'
+  const limit = req.query.limit ? req.query.limit : 9
+  const part = req.query.part ? req.query.part.toUpperCase() : ''
+
+  let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
+  let hasPrevSms = cursor ? true : false
+  let context = {}
+
+  if (cursor) {
+    context = {
+      fraude: req.params.id,
+      limit: limit + 1,
+      direction: dir,
+      cursor: JSON.parse(convertCursorToNode(JSON.stringify(cursor))),
+      part,
+    }
+  } else {
+    context = {
+      fraude: req.params.id,
+      limit: limit + 1,
+      direction: dir,
+      cursor: {
+        next: 0,
+        prev: 0,
+      },
+      part,
+    }
+  }
 
   try {
-    const ret = await axios.post(`http://${serverAPI}:8100/api/fraude`, {
-      fraude,
-    })
-    const smss = await axios.post(`http://${serverAPI}:8100/api/fraudes/smss`, {
-      fraude,
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/smss`, {
+      context,
     })
 
-    const fraudeData = {
-      NIFCON: ret.data.NIFCON,
-      NOMCON: ret.data.NOMCON,
-      EJEFRA: ret.data.EJEFRA,
+    let smss = result.data.data
+    let hasNextSms = smss.length === limit + 1
+    let nextCursor = 0
+    let prevCursor = 0
+
+    if (hasNextSms) {
+      nextCursor = dir === 'next' ? smss[limit - 1].IDSMSS : smss[0].IDSMSS
+      prevCursor = dir === 'next' ? smss[0].IDSMSS : smss[limit - 1].IDSMSS
+
+      smss.pop()
+    } else {
+      nextCursor = dir === 'next' ? 0 : smss[0]?.IDSMSS
+      prevCursor = dir === 'next' ? smss[0]?.IDSMSS : 0
+
+      if (cursor) {
+        hasNextSms = nextCursor === 0 ? false : true
+        hasPrevSms = prevCursor === 0 ? false : true
+      } else {
+        hasNextSms = false
+        hasPrevSms = false
+      }
     }
+
+    if (dir === 'prev') {
+      smss = smss.reverse()
+    }
+
+    cursor = {
+      next: nextCursor,
+      prev: prevCursor,
+    }
+
+    const fraude = {
+      IDFRAU: req.params.id,
+    };
     const datos = {
       fraude,
-      fraudeData,
-      smss: smss.data,
+      smss,
+      hasNextSms,
+      hasPrevSms,
+      cursor: convertNodeToCursor(JSON.stringify(cursor)),
       estadosSms,
     }
 
-    res.render("admin/fraudes/smss", { user, datos });
+    console.log(smss);
+    res.render("user/fraudes/smss", { user, datos });
   } catch (error) {
-    const msg = "No se ha podido acceder a los datos de la aplicación.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 }
 export const smssAddPage = async (req, res) => {
   const user = req.user;
-  let fraude = {
-    IDFRAU: req.params.id,
-  };
 
   try {
-    const result = await axios.post(`http://${serverAPI}:8100/api/fraude`, {
-      fraude,
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
+      context: {
+        IDFRAU: req.params.id,
+      },
     });
+    const fraude = result.data.data[0]
     const sms = {
-      MOVSMS: result.data.MOVCON,
+      MOVSMS: fraude.MOVCON,
     }
     const datos = {
       fraude,
       sms,
     };
 
-    res.render("admin/fraudes/smss/add", { user, datos });
+    res.render("user/fraudes/smss/add", { user, datos });
   } catch (error) {
-    const msg =
-      "No se ha podido acceder a los datos de la aplicación. Si persiste el error solicite asistencia.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 }
 export const smssEditPage = async (req, res) => {
@@ -477,27 +753,30 @@ export const smssEditPage = async (req, res) => {
   const fraude = {
     IDFRAU: req.params.idfra,
   }
-  const sms = {
-    IDSMSS: req.params.idsms,
-  };
 
   try {
-    const result = await axios.post(`http://${serverAPI}:8100/api/fraudes/sms`, {
-      sms,
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/sms`, {
+      context: {
+        IDSMSS: req.params.idsms,
+      },
     });
+    const sms = result.data.data[0]
     const datos = {
       fraude,
-      sms: result.data,
+      sms,
     };
 
-    res.render("admin/fraudes/smss/edit", { user, datos });
+    res.render("user/fraudes/smss/edit", { user, datos });
   } catch (error) {
-    const msg =
-      "No se ha podido acceder a los datos de la aplicación. Si persiste el error solicite asistencia.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 }
 export const smssReadonlyPage = async (req, res) => {
@@ -507,68 +786,124 @@ export const smssReadonlyPage = async (req, res) => {
   };
 
   try {
-    const ret = await axios.post(`http://${serverAPI}:8100/api/fraude`, {
-      fraude,
-    })
-    const smss = await axios.post(`http://${serverAPI}:8100/api/fraudes/smss`, {
-      fraude,
+    const smss = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/sms`, {
+      context: {
+        IDFRAU: req.params.id,
+      },
     })
 
-    const fraudeData = {
-      NIFCON: ret.data.NIFCON,
-      NOMCON: ret.data.NOMCON,
-      EJEFRA: ret.data.EJEFRA,
-    }
     const datos = {
       fraude,
-      fraudeData,
-      smss: smss.data,
+      smss: smss.data.data,
       estadosSms,
     }
 
-    res.render("admin/fraudes/smss/readonly", { user, datos });
+    res.render("user/fraudes/smss/readonly", { user, datos });
   } catch (error) {
-    const msg = "No se ha podido acceder a los datos de la aplicación.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 }
 
 // pag relacionados
 export const relacionesPage = async (req, res) => {
   const user = req.user;
-  const fraude = {
-    IDFRAU: req.params.id,
-  };
+
+  const dir = req.query.dir ? req.query.dir : 'next'
+  const limit = req.query.limit ? req.query.limit : 9
+  const part = req.query.part ? req.query.part.toUpperCase() : ''
+
+  let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
+  let hasPrevRela = cursor ? true : false
+  let context = {}
+
+  if (cursor) {
+    context = {
+      fraude: req.params.id,
+      limit: limit + 1,
+      direction: dir,
+      cursor: JSON.parse(convertCursorToNode(JSON.stringify(cursor))),
+      part,
+    }
+  } else {
+    context = {
+      fraude: req.params.id,
+      limit: limit + 1,
+      direction: dir,
+      cursor: {
+        next: 0,
+        prev: 0,
+      },
+      part,
+    }
+  }
 
   try {
-    const ret = await axios.post(`http://${serverAPI}:8100/api/fraude`, {
-      fraude,
-    })
-    const relaciones = await axios.post(`http://${serverAPI}:8100/api/fraudes/relaciones`, {
-      fraude,
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/relaciones`, {
+      context,
     })
 
-    const fraudeData = {
-      NIFCON: ret.data.NIFCON,
-      NOMCON: ret.data.NOMCON,
-      EJEFRA: ret.data.EJEFRA,
+    let relaciones = result.data.data
+    let hasNextRela = relaciones.length === limit + 1
+    let nextCursor = 0
+    let prevCursor = 0
+
+    if (hasNextRela) {
+      nextCursor = dir === 'next' ? relaciones[limit - 1].IDRELA : relaciones[0].IDRELA
+      prevCursor = dir === 'next' ? relaciones[0].IDRELA : relaciones[limit - 1].IDRELA
+
+      relaciones.pop()
+    } else {
+      nextCursor = dir === 'next' ? 0 : relaciones[0]?.IDRELA
+      prevCursor = dir === 'next' ? relaciones[0]?.IDRELA : 0
+
+      if (cursor) {
+        hasNextRela = nextCursor === 0 ? false : true
+        hasPrevRela = prevCursor === 0 ? false : true
+      } else {
+        hasNextRela = false
+        hasPrevRela = false
+      }
     }
+
+    if (dir === 'prev') {
+      relaciones = relaciones.reverse()
+    }
+
+    cursor = {
+      next: nextCursor,
+      prev: prevCursor,
+    }
+
+    const fraude = {
+      IDFRAU: req.params.id,
+    };
     const datos = {
       fraude,
-      fraudeData,
-      relaciones: relaciones.data,
+      relaciones,
+      hasNextRela,
+      hasPrevRela,
+      cursor: convertNodeToCursor(JSON.stringify(cursor)),
     }
 
-    res.render("admin/fraudes/relaciones", { user, datos });
+    res.render("user/fraudes/relaciones", { user, datos });
   } catch (error) {
-    const msg = "No se ha podido acceder a los datos de la aplicación.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 }
 export const relacionesAddPage = async (req, res) => {
@@ -582,14 +917,17 @@ export const relacionesAddPage = async (req, res) => {
       fraude,
     };
 
-    res.render("admin/fraudes/relaciones/add", { user, datos });
+    res.render("user/fraudes/relaciones/add", { user, datos });
   } catch (error) {
-    const msg =
-      "No se ha podido acceder a los datos de la aplicación. Si persiste el error solicite asistencia.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 }
 export const relacionesEditPage = async (req, res) => {
@@ -597,27 +935,30 @@ export const relacionesEditPage = async (req, res) => {
   const fraude = {
     IDFRAU: req.params.idfra,
   }
-  const relacion = {
-    IDRELA: req.params.idrel,
-  };
 
   try {
-    const result = await axios.post(`http://${serverAPI}:8100/api/fraudes/relacion`, {
-      relacion,
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/relacion`, {
+      context: {
+        IDRELA: req.params.idrel,
+      },
     });
+
     const datos = {
       fraude,
-      relacion: result.data,
+      relacion: result.data.data[0],
     };
 
-    res.render("admin/fraudes/relaciones/edit", { user, datos });
+    res.render("user/fraudes/relaciones/edit", { user, datos });
   } catch (error) {
-    const msg =
-      "No se ha podido acceder a los datos de la aplicación. Si persiste el error solicite asistencia.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 }
 export const relacionesReadonlyPage = async (req, res) => {
@@ -627,63 +968,61 @@ export const relacionesReadonlyPage = async (req, res) => {
   };
 
   try {
-    const ret = await axios.post(`http://${serverAPI}:8100/api/fraude`, {
-      fraude,
-    })
-    const relaciones = await axios.post(`http://${serverAPI}:8100/api/fraudes/relaciones`, {
-      fraude,
+    const relaciones = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/relacion`, {
+      context: {
+        IDFRAU: req.params.id,
+      },
     })
 
-    const fraudeData = {
-      NIFCON: ret.data.NIFCON,
-      NOMCON: ret.data.NOMCON,
-      EJEFRA: ret.data.EJEFRA,
-    }
     const datos = {
       fraude,
-      fraudeData,
-      relaciones: relaciones.data,
-      estadosSms,
+      relaciones: relaciones.data.data,
     }
 
-    res.render("admin/fraudes/relaciones/readonly", { user, datos });
+    res.render("user/fraudes/relaciones/readonly", { user, datos });
   } catch (error) {
-    const msg = "No se ha podido acceder a los datos de la aplicación.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 }
 
 // pages otros
-export const ejercicioPage = async (req, res) => {
+export const addEjercicioPage = async (req, res) => {
   const user = req.user;
   const fecha = new Date();
-  let fraude = {
-    IDFRAU: req.params.id,
-  };
 
   try {
-    const result = await axios.post(`http://${serverAPI}:8100/api/fraude`, {
-      fraude,
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
+      context: {
+        IDFRAU: req.params.id,
+      },
     });
 
-    fraude = result.data
+    let fraude = result.data.data[0]
     fraude.EJEFRA = fecha.getFullYear()
 
     const datos = {
       fraude,
     };
 
-    res.render("admin/fraudes/ejercicio", { user, datos });
+    res.render("user/fraudes/ejercicios/add", { user, datos });
   } catch (error) {
-    const msg =
-      "No se ha podido acceder a los datos de la aplicación. Si persiste el error solicite asistencia.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 
@@ -713,18 +1052,22 @@ export const insert = async (req, res) => {
   };
 
   try {
-    await axios.post(`http://${serverAPI}:8100/api/fraudes/insert`, {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/insert`, {
       fraude,
       movimiento,
     });
 
-    res.redirect("/admin/fraudes");
+    res.redirect(`/user/fraudes?part=${req.query.part}`);
   } catch (error) {
-    let msg = "No se ha podido crear el documento.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const update = async (req, res) => {
@@ -748,18 +1091,22 @@ export const update = async (req, res) => {
   };
 
   try {
-    await axios.post(`http://${serverAPI}:8100/api/fraudes/update`, {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/update`, {
       fraude,
       movimiento,
     });
 
-    res.redirect("/admin/fraudes");
+    res.redirect(`/user/fraudes?part=${req.query.part}`);
   } catch (error) {
-    let msg = "No se ha podido actualizar el documento.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const remove = async (req, res) => {
@@ -773,118 +1120,135 @@ export const remove = async (req, res) => {
   };
 
   try {
-    await axios.post(`http://${serverAPI}:8100/api/fraudes/delete`, {
-      fraude,
-      movimiento,
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
+      context: {
+        IDFRAU: req.body.idfrau,
+      }
     });
 
-    res.redirect("/admin/fraudes");
+    if (result.data.stat) {
+      if (result.data.data[0].FUNFRA === user.userid) {
+        await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/delete`, {
+          fraude,
+          movimiento,
+        });
+
+        res.redirect(`/user/fraudes?part=${req.query.part}`);
+      } else {
+        throw "El documento no puede ser borrado."
+      }
+    } else {
+      throw "El documento no existe."
+    }
   } catch (error) {
-    const msg = "No se ha podido elminar el documento.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const asignar = async (req, res) => {
   const user = req.user;
-  let fraude = {
-    IDFRAU: req.body.idfrau,
+  const movimiento = {
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.asignarFraude,
   };
 
   try {
-    const result = await axios.post(`http://${serverAPI}:8100/api/fraude`, {
-      fraude,
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
+      context: {
+        IDFRAU: req.body.idfrau,
+      },
     });
 
-    fraude.LIQFRA = user.userid
-    fraude.STAFRA = estadosFraude.asignado
-    const movimiento = {
-      USUMOV: user.id,
-      TIPMOV: tiposMovimiento.asignarFraude,
-    };
+    let fraude = result.data.data[0]
+    if (fraude.STAFRA === estadosFraude.pendiente) {
+      fraude.LIQFRA = user.userid
+      fraude.STAFRA = estadosFraude.asignado
 
-    if (result.data.STAFRA === estadosFraude.pendiente) {
-      await axios.post(`http://${serverAPI}:8100/api/fraudes/asign`, {
+      await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/asign`, {
         fraude,
         movimiento,
       });
-
-      res.redirect("/admin/fraudes");
     }
-  } catch (error) {
-    const msg = "No se ha podido asignar el documento.";
 
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    res.redirect(`/user/fraudes?part=${req.query.part}`);
+  } catch (error) {
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const resolver = async (req, res) => {
   const user = req.user;
-  let fraude = {
-    IDFRAU: req.body.idfrau,
-  };
-  const cierre = {
-    REFFRA: req.body.reffra,
-    SITCIE: req.body.sitcie
-  }
-  const movimiento = {
-    USUMOV: user.id,
-    TIPMOV: tiposMovimiento.resolverFraude,
-  };
 
   try {
-    const result = await axios.post(`http://${serverAPI}:8100/api/fraude`, {
-      fraude,
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
+      context: {
+        IDFRAU: req.body.idfrau,
+      },
     });
 
-    if (result.data.STAFRA === estadosFraude.asignado) {
-      const hitos = await axios.post(`http://${serverAPI}:8100/api/fraudes/hitos`, {
-        fraude,
+    let fraude = result.data.data[0]
+    if (fraude.STAFRA === estadosFraude.asignado) {
+      const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/hito`, {
+        context: {
+          IDFRAU: req.body.idfrau,
+        }
       });
 
-      const hayPropuestaLiquidacion = hitos.data.some((itm) => itm.STAHIT === estadosHito.propuestaLiquidacion);
+      const hitos = result.data.data
+      const hayPropuestaLiquidacion = hitos.some((itm) => itm.STAHIT === estadosHito.propuestaLiquidacion);
       if (hayPropuestaLiquidacion) {
-        if (!hitos.data.some((itm) => itm.STAHIT === estadosHito.liquidacion)) {
+        if (!hitos.some((itm) => itm.STAHIT === estadosHito.liquidacion)) {
           const msg =
             "Existe propuesta de liquidación sin su correspondiente liquidación.\nNo se puede resolver el fraude.";
 
-          return res.render("admin/error400", {
+          return res.render("user/error400", {
             alerts: [{ msg }],
           });
         }
       }
-      const hayLiquidacion = hitos.data.some((itm) => itm.STAHIT === estadosHito.liquidacion);
+      const hayLiquidacion = hitos.some((itm) => itm.STAHIT === estadosHito.liquidacion);
       if (hayLiquidacion) {
-        if (!hitos.data.some((itm) => itm.STAHIT === estadosHito.propuestaLiquidacion)) {
+        if (!hitos.some((itm) => itm.STAHIT === estadosHito.propuestaLiquidacion)) {
           const msg =
             "Existe liquidación/es sin su correspondiente propuesta de liquidación.\nNo se puede resolver el fraude.";
 
-          return res.render("admin/error400", {
+          return res.render("user/error400", {
             alerts: [{ msg }],
           });
         }
       }
-      const hayPropuestaSancion = hitos.data.some((itm) => itm.STAHIT === estadosHito.propuestaSancion);
+      const hayPropuestaSancion = hitos.some((itm) => itm.STAHIT === estadosHito.propuestaSancion);
       if (hayPropuestaSancion) {
-        if (!hitos.data.some((itm) => itm.STAHIT === estadosHito.sancion || itm.STAHIT === estadosHito.sancionAnulada)) {
+        if (!hitos.some((itm) => itm.STAHIT === estadosHito.sancion || itm.STAHIT === estadosHito.sancionAnulada)) {
           const msg =
             "Existe propuesta de sanción sin su correspondiente sanción o sanción anulada.\nNo se puede resolver el fraude.";
 
-          return res.render("admin/error400", {
+          return res.render("user/error400", {
             alerts: [{ msg }],
           });
         }
       }
-      const haySancion = hitos.data.some((itm) => itm.STAHIT === estadosHito.sancion);
+      const haySancion = hitos.some((itm) => itm.STAHIT === estadosHito.sancion);
       if (haySancion) {
-        if (!hitos.data.some((itm) => itm.STAHIT === estadosHito.propuestaSancion)) {
+        if (!hitos.some((itm) => itm.STAHIT === estadosHito.propuestaSancion)) {
           const msg =
             "Existe sanción sin su correspondiente propuesta de sanción.\nNo se puede resolver el fraude.";
 
-          return res.render("admin/error400", {
+          return res.render("user/error400", {
             alerts: [{ msg }],
           });
         }
@@ -892,94 +1256,72 @@ export const resolver = async (req, res) => {
 
       fraude.LIQFRA = user.userid
       fraude.STAFRA = estadosFraude.resuelto
+      const cierre = {
+        REFFRA: fraude.REFFRA,
+        SITCIE: req.body.sitcie
+      }
+      const movimiento = {
+        USUMOV: user.id,
+        TIPMOV: tiposMovimiento.resolverFraude,
+      };
 
-      await axios.post(`http://${serverAPI}:8100/api/fraudes/cierre`, {
+      await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/cierre`, {
         fraude,
         cierre,
         movimiento,
       });
     }
 
-    res.redirect("/admin/fraudes");
+    res.redirect(`/user/fraudes?part=${req.query.part}`);
   } catch (error) {
-    const msg = "No se ha podido resolver el documento.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const desasignar = async (req, res) => {
   const user = req.user;
-  let fraude = {
-    IDFRAU: req.body.idfrau,
-  };
 
   try {
-    const resul = await axios.post(`http://${serverAPI}:8100/api/fraude`, {
-      fraude,
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
+      context: {
+        IDFRAU: req.body.idfrau,
+      },
     });
 
-    if (resul.data.STAFRA === estadosFraude.asignado) {
+    let fraude = result.data.data[0]
+    if (fraude.STAFRA === estadosFraude.asignado) {
       fraude.LIQFRA = "PEND"
       fraude.STAFRA = estadosFraude.pendiente
+
       const movimiento = {
         USUMOV: user.id,
         TIPMOV: tiposMovimiento.desasignarFraude,
       };
 
-      await axios.post(`http://${serverAPI}:8100/api/fraudes/unasign`, {
+      await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/unasign`, {
         fraude,
         movimiento,
       });
     }
 
-    res.redirect("/admin/fraudes");
+    res.redirect(`/user/fraudes?part=${req.query.part}`);
   } catch (error) {
-    const msg = "No se ha podido desasignar el documento.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
-  }
-};
-export const ejercicio = async (req, res) => {
-  const user = req.user;
-  const fecha = new Date()
-  const fraude = {
-    FECFRA: fecha.toISOString().substring(0, 10),
-    NIFCON: req.body.nifcon,
-    NOMCON: req.body.nomcon,
-    EMACON: req.body.emacon,
-    TELCON: req.body.telcon,
-    MOVCON: req.body.movcon,
-    REFFRA: req.body.reffra,
-    TIPFRA: req.body.tipfra,
-    EJEFRA: req.body.ejefra,
-    OFIFRA: user.oficina,
-    OBSFRA: req.body.obsfra,
-    FUNFRA: user.userid,
-    LIQFRA: user.userid,
-    STAFRA: estadosFraude.asignado,
-  };
-  const movimiento = {
-    USUMOV: user.id,
-    TIPMOV: tiposMovimiento.crearEjercicio,
-  };
-
-  try {
-    await axios.post(`http://${serverAPI}:8100/api/fraudes/insert`, {
-      fraude,
-      movimiento,
-    });
-
-    res.redirect("/admin/fraudes");
-  } catch (error) {
-    const msg = "No se ha podido insertar el ejercicio.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 
@@ -1004,59 +1346,61 @@ export const insertHito = async (req, res) => {
 
   try {
     if (parseInt(generaLiq) === 1) {
-      const tipo = {
-        IDTIPO: estadosHito.liquidacion,
-      }
-      const tipoHito = await axios.post(`http://${serverAPI}:8100/api/tipos/hito`, {
-        tipo,
+      const tipoHito = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/hito`, {
+        context: {
+          IDTIPO: estadosHito.liquidacion,
+        },
       });
       const liquidacion = {
-        TIPLIQ: tipoHito.data.IDTIPO,
+        TIPLIQ: tipoHito.data.data[0].IDTIPO,
         IMPLIQ: hito.IMPHIT,
         OBSLIQ: '',
-        STALIQ: tipoHito.data.ANUHIT,
+        STALIQ: tipoHito.data.data[0].ANUHIT,
       }
 
-      await axios.post(`http://${serverAPI}:8100/api/fraudes/hitos/insertliq`, {
+      await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/hitos/insertliq`, {
         fraude,
         hito,
         liquidacion,
         movimiento,
       });
     } else if (parseInt(generaSan) === 1) {
-      const tipo = {
-        IDTIPO: estadosHito.sancion,
-      }
-      const tipoHito = await axios.post(`http://${serverAPI}:8100/api/tipos/hito`, {
-        tipo,
+      const tipoHito = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/hito`, {
+        context: {
+          IDTIPO: estadosHito.sancion,
+        },
       });
       const sancion = {
-        TIPSAN: tipoHito.data.IDTIPO,
+        TIPSAN: tipoHito.data.data[0].IDTIPO,
         IMPSAN: hito.IMPHIT,
         OBSSAN: '',
-        STASAN: tipoHito.data.ANUHIT,
+        STASAN: tipoHito.data.data[0].ANUHIT,
       }
-      await axios.post(`http://${serverAPI}:8100/api/fraudes/hitos/insertsan`, {
+      await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/hitos/insertsan`, {
         fraude,
         hito,
         sancion,
         movimiento,
       });
     } else {
-      await axios.post(`http://${serverAPI}:8100/api/fraudes/hitos/insert`, {
+      await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/hitos/insert`, {
         fraude,
         hito,
         movimiento,
       });
     }
 
-    res.redirect(`/admin/fraudes/hitoseventos/${fraude.IDFRAU}`);
+    res.redirect(`/user/fraudes/hitoseventos/${fraude.IDFRAU}`);
   } catch (error) {
-    const msg = "No se ha podido insertar el hito.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const updateHito = async (req, res) => {
@@ -1077,18 +1421,22 @@ export const updateHito = async (req, res) => {
   };
 
   try {
-    await axios.post(`http://${serverAPI}:8100/api/fraudes/hitos/update`, {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/hitos/update`, {
       hito,
       movimiento,
     });
 
-    res.redirect(`/admin/fraudes/hitoseventos/${fraude.IDFRAU}`);
+    res.redirect(`/user/fraudes/hitoseventos/${fraude.IDFRAU}`);
   } catch (error) {
-    const msg = "No se ha podido actualizar el hito.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const removeHito = async (req, res) => {
@@ -1105,19 +1453,23 @@ export const removeHito = async (req, res) => {
   };
 
   try {
-    await axios.post(`http://${serverAPI}:8100/api/fraudes/hitos/delete`, {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/hitos/delete`, {
       fraude,
       hito,
       movimiento,
     });
 
-    res.redirect(`/admin/fraudes/hitoseventos/${fraude.IDFRAU}`);
+    res.redirect(`/user/fraudes/hitoseventos/${fraude.IDFRAU}`);
   } catch (error) {
-    const msg = "No se ha podido acceder borrar el hito.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const archivoHito = async (req, res) => {
@@ -1135,18 +1487,22 @@ export const archivoHito = async (req, res) => {
   };
 
   try {
-    await axios.post(`http://${serverAPI}:8100/api/fraudes/hitos/archivado`, {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/hitos/archivado`, {
       hito,
       movimiento,
     });
 
-    res.redirect(`/admin/fraudes/hitoseventos/${fraude.IDFRAU}`);
+    res.redirect(`/user/fraudes/hitoseventos/${fraude.IDFRAU}`);
   } catch (error) {
-    const msg = "No se ha podido acceder borrar el hito.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 
@@ -1157,7 +1513,6 @@ export const insertEvento = async (req, res) => {
     IDFRAU: req.body.idfrau,
   };
   const evento = {
-    FECEVE: new Date().toISOString().slice(0, 10),
     TIPEVE: req.body.tipeve,
     OBSEVE: req.body.obseve,
   };
@@ -1167,19 +1522,23 @@ export const insertEvento = async (req, res) => {
   };
 
   try {
-    await axios.post(`http://${serverAPI}:8100/api/fraudes/eventos/insert`, {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/eventos/insert`, {
       fraude,
       evento,
       movimiento,
     });
 
-    res.redirect(`/admin/fraudes/hitoseventos/${fraude.IDFRAU}`);
+    res.redirect(`/user/fraudes/hitoseventos/${fraude.IDFRAU}`);
   } catch (error) {
-    const msg = "No se ha podido insertar el evento.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const updateEvento = async (req, res) => {
@@ -1189,7 +1548,6 @@ export const updateEvento = async (req, res) => {
   };
   const evento = {
     IDEVEN: req.body.ideven,
-    FECEVE: new Date().toISOString().slice(0, 10),
     TIPEVE: req.body.tipeve,
     OBSEVE: req.body.obseve,
   };
@@ -1199,18 +1557,22 @@ export const updateEvento = async (req, res) => {
   };
 
   try {
-    await axios.post(`http://${serverAPI}:8100/api/fraudes/eventos/update`, {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/eventos/update`, {
       evento,
       movimiento,
     });
 
-    res.redirect(`/admin/fraudes/hitoseventos/${fraude.IDFRAU}`);
+    res.redirect(`/user/fraudes/hitoseventos/${fraude.IDFRAU}`);
   } catch (error) {
-    const msg = "No se ha podido actualizar el evento.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const removeEvento = async (req, res) => {
@@ -1227,19 +1589,68 @@ export const removeEvento = async (req, res) => {
   };
 
   try {
-    await axios.post(`http://${serverAPI}:8100/api/fraudes/eventos/delete`, {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/eventos/delete`, {
       fraude,
       evento,
       movimiento,
     });
 
-    res.redirect(`/admin/fraudes/hitoseventos/${fraude.IDFRAU}`);
+    res.redirect(`/user/fraudes/hitoseventos/${fraude.IDFRAU}`);
   } catch (error) {
-    const msg = "No se ha podido acceder borrar el evento.";
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
+  }
+};
 
-    res.render("admin/error400", {
-      alerts: [{ msg }],
+// proc ejercicio
+export const insertEjercicio = async (req, res) => {
+  const user = req.user;
+  const fecha = new Date()
+  const fraude = {
+    FECFRA: fecha.toISOString().substring(0, 10),
+    NIFCON: req.body.nifcon,
+    NOMCON: req.body.nomcon,
+    EMACON: req.body.emacon,
+    TELCON: req.body.telcon,
+    MOVCON: req.body.movcon,
+    REFFRA: req.body.reffra,
+    TIPFRA: req.body.tipfra,
+    EJEFRA: req.body.ejefra,
+    OFIFRA: user.oficina,
+    OBSFRA: req.body.obsfra,
+    FUNFRA: user.userid,
+    LIQFRA: user.userid,
+    STAFRA: estadosFraude.asignado,
+  };
+  const movimiento = {
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.crearEjercicio,
+  };
+
+  try {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/insert`, {
+      fraude,
+      movimiento,
     });
+
+    res.redirect(`/user/fraudes?part=${req.query.part}`);
+  } catch (error) {
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 
@@ -1262,19 +1673,23 @@ export const insertSms = async (req, res) => {
   };
 
   try {
-    await axios.post(`http://${serverAPI}:8100/api/fraudes/smss/insert`, {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/smss/insert`, {
       fraude,
       sms,
       movimiento,
     });
 
-    res.redirect(`/admin/fraudes/smss/${fraude.IDFRAU}`);
+    res.redirect(`/user/fraudes/smss/${fraude.IDFRAU}`);
   } catch (error) {
-    const msg = "No se ha podido insertar el ejercicio.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 }
 export const updateSms = async (req, res) => {
@@ -1294,18 +1709,22 @@ export const updateSms = async (req, res) => {
   };
 
   try {
-    await axios.post(`http://${serverAPI}:8100/api/fraudes/smss/update`, {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/smss/update`, {
       sms,
       movimiento,
     });
 
-    res.redirect(`/admin/fraudes/smss/${fraude.IDFRAU}`);
+    res.redirect(`/user/fraudes/smss/${fraude.IDFRAU}`);
   } catch (error) {
-    const msg = "No se ha podido actualizar el sms.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 }
 export const removeSms = async (req, res) => {
@@ -1322,19 +1741,23 @@ export const removeSms = async (req, res) => {
   };
 
   try {
-    await axios.post(`http://${serverAPI}:8100/api/fraudes/smss/delete`, {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/smss/delete`, {
       fraude,
       sms,
       movimiento,
     });
 
-    res.redirect(`/admin/fraudes/smss/${fraude.IDFRAU}`);
+    res.redirect(`/user/fraudes/smss/${fraude.IDFRAU}`);
   } catch (error) {
-    const msg = "No se ha podido borrar el sms.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 }
 
@@ -1356,19 +1779,23 @@ export const insertRelacion = async (req, res) => {
   };
 
   try {
-    await axios.post(`http://${serverAPI}:8100/api/fraudes/relaciones/insert`, {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/relaciones/insert`, {
       fraude,
       relacion,
       movimiento,
     });
 
-    res.redirect(`/admin/fraudes/relaciones/${fraude.IDFRAU}`);
+    res.redirect(`/user/fraudes/relaciones/${fraude.IDFRAU}`);
   } catch (error) {
-    const msg = "No se ha podido insertar el ejercicio.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const updateRelacion = async (req, res) => {
@@ -1388,18 +1815,22 @@ export const updateRelacion = async (req, res) => {
   };
 
   try {
-    await axios.post(`http://${serverAPI}:8100/api/fraudes/relaciones/update`, {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/relaciones/update`, {
       relacion,
       movimiento,
     });
 
-    res.redirect(`/admin/fraudes/relaciones/${fraude.IDFRAU}`);
+    res.redirect(`/user/fraudes/relaciones/${fraude.IDFRAU}`);
   } catch (error) {
-    const msg = "No se ha podido actualizar la relación.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 };
 export const removeRelacion = async (req, res) => {
@@ -1416,51 +1847,33 @@ export const removeRelacion = async (req, res) => {
   };
 
   try {
-    await axios.post(`http://${serverAPI}:8100/api/fraudes/relaciones/delete`, {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/relaciones/delete`, {
       fraude,
       relacion,
       movimiento,
     });
 
-    res.redirect(`/admin/fraudes/relaciones/${fraude.IDFRAU}`);
+    res.redirect(`/user/fraudes/relaciones/${fraude.IDFRAU}`);
   } catch (error) {
-    const msg = "No se ha podido enviar el sms.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 }
 
-// proc otros
-export const verTodo = async (req, res) => {
-  const user = req.user;
-  const fraude = {
-    LIQFRA: user.userid,
-    STAFRA: estadosFraude.resuelto,
-  };
-
-  try {
-    const result = await axios.post(`http://${serverAPI}:8100/api/fraudes`, {
-      fraude,
-    });
-    const datos = {
-      fraudes: result.data,
-      estadosFraude,
-      verTodo: true,
-    };
-
-    res.render("admin/fraudes", { user, datos });
-  } catch (error) {
-    const msg = "No se ha podido acceder a los datos de la aplicación.";
-
-    res.render("admin/error400", {
-      alerts: [{ msg }],
-    });
-  }
-};
-
 // helpers
+const convertNodeToCursor = (node) => {
+  return new Buffer.from(node, 'binary').toString('base64')
+}
+const convertCursorToNode = (cursor) => {
+  return new Buffer.from(cursor, 'base64').toString('binary')
+}
 const randomString = (long, chars) => {
   let result = "";
   for (let i = long; i > 0; --i) {
