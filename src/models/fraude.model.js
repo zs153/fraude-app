@@ -14,15 +14,15 @@ const cierreSql = "BEGIN FRAUDE_PKG.CIERREFRAUDE(:idfrau,:liqfra,:stafra,:reffra
 // hito
 const hitosQuery = "SELECT hh.*,th.destip FROM hitos hh INNER JOIN tiposhito th ON th.idtipo = hh.tiphit"
 const insertHitoSql = "BEGIN FRAUDE_PKG.INSERTHITOFRAUDE(:idfrau,:tiphit,:imphit,:obshit,:stahit,:usumov,:tipmov,:idhito); END;"
-const updateHitoSql = "BEGIN FRAUDE_PKG.UPDATEHITO(:idhito,TO_DATE(:fechit, 'YYYY-MM-DD'),:tiphit,:imphit,:obshit,:usumov,:tipmov); END;"
+const updateHitoSql = "BEGIN FRAUDE_PKG.UPDATEHITO(:idhito,:tiphit,:imphit,:obshit,:usumov,:tipmov); END;"
 const removeHitoSql = "BEGIN FRAUDE_PKG.DELETEHITOFRAUDE(:idfrau,:idhito,:usumov,:tipmov ); END;"
 const insertHitoLiquidacionSql = "BEGIN FRAUDE_PKG.INSERTHITOLIQFRAUDE(:idfrau,:tiphit,:imphit,:obshit,:stahit,:tipliq,:impliq,:obsliq,:staliq,:usumov,:tipmov,:idhito); END;"
 const insertHitoSancionSql = "BEGIN FRAUDE_PKG.INSERTHITOSANFRAUDE(:idfrau,:tiphit,:imphit,:obshit,:stahit,:tipsan,:impsan,:obssan,:stasan,:usumov,:tipmov,:idhito); END;"
 const cambioEstadoHitoSql = "BEGIN FRAUDE_PKG.CAMBIOESTADOHITO(:idhito,:stahit,:usumov,:tipmov); END;"
 // evento
 const eventosQuery = "SELECT ee.*,tt.destip FROM eventos ee INNER JOIN tiposevento tt ON tt.idtipo = ee.tipeve"
-const insertEventoSql = "BEGIN FRAUDE_PKG.INSERTEVENTOFRAUDE(:idfrau,TO_DATE(:feceve, 'YYYY-MM-DD'),:tipeve,:obseve,:usumov,:tipmov,:ideven); END;"
-const updateEventoSql = "BEGIN FRAUDE_PKG.UPDATEEVENTO(:ideven,TO_DATE(:feceve, 'YYYY-MM-DD'),:tipeve,:obseve,:usumov,:tipmov); END;"
+const insertEventoSql = "BEGIN FRAUDE_PKG.INSERTEVENTOFRAUDE(:idfrau,:tipeve,:obseve,:usumov,:tipmov,:ideven); END;"
+const updateEventoSql = "BEGIN FRAUDE_PKG.UPDATEEVENTO(:ideven,:tipeve,:obseve,:usumov,:tipmov); END;"
 const removeEventoSql = "BEGIN FRAUDE_PKG.DELETEEVENTOFRAUDE(:idfrau,:ideven,:usumov,:tipmov ); END;"
 // sms
 const smssQuery = "SELECT ss.* FROM smss ss"

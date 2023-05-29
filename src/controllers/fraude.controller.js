@@ -253,7 +253,6 @@ export const modificarHito = async (req, res) => {
   // context
   const hito = {
     idhito: req.body.hito.IDHITO,
-    fechit: req.body.hito.FECHIT,
     tiphit: req.body.hito.TIPHIT,
     imphit: req.body.hito.IMPHIT,
     obshit: req.body.hito.OBSHIT,
@@ -415,7 +414,6 @@ export const crearEvento = async (req, res) => {
     idfrau: req.body.fraude.IDFRAU,
   }
   const evento = {
-    feceve: req.body.evento.FECEVE,
     tipeve: req.body.evento.TIPEVE,
     obseve: req.body.evento.OBSEVE,
   }
@@ -438,7 +436,6 @@ export const modificarEvento = async (req, res) => {
   // context
   const evento = {
     ideven: req.body.evento.IDEVEN,
-    feceve: req.body.evento.FECEVE,
     tipeve: req.body.evento.TIPEVE,
     obseve: req.body.evento.OBSEVE,
   }

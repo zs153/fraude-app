@@ -10,10 +10,7 @@ import apiUsuarioRouter from '../routes/usuario.router'
 import apiHistoricoRouter from '../routes/historico.router'
 import apiGenteRouter from '../routes/gente.router'
 import apiFraudeRouter from '../routes/fraude.router'
-import apiTipoHitoRouter from '../routes/tipohito.router'
-import apiTipoFraudeRouter from '../routes/tipofraude.router'
-import apiTipoEventoRouter from '../routes/tipoevento.router'
-import apiTipoCierreRouter from '../routes/tipocierre.router'
+import apiTiposRouter from '../routes/tipos.router'
 import apiCargaRouter from '../routes/carga.router'
 import apiEstadisticaRouter from '../routes/estadistica.router'
 
@@ -37,10 +34,7 @@ function initialize() {
     app.use('/api', apiHistoricoRouter)
     app.use('/api', apiGenteRouter)
     app.use('/api', apiFraudeRouter)
-    app.use('/api', apiTipoHitoRouter)
-    app.use('/api', apiTipoFraudeRouter)
-    app.use('/api', apiTipoEventoRouter)
-    app.use('/api', apiTipoCierreRouter)
+    app.use('/api', apiTiposRouter)
     app.use('/api', apiCargaRouter)
     app.use('/api', apiEstadisticaRouter)
 
