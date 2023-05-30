@@ -71,6 +71,49 @@ WHERE cc.reffra = :reffra AND
 GROUP BY CUBE(TO_CHAR(cc.feccie, 'YYYY-MM-DD'))
 `
 
+// proc
+export const find = async (context) => {
+  // bind
+  let query = baseQuery
+  const bind = context
+
+  if (context.IDOFIC) {
+    query += " WHERE idofic = :idofic"
+  }
+  if (context.CODOFI) {
+    query += " WHERE codofi = :codofi"
+  }
+
+  // proc
+  const ret = await simpleExecute(query, bind)
+
+  if (ret) {
+    return ({ stat: ret.rows.length, data: ret.rows })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+}
+export const stadi = async (context) => {
+  // bind
+  let query = estadisticaSitActSql
+  const bind = context
+
+  if (context.IDOFIC) {
+    query += " WHERE idofic = :idofic"
+  }
+  if (context.CODOFI) {
+    query += " WHERE codofi = :codofi"
+  }
+
+  // proc
+  const ret = await simpleExecute(query, bind)
+
+  if (ret) {
+    return ({ stat: ret.rows.length, data: ret.rows })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+}
 export const sitAct = async (context) => {
   let result
 
