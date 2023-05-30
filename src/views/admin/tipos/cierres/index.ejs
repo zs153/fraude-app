@@ -37,7 +37,7 @@
                               aria-label="Buscar en tipos">
                           </div>
                         </form>
-                        <a href="/admin/tipos/cierres/add" class="btn">
+                        <a href="" id="new" class="btn">
                           <svg xmlns="http://www.w3.org/2000/svg" class="icon" height="24" width="24" viewBox="0 0 24 24">
                             <path d="M11.25 18.75v-6h-6v-1.5h6v-6h1.5v6h6v1.5h-6v6Z" />
                           </svg>
@@ -106,12 +106,12 @@
     </div>
 
     <script>
-      const orgList = <%- JSON.stringify(datos.tipos) %>
+      const orgList = <%- JSON.stringify(datos.cierres) %>
       const cursor = <%- JSON.stringify(datos.cursor) %>
       const hasNextCierr = <%- datos.hasNextCierr %>
       const hasPrevCierr = <%- datos.hasPrevCierr %>
     </script>
     <script src="/js/ayuda.min.js"></script>
-    <script src="/js/indexTiposCierre.js"></script>
+    <script src="/js/indexTiposCierre.min.js"></script>
 </body>
 </html>

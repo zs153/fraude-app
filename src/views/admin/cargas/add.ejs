@@ -8,8 +8,6 @@
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
   <!-- styles -->
   <link rel="stylesheet" href="/css/styles.css">
-  <!-- <link rel="stylesheet" href="/css/estilos.css">
-  <link rel="stylesheet" href="/css/navbar.css"> -->
   <style>
     .modal-full-width {
       max-width: none !important;
@@ -47,8 +45,7 @@
                     <div class="row">
                       <div class="col-8">
                         <div class="mb-1">
-                          <label class="form-label required">Nombre de fichero
-                          </label>
+                          <label class="form-label required">Nombre de fichero</label>
                           <div class="input-group input-group-flat">
                             <input type="text" name="ficcar" id="ficcar" class="form-control" value=""
                               placeholder="Nombre de fichero con extención" />
@@ -195,56 +192,6 @@
   </div>
 
   <script src="/js/ayuda.min.js"></script>
-  <script>
-    const descar = document.getElementById("descar");
-    const ficcar = document.getElementById("ficcar");
-    const refcar = document.getElementById("refcar");
-
-    const validate = () => {
-      const descarValue = descar.value.trim();
-      const ficcarValue = ficcar.value.trim();
-      const refcarValue = refcar.value.trim();
-
-      if (descarValue === "") {
-        setError(descar, "Descripción requerida");
-        setTimeout(function () {
-          setSuccess(descar);
-        }, 3000);
-        return false;
-      }
-      if (ficcarValue === "") {
-        setError(ficcar, "Nombre de fichero requerido");
-        setTimeout(function () {
-          setSuccess(ficcar);
-        }, 3000);
-        return false;
-      }
-      if (refcarValue === "") {
-        setError(refcar, "Referencia requerida");
-        setTimeout(function () {
-          setSuccess(refcar);
-        }, 3000);
-        return false;
-      }
-
-      return true;
-    };
-    const setSuccess = (element) => {
-      const inputControl = element.parentElement;
-      const errorDisplay = inputControl.querySelector(".invalid-feedback");
-
-      errorDisplay.innerText = "";
-      inputControl.classList.add("is-valid");
-      element.classList.remove("is-invalid");
-    };
-    const setError = (element, message) => {
-      const inputControl = element.parentElement;
-      const errorDisplay = inputControl.querySelector(".invalid-feedback");
-
-      errorDisplay.innerText = message;
-      element.classList.add("is-invalid");
-      inputControl.classList.remove("is-valid");
-    };
-  </script>
+  <script src="/js/addCarga.min.js"></script>
 </body>
 </html>

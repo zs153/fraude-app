@@ -9,8 +9,6 @@
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
   <!-- styles -->
   <link rel="stylesheet" href="/css/styles.css">
-  <!-- <link rel="stylesheet" href="/css/estilos.css">
-  <link rel="stylesheet" href="/css/navbar.css"> -->
 </head>
 
 <body class="antialiased">
@@ -83,61 +81,7 @@
   </div>
 
   <script src="/js/ayuda.min.js"></script>
-  <script>
-    const desde = document.getElementById('desde')
-    const hasta = document.getElementById('hasta')
-    const cboC = document.getElementById('cbocar');
-
-    cboC.addEventListener('change', (e) => {
-      document.getElementById('cbocar').value = e.target.options[e.target.selectedIndex].value
-    })
-
-    const validate = () => {
-      const desdeValue = desde.value
-      const hastaValue = hasta.value
-      const cbocarValue = cboC.value
-
-      if (isNaN(Date.parse(desdeValue))) {
-        setError(desde, 'Fecha requerida')
-        setTimeout(function () {
-          setSuccess(desde)
-        }, 3000)
-        return false
-      }
-      if (isNaN(Date.parse(hastaValue))) {
-        setError(hasta, 'Fecha requerida')
-        setTimeout(function () {
-          setSuccess(hasta)
-        }, 3000)
-        return false
-      }
-      if (cbocarValue === '0') {
-        setError(cboC, 'Carga requerida')
-        setTimeout(function () {
-          setSuccess(cboC)
-        }, 3000)
-        return false
-      }
-
-      return true
-    }
-    const setSuccess = (element) => {
-      const inputControl = element.parentElement;
-      const errorDisplay = inputControl.querySelector('.invalid-feedback');
-
-      errorDisplay.innerText = '';
-      inputControl.classList.add('is-valid');
-      element.classList.remove('is-invalid');
-    }
-    const setError = (element, message) => {
-      const inputControl = element.parentElement;
-      const errorDisplay = inputControl.querySelector('.invalid-feedback');
-
-      errorDisplay.innerText = message;
-      element.classList.add('is-invalid');
-      inputControl.classList.remove('is-valid');
-    }
-  </script>
+  <script src="/js/indexStat.min.js"></script>
 </body>
 
 </html>

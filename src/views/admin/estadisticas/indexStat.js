@@ -1,8 +1,7 @@
-// const
-const destip = document.getElementById('destip')
-const cbosta = document.getElementById('cbosta');
+const desde = document.getElementById('desde')
+const hasta = document.getElementById('hasta')
+const cboC = document.getElementById('cbocar');
 
-// func
 const getCookie = (key) => {
   let value = ''
   document.cookie.split(';').forEach((e) => {
@@ -27,6 +26,7 @@ const deleteCookie = () => {
 const setSuccess = (element) => {
   const inputControl = element.parentElement;
   const errorDisplay = inputControl.querySelector('.invalid-feedback');
+
   errorDisplay.innerText = '';
   inputControl.classList.add('is-valid');
   element.classList.remove('is-invalid');
@@ -34,28 +34,42 @@ const setSuccess = (element) => {
 const setError = (element, message) => {
   const inputControl = element.parentElement;
   const errorDisplay = inputControl.querySelector('.invalid-feedback');
+
   errorDisplay.innerText = message;
   element.classList.add('is-invalid');
   inputControl.classList.remove('is-valid');
 }
 const validate = () => {
-  const destipValue = destip.value.trim()
-  const cbostaValue = cbosta.value
+  const desdeValue = desde.value
+  const hastaValue = hasta.value
+  const cbocarValue = cboC.value
 
-  if (destipValue === '') {
-    setError(destip, 'Descripción requerida')
+  if (isNaN(Date.parse(desdeValue))) {
+    setError(desde, 'Fecha requerida')
     setTimeout(function () {
-      setSuccess(destip)
+      setSuccess(desde)
     }, 3000)
     return false
   }
-  if (cbostaValue === '0') {
-    setError(cbosta, 'Estado requerido')
+  if (isNaN(Date.parse(hastaValue))) {
+    setError(hasta, 'Fecha requerida')
     setTimeout(function () {
-      setSuccess(cbosta)
+      setSuccess(hasta)
     }, 3000)
     return false
   }
-  
+  if (cbocarValue === '0') {
+    setError(cboC, 'Carga requerida')
+    setTimeout(function () {
+      setSuccess(cboC)
+    }, 3000)
+    return false
+  }
+
   return true
 }
+
+// eventos
+cboC.addEventListener('change', (e) => {
+  document.getElementById('cbocar').value = e.target.options[e.target.selectedIndex].value
+})

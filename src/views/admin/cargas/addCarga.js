@@ -1,8 +1,7 @@
-// const
-const destip = document.getElementById('destip')
-const cbosta = document.getElementById('cbosta');
+const descar = document.getElementById("descar");
+const ficcar = document.getElementById("ficcar");
+const refcar = document.getElementById("refcar");
 
-// func
 const getCookie = (key) => {
   let value = ''
   document.cookie.split(';').forEach((e) => {
@@ -27,6 +26,7 @@ const deleteCookie = () => {
 const setSuccess = (element) => {
   const inputControl = element.parentElement;
   const errorDisplay = inputControl.querySelector('.invalid-feedback');
+
   errorDisplay.innerText = '';
   inputControl.classList.add('is-valid');
   element.classList.remove('is-invalid');
@@ -34,28 +34,37 @@ const setSuccess = (element) => {
 const setError = (element, message) => {
   const inputControl = element.parentElement;
   const errorDisplay = inputControl.querySelector('.invalid-feedback');
+
   errorDisplay.innerText = message;
   element.classList.add('is-invalid');
   inputControl.classList.remove('is-valid');
 }
 const validate = () => {
-  const destipValue = destip.value.trim()
-  const cbostaValue = cbosta.value
+  const descarValue = descar.value.trim();
+  const ficcarValue = ficcar.value.trim();
+  const refcarValue = refcar.value.trim();
 
-  if (destipValue === '') {
-    setError(destip, 'Descripción requerida')
+  if (descarValue === "") {
+    setError(descar, "Descripción requerida");
     setTimeout(function () {
-      setSuccess(destip)
-    }, 3000)
-    return false
+      setSuccess(descar);
+    }, 3000);
+    return false;
   }
-  if (cbostaValue === '0') {
-    setError(cbosta, 'Estado requerido')
+  if (ficcarValue === "") {
+    setError(ficcar, "Nombre de fichero requerido");
     setTimeout(function () {
-      setSuccess(cbosta)
-    }, 3000)
-    return false
+      setSuccess(ficcar);
+    }, 3000);
+    return false;
   }
-  
+  if (refcarValue === "") {
+    setError(refcar, "Referencia requerida");
+    setTimeout(function () {
+      setSuccess(refcar);
+    }, 3000);
+    return false;
+  }
+
   return true
 }

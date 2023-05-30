@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { serverAPI } from '../config/settings'
+import { puertoAPI, serverAPI } from '../../config/settings'
 
 // pages
 export const mainPage = async (req, res) => {
@@ -8,19 +8,19 @@ export const mainPage = async (req, res) => {
   const currentYear = fecha.getFullYear()
   const currentMonth = fecha.getMonth() + 1
   const lastDayMonth = new Date(currentYear, currentMonth, 0).getDate()
-  const carga = {}
 
   let desde = new Date(yearMonthDayToUTCString(currentYear, currentMonth, 1)).toISOString().slice(0, 10)
   let hasta = new Date(yearMonthDayToUTCString(currentYear, currentMonth, lastDayMonth)).toISOString().slice(0, 10)
 
   try {
-    const cargas = await axios.post(`http://${serverAPI}:8100/api/cargas`, {
-      carga,
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/carga`, {
+      context: {},
     })
+    const cargas = result.data.data
     const datos = {
       desde,
       hasta,
-      cargas: cargas.data,
+      cargas,
     }
 
     res.render('admin/estadisticas', { user, datos })
@@ -40,25 +40,34 @@ export const generarEstadistica = async (req, res) => {
     DESDE: req.body.desde,
     HASTA: req.body.hasta,
   }
-  const tipo = {}
   const carga = {}
   const fraude = {
     REFFRA: req.body.refcar,
   }
 
   try {
-    const tipos = await axios.post(`http://${serverAPI}:8100/api/tipos/cierres`, {
-      tipo,
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/cierre`, {
+      context: {},
     })
-    const result = await axios.post(`http://${serverAPI}:8100/api/estadisticas/sitact`, {
+    const tipos = result.data.data
+
+    console.log(tipos);
+    result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/estadisticas/sitact`, {
+      context: {
+        REFFRA: req.body.refcar,
+        DESDE: periodo.DESDE,
+        HASTA: periodo.HASTA,
+        CRUERR: tipos[0].IDTIPO,
+        SINEFE: tipos[1].IDTIPO,
+        TRICOR: tipos[2].IDTIPO,
+        PRESCR: tipos[3].IDTIPO,
+        OTRCAS: tipos[4].IDTIPO,
+      }
+    })
+    const oficinas = await axios.post(`http://${serverAPI}:${puertoAPI}/api/estadisticas/oficinas`, {
       fraude,
-      periodo,
-      tipos: tipos.data,
     })
-    const oficinas = await axios.post(`http://${serverAPI}:8100/api/estadisticas/oficinas`, {
-      fraude,
-    })
-    const cargas = await axios.post(`http://${serverAPI}:8100/api/cargas`, {
+    const cargas = await axios.post(`http://${serverAPI}:${puertoAPI}/api/cargas`, {
       carga,
     })
 

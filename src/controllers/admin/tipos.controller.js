@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { tiposMovimiento } from '../../public/js/enumeraciones'
-import { serverAPI } from '../../config/settings'
+import { serverAPI, puertoAPI } from '../../config/settings'
+import { tiposMovimiento, arrEstadosHito } from '../../public/js/enumeraciones'
 
 // pages
 // cierres
@@ -78,8 +78,10 @@ export const mainCierresPage = async (req, res) => {
       cursor: convertNodeToCursor(JSON.stringify(cursor)),
     };
 
+    console.log(datos);
     res.render("admin/tipos/cierres", { user, datos });
   } catch (error) {
+    console.log(error);
     if (error.response?.status === 400) {
       res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
@@ -474,7 +476,7 @@ export const mainHitosPage = async (req, res) => {
       cursor: convertNodeToCursor(JSON.stringify(cursor)),
     };
 
-    res.render("admin/tipos/fraudes", { user, datos });
+    res.render("admin/tipos/hitos", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
@@ -489,9 +491,12 @@ export const mainHitosPage = async (req, res) => {
 }
 export const addHitoPage = async (req, res) => {
   const user = req.user
+  const datos = {
+    arrEstadosHito,
+  }
 
   try {
-    res.render('admin/tipos/hitos/add', { user })
+    res.render('admin/tipos/hitos/add', { user, datos })
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
@@ -516,6 +521,7 @@ export const editHitoPage = async (req, res) => {
     const tipo = result.data.data[0]
     const datos = {
       tipo,
+      arrEstadosHito,
     }
 
     res.render('admin/tipos/hitos/edit', { user, datos })
@@ -550,7 +556,7 @@ export const insertCierre = async (req, res) => {
       movimiento,
     })
 
-    res.redirect(`/admin/tipos/cierres`)
+    res.redirect(`/admin/tipos/cierres?part=${req.query.part}`)
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
@@ -580,7 +586,7 @@ export const updateCierre = async (req, res) => {
       movimiento,
     })
 
-    res.redirect(`/admin/tipos/cierres`)
+    res.redirect(`/admin/tipos/cierres?part=${req.query.part}`)
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
@@ -639,7 +645,7 @@ export const insertEvento = async (req, res) => {
       movimiento,
     })
 
-    res.redirect(`/admin/tipos/eventos`)
+    res.redirect(`/admin/tipos/eventos?part=${req.query.part}`)
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
@@ -669,7 +675,7 @@ export const updateEvento = async (req, res) => {
       movimiento,
     })
 
-    res.redirect(`/admin/tipos/eventos`)
+    res.redirect(`/admin/tipos/eventos?part=${req.query.part}`)
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
@@ -698,7 +704,7 @@ export const removeEvento = async (req, res) => {
       movimiento,
     })
 
-    res.redirect(`/admin/tipos/eventos`)
+    res.redirect(`/admin/tipos/eventos?part=${req.query.part}`)
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
@@ -728,7 +734,7 @@ export const insertFraude = async (req, res) => {
       movimiento,
     })
 
-    res.redirect(`/admin/tipos/fraudes`)
+    res.redirect(`/admin/tipos/fraudes?part=${req.query.part}`)
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
@@ -758,7 +764,7 @@ export const updateFraude = async (req, res) => {
       movimiento,
     })
 
-    res.redirect(`/admin/tipos/fraudes`)
+    res.redirect(`/admin/tipos/fraudes?part=${req.query.part}`)
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
@@ -787,7 +793,7 @@ export const removeFraude = async (req, res) => {
       movimiento,
     })
 
-    res.redirect(`/admin/tipos/fraudes`)
+    res.redirect(`/admin/tipos/fraudes?part=${req.query.part}`)
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
@@ -805,6 +811,7 @@ export const insertHito = async (req, res) => {
   const user = req.user
   const tipo = {
     DESTIP: req.body.destip.toUpperCase(),
+    ANUHIT: req.body.anuhit
   }
   const movimiento = {
     USUMOV: user.id,
@@ -817,7 +824,7 @@ export const insertHito = async (req, res) => {
       movimiento,
     })
 
-    res.redirect(`/admin/tipos/hitos`)
+    res.redirect(`/admin/tipos/hitos?part=${req.query.part}`)
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
@@ -835,6 +842,7 @@ export const updateHito = async (req, res) => {
   const tipo = {
     IDTIPO: req.body.idtipo,
     DESTIP: req.body.destip.toUpperCase(),
+    ANUHIT: req.body.anuhit,
   }
   const movimiento = {
     USUMOV: user.id,
@@ -847,7 +855,7 @@ export const updateHito = async (req, res) => {
       movimiento,
     })
 
-    res.redirect(`/admin/tipos/hitos`)
+    res.redirect(`/admin/tipos/hitos?part=${req.query.part}`)
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
@@ -876,7 +884,7 @@ export const removeHito = async (req, res) => {
       movimiento,
     })
 
-    res.redirect(`/admin/tipos/hitos`)
+    res.redirect(`/admin/tipos/hitos?part=${req.query.part}`)
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
@@ -888,4 +896,12 @@ export const removeHito = async (req, res) => {
       });
     }
   }
+}
+
+// helpers
+const convertNodeToCursor = (node) => {
+  return new Buffer.from(node, 'binary').toString('base64')
+}
+const convertCursorToNode = (cursor) => {
+  return new Buffer.from(cursor, 'base64').toString('binary')
 }

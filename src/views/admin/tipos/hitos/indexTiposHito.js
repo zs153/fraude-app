@@ -58,8 +58,8 @@ const buildTable = (state) => {
   table.innerHTML = ''
 
   myList.map(element => {
-    // col1
     const row = document.createElement('tr')
+    // col1
     let cell = document.createElement('td')
     cell.classList.add("w-4")
     cell.innerHTML = `<div class="align-items-center py-1">
@@ -77,7 +77,14 @@ const buildTable = (state) => {
       </div>
     </div>`
     row.appendChild(cell)
-
+    // col3
+    cell = document.createElement('td')
+    cell.innerHTML = `<div class="d-flex py-1 align-items-center">
+      <div class="flex-fill">
+        <div class="font-weight-medium">${element.ANUHIT}</div>
+      </div>
+    </div>`
+    row.appendChild(cell)
     // col4
     cell = document.createElement('td')
     cell.classList.add("w-5")
@@ -90,7 +97,7 @@ const buildTable = (state) => {
         </a>
         <ul>
           <li class="nav-item">
-            <a href="/admin/tipos/cierres/edit/${element.IDTIPO}" class="nav-link">
+            <a href="/admin/tipos/hitos/edit/${element.IDTIPO}" class="nav-link">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke-width=".4" fill="none" d="M6.85 20.575q-.6 0-1.012-.412-.413-.413-.413-1.013V4.85q0-.6.413-1.013.412-.412 1.012-.412h7.825L18.6 7.35v3.4h-.65V7.675h-3.6V4.05h-7.5q-.3 0-.55.25-.25.25-.25.55v14.275q0 .3.25.55.25.25.55.25h4.25v.65Zm-.8-.65V4.05 19.925ZM17.025 14.6l.45.425-3.75 3.75v1.1h1.1l3.775-3.75.45.45-3.95 3.95h-2v-2Zm2.025 1.975L17.025 14.6l1.05-1.05q.225-.2.525-.2.3 0 .475.2l1 1q.2.2.2.487 0 .288-.2.538Z"/></svg>
               </svg>
@@ -118,14 +125,14 @@ const buildTable = (state) => {
 const createPages = () => {
   let str = "<ul>";
 
-  if (hasPrevCierr) {
-    str += "<li class='page-item previous no'><a href='/admin/tipos/cierres?cursor=" + JSON.stringify(cursor) + "&part=" + document.getElementById('buscarTipoBox').value + "&dir=prev' class='nav-link'>&#9664 Anterior</a>";
+  if (hasPrevHito) {
+    str += "<li class='page-item previous no'><a href='/admin/tipos/hitos?cursor=" + JSON.stringify(cursor) + "&part=" + document.getElementById('buscarTipoBox').value + "&dir=prev' class='nav-link'>&#9664 Anterior</a>";
   } else {
     str += "<li><a href='#' class='nav-link disabled'>&#9664 Anterior</a>";
   }
 
-  if (hasNextRela) {
-    str += "<li class='page-item next no'><a href='/admin/tipos/cierres?cursor=" + JSON.stringify(cursor) + "&part=" + document.getElementById('buscarTipoBox').value + "&dir=next' class='nav-link'>Siguiente &#9654</a>";
+  if (hasNextHito) {
+    str += "<li class='page-item next no'><a href='/admin/tipos/hitos?cursor=" + JSON.stringify(cursor) + "&part=" + document.getElementById('buscarTipoBox').value + "&dir=next' class='nav-link'>Siguiente &#9654</a>";
   } else {
     str += "<li><a href='#' class='nav-link disabled'>Siguiente &#9654</a>";
   }
@@ -135,18 +142,18 @@ const createPages = () => {
 }
 
 // events
-// const elemBuscar = document.getElementById('buscarRelBox');
-// elemBuscar.onchange = (event) => {
-//   setCookie('filtro', event.target.value, .5) // medio dia
-// }
-// elemBuscar.value = getCookie('filtro')
+const elemBuscar = document.getElementById('buscarTipoBox');
+elemBuscar.onchange = (event) => {
+  setCookie('filtro', event.target.value, .5) // medio dia
+}
+elemBuscar.value = getCookie('filtro')
 
 // incializacion
-const elemDel = document.getElementById('del');
-elemDel.setAttribute('action', `/user/fraudes/relaciones/delete?part=${getCookie('filtro')}`)
+const elemNew = document.getElementById('new');
+elemNew.setAttribute('href', `/admin/tipos/hitos/add?part=${getCookie('filtro')}`)
 
-const elemVol = document.getElementById('vol');
-elemVol.setAttribute('href', `/user/fraudes/?part=${getCookie('filtro')}`)
+const elemDel = document.getElementById('del');
+elemDel.setAttribute('action', `/admin/tipos/hitos/delete?part=${getCookie('filtro')}`)
 
 // tabla
 buildTable(orgList)

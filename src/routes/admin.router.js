@@ -4,8 +4,10 @@ import { verifyTokenAndAdmin,verifyTokenAndResp } from "../middleware/auth";
 import * as oficina from '../controllers/admin/oficina.controller'
 import * as usuario from '../controllers/admin/usuario.controller'
 import * as historico from '../controllers/admin/historico.controller'
-import * as tipocierre from '../controllers/admin/tipocierre.controller'
+import * as tipos from '../controllers/admin/tipos.controller'
 import * as fraude from '../controllers/admin/fraude.controller'
+import * as carga from '../controllers/admin/carga.controller'
+import * as estadistica from '../controllers/admin/estadistica.controller'
 
 const adminRouter = express.Router()
 
@@ -24,44 +26,58 @@ adminRouter.get('/usuarios', verifyTokenAndResp, usuario.mainPage)
 adminRouter.get('/usuarios/add', verifyTokenAndResp, usuario.addPage)
 adminRouter.get('/usuarios/edit/:id', verifyTokenAndResp, usuario.editPage)
 
-// pag tipocierre
-adminRouter.get('/tipos/cierres', verifyTokenAndAdmin, tipocierre.mainPage)
-adminRouter.get('/tipos/cierres/add', verifyTokenAndAdmin, tipocierre.addPage)
-adminRouter.get('/tipos/cierres/edit/:id', verifyTokenAndAdmin, tipocierre.editPage)
+// tipos
+// cierres
+adminRouter.get('/tipos/cierres', verifyTokenAndAdmin, tipos.mainCierresPage)
+adminRouter.get('/tipos/cierres/add', verifyTokenAndAdmin, tipos.addCierrePage)
+adminRouter.get('/tipos/cierres/edit/:id', verifyTokenAndAdmin, tipos.editCierrePage)
+// eventos
+adminRouter.get('/tipos/eventos', verifyTokenAndAdmin, tipos.mainEventosPage)
+adminRouter.get('/tipos/eventos/add', verifyTokenAndAdmin, tipos.addEventoPage)
+adminRouter.get('/tipos/eventos/edit/:id', verifyTokenAndAdmin, tipos.editEventoPage)
+// fraudes
+adminRouter.get('/tipos/fraudes', verifyTokenAndAdmin, tipos.mainFraudesPage)
+adminRouter.get('/tipos/fraudes/add', verifyTokenAndAdmin, tipos.addFraudePage)
+adminRouter.get('/tipos/fraudes/edit/:id', verifyTokenAndAdmin, tipos.editFraudePage)
+// hitos
+adminRouter.get('/tipos/hitos', verifyTokenAndAdmin, tipos.mainHitosPage)
+adminRouter.get('/tipos/hitos/add', verifyTokenAndAdmin, tipos.addHitoPage)
+adminRouter.get('/tipos/hitos/edit/:id', verifyTokenAndAdmin, tipos.editHitoPage)
 
-// page fraude
+// fraude
 adminRouter.get("/fraudes", verifyTokenAndResp, fraude.mainPage);
 adminRouter.get("/fraudes/resueltos", verifyTokenAndResp, fraude.resueltosPage);
 adminRouter.get("/fraudes/add", verifyTokenAndResp, fraude.addPage);
 adminRouter.get("/fraudes/edit/:id", verifyTokenAndResp, fraude.editPage);
 adminRouter.get("/fraudes/resolver/:id", verifyTokenAndResp, fraude.resolverPage);
-
-// page hitoseventos
+// hitoseventos
 adminRouter.get("/fraudes/hitoseventos/:id", verifyTokenAndResp, fraude.hitoseventosPage);
 adminRouter.get("/fraudes/hitoseventos/readonly/:id", verifyTokenAndResp, fraude.hitoseventosReadonlyPage);
-
-// page hitos
+// hitos
 adminRouter.get("/fraudes/hitos/add/:id", verifyTokenAndResp, fraude.addHitosPage);
 adminRouter.get("/fraudes/hitos/edit/:idfra/:idhit", verifyTokenAndResp, fraude.editHitosPage);
-
-// page eventos
+// eventos
 adminRouter.get("/fraudes/eventos/add/:id", verifyTokenAndResp, fraude.addEventosPage);
 adminRouter.get("/fraudes/eventos/edit/:idfra/:ideve", verifyTokenAndResp, fraude.editEventosPage);
-
-// page ejercios
+// ejercios
 adminRouter.get("/fraudes/ejercicios/add/:id", verifyTokenAndResp, fraude.addEjercicioPage);
-
-// page relacion
+// relacion
 adminRouter.get("/fraudes/relaciones/:id", verifyTokenAndResp, fraude.relacionesPage);
 adminRouter.get("/fraudes/relaciones/add/:id", verifyTokenAndResp, fraude.relacionesAddPage);
 adminRouter.get("/fraudes/relaciones/edit/:idfra/:idrel", verifyTokenAndResp, fraude.relacionesEditPage);
 adminRouter.get("/fraudes/relaciones/readonly/:id", verifyTokenAndResp, fraude.relacionesReadonlyPage);
-
-// page smss
+// smss
 adminRouter.get("/fraudes/smss/:id", verifyTokenAndResp, fraude.smssPage);
 adminRouter.get("/fraudes/smss/add/:id", verifyTokenAndResp, fraude.smssAddPage);
 adminRouter.get("/fraudes/smss/edit/:idfra/:idsms", verifyTokenAndResp, fraude.smssEditPage);
 adminRouter.get("/fraudes/smss/readonly/:id", verifyTokenAndResp, fraude.smssReadonlyPage);
+
+// page carga
+adminRouter.get('/cargas', verifyTokenAndAdmin, carga.mainPage)
+adminRouter.get('/cargas/add', verifyTokenAndAdmin, carga.addPage)
+
+// estadistica
+adminRouter.get("/estadisticas", verifyTokenAndAdmin, estadistica.mainPage);
 
 //--------------- procedures
 // oficinas
@@ -78,10 +94,23 @@ adminRouter.post('/usuarios/insert', verifyTokenAndResp, usuario.insert)
 adminRouter.post('/usuarios/update', verifyTokenAndResp, usuario.update)
 adminRouter.post('/usuarios/delete', verifyTokenAndResp, usuario.remove)
 
-// tipocierre
-adminRouter.post('/tipos/cierres/insert', verifyTokenAndAdmin, tipocierre.insert)
-adminRouter.post('/tipos/cierres/update', verifyTokenAndAdmin, tipocierre.update)
-adminRouter.post('/tipos/cierres/delete', verifyTokenAndAdmin, tipocierre.remove)
+// tipos
+// cierres
+adminRouter.post('/tipos/cierres/insert', verifyTokenAndAdmin, tipos.insertCierre)
+adminRouter.post('/tipos/cierres/update', verifyTokenAndAdmin, tipos.updateCierre)
+adminRouter.post('/tipos/cierres/delete', verifyTokenAndAdmin, tipos.removeCierre)
+// eventos
+adminRouter.post('/tipos/eventos/insert', verifyTokenAndAdmin, tipos.insertEvento)
+adminRouter.post('/tipos/eventos/update', verifyTokenAndAdmin, tipos.updateEvento)
+adminRouter.post('/tipos/eventos/delete', verifyTokenAndAdmin, tipos.removeEvento)
+// fraudes
+adminRouter.post('/tipos/fraudes/insert', verifyTokenAndAdmin, tipos.insertFraude)
+adminRouter.post('/tipos/fraudes/update', verifyTokenAndAdmin, tipos.updateFraude)
+adminRouter.post('/tipos/fraudes/delete', verifyTokenAndAdmin, tipos.removeFraude)
+// hitos
+adminRouter.post('/tipos/hitos/insert', verifyTokenAndAdmin, tipos.insertHito)
+adminRouter.post('/tipos/hitipos.tos/update', verifyTokenAndAdmin, tipos.updateHito)
+adminRouter.post('/tipos/hitos/delete', verifyTokenAndAdmin, tipos.removeHito)
 
 // fraudes
 adminRouter.post("/fraudes/insert", verifyTokenAndResp, fraude.insert);
@@ -90,29 +119,30 @@ adminRouter.post("/fraudes/delete", verifyTokenAndResp, fraude.remove);
 adminRouter.post("/fraudes/asignar", verifyTokenAndResp, fraude.asignar);
 adminRouter.post("/fraudes/desasignar", verifyTokenAndResp, fraude.desasignar);
 adminRouter.post("/fraudes/resolver", verifyTokenAndResp, fraude.resolver);
-
 // hitos
 adminRouter.post("/fraudes/hitos/insert", verifyTokenAndResp, fraude.insertHito);
 adminRouter.post("/fraudes/hitos/update", verifyTokenAndResp, fraude.updateHito);
 adminRouter.post("/fraudes/hitos/delete", verifyTokenAndResp, fraude.removeHito);
 adminRouter.post("/fraudes/hitos/archivado", verifyTokenAndResp, fraude.archivoHito);
-
 // eventos
 adminRouter.post("/fraudes/eventos/insert", verifyTokenAndResp, fraude.insertEvento);
 adminRouter.post("/fraudes/eventos/update", verifyTokenAndResp, fraude.updateEvento);
 adminRouter.post("/fraudes/eventos/delete", verifyTokenAndResp, fraude.removeEvento);
-
 // ejercicios
 adminRouter.post("/fraudes/ejercicios/insert", verifyTokenAndResp, fraude.insertEjercicio);
-
 // relacion
 adminRouter.post("/fraudes/relaciones/insert", verifyTokenAndResp, fraude.insertRelacion);
 adminRouter.post("/fraudes/relaciones/update", verifyTokenAndResp, fraude.updateRelacion);
 adminRouter.post("/fraudes/relaciones/delete", verifyTokenAndResp, fraude.removeRelacion);
-
 // sms
 adminRouter.post("/fraudes/smss/insert", verifyTokenAndResp, fraude.insertSms);
 adminRouter.post("/fraudes/smss/update", verifyTokenAndResp, fraude.updateSms);
 adminRouter.post("/fraudes/smss/delete", verifyTokenAndResp, fraude.removeSms);
+
+// carga
+adminRouter.post('/cargas/insert', verifyTokenAndAdmin, carga.insert)
+
+// estadistica
+adminRouter.post("/estadisticas", verifyTokenAndAdmin, estadistica.generarEstadistica);
 
 export default adminRouter

@@ -21,7 +21,7 @@
           <div class="row">
             <div class="col-12">
               <div class="card">
-                <form action="/admin/tipos/cierres/update" method="POST" onsubmit="return validate();">
+                <form action="" id="upd" method="POST" onsubmit="return validate();">
                   <input type="hidden" name="idtipo" id="idtipo" value=<%- datos.tipo.IDTIPO %>>
                   <div class="card-header">
                     <h3 class="card-title">Tipo Cierre</h3>
@@ -58,6 +58,10 @@
 
   <script src="/js/ayuda.min.js"></script>
   <script src="/js/addEditTipoCierre.min.js"></script>
+  <script>
+    const elemUpd = document.getElementById('upd');
+    elemUpd.setAttribute('action', `/admin/tipos/cierres/update?part=${getCookie('filtro')}`)
+  </script>  
 </body>
 
 </html>

@@ -1,5 +1,5 @@
 // const
-const destipValue = destip.value.trim()
+const destip = document.getElementById('destip')
 
 // func
 const getCookie = (key) => {
