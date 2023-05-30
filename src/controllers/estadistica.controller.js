@@ -54,16 +54,17 @@ const actuacionFromRec = (req) => {
 }
 
 export const situacionActuacion = async (req, res) => {
-  try {
-    const result = await DAL.sitAct(situacionActuacionFromRec(req))
+  // context
+  const context = req.body.context
 
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
+  console.log(context.fraude.REFFRA);
+  // proc
+  try {
+    const result = await DAL.stadi(context)
+
+    res.status(200).json(result)
   } catch (err) {
-    res.status(500).end()
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
 export const estadisticasSituacion = async (req, res) => {

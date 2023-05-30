@@ -1,6 +1,35 @@
 import * as DAL from "../models/carga.model";
 
-const insertFromRec = (req) => {
+// proc
+export const carga = async (req, res) => {
+  // context
+  const context = req.body.context
+
+  // proc
+  try {
+    const result = await DAL.carga(context)
+
+    res.status(200).json(result)
+  } catch (err) {
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+  }
+}
+export const cargas = async (req, res) => {
+  // context
+  const context = req.body.context
+
+  // proc
+  try {
+    const result = await DAL.cargas(context)
+
+    res.status(200).json(result)
+  } catch (err) {
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+  }
+}
+
+export const crear = async (req, res) => {
+  // context
   const carga = {
     descar: req.body.carga.DESCAR,
     ficcar: req.body.carga.FICCAR,
@@ -12,50 +41,14 @@ const insertFromRec = (req) => {
     tipmov: req.body.movimiento.TIPMOV,
   };
 
-  return Object.assign(carga, movimiento);
-};
+  const context = Object.assign(carga, movimiento);
 
-// proc
-export const carga = async (req, res) => {
-  const context = req.body.carga;
-
+  // proc
   try {
-    const result = await DAL.find(context);
+    const result = await DAL.insert(context)
 
-    if (result.length === 1) {
-      return res.status(200).json(result[0]);
-    } else {
-      res.status(404).end();
-    }
+    res.status(200).json(result)
   } catch (err) {
-    res.status(500).end();
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
-};
-export const cargas = async (req, res) => {
-  const context = req.body.carga
-
-  try {
-    const result = await DAL.find(context);
-
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
-  } catch (err) {
-    res.status(500).end();
-  }
-};
-export const crear = async (req, res) => {
-  try {
-    const result = await DAL.insert(insertFromRec(req));
-
-    if (result !== null) {
-      res.status(200).json(result);
-    } else {
-      res.status(404).end();
-    }
-  } catch (err) {
-    res.status(500).end();
-  }
-};
+}

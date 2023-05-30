@@ -1,3 +1,4 @@
+import { BIND_OUT, NUMBER } from "oracledb";
 import { simpleExecute } from "../services/database.js";
 
 const baseCierreQuery = "SELECT * FROM tiposcierre";
@@ -16,8 +17,8 @@ const updateFraudeSql = "BEGIN FRAUDE_PKG.UPDATETIPOFRAUDE(:idtipo,:destip,:usum
 const removeFraudeSql = "BEGIN FRAUDE_PKG.DELETETIPOFRAUDE(:idtipo,:usumov,:tipmov ); END;";
 
 const baseHitoQuery = "SELECT * FROM tiposhito";
-const insertHitoSql = "BEGIN FRAUDE_PKG.INSERTTIPOHITO(:destip,:usumov,:tipmov,:idtipo); END;";
-const updateHitoSql = "BEGIN FRAUDE_PKG.UPDATETIPOHITO(:idtipo,:destip,:usumov,:tipmov); END;";
+const insertHitoSql = "BEGIN FRAUDE_PKG.INSERTTIPOHITO(:destip,:anuhit,:usumov,:tipmov,:idtipo); END;";
+const updateHitoSql = "BEGIN FRAUDE_PKG.UPDATETIPOHITO(:idtipo,:destip,:anuhit,:usumov,:tipmov); END;";
 const removeHitoSql = "BEGIN FRAUDE_PKG.DELETETIPOHITO(:idtipo,:usumov,:tipmov ); END;";
 
 export const cierre = async (context) => {
@@ -309,10 +310,10 @@ export const hitos = async (context) => {
 
   if (context.direction === 'next') {
     bind.idtipo = context.cursor.next;
-    query = "WITH datos AS (SELECT * FROM tiposfraude WHERE destip LIKE '%' || :part || '%' OR :part IS NULL) SELECT * FROM datos WHERE idtipo > :idtipo ORDER BY idtipo ASC FETCH NEXT :limit ROWS ONLY"
+    query = "WITH datos AS (SELECT * FROM tiposhito WHERE destip LIKE '%' || :part || '%' OR :part IS NULL) SELECT * FROM datos WHERE idtipo > :idtipo ORDER BY idtipo ASC FETCH NEXT :limit ROWS ONLY"
   } else {
     bind.idtipo = context.cursor.prev;
-    query = "WITH datos AS (SELECT * FROM tiposfraude WHERE destip LIKE '%' || :part || '%' OR :part IS NULL) SELECT * FROM datos WHERE idtipo < :idtipo ORDER BY idtipo DESC FETCH NEXT :limit ROWS ONLY"
+    query = "WITH datos AS (SELECT * FROM tiposhito WHERE destip LIKE '%' || :part || '%' OR :part IS NULL) SELECT * FROM datos WHERE idtipo < :idtipo ORDER BY idtipo DESC FETCH NEXT :limit ROWS ONLY"
   }
 
   // proc

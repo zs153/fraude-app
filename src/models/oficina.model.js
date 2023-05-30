@@ -1,7 +1,7 @@
 import { BIND_OUT, NUMBER } from "oracledb";
 import { simpleExecute } from '../services/database.js'
 
-const baseQuery = "SELECT * FROM oficinas oo"
+const baseQuery = "SELECT * FROM oficinas"
 const insertSql = "BEGIN FRAUDE_PKG.INSERTOFICINA(:desofi, :codofi,:usumov,:tipmov,:idofic); END;"
 const updateSql = "BEGIN FRAUDE_PKG.UPDATEOFICINA(:idofic,:desofi, :codofi,:usumov,:tipmov); END;"
 const removeSql = "BEGIN FRAUDE_PKG.DELETEOFICINA(:idofic,:usumov,:tipmov ); END;"

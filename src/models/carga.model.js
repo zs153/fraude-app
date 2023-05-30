@@ -1,47 +1,67 @@
-import oracledb from "oracledb";
+import { BIND_OUT, NUMBER } from "oracledb";
 import { simpleExecute } from "../services/database.js";
 
-const baseQuery = `SELECT 
-  cc.*,
-  TO_CHAR(cc.feccar, 'DD/MM/YYYY') "STRFEC"
-FROM cargas cc
-`;
-const insertSql = `BEGIN FRAUDE_PKG.INSERTCARGA(
-  :descar,
-  :ficcar,
-  :refcar,
-  :stacar,
-  :usumov,
-  :tipmov,
-  :idcarg
-); END;
-`;
+const baseQuery = "SELECT * FROM cargas"
+const insertSql = "BEGIN FRAUDE_PKG.INSERTCARGA(:descar,:ficcar,:refcar,:stacar,:usumov,:tipmov,:idcarg); END;";
 
-export const find = async (context) => {
-  let query = baseQuery;
-  let binds = {};
+export const carga = async (context) => {
+  // bind
+  let query = baseQuery
+  const bind = context
 
   if (context.IDCARG) {
-    binds.idcarg = context.IDCARG
-    query += `WHERE cc.idcarg = :idcarg`
+    query += " WHERE idcarg = :idcarg"
   }
 
-  const result = await simpleExecute(query, binds);
-  return result.rows;
-};
-export const insert = async (bind) => {
-  bind.idcarg = {
-    dir: oracledb.BIND_OUT,
-    type: oracledb.NUMBER,
+  // proc
+  const ret = await simpleExecute(query, bind)
+
+  if (ret) {
+    return ({ stat: ret.rows.length, data: ret.rows })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+}
+export const cargas = async (context) => {
+  // bind
+  let query = '';
+  let bind = {
+    limit: context.limit,
+    part: context.part,
   };
 
-  try {
-    const result = await simpleExecute(insertSql, bind);
-
-    bind.idcarg = await result.outBinds.idcarg;
-  } catch (error) {
-    bind = null;
+  if (context.direction === 'next') {
+    bind.idcarg = context.cursor.next;
+    query = "WITH datos AS (SELECT * FROM cargas WHERE descar LIKE '%' || :part || '%' OR :part IS NULL) SELECT * FROM datos WHERE idcarg > :idcarg ORDER BY idcarg ASC FETCH NEXT :limit ROWS ONLY"
+  } else {
+    bind.idcarg = context.cursor.prev;
+    query = "WITH datos AS (SELECT * FROM cargas WHERE descar LIKE '%' || :part || '%' OR :part IS NULL) SELECT * FROM datos WHERE idcarg < :idcarg ORDER BY idcarg DESC FETCH NEXT :limit ROWS ONLY"
   }
 
-  return bind;
+  // proc
+  const ret = await simpleExecute(query, bind)
+
+  if (ret) {
+    return ({ stat: ret.rows.length, data: ret.rows })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+};
+export const insert = async (context) => {
+  // bind
+  let bind = context
+  bind.idcarg = {
+    dir: BIND_OUT,
+    type: NUMBER,
+  };
+
+  // proc
+  const ret = await simpleExecute(insertSql, bind)
+
+  if (ret) {
+    bind.IDOFIC = ret.outBinds.IDOFIC
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
 };

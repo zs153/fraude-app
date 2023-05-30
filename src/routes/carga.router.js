@@ -1,9 +1,5 @@
 import express from "express";
-import {
-  carga,
-  cargas,
-  crear,
-} from "../controllers/carga.controller";
+import { carga, cargas, crear } from "../controllers/carga.controller";
 
 const apiCargaRouter = express.Router();
 
