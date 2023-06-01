@@ -114,7 +114,7 @@ export const editCierrePage = async (req, res) => {
   const user = req.user
   
   try {
-    const result = await axios.post(`http://${serverAPI}:8100/api/tipos/cierre`, {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/cierre`, {
       context: {
         IDTIPO: req.params.id,
       },
@@ -246,7 +246,7 @@ export const editEventoPage = async (req, res) => {
   const user = req.user
 
   try {
-    const result = await axios.post(`http://${serverAPI}:8100/api/tipos/evento`, {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/evento`, {
       context: {
         IDTIPO: req.params.id,
       },
@@ -378,7 +378,7 @@ export const editFraudePage = async (req, res) => {
   const user = req.user
 
   try {
-    const result = await axios.post(`http://${serverAPI}:8100/api/tipos/fraude`, {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/fraude`, {
       context: {
         IDTIPO: req.params.id,
       },
@@ -513,7 +513,7 @@ export const editHitoPage = async (req, res) => {
   const user = req.user
 
   try {
-    const result = await axios.post(`http://${serverAPI}:8100/api/tipos/hito`, {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/hito`, {
       context: {
         IDTIPO: req.params.id,
       },
@@ -551,7 +551,7 @@ export const insertCierre = async (req, res) => {
   }
 
   try {
-    await axios.post(`http://${serverAPI}:8100/api/tipos/cierres/insert`, {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/cierres/insert`, {
       tipo,
       movimiento,
     })
@@ -581,7 +581,7 @@ export const updateCierre = async (req, res) => {
   }
 
   try {
-    await axios.post(`http://${serverAPI}:8100/api/tipos/cierres/update`, {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/cierres/update`, {
       tipo,
       movimiento,
     })
@@ -610,12 +610,12 @@ export const removeCierre = async (req, res) => {
   }
 
   try {
-    await axios.post(`http://${serverAPI}:8100/api/tipos/cierres/delete`, {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/cierres/delete`, {
       tipo,
       movimiento,
     })
 
-    res.redirect(`/admin/tipos/cierres`)
+    res.redirect(`/admin/tipos/cierres?part=${req.query.part}`)
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
@@ -640,7 +640,7 @@ export const insertEvento = async (req, res) => {
   }
 
   try {
-    await axios.post(`http://${serverAPI}:8100/api/tipos/eventos/insert`, {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/eventos/insert`, {
       tipo,
       movimiento,
     })
@@ -670,7 +670,7 @@ export const updateEvento = async (req, res) => {
   }
 
   try {
-    await axios.post(`http://${serverAPI}:8100/api/tipos/eventos/update`, {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/eventos/update`, {
       tipo,
       movimiento,
     })
@@ -699,7 +699,7 @@ export const removeEvento = async (req, res) => {
   }
 
   try {
-    await axios.post(`http://${serverAPI}:8100/api/tipos/eventos/delete`, {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/eventos/delete`, {
       tipo,
       movimiento,
     })
@@ -729,7 +729,7 @@ export const insertFraude = async (req, res) => {
   }
 
   try {
-    await axios.post(`http://${serverAPI}:8100/api/tipos/fraudes/insert`, {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/fraudes/insert`, {
       tipo,
       movimiento,
     })
@@ -759,7 +759,7 @@ export const updateFraude = async (req, res) => {
   }
 
   try {
-    await axios.post(`http://${serverAPI}:8100/api/tipos/fraudes/update`, {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/fraudes/update`, {
       tipo,
       movimiento,
     })
@@ -788,7 +788,7 @@ export const removeFraude = async (req, res) => {
   }
 
   try {
-    await axios.post(`http://${serverAPI}:8100/api/tipos/fraudes/delete`, {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/fraudes/delete`, {
       tipo,
       movimiento,
     })
@@ -811,7 +811,6 @@ export const insertHito = async (req, res) => {
   const user = req.user
   const tipo = {
     DESTIP: req.body.destip.toUpperCase(),
-    ANUHIT: req.body.anuhit
   }
   const movimiento = {
     USUMOV: user.id,
@@ -819,7 +818,7 @@ export const insertHito = async (req, res) => {
   }
 
   try {
-    await axios.post(`http://${serverAPI}:8100/api/tipos/hitos/insert`, {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/hitos/insert`, {
       tipo,
       movimiento,
     })
@@ -850,7 +849,7 @@ export const updateHito = async (req, res) => {
   }
 
   try {
-    await axios.post(`http://${serverAPI}:8100/api/tipos/hitos/update`, {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/hitos/update`, {
       tipo,
       movimiento,
     })
@@ -879,7 +878,7 @@ export const removeHito = async (req, res) => {
   }
 
   try {
-    await axios.post(`http://${serverAPI}:8100/api/tipos/hitos/delete`, {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/hitos/delete`, {
       tipo,
       movimiento,
     })

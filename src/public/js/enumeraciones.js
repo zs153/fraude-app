@@ -49,6 +49,7 @@ export const tiposMovimiento = {
   modificarPerfil: 65,
   modificarHistorico: 66,
   activarHistorico: 67,
+  borrarHistorico: 68,
 }
 export const tiposPerfil = {
   general: 1,

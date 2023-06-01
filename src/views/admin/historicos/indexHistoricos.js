@@ -99,7 +99,15 @@ const buildTable = (state) => {
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link" onclick="{document.getElementById('idusua').value ='${element.IDUSUA}', document.getElementById('msgact').innerHTML ='<p>${element.NOMUSU}</p>'}" data-bs-toggle="modal" data-bs-target="#modal-activar">
+            <a href="#" class="nav-link" onclick="{document.getElementById('delusu').value ='${element.IDUSUA}', document.getElementById('msgbor').innerHTML ='<p>${element.USERID}</p><p>${element.NOMUSU}</p>'}" data-bs-toggle="modal" data-bs-target="#modal-borrar">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke-width=".4" fill="none" d="M7.85 19.575q-.6 0-1.025-.425-.425-.425-.425-1.025v-12.1h-.975V5.4h3.6v-.675H15V5.4h3.6v.625h-.975V18.15q0 .6-.425 1.013-.425.412-1.025.412Zm9.125-13.55H7.05v12.1q0 .35.225.575.225.225.575.225h8.325q.3 0 .55-.25.25-.25.25-.55Zm-6.85 10.925h.625V8h-.625Zm3.15 0h.625V8h-.625ZM7.05 6.025V18.925 18.125Z"/>
+              </svg>
+              Borrar
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link" onclick="{document.getElementById('idusua').value ='${element.IDUSUA}', document.getElementById('msgact').innerHTML ='<p>${element.USERID}</p><p>${element.NOMUSU}</p>'}" data-bs-toggle="modal" data-bs-target="#modal-activar">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon me-2" height="24" width="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke-width="1" fill="none" d="M4.85 18.575q-.6 0-1.012-.412-.413-.413-.413-1.013v-2.175h.625v2.175q0 .3.25.55.25.25.55.25h2.175v.625Zm4.8-3.375 1.075-5.45-3.375 1.425v3.15h-.625V10.75L10.7 9.1q.55-.2.825-.288.275-.087.475-.087.35 0 .638.175.287.175.487.5l.675 1.075q-.025.025-.025.013 0-.013.025-.013-1.025.85-1.625 2.062-.6 1.213-.6 2.663Zm3.85-8.075q-.675 0-1.125-.45-.45-.45-.45-1.125 0-.65.45-1.113.45-.462 1.125-.462.65 0 1.113.462.462.463.462 1.113 0 .675-.462 1.125-.463.45-1.113.45Zm-10.075-2.1V2.85q0-.6.413-1.025Q4.25 1.4 4.85 1.4h2.175v.65H4.85q-.3 0-.55.25-.25.25-.25.55v2.175Zm16.525 0V2.85q0-.3-.25-.55-.25-.25-.55-.25h-2.175V1.4h2.175q.6 0 1.025.425.425.425.425 1.025v2.175Zm-2.25 13.75q-1.525 0-2.575-1.05-1.05-1.05-1.05-2.575 0-1.5 1.05-2.55 1.05-1.05 2.575-1.05 1.5 0 2.55 1.05 1.05 1.05 1.05 2.55 0 1.525-1.05 2.575-1.05 1.05-2.55 1.05Zm-.35-3.15h.675V13h-.675Zm.35 1.775q.2 0 .325-.125t.125-.325q0-.2-.125-.325T17.7 16.5q-.2 0-.325.125t-.125.325q0 .2.125.325t.325.125Z"/></svg>
               Activar
             </a>
@@ -143,6 +151,9 @@ elemBuscar.value = getCookie('filtro')
 // inicializar action
 const elemActivar = document.getElementById('activ')
 elemActivar.setAttribute('action', `/admin/historicos/activar?part=${getCookie('filtro')}`)
+
+const elemDel = document.getElementById('del');
+elemDel.setAttribute('action', `/admin/historicos/delete?part=${getCookie('filtro')}`)
 
 // tabla
 buildTable(orgList)

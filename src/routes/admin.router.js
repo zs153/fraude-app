@@ -88,6 +88,7 @@ adminRouter.post('/oficinas/delete', verifyTokenAndAdmin, oficina.remove)
 // historico
 adminRouter.post('/historicos/activar', verifyTokenAndResp, historico.activar)
 adminRouter.post('/historicos/update', verifyTokenAndResp, historico.update)
+adminRouter.post('/historicos/delete', verifyTokenAndResp, historico.remove)
 
 // usuarios
 adminRouter.post('/usuarios/insert', verifyTokenAndResp, usuario.insert)
@@ -109,7 +110,7 @@ adminRouter.post('/tipos/fraudes/update', verifyTokenAndAdmin, tipos.updateFraud
 adminRouter.post('/tipos/fraudes/delete', verifyTokenAndAdmin, tipos.removeFraude)
 // hitos
 adminRouter.post('/tipos/hitos/insert', verifyTokenAndAdmin, tipos.insertHito)
-adminRouter.post('/tipos/hitipos.tos/update', verifyTokenAndAdmin, tipos.updateHito)
+adminRouter.post('/tipos/hitos/update', verifyTokenAndAdmin, tipos.updateHito)
 adminRouter.post('/tipos/hitos/delete', verifyTokenAndAdmin, tipos.removeHito)
 
 // fraudes

@@ -78,12 +78,12 @@ const buildTable = (state) => {
     </div>`
     row.appendChild(cell)
     // col3
-    cell = document.createElement('td')
-    cell.innerHTML = `<div class="d-flex py-1 align-items-center">
-      <div class="flex-fill">
-        <div class="font-weight-medium">${element.ANUHIT}</div>
-      </div>
-    </div>`
+    // cell = document.createElement('td')
+    // cell.innerHTML = `<div class="d-flex py-1 align-items-center">
+    //   <div class="flex-fill">
+    //     <div class="font-weight-medium">${element.ANUHIT}</div>
+    //   </div>
+    // </div>`
     row.appendChild(cell)
     // col4
     cell = document.createElement('td')

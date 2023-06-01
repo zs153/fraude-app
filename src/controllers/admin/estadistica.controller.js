@@ -40,35 +40,39 @@ export const generarEstadistica = async (req, res) => {
     DESDE: req.body.desde,
     HASTA: req.body.hasta,
   }
-  const carga = {}
   const fraude = {
     REFFRA: req.body.refcar,
   }
 
   try {
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/cierre`, {
+    const tipos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/cierre`, {
       context: {},
     })
-    const tipos = result.data.data
-
-    console.log(tipos);
-    result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/estadisticas/sitact`, {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/estadisticas/contadores`, {
       context: {
         REFFRA: req.body.refcar,
         DESDE: periodo.DESDE,
         HASTA: periodo.HASTA,
-        CRUERR: tipos[0].IDTIPO,
-        SINEFE: tipos[1].IDTIPO,
-        TRICOR: tipos[2].IDTIPO,
-        PRESCR: tipos[3].IDTIPO,
-        OTRCAS: tipos[4].IDTIPO,
+        CRUERR: tipos.data.data[0].IDTIPO,
+        SINEFE: tipos.data.data[1].IDTIPO,
+        TRICOR: tipos.data.data[2].IDTIPO,
+        PRESCR: tipos.data.data[3].IDTIPO,
       }
     })
     const oficinas = await axios.post(`http://${serverAPI}:${puertoAPI}/api/estadisticas/oficinas`, {
-      fraude,
+      context: {
+        REFFRA: req.body.refcar
+      },
     })
-    const cargas = await axios.post(`http://${serverAPI}:${puertoAPI}/api/cargas`, {
-      carga,
+    const actividad = await axios.post(`http://${serverAPI}:${puertoAPI}/api/estadisticas/actividad`, {
+      context: {
+        REFFRA: req.body.refcar,
+        DESDE: periodo.DESDE,
+        HASTA: periodo.HASTA,
+      }
+    })
+    const cargas = await axios.post(`http://${serverAPI}:${puertoAPI}/api/carga`, {
+      context: {},
     })
 
     const serieC = []
@@ -78,7 +82,7 @@ export const generarEstadistica = async (req, res) => {
     let importes
     let causas
 
-    result.data.map(itm => {
+    result.data.data.map(itm => {
       if (itm.FECHA) {
         serieC.push([new Date(itm.FECHA).getTime(), itm.CORREC])
         serieL.push([new Date(itm.FECHA).getTime(), itm.LIQUID])
@@ -133,8 +137,8 @@ export const generarEstadistica = async (req, res) => {
 
     const datos = {
       fraude,
-      cargas: cargas.data,
-      oficinas: oficinas.data,
+      cargas: cargas.data.data,
+      oficinas: oficinas.data.data,
       periodo,
       contadores,
       importes,
@@ -147,11 +151,15 @@ export const generarEstadistica = async (req, res) => {
 
     res.render('admin/estadisticas/resultado', { user, datos })
   } catch (error) {
-    const msg = 'No se ha podido acceder a los datos de la aplicación.'
-
-    res.render('admin/error400', {
-      alerts: [{ msg }],
-    })
+    if (error.response?.status === 400) {
+      res.render("admin/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("admin/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 }
 

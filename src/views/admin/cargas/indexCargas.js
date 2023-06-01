@@ -111,7 +111,7 @@ const buildTable = (state) => {
     cell.classList.add("w-6")
     cell.innerHTML = `<div class="d-flex py-1 align-items-center">
       <div class="flex-fill">
-        <div class="font-weight-medium">${element.NUMREG}</div>
+        <div class="font-weight-medium">${element.NUMCAR}</div>
       </div>
     </div>`
     row.appendChild(cell)

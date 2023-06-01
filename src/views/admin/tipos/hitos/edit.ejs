@@ -38,20 +38,6 @@
                         </div>
                       </div>
                     </div>
-                    <div class="row">
-                      <div class="col-4">
-                        <div class="mb-1">
-                          <label class="form-label required">Estado</label>
-                          <select class="form-select form-control" id="cbosta" name="anuhit" value="<%- datos.tipo.ANUHIT %>">
-                            <% datos.arrEstadosHito.map(element => { %>
-                            <option value="<%- element.id %>"<%- element.id === datos.tipo.ANUHIT ? " selected":"" %>>
-                              <%= element.des %>
-                            </option>
-                            <% }) %>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                   <div class="card-footer text-end">
                     <div class="d-flex">

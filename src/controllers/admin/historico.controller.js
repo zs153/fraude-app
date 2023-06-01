@@ -160,6 +160,35 @@ export const update = async (req, res) => {
     }
   }
 }
+export const remove = async (req, res) => {
+  const user = req.user
+  const usuario = {
+    IDUSUA: req.body.idusua,
+  }
+  const movimiento = {
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.borrarHistorico,
+  }
+
+  try {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/historicos/delete`, {
+      usuario,
+      movimiento,
+    })
+
+    res.redirect(`/admin/historicos?part=${req.query.part}`)
+  } catch (error) {
+    if (error.response?.status === 400) {
+      res.render("admin/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("admin/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
+  }
+}
 export const activar = async (req, res) => {
   const user = req.user
 
