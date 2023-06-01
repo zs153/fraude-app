@@ -6,7 +6,7 @@ export const oficina = async (req, res) => {
 
   // proc
   try {
-    const result = await DAL.find(context)
+    const result = await DAL.oficina(context)
 
     res.status(200).json(result)
   } catch (err) {
@@ -19,7 +19,7 @@ export const oficinas = async (req, res) => {
 
   // proc
   try {
-    const result = await DAL.findAll(context)
+    const result = await DAL.oficinas(context)
 
     res.status(200).json(result)
   } catch (err) {

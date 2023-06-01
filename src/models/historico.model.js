@@ -2,9 +2,10 @@ import { simpleExecute } from "../services/database.js";
 
 const baseQuery = "SELECT * FROM historicos"
 const updateSql = "BEGIN FRAUDE_PKG.UPDATEHISTORICO(:idusua,:nomusu,:ofiusu,:rolusu,:userid,:emausu,:perusu,:telusu,:usumov,:tipmov); END;";
+const removeSql = "BEGIN FRAUDE_PKG.DELETEHISTORICO(:idusua,:usumov,:tipmov); END;";
 const activarSql = "BEGIN FRAUDE_PKG.ACTIVARHISTORICO(:idusua,:usumov,:tipmov); END;"
 
-export const find = async (context) => {
+export const historico = async (context) => {
   // bind
   let query = baseQuery;
   let bind = context;
@@ -22,7 +23,7 @@ export const find = async (context) => {
     return ({ stat: 0, data: [] })
   }
 };
-export const findAll = async (context) => {
+export const historicos = async (context) => {
   // bind
   let query = '';
   let bind = {
@@ -57,6 +58,19 @@ export const update = async (context) => {
     return ({ stat: 1, data: bind })
   } else {
     return ({ stat: null, data: [] })
+  }
+};
+export const remove = async (context) => {
+  // bind
+  const bind = context
+  console.log(removeSql,bind);
+  // proc
+  const ret = await simpleExecute(removeSql, bind)
+
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
   }
 };
 export const activar = async (context) => {

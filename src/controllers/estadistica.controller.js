@@ -1,75 +1,20 @@
 import * as DAL from '../models/estadistica.model'
 
-const situacionActuacionFromRec = (req) => {
-  const fraude = {
-    reffra: req.body.fraude.REFFRA,
-  }
-  const periodo = {
-    desde: req.body.periodo.DESDE,
-    hasta: req.body.periodo.HASTA,
-  }
-  const tipos = {
-    cruerr: req.body.tipos[0].IDTIPO,
-    sinefe: req.body.tipos[1].IDTIPO,
-    tricor: req.body.tipos[2].IDTIPO,
-    prescr: req.body.tipos[3].IDTIPO,
-  }
-
-  return Object.assign(fraude, periodo, tipos)
-}
-const situacionFromRec = (req) => {
-  const fraude = {
-    reffra: req.body.fraude.REFFRA,
-  }
-  const periodo = {
-    desde: req.body.periodo.DESDE,
-    hasta: req.body.periodo.HASTA,
-  }
-  const tipos = {
-    cruerr: req.body.tipos[0].IDTIPO,
-    sinefe: req.body.tipos[1].IDTIPO,
-    tricor: req.body.tipos[2].IDTIPO,
-    prescr: req.body.tipos[3].IDTIPO,
-  }
-
-  return Object.assign(fraude, periodo, tipos)
-}
-const oficinasFromRec = (req) => {
-  const fraude = {
-    reffra: req.body.fraude.REFFRA,
-  }
-
-  return fraude
-}
-const actuacionFromRec = (req) => {
-  const fraude = {
-    reffra: req.body.fraude.REFFRA,
-  }
-  const periodo = {
-    desde: req.body.periodo.DESDE,
-    hasta: req.body.periodo.HASTA,
-  }
-
-  return Object.assign(fraude, periodo)
-}
-
-export const situacionActuacion = async (req, res) => {
+export const contadores = async (req, res) => {
   // context
   const context = req.body.context
-
-  console.log(context.fraude.REFFRA);
   // proc
   try {
-    const result = await DAL.stadi(context)
+    const result = await DAL.contadores(context)
 
     res.status(200).json(result)
   } catch (err) {
     res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
-export const estadisticasSituacion = async (req, res) => {
+export const situacion = async (req, res) => {
   try {
-    const result = await DAL.statSituacion(situacionFromRec(req))
+    const result = await DAL.situacion(situacionFromRec(req))
 
     if (result !== null) {
       res.status(200).json(result)
@@ -80,9 +25,12 @@ export const estadisticasSituacion = async (req, res) => {
     res.status(500).end()
   }
 }
-export const estadisticasOficinas = async (req, res) => {
+export const oficinas = async (req, res) => {
+  // context
+  const context = req.body.context
+  // proc
   try {
-    const result = await DAL.statOficinas(oficinasFromRec(req))
+    const result = await DAL.oficinas(context)
 
     if (result !== null) {
       res.status(200).json(result)
@@ -93,9 +41,9 @@ export const estadisticasOficinas = async (req, res) => {
     res.status(500).end()
   }
 }
-export const estadisticasActuacion = async (req, res) => {
+export const actuacion = async (req, res) => {
   try {
-    const result = await DAL.statActuacion(actuacionFromRec(req))
+    const result = await DAL.actuacion(actuacionFromRec(req))
 
     if (result !== null) {
       res.status(200).json(result)

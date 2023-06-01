@@ -286,7 +286,6 @@ export const crearHito = async (req, res) => {
   // context
   const tipo = {
     destip: req.body.tipo.DESTIP,
-    anuhit: req.body.tipo.ANUHIT,
   };
   const movimiento = {
     usumov: req.body.movimiento.USUMOV,
@@ -308,7 +307,6 @@ export const modificarHito = async (req, res) => {
   const tipo = {
     idtipo: req.body.tipo.IDTIPO,
     destip: req.body.tipo.DESTIP,
-    anuhit: req.body.tipo.ANUHIT,
   };
   const movimiento = {
     usumov: req.body.movimiento.USUMOV,

@@ -1,16 +1,16 @@
 import express from 'express'
 import {
-  situacionActuacion,
-  estadisticasOficinas,
-  estadisticasSituacion,
-  estadisticasActuacion,
+  actuacion,
+  contadores,
+  oficinas,
+  situacion,
 } from '../controllers/estadistica.controller'
 
 const apiEstadisticaRouter = express.Router()
 
-apiEstadisticaRouter.post('/estadisticas/sitact', situacionActuacion)
-apiEstadisticaRouter.post('/estadisticas/situacion', estadisticasSituacion)
-apiEstadisticaRouter.post('/estadisticas/oficinas', estadisticasOficinas)
-apiEstadisticaRouter.post('/estadisticas/actuacion', estadisticasActuacion)
+apiEstadisticaRouter.post('/estadisticas/contadores', contadores)
+apiEstadisticaRouter.post('/estadisticas/situacion', situacion)
+apiEstadisticaRouter.post('/estadisticas/oficinas', oficinas)
+apiEstadisticaRouter.post('/estadisticas/actuacion', actuacion)
 
 export default apiEstadisticaRouter

@@ -6,7 +6,7 @@ const insertSql = "BEGIN FRAUDE_PKG.INSERTOFICINA(:desofi, :codofi,:usumov,:tipm
 const updateSql = "BEGIN FRAUDE_PKG.UPDATEOFICINA(:idofic,:desofi, :codofi,:usumov,:tipmov); END;"
 const removeSql = "BEGIN FRAUDE_PKG.DELETEOFICINA(:idofic,:usumov,:tipmov ); END;"
 
-export const find = async (context) => {
+export const oficina = async (context) => {
   // bind
   let query = baseQuery
   const bind = context
@@ -27,7 +27,7 @@ export const find = async (context) => {
     return ({ stat: 0, data: [] })
   }
 }
-export const findAll = async (context) => {
+export const oficinas = async (context) => {
   // bind
   let query = '';
   let bind = {

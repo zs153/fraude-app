@@ -17,8 +17,8 @@ const updateFraudeSql = "BEGIN FRAUDE_PKG.UPDATETIPOFRAUDE(:idtipo,:destip,:usum
 const removeFraudeSql = "BEGIN FRAUDE_PKG.DELETETIPOFRAUDE(:idtipo,:usumov,:tipmov ); END;";
 
 const baseHitoQuery = "SELECT * FROM tiposhito";
-const insertHitoSql = "BEGIN FRAUDE_PKG.INSERTTIPOHITO(:destip,:anuhit,:usumov,:tipmov,:idtipo); END;";
-const updateHitoSql = "BEGIN FRAUDE_PKG.UPDATETIPOHITO(:idtipo,:destip,:anuhit,:usumov,:tipmov); END;";
+const insertHitoSql = "BEGIN FRAUDE_PKG.INSERTTIPOHITO(:destip,:usumov,:tipmov,:idtipo); END;";
+const updateHitoSql = "BEGIN FRAUDE_PKG.UPDATETIPOHITO(:idtipo,:destip,:usumov,:tipmov); END;";
 const removeHitoSql = "BEGIN FRAUDE_PKG.DELETETIPOHITO(:idtipo,:usumov,:tipmov ); END;";
 
 export const cierre = async (context) => {
