@@ -13,16 +13,15 @@ export const contadores = async (req, res) => {
   }
 }
 export const situacion = async (req, res) => {
+  // context
+  const context = req.body.context
+  // proc
   try {
-    const result = await DAL.situacion(situacionFromRec(req))
+    const result = await DAL.situacion(context)
 
-    if (result !== null) {
-      res.status(200).json(result)
-    } else {
-      res.status(404).end()
-    }
+    res.status(200).json(result)
   } catch (err) {
-    res.status(500).end()
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
 export const oficinas = async (req, res) => {
@@ -42,8 +41,11 @@ export const oficinas = async (req, res) => {
   }
 }
 export const actuacion = async (req, res) => {
+  // context
+  const context = req.body.context
+  // proc
   try {
-    const result = await DAL.actuacion(actuacionFromRec(req))
+    const result = await DAL.actuacion(context)
 
     if (result !== null) {
       res.status(200).json(result)
