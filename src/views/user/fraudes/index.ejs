@@ -39,7 +39,7 @@
                                 aria-label="Buscar en fraudes">
                             </div>
                           </form>
-                          <a href="#" id="res" class="btn">
+                          <a href="#" id="rsltos" class="btn">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" height="20" width="20"
                               viewBox="0 0 20 20">
                               <path
@@ -119,68 +119,6 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-  <div class="modal modal-blur fade" id="modal-resolver" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        <div class="modal-status bg-success"></div>
-        <form action="/user/fraudes/resolver" method="POST">
-          <input type="hidden" id="idreso" name="idfrau" value="">
-          <div class="modal-body text-center py-4">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-green icon-lg" width="24" height="24"
-              viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
-              stroke-linejoin="round">
-              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-              <circle cx="12" cy="12" r="9"></circle>
-              <path d="M9 12l2 2l4 -4"></path>
-            </svg>
-            <h3>Resolver fraude</h3>
-            <div id="msgres"></div>
-            <div class="card-header">
-              SMS
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-4">
-                  <div class="mb-1">
-                    <label class="form-label text-start">Móvil</label>
-                    <input type="text" name="movsms" id="movres" class="form-control" readonly />
-                  </div>
-                </div>
-                <div class="col-8">
-                  <div class="mb-1">
-                    <label class="form-label text-start">Texto sms</label>
-                    <textarea name="texsms" id="texres" class="form-control" value="" maxlength="140" rows="3"
-                      style="resize: vertical"></textarea>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-2 text-start">
-                  <label class="form-check form-check-inline">
-                    <input type="checkbox" class="form-check-input" name="chkenv" id="chkenv" />
-                    <span class="form-check-label">Enviar</span>
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <div class="w-100">
-              <div class="row">
-                <div class="col">
-                  <a href="#" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
-                </div>
-                <div class="col">
-                  <button type="submit" class="btn btn-success w-100">Resolver fraude</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </form>
       </div>
     </div>
   </div>

@@ -1,11 +1,5 @@
 import axios from "axios";
-import {
-  estadosFraude,
-  estadosSms,
-  tiposMovimiento,
-  tiposRol,
-  estadosHito,
-} from "../../public/js/enumeraciones";
+import { estadosFraude, estadosSms, tiposMovimiento, tiposRol, estadosHito } from "../../public/js/enumeraciones";
 import { serverAPI,puertoAPI } from '../../config/settings'
 
 // pages fraude

@@ -64,13 +64,13 @@ export const generarEstadistica = async (req, res) => {
         REFFRA: req.body.refcar
       },
     })
-    const actividad = await axios.post(`http://${serverAPI}:${puertoAPI}/api/estadisticas/actividad`, {
-      context: {
-        REFFRA: req.body.refcar,
-        DESDE: periodo.DESDE,
-        HASTA: periodo.HASTA,
-      }
-    })
+    // const actividad = await axios.post(`http://${serverAPI}:${puertoAPI}/api/estadisticas/actividad`, {
+    //   context: {
+    //     REFFRA: req.body.refcar,
+    //     DESDE: periodo.DESDE,
+    //     HASTA: periodo.HASTA,
+    //   }
+    // })
     const cargas = await axios.post(`http://${serverAPI}:${puertoAPI}/api/carga`, {
       context: {},
     })

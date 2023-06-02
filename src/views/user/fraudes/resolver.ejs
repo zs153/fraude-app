@@ -20,7 +20,7 @@
           <div class="row">
             <div class="col-12">
               <div class="card">
-                <form action="/user/fraudes/resolver" method="POST">
+                <form action="" id="rslver" method="POST">
                   <input type="hidden" id="idfrau" name="idfrau" value="<%- datos.fraude.IDFRAU %>">
                   <div class="card-header">
                     <h4 class="card-title">Resolver</h4>
@@ -108,7 +108,10 @@
     
     // inicializar
     const elemVol = document.getElementById('vol');
-    elemVol.setAttribute('href', `/user/fraudes/?part=${getCookie('filtro')}`)
+    elemVol.setAttribute('href', `/user/fraudes?part=${getCookie('filtro')}`)
+
+    const elemRslver = document.getElementById('rslver');
+    elemRslver.setAttribute('action', `/user/fraudes/resolver?part=${getCookie('filtro')}`)    
   </script>
 </body>
 </html>

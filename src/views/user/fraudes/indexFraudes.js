@@ -271,7 +271,7 @@ const buildTable = (state) => {
               </a>
             </li>
             <li class="nav-item">
-              <a href="/user/fraudes/resolver/${element.IDFRAU}" class="nav-link">
+            <a href="/user/fraudes/resolver/${element.IDFRAU}" class="nav-link">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                   <path stroke-width=".4" fill="none" d="M9.575 17.025 4.9 12.35l.475-.45 4.2 4.2 9.075-9.075.45.45Z"/>
                 </svg>
@@ -306,7 +306,7 @@ const buildTable = (state) => {
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                   <path stroke-width=".4" fill="none" d="M15 17.95q-.825 0-1.387-.575-.563-.575-.563-1.4 0-.8.563-1.375.562-.575 1.387-.575t1.4.575q.575.575.575 1.375 0 .825-.575 1.4t-1.4.575Zm-9.15 2.625q-.6 0-1.012-.412-.413-.413-.413-1.013V6.825q0-.6.413-1.013Q5.25 5.4 5.85 5.4h2.075V3.1h.725v2.3h6.8V3.1h.65v2.3h2.05q.6 0 1.025.412.425.413.425 1.013V19.15q0 .6-.425 1.013-.425.412-1.025.412Zm0-.65h12.3q.3 0 .55-.25.25-.25.25-.55v-8.3H5.05v8.3q0 .3.25.55.25.25.55.25Zm-.8-9.75h13.9v-3.35q0-.3-.25-.55-.25-.25-.55-.25H5.85q-.3 0-.55.25-.25.25-.25.55Zm0 0v-4.15 4.15Z"/>
                 </svg>
-                Hitos / Eventos
+                Hitos/Eventos
               </a>
             </li>
             <li class="nav-item list-divider"></li>
@@ -368,7 +368,7 @@ elemDesag.setAttribute('action', `/user/fraudes/desasignar?part=${getCookie('fil
 const elemAsig = document.getElementById('asig');
 elemAsig.setAttribute('action', `/user/fraudes/asignar?part=${getCookie('filtro')}`)
 
-const elemRes = document.getElementById('res');
+const elemRes = document.getElementById('rsltos');
 elemRes.setAttribute('href', `/user/fraudes/resueltos?part=${getCookie('filtro')}`)
 
 // tabla
