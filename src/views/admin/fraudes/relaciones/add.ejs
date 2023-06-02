@@ -5,12 +5,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>Relacionados</title>
+  <title>Fraudes</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
   <!-- styles -->
   <link rel="stylesheet" href="/css/styles.css">
-  <!-- <link rel="stylesheet" href="/css/estilos.css">
-  <link rel="stylesheet" href="/css/navbar.css"> -->
 </head>
 
 <body class="antialiased">
@@ -52,7 +50,7 @@
                   </div>
                   <div class="card-footer text-end">
                     <div class="d-flex">
-                      <a href="/admin/fraudes/relaciones/<%- datos.fraude.IDFRAU %>" class="btn btn-link">Cancelar</a>
+                      <input class="btn btn-white" action="action" onclick="window.history.go(-1); return false;" type="submit" value="Volver" />
                       <button type="submit" class="btn btn-success ms-auto" id="btnInsert">Crear nueva relación</button>
                     </div>
                   </div>
@@ -67,88 +65,7 @@
   </div>
 
   <script src="/js/ayuda.min.js"></script>
-  <script>
-    const nifcon = document.getElementById('nifcon')
-    const nomcon = document.getElementById('nomcon')
-
-    const validate = () => {
-      const nifconValue = nifcon.value.trim().toUpperCase().slice(0, 9)
-      const nomconValue = nomcon.value.trim()
-
-      if (nifconValue === '') {
-        setError(nifcon, 'NIF/NIE requerido')
-        setTimeout(function () {
-          setSuccess(nifcon)
-        }, 3000)
-        return false
-      } else {
-        const pattern = /^([X-Y][0-9]{7}[A-Z]{1})|([0-9]{8}[A-Z]{1})$/
-
-        if (!pattern.test(nifconValue)) {
-          setError(nifcon, 'Introduzca NIF/NIE válido')
-          setTimeout(function () {
-            setSuccess(nifcon)
-          }, 3000)
-          return false
-        }
-
-        const strBase = "TRWAGMYFPDXBNJZSQVHLCKET";
-        const primeraPosicion = nifconValue.slice(0, 1);
-        const letraNif = nifconValue.slice(8);
-        let nuevoNif = nifconValue;
-
-        if (isNaN(primeraPosicion)) {
-          nuevoNif = nifconValue.slice(1);
-          if (primeraPosicion === 'X') {
-            nuevoNif = '0' + nuevoNif;
-          } else if (primeraPosicion === "Y") {
-            nuevoNif = "1" + nuevoNif;
-          } else if (primeraPosicion === "Z") {
-            nuevoNif = "2" + nuevoNif;
-          }
-        }
-
-        const dniNumero = nuevoNif.slice(0, 8);
-        const pos = parseInt(dniNumero) % 23;
-        const letra = strBase.slice(pos, pos + 1);
-        const isValid = letraNif === letra
-
-        if (isValid === false) {
-          setError(nifcon, 'Introduzca NIF/NIE válido')
-          setTimeout(function () {
-            setSuccess(nifcon)
-          }, 3000)
-          return false
-        }
-      }
-      if (nomconValue === '') {
-        setError(nomcon, 'Nombre requerido')
-        setTimeout(function () {
-          setSuccess(nomcon)
-        }, 3000)
-        return false
-      }
-
-      return true
-    }
-
-    const setSuccess = (element) => {
-      const inputControl = element.parentElement;
-      const errorDisplay = inputControl.querySelector('.invalid-feedback');
-
-      errorDisplay.innerText = '';
-      inputControl.classList.add('is-valid');
-      element.classList.remove('is-invalid');
-    }
-    const setError = (element, message) => {
-      const inputControl = element.parentElement;
-      const errorDisplay = inputControl.querySelector('.invalid-feedback');
-
-      errorDisplay.innerText = message;
-      element.classList.add('is-invalid');
-      inputControl.classList.remove('is-valid');
-    }
-  </script>
+  <script src="/js/addEditRelacion.min.js"></script>
 </body>
 
 </html>

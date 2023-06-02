@@ -4,29 +4,27 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>Ejercicio</title>
+  <title>Fraude</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
   <!-- styles -->
   <link rel="stylesheet" href="/css/styles.css">
-  <!-- <link rel="stylesheet" href="/css/estilos.css">
-  <link rel="stylesheet" href="/css/navbar.css"> -->
 </head>
 
 <body class="antialiased">
   <div class="wrapper">
-    <%- include('../../partials/header') %>
-    <%- include('../../partials/navbar', {opcion: 'FRAUDE'}) %>
+    <%- include('../../../partials/header') %>
+    <%- include('../../../partials/navbar', {opcion: 'FRAUDE'}) %>
     <div class="page-wrapper">
       <div class="page-body">
         <div class="container-xl">
           <div class="row">
             <div class="col-12">
               <div class="card">
-                <form id="form" action="/admin/fraudes/ejercicio" method="POST" onsubmit="return validate();">
+                <form action="" id="new" method="POST" onsubmit="return validate();">
                   <input type="hidden" name="idfrau" id="idfrau" value="<%- datos.fraude.IDFRAU %>">
                   <input type="hidden" name="reffra" id="reffra" value="<%- datos.fraude.REFFRA %>">
                   <div class="card-header">
-                    <h3 class="card-title">Nuevo ejercicio</h3>
+                    <h3 class="card-title">Ejercicio</h3>
                   </div>
                   <div class="card-body">
                     <div class="row">
@@ -96,7 +94,7 @@
                   </div>
                   <div class="card-footer text-end">
                     <div class="d-flex">
-                      <a href="/admin/fraudes" class="btn btn-white">Cancelar</a>
+                      <a href="#" id="vol" class="btn btn-white">Cancelar</a>
                       <button type="submit" class="btn btn-success ms-auto" id="btnInsert">Crear nuevo ejercicio</button>
                     </div>
                   </div>
@@ -107,53 +105,9 @@
         </div>
       </div>
     </div>
-    <%- include('../../partials/footer') %>
+    <%- include('../../../partials/footer') %>
   </div>
   <script src="/js/ayuda.min.js"></script>
-  <script>
-    const ejefra = document.getElementById('ejefra')
-
-    const validate = () => {
-      const ejefraValue = ejefra.value.trim()
-
-      if (ejefraValue === '') {
-        setError(ejefra, 'Ejercicio requerido')
-        setTimeout(function () {
-          setSuccess(ejefra)
-        }, 3000)
-        return false
-      } else {
-        const pattern = /^([0-9]{4})$/
-        const isValid = pattern.test(ejefraValue)
-
-        if(isValid === false) {
-          setTimeout(function () {
-            setSuccess(ejefra)
-          }, 3000)
-          setError(ejefra, 'Introduzca ejercicio válido')
-          return false
-        }
-      }
-
-      return true
-    }
-
-    const setSuccess = (element) => {
-      const inputControl = element.parentElement;
-      const errorDisplay = inputControl.querySelector('.invalid-feedback');
-
-      errorDisplay.innerText = '';
-      inputControl.classList.add('is-valid');
-      element.classList.remove('is-invalid');
-    }
-    const setError = (element, message) => {
-      const inputControl = element.parentElement;
-      const errorDisplay = inputControl.querySelector('.invalid-feedback');
-
-      errorDisplay.innerText = message;
-      element.classList.add('is-invalid');
-      inputControl.classList.remove('is-valid');
-    }
-  </script>
+  <script src="/js/addEjercicio.min.js"></script>
 </body>
 </html>

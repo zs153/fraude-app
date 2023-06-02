@@ -5,12 +5,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>Relacionados</title>
+  <title>Fraudes</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
   <!-- styles -->
   <link rel="stylesheet" href="/css/styles.css">
-  <!-- <link rel="stylesheet" href="/css/estilos.css">
-  <link rel="stylesheet" href="/css/navbar.css"> -->
 </head>
 
 <body class="antialiased">
@@ -26,69 +24,31 @@
                 <div class="card-header">
                   <div>
                     <h3 class="card-title">Relacionados</h3>
-                    <p class="subtitulo">
-                      <span class="text-muted">
-                        <%- datos.fraudeData.NIFCON %>
-                        <%- datos.fraudeData.NOMCON %>
-                      </span>
-                      <span class="ms-2">
-                        Ejercicio: <%- datos.fraudeData.EJEFRA %>
-                      </span>
-                    </p>
                   </div>
                 </div>
                 <div class="card-body">
-                    <table class="table table-vcenter table-striped" id="tblRela">
-                      <thead>
-                        <tr class="header">
-                        <th class="w-4"></th>
-                        <th class="w-6">Fecha</th>
-                        <th class="w-8">NIF</th>
-                        <th>Nombre</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <% datos.relaciones.map(element => { %>
-                        <tr>
-                          <!-- col1 -->
-                          <td class="w-4">
-                            <div class="py-1 align-items-center">
-                              <span class="avatar avatar-rounded bg-green-lt">
-                                <h6>OK</h6>
+                  <div class="list-group list-group-flush overflow-auto" style="max-height: 50vh">
+                    <% datos.relaciones.map(itm=> { %>
+                      <div class="list-group-item py-1">
+                        <div class="row">
+                          <div class="col text-truncate">
+                            <span style="font-size: .7rem;">
+                              Contribuyente: <%- itm.NIFCON %> <%- itm.NOMCON %>
+                            </span>
+                            <div class="text-muted text-truncate">
+                              <span style="font-size: .7rem;">
+                                Fecha: <%- itm.FECREL.slice(0,10).split("-").reverse().join("/") %>
                               </span>
                             </div>
-                          </td>
-                          <!-- col2 -->
-                          <td class="w-6">
-                            <div class="d-flex py-1 align-items-center">
-                              <div class="flex-fill">
-                                <div class="font-weight-medium"><%- element.FECREL.slice(0,10).split('-').reverse().join('/') %></div>
-                              </div>
-                            </div>
-                          </td>
-                          <!-- col3 -->
-                          <td class="w-8">
-                            <div class="d-flex py-1 align-items-center">
-                              <div class="flex-fill">
-                                <div class="font-weight-medium"><%- element.NIFCON %></div>
-                              </div>
-                            </div>
-                          </td>
-                          <!-- col4 -->
-                          <td>
-                            <div class="d-flex py-1 align-items-center">
-                              <div class="flex-fill">
-                                <div class="font-weight-medium"><%- element.NOMCON %></div>
-                              </div>
-                            </div>
-                          </td>
-                        </tr>
-                        <% }) %>
-                      </tbody>
-                    </table>
-                  <div id="pagination-wrapper" class="py-1"></div>
+                          </div>                            
+                        </div>
+                      </div>
+                    <% }) %>
+                  </div>
+                </div>
+                <div class="card-footer">                  
                   <div class="ms-auto d-flex py-1">
-                    <a href="/admin/fraudes/vertodo" class="btn btn-white">Volver</a>
+                    <input class="btn btn-primary" action="action" onclick="window.history.go(-1); return false;" type="submit" value="Volver" />
                   </div>
                 </div>
               </div>
@@ -99,8 +59,6 @@
     </div>
     <%- include('../../../partials/footer') %>
   </div>
-
-  <script src="/js/ayuda.min.js"></script>
 </body>
 
 </html>

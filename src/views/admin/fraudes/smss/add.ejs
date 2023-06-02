@@ -9,8 +9,6 @@
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
   <!-- styles -->
   <link rel="stylesheet" href="/css/styles.css">
-  <!-- <link rel="stylesheet" href="/css/estilos.css">
-  <link rel="stylesheet" href="/css/navbar.css"> -->
 </head>
 
 <body class="antialiased">
@@ -26,7 +24,7 @@
                 <form action="/admin/fraudes/smss/insert" method="POST" onsubmit="return validate();">
                   <input type="hidden" id="idfrau" name="idfrau" value="<%- datos.fraude.IDFRAU %>">
                   <div class="card-header">
-                    <h3 class="card-title">Nuevo sms</h3>
+                    <h3 class="card-title">SMS</h3>
                   </div>
                   <div class="card-body">
                     <div class="row">
@@ -44,7 +42,7 @@
                         <div class="mb-1">
                           <div class="input-control required">
                             <label class="form-label required">Texto</label>
-                            <textarea type="text" name="texsms" id="texsms" class="form-control" rows="3" style="resize: vertical"></textarea>
+                            <textarea type="text" name="texsms" id="texsms" class="form-control" maxlength="140" rows="3" style="resize: vertical"></textarea>
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>
@@ -53,8 +51,8 @@
                   </div>
                   <div class="card-footer text-end">
                     <div class="d-flex">
-                      <a href="/admin/fraudes/smss/<%- datos.fraude.IDFRAU %>" class="btn btn-link">Cancelar</a>
-                      <button type="submit" class="btn btn-success ms-auto" id="btnInsert">Crear relación</button>
+                      <input class="btn btn-white" action="action" onclick="window.history.go(-1); return false;" type="submit" value="Volver" />
+                      <button type="submit" class="btn btn-success ms-auto" id="btnInsert">Crear nuevo Sms</button>
                     </div>
                   </div>
                 </form>
@@ -68,40 +66,7 @@
   </div>
 
   <script src="/js/ayuda.min.js"></script>
-  <script>
-    const texsms = document.getElementById('texsms')
-
-    const validate = () => {
-      const texsmsValue = texsms.value.trim()
-
-      if (texsmsValue === '' || texsmsValue.length > 140) {
-        setError(texsms, 'Texto requerido (no puede superar los 140 caracteres)')
-        setTimeout(function () {
-          setSuccess(texsms)
-        }, 3000)
-        return false
-      }
-
-      return true
-    }
-
-    const setSuccess = (element) => {
-      const inputControl = element.parentElement;
-      const errorDisplay = inputControl.querySelector('.invalid-feedback');
-
-      errorDisplay.innerText = '';
-      inputControl.classList.add('is-valid');
-      element.classList.remove('is-invalid');
-    }
-    const setError = (element, message) => {
-      const inputControl = element.parentElement;
-      const errorDisplay = inputControl.querySelector('.invalid-feedback');
-
-      errorDisplay.innerText = message;
-      element.classList.add('is-invalid');
-      inputControl.classList.remove('is-valid');
-    }
-  </script>
+  <script src="/js/addEditSms.min.js"></script>
 </body>
 
 </html>

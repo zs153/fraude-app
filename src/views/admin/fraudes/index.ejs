@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -8,86 +9,81 @@
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
   <!-- styles -->
   <link rel="stylesheet" href="/css/styles.css">
-  <!-- <link rel="stylesheet" href="/css/estilos.css">
-  <link rel="stylesheet" href="/css/navbar.css"> -->
 </head>
 
 <body class="antialiased">
   <div class="wrapper">
     <%- include('../../partials/header') %>
-    <%- include('../../partials/navbar', {opcion: 'FRAUDE'}) %>
-    <div class="page-wrapper">
-      <div class="page-body">
-        <div class="container-xl">
-          <div class="row">
-            <div class="col-12">
-              <div class="card">
-                <div class="card-header">
-                  <h3 class="card-title">Fraudes</h3>
-                  <div class="col-auto ms-auto">
-                    <div class="d-flex">
-                      <div class="input-icon me-3">
-                        <span class="input-icon-addon">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" fill="none" d="M0 0h24v24H0z" fill="none"></path>
-                            <circle cx="10" cy="10" r="7"></circle>
-                            <line x1="21" y1="21" x2="15" y2="15"></line>
-                          </svg>
-                        </span>
-                        <input type="text" class="form-control d-inline-block me-3" id="buscarFraudeBox"
-                          onkeyup="arrayFilter(this.value);" placeholder="Buscar..." aria-label="Buscar en fraudes">
+      <%- include('../../partials/navbar', {opcion: 'FRAUDE' }) %>
+        <div class="page-wrapper">
+          <div class="page-body">
+            <div class="container-xl">
+              <div class="row">
+                <div class="col-12">
+                  <div class="card">
+                    <div class="card-header">
+                      <h3 class="card-title">Fraudes</h3>
+                      <div class="col-auto ms-auto">
+                        <div class="d-flex">
+                          <form action="/admin/fraudes" method="GET">
+                            <div class="input-icon me-3">
+                              <span class="input-icon-addon">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+                                  stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                  <circle cx="10" cy="10" r="7"></circle>
+                                  <line x1="21" y1="21" x2="15" y2="15"></line>
+                                </svg>
+                              </span>
+                              <input type="text" class="form-control d-inline-block me-3" id="buscarFraudeBox" name="part" placeholder="Buscar..."
+                                aria-label="Buscar en fraudes">
+                            </div>
+                          </form>
+                          <a href="#" id="rsltos" class="btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" height="20" width="20"
+                              viewBox="0 0 20 20">
+                              <path
+                                d="m12.729 10.604-.75-.75q.083-.896-.531-1.416-.615-.521-1.302-.438l-.75-.75q.125-.021.281-.031.156-.011.323-.011 1.167 0 1.979.813.813.812.813 1.979 0 .167-.011.333-.01.167-.052.271Zm2.729 2.708-.5-.479q.75-.583 1.365-1.281T17.354 10q-1.021-2.104-3.01-3.302Q12.354 5.5 10 5.5q-.542 0-1.062.062-.521.063-1.021.209l-.563-.563q.667-.229 1.344-.302.677-.073 1.302-.073 2.542 0 4.802 1.365 2.26 1.364 3.302 3.802-.437.958-1.094 1.76-.656.802-1.552 1.552Zm.48 3.605-2.459-2.5q-.604.312-1.51.531-.907.219-1.969.219-2.562 0-4.802-1.365Q2.958 12.438 1.896 10q.5-1.188 1.385-2.188.886-1 1.927-1.687L3.083 4.042l.5-.48 12.834 12.855ZM5.688 6.625q-.834.563-1.709 1.448-.875.885-1.333 1.927 1.021 2.104 3.01 3.302Q7.646 14.5 10 14.5q.854 0 1.708-.156t1.334-.365l-1.563-1.521q-.25.146-.687.24-.438.094-.792.094-1.167 0-1.979-.813-.813-.812-.813-1.979 0-.333.115-.76.115-.428.219-.719ZM11 9Zm-1.208 1.625Z" />
+                            </svg>
+                            Resueltos
+                          </a>
+                          <a href="#" id="new" class="btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" height="24" width="24"
+                              viewBox="0 0 24 24">
+                              <path d="M11.25 18.75v-6h-6v-1.5h6v-6h1.5v6h6v1.5h-6v6Z" />
+                            </svg>
+                            Nuevo Fraude
+                          </a>
+                        </div>
                       </div>
-                      <a href="#" class="btn" onclick="checkItem(localStorage.getItem('vertodo'));">
-                        <% if (datos.verTodo) { %>
-                          <svg xmlns="http://www.w3.org/2000/svg" class="icon" height="20" width="20" viewBox="0 0 20 20" >
-                            <path
-                              d="M10 12.792q1.167 0 1.979-.813.813-.812.813-1.979t-.813-1.979q-.812-.813-1.979-.813t-1.979.813q-.813.812-.813 1.979t.813 1.979q.812.813 1.979.813ZM10 12q-.833 0-1.417-.583Q8 10.833 8 10q0-.833.583-1.417Q9.167 8 10 8q.833 0 1.417.583Q12 9.167 12 10q0 .833-.583 1.417Q10.833 12 10 12Zm0 3.167q-2.625 0-4.802-1.407Q3.021 12.354 1.896 10q1.125-2.354 3.292-3.76Q7.354 4.833 10 4.833q2.625 0 4.802 1.407 2.177 1.406 3.302 3.76-1.125 2.354-3.292 3.76-2.166 1.407-4.812 1.407ZM10 10Zm0 4.5q2.333 0 4.312-1.208 1.98-1.209 3.042-3.292-1.062-2.083-3.042-3.292Q12.333 5.5 10 5.5T5.688 6.708Q3.708 7.917 2.646 10q1.062 2.083 3.042 3.292Q7.667 14.5 10 14.5Z" />
-                          </svg>
-                          Pendientes
-                        <% } else { %>
-                          <svg xmlns="http://www.w3.org/2000/svg" class="icon" height="20" width="20" viewBox="0 0 20 20" >
-                            <path
-                              d="m12.729 10.604-.75-.75q.083-.896-.531-1.416-.615-.521-1.302-.438l-.75-.75q.125-.021.281-.031.156-.011.323-.011 1.167 0 1.979.813.813.812.813 1.979 0 .167-.011.333-.01.167-.052.271Zm2.729 2.708-.5-.479q.75-.583 1.365-1.281T17.354 10q-1.021-2.104-3.01-3.302Q12.354 5.5 10 5.5q-.542 0-1.062.062-.521.063-1.021.209l-.563-.563q.667-.229 1.344-.302.677-.073 1.302-.073 2.542 0 4.802 1.365 2.26 1.364 3.302 3.802-.437.958-1.094 1.76-.656.802-1.552 1.552Zm.48 3.605-2.459-2.5q-.604.312-1.51.531-.907.219-1.969.219-2.562 0-4.802-1.365Q2.958 12.438 1.896 10q.5-1.188 1.385-2.188.886-1 1.927-1.687L3.083 4.042l.5-.48 12.834 12.855ZM5.688 6.625q-.834.563-1.709 1.448-.875.885-1.333 1.927 1.021 2.104 3.01 3.302Q7.646 14.5 10 14.5q.854 0 1.708-.156t1.334-.365l-1.563-1.521q-.25.146-.687.24-.438.094-.792.094-1.167 0-1.979-.813-.813-.812-.813-1.979 0-.333.115-.76.115-.428.219-.719ZM11 9Zm-1.208 1.625Z" />
-                          </svg>
-                          Resueltos
-                        <% } %>
-                      </a>
-                      <a href="/admin/fraudes/add" class="btn">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" height="24" width="24" viewBox="0 0 24 24">
-                          <path d="M11.25 18.75v-6h-6v-1.5h6v-6h1.5v6h6v1.5h-6v6Z" />
-                        </svg>
-                        Nuevo Fraude
-                      </a>
+                    </div>
+                    <div class="card-body">
+                      <table class="table table-vcenter table-striped sortable" id="tblFraudes">
+                        <thead>
+                          <tr class="header">
+                            <th class="w-4"></th>
+                            <th class="w-8">Oficina</th>
+                            <th class="w-6">Fecha</th>
+                            <th class="w-5">Ejercicio</th>
+                            <th class="w-8">NIF</th>
+                            <th>Nombre</th>
+                            <th class="w-15">Tipo</th>
+                            <th>Observaciones</th>
+                            <th class="w-5"></th>
+                          </tr>
+                        </thead>
+                        <tbody id="table-body">
+                        </tbody>
+                      </table>
+                      <div id="pagination-wrapper" class="py-1"></div>
                     </div>
                   </div>
                 </div>
-                <div class="card-body">
-                  <table class="table table-vcenter table-striped sortable" id="tblFraudes">
-                    <thead>
-                    <tr class="header">
-                      <th class="w-4"></th>
-                      <th class="w-8">Oficina</th>
-                      <th class="w-6">Fecha</th>
-                      <th class="w-5">Ejerc</th>
-                      <th class="w-8">NIF</th>
-                      <th>Nombre</th>
-                      <th>Tipo</th>
-                      <th>Observaciones</th>
-                      <th class="w-5"></th>
-                    </tr>
-                    </thead>
-                    <tbody id="table-body">
-                    </tbody>
-                  </table>
-                  <div id="pagination-wrapper" class="py-1"></div>
-                </div>
-              </div>                
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    <%- include('../../partials/footer') %>
+        <%- include('../../partials/footer') %>
   </div>
 
   <!-- modales -->
@@ -115,7 +111,7 @@
                 <a href="#" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
               </div>
               <div class="col">
-                <form action="/admin/fraudes/delete" method="POST">
+                <form action="#" id="del" method="POST">
                   <input type="hidden" id="idborr" name="idfrau" value="">
                   <button type="submit" class="btn btn-danger w-100">Borrar fraude</button>
                 </form>
@@ -149,7 +145,7 @@
                 <a href="#" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
               </div>
               <div class="col">
-                <form action="/admin/fraudes/asignar" method="POST">
+                <form action="#" id="asig" method="POST">
                   <input type="hidden" id="idasig" name="idfrau" value="">
                   <button type="submit" class="btn btn-success w-100">Asignar fraude</button>
                 </form>
@@ -157,68 +153,6 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-  <div class="modal modal-blur fade" id="modal-resolver" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        <div class="modal-status bg-success"></div>
-        <form action="/admin/fraudes/resolver" method="POST">
-          <input type="hidden" id="idreso" name="idfrau" value="">
-          <div class="modal-body text-center py-4">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-green icon-lg" width="24" height="24"
-              viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
-              stroke-linejoin="round">
-              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-              <circle cx="12" cy="12" r="9"></circle>
-              <path d="M9 12l2 2l4 -4"></path>
-            </svg>
-            <h3>Resolver fraude</h3>
-            <div id="msgres"></div>
-            <div class="card-header">
-              SMS
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-4">
-                  <div class="mb-1">
-                    <label class="form-label text-start">Móvil</label>
-                    <input type="text" name="movsms" id="movres" class="form-control" readonly />
-                  </div>
-                </div>
-                <div class="col-8">
-                  <div class="mb-1">
-                    <label class="form-label text-start">Texto sms</label>
-                    <textarea name="texsms" id="texres" class="form-control" value="" maxlength="140" rows="3"
-                      style="resize: vertical"></textarea>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-2 text-start">
-                  <label class="form-check form-check-inline">
-                    <input type="checkbox" class="form-check-input" name="chkenv" id="chkenv" />
-                    <span class="form-check-label">Enviar</span>
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <div class="w-100">
-              <div class="row">
-                <div class="col">
-                  <a href="#" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
-                </div>
-                <div class="col">
-                  <button type="submit" class="btn btn-success w-100">Resolver fraude</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </form>
       </div>
     </div>
   </div>
@@ -245,7 +179,7 @@
                 <a href="" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
               </div>
               <div class="col">
-                <form action="/admin/fraudes/desasignar" method="POST">
+                <form action="#" id="desag" method="POST">
                   <input type="hidden" id="iddesa" name="idfrau" value="">
                   <button type="submit" class="btn btn-danger w-100">Desasignar fraude</button>
                 </form>
@@ -257,28 +191,15 @@
     </div>
   </div>
 
-  <script src="/js/ayuda.min.js"></script>
-  <script src="/js/fraude.js"></script>
   <script>
     const orgList = <%- JSON.stringify(datos.fraudes) %>
     const estadosFraude = <%- JSON.stringify(datos.estadosFraude) %>
-
-    let state = {
-      'querySet': orgList,
-      'page': 1,
-      'rows': 9,
-      'window': 3,
-    }
-
-    // events
-    const elemBuscar = document.getElementById('buscarFraudeBox');
-    elemBuscar.onchange = (event) => {
-      setCookie('filtro', event.target.value, .5) // medio dia
-    }
-    elemBuscar.value = getCookie('filtro')
-
-    // inicializa tabla
-    arrayFilter(elemBuscar.value)
+    const cursor = <%- JSON.stringify(datos.cursor) %>
+    const hasNextFras = <%- datos.hasNextFras %>
+    const hasPrevFras = <%- datos.hasPrevFras %>
   </script>
+  <script src="/js/ayuda.min.js"></script>
+  <script src="/js/indexFraudes.min.js"></script>
 </body>
+
 </html>

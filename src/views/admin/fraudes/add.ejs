@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -8,23 +9,21 @@
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
   <!-- styles -->
   <link rel="stylesheet" href="/css/styles.css">
-  <!-- <link rel="stylesheet" href="/css/estilos.css">
-  <link rel="stylesheet" href="/css/navbar.css"> -->
 </head>
 
 <body class="antialiased">
   <div class="wrapper">
     <%- include('../../partials/header') %>
-    <%- include('../../partials/navbar', {opcion: 'FRAUDE'}) %>
+    <%- include('../../partials/navbar', {opcion: 'FRAUDE' }) %>
     <div class="page-wrapper">
       <div class="page-body">
         <div class="container-xl">
           <div class="row">
             <div class="col-12">
               <div class="card">
-                <form id="form" action="/admin/fraudes/insert" method="POST" onsubmit="return validate();">
+                <form action="#" id="add" method="POST" onsubmit="return validate();">
                   <div class="card-header">
-                    <h3 class="card-title">Nuevo fraude</h3>
+                    <h3 class="card-title">Fraude</h3>
                   </div>
                   <div class="card-body">
                     <div class="row">
@@ -32,7 +31,7 @@
                         <div class="mb-1">
                           <div class="input-control">
                             <label class="form-label required">NIF/NIE</label>
-                            <input type="text" name="nifcon" id="nifcon" class="form-control" style="text-transform: uppercase;" value="" autofocus/>
+                            <input type="text" name="nifcon" id="nifcon" class="form-control" style="text-transform: uppercase;" value="" autofocus />
                             <div class="invalid-feedback"></div>
                           </div>
                         </div>
@@ -56,8 +55,8 @@
                     <div class="row">
                       <div class="col-9">
                         <div class="mb-1">
-                          <div class="form-label required">Tipo</div>
                           <div class="input-control">
+                            <div class="form-label required">Tipo</div>
                             <select class="form-select form-control" id="cbotip" name="tipfra" value="">
                               <option value="0">SELECCIONE UN TIPO</option>
                               <% datos.tipos.map(element=> { %>
@@ -101,7 +100,7 @@
                           <div class="form-label">Oficina</div>
                           <select class="form-select form-control" id="cboofi" name="ofifra" value="<%- datos.fraude.OFIFRA %>">
                             <% datos.oficinas.map(element=> { %>
-                              <option value="<%- element.IDOFIC %>" <%- element.IDOFIC === datos.fraude.OFIFRA ? " selected" :"" %>>
+                              <option value="<%- element.IDOFIC %>" <%- element.IDOFIC===datos.fraude.OFIFRA ? "selected" :"" %>>
                                 <%- element.DESOFI %>
                               </option>
                             <% }) %>
@@ -128,15 +127,15 @@
                       <div class="col-12">
                         <div class="mb-1">
                           <label class="form-label">Observaciones</label>
-                            <textarea type="text" name="obsfra" id="obsfra" class="form-control" rows="3" style="resize: vertical"></textarea>
+                          <textarea type="text" name="obsfra" id="obsfra" class="form-control" rows="3" style="resize: vertical"></textarea>
                         </div>
                       </div>
                     </div>
                   </div>
                   <div class="card-footer text-end">
                     <div class="d-flex">
-                      <input type="submit" class="btn btn-white" action="action" onclick="window.history.go(-1); return false;" value="Cancelar" />
-                      <button type="submit" class="btn btn-success ms-auto" onclick="checkVer()">Crear nevo fraude</button>
+                      <input class="btn btn-white" action="action" onclick="window.history.go(-1); return false;" type="submit" value="Cancelar" />
+                      <button type="submit" class="btn btn-success ms-auto" id="btnInsert">Crear nevo fraude</button>
                     </div>
                   </div>
                 </form>
@@ -150,128 +149,11 @@
   </div>
 
   <script src="/js/ayuda.min.js"></script>
+  <script src="/js/addEditFraude.min.js"></script>
   <script>
-    const nifcon = document.getElementById('nifcon')
-    const nomcon = document.getElementById('nomcon')
-    const ejefra = document.getElementById('ejefra')
-    const fecfra = document.getElementById('fecfra')
-    const tipfra = document.getElementById('cbotip')
-
-    const validate = () => {
-      const nifconValue = nifcon.value.trim().toUpperCase().slice(0,9)
-      const nomconValue = nomcon.value.trim()
-      const ejefraValue = ejefra.value.trim()
-      const fecfraValue = fecfra.value.trim()
-      const tipfraValue = tipfra.value
-
-      if (nifconValue === '') {
-        setError(nifcon, 'NIF/NIE requerido')
-        setTimeout(function () {
-          setSuccess(nifcon)
-        }, 3000)
-        return false
-      } else {
-        const pattern = /^([X-Y][0-9]{7}[A-Z]{1})|([0-9]{8}[A-Z]{1})$/
-
-        if (!pattern.test(nifconValue)){
-          setError(nifcon, 'Introduzca NIF/NIE válido')
-          setTimeout(function () {
-            setSuccess(nifcon)
-          }, 3000)
-          return false
-        }
-
-        const strBase = "TRWAGMYFPDXBNJZSQVHLCKET";
-        const primeraPosicion = nifconValue.slice(0, 1);
-        const letraNif = nifconValue.slice(8);
-        let nuevoNif = nifconValue;
-
-        if (isNaN(primeraPosicion)) {
-          nuevoNif = nifconValue.slice(1);
-          if (primeraPosicion === 'X') {
-            nuevoNif = '0' + nuevoNif;
-          } else if (primeraPosicion === "Y") {
-            nuevoNif = "1" + nuevoNif;
-          } else if (primeraPosicion === "Z") {
-            nuevoNif = "2" + nuevoNif;
-          }
-        }
-
-        const dniNumero = nuevoNif.slice(0, 8);
-        const pos = parseInt(dniNumero) % 23;
-        const letra = strBase.slice(pos, pos + 1);
-        const isValid = letraNif === letra
-
-        if(isValid === false) {
-          setError(nifcon, 'Introduzca NIF/NIE válido')
-          setTimeout(function () {
-            setSuccess(nifcon)
-          }, 3000)
-          return false
-        }
-      }
-      if (nomconValue === '') {
-        setError(nomcon, 'Nombre requerido')
-        setTimeout(function () {
-          setSuccess(nomcon)
-        }, 3000)
-        return false
-      }
-      if (tipfraValue === '0') {
-        setError(cbotip, 'Seleccione un tipo')
-        setTimeout(function () {
-          setSuccess(cbotip)
-        }, 3000)
-        return false
-      }    
-      if (ejefraValue === '') {
-        setError(ejefra, 'Ejercicio requerido')
-        setTimeout(function () {
-          setSuccess(ejefra)
-        }, 3000)
-        return false
-      } else {
-        const pattern = /^([0-9]{4})$/
-        const isValid = pattern.test(ejefraValue)
-
-        if(isValid === false) {
-          setError(ejefra, 'Introduzca ejercicio válido')
-          setTimeout(function () {
-            setSuccess(ejefra)
-          }, 3000)
-          return false
-        }
-      }
-      if (isNaN(Date.parse(fecfraValue))) {
-        setError(fecfra, 'Fecha requerida')
-        setTimeout(function () {
-          setSuccess(fecfra)
-        }, 3000)
-        return false
-      }
-
-      return true
-    }
-
-    const setSuccess = (element) => {
-      const inputControl = element.parentElement;
-      const errorDisplay = inputControl.querySelector('.invalid-feedback');
-
-      errorDisplay.innerText = '';
-      inputControl.classList.add('is-valid');
-      element.classList.remove('is-invalid');
-    }
-    const setError = (element, message) => {
-      const inputControl = element.parentElement;
-      const errorDisplay = inputControl.querySelector('.invalid-feedback');
-
-      errorDisplay.innerText = message;
-      element.classList.add('is-invalid');
-      inputControl.classList.remove('is-valid');
-    }
-    const checkVer = () => {
-      localStorage.setItem('vertodo', 'n')
-    }
+    const elemAdd = document.getElementById('add');
+    elemAdd.setAttribute('action', `/admin/fraudes/insert?part=${getCookie('filtro')}`)
   </script>
 </body>
+
 </html>

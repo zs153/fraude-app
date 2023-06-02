@@ -1,12 +1,6 @@
 import axios from "axios";
-import {
-  estadosFraude,
-  estadosSms,
-  tiposMovimiento,
-  tiposRol,
-  estadosHito,
-} from "../../public/js/enumeraciones";
-import { serverAPI } from '../../config/settings'
+import { estadosFraude, estadosSms, tiposMovimiento, tiposRol, estadosHito } from "../../public/js/enumeraciones";
+import { serverAPI,puertoAPI } from '../../config/settings'
 
 // pages fraude
 export const mainPage = async (req, res) => {
@@ -22,9 +16,6 @@ export const mainPage = async (req, res) => {
 
   if (cursor) {
     context = {
-      liquidador: user.userid,
-      oficina: user.oficina,
-      estado: estadosFraude.asignado,
       limit: limit + 1,
       direction: dir,
       cursor: JSON.parse(convertCursorToNode(JSON.stringify(cursor))),
@@ -32,9 +23,6 @@ export const mainPage = async (req, res) => {
     }
   } else {
     context = {
-      liquidador: user.userid,
-      oficina: user.oficina,
-      estado: estadosFraude.asignado,
       limit: limit + 1,
       direction: dir,
       cursor: {
@@ -183,7 +171,7 @@ export const editPage = async (req, res) => {
 export const resolverPage = async (req, res) => {
   const user = req.user;
   let hayLiquidacion = false;
-
+  
   try {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/hito`, {
       context: {
@@ -299,26 +287,26 @@ export const resueltosPage = async (req, res) => {
       part,
     }
   }
-
+  
   try {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes`, {
       context,
     });
-
+    
     let fraudes = result.data.data
     let hasNextFras = fraudes.length === limit + 1
     let nextCursor = 0
     let prevCursor = 0
-
+    
     if (hasNextFras) {
       nextCursor = dir === 'next' ? fraudes[limit - 1].IDFRAU : fraudes[0].IDFRAU
       prevCursor = dir === 'next' ? fraudes[0].IDFRAU : fraudes[limit - 1].IDFRAU
-
+      
       fraudes.pop()
     } else {
       nextCursor = dir === 'next' ? 0 : fraudes[0]?.IDFRAU
       prevCursor = dir === 'next' ? fraudes[0]?.IDFRAU : 0
-
+      
       if (cursor) {
         hasNextFras = nextCursor === 0 ? false : true
         hasPrevFras = prevCursor === 0 ? false : true
@@ -327,16 +315,16 @@ export const resueltosPage = async (req, res) => {
         hasPrevFras = false
       }
     }
-
+    
     if (dir === 'prev') {
       fraudes = fraudes.reverse()
     }
-
+    
     cursor = {
       next: nextCursor,
       prev: prevCursor,
     }
-
+    
     const datos = {
       fraudes,
       hasNextFras,
@@ -345,7 +333,7 @@ export const resueltosPage = async (req, res) => {
       estadosFraude,
       verTodo: false,
     };
-
+    
     res.render("user/fraudes/resueltos", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {
@@ -699,7 +687,7 @@ export const smssPage = async (req, res) => {
       smss,
       hasNextSms,
       hasPrevSms,
-      cursor: convertNodeToCursor(JSON.stringify(cursor)),
+      cursor: convertNodeToCursor(JSON.stringify(cursor)),      
       estadosSms,
     }
 
@@ -1109,7 +1097,7 @@ export const update = async (req, res) => {
     }
   }
 };
-export const remove = async (req, res) => {
+export const remove = async (req, res) => { 
   const user = req.user;
   const fraude = {
     IDFRAU: req.body.idfrau,
@@ -1132,7 +1120,7 @@ export const remove = async (req, res) => {
           fraude,
           movimiento,
         });
-
+    
         res.redirect(`/user/fraudes?part=${req.query.part}`);
       } else {
         throw "El documento no puede ser borrado."
@@ -1170,7 +1158,7 @@ export const asignar = async (req, res) => {
     if (fraude.STAFRA === estadosFraude.pendiente) {
       fraude.LIQFRA = user.userid
       fraude.STAFRA = estadosFraude.asignado
-
+        
       await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/asign`, {
         fraude,
         movimiento,
@@ -1264,7 +1252,7 @@ export const resolver = async (req, res) => {
         USUMOV: user.id,
         TIPMOV: tiposMovimiento.resolverFraude,
       };
-
+    
       await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/cierre`, {
         fraude,
         cierre,
@@ -1290,7 +1278,7 @@ export const desasignar = async (req, res) => {
 
   try {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
-      context: {
+      context : {
         IDFRAU: req.body.idfrau,
       },
     });
