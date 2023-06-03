@@ -14,7 +14,6 @@ const setCookie = (name, value, days) => {
     date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
     expires = "; expires=" + date.toUTCString();
   }
-  // document.cookie = name + "=" + (encodeURIComponent(value) || "")  + expires + "; path=/";
   document.cookie = name + "=" + (value || "") + expires + "; path=/";
 }
 const deleteCookie = () => {
@@ -356,9 +355,6 @@ elemBuscar.onchange = (event) => {
 elemBuscar.value = getCookie('filtro')
 
 // incializacion
-const elemNew = document.getElementById('new');
-elemNew.setAttribute('href', `/admin/fraudes/add?part=${getCookie('filtro')}`)
-
 const elemDel = document.getElementById('del');
 elemDel.setAttribute('action', `/admin/fraudes/delete?part=${getCookie('filtro')}`)
 
@@ -367,9 +363,6 @@ elemDesag.setAttribute('action', `/admin/fraudes/desasignar?part=${getCookie('fi
 
 const elemAsig = document.getElementById('asig');
 elemAsig.setAttribute('action', `/admin/fraudes/asignar?part=${getCookie('filtro')}`)
-
-const elemRes = document.getElementById('rsltos');
-elemRes.setAttribute('href', `/admin/fraudes/resueltos?part=${getCookie('filtro')}`)
 
 // tabla
 buildTable(orgList)

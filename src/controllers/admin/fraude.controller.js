@@ -34,7 +34,7 @@ export const mainPage = async (req, res) => {
   }
 
   try {
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes`, {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/extended`, {
       context,
     });
 
@@ -79,14 +79,14 @@ export const mainPage = async (req, res) => {
       verTodo: false,
     };
 
-    res.render("user/fraudes", { user, datos });
+    res.render("admin/fraudes", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -117,14 +117,14 @@ export const addPage = async (req, res) => {
       oficinas: oficinas.data.data,
     };
 
-    res.render("user/fraudes/add", { user, datos });
+    res.render("admin/fraudes/add", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -155,14 +155,14 @@ export const editPage = async (req, res) => {
       tiposRol,
     };
 
-    res.render("user/fraudes/edit", { user, datos });
+    res.render("admin/fraudes/edit", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -187,7 +187,7 @@ export const resolverPage = async (req, res) => {
           const msg =
             "Existe propuesta de liquidación sin su correspondiente liquidación.\nNo se puede resolver el fraude.";
 
-          return res.render("user/error400", {
+          return res.render("admin/error400", {
             alerts: [{ msg }],
           });
         }
@@ -198,7 +198,7 @@ export const resolverPage = async (req, res) => {
           const msg =
             "Existe liquidación sin su correspondiente propuesta de liquidación.\nNo se puede resolver el fraude.";
 
-          return res.render("user/error400", {
+          return res.render("admin/error400", {
             alerts: [{ msg }],
           });
         }
@@ -209,7 +209,7 @@ export const resolverPage = async (req, res) => {
           const msg =
             "Existe propuesta de sanción sin su correspondiente sanción o sanción anulada.\nNo se puede resolver el fraude.";
 
-          return res.render("user/error400", {
+          return res.render("admin/error400", {
             alerts: [{ msg }],
           });
         }
@@ -220,7 +220,7 @@ export const resolverPage = async (req, res) => {
           const msg =
             "Existe sanción sin su correspondiente propuesta de sanción.\nNo se puede resolver el fraude.";
 
-          return res.render("user/error400", {
+          return res.render("admin/error400", {
             alerts: [{ msg }],
           });
         }
@@ -241,14 +241,14 @@ export const resolverPage = async (req, res) => {
       hayLiquidacion,
     };
 
-    res.render("user/fraudes/resolver", { user, datos });
+    res.render("admin/fraudes/resolver", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -334,14 +334,14 @@ export const resueltosPage = async (req, res) => {
       verTodo: false,
     };
     
-    res.render("user/fraudes/resueltos", { user, datos });
+    res.render("admin/fraudes/resueltos", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -384,14 +384,14 @@ export const hitoseventosPage = async (req, res) => {
       estadosHito,
     };
 
-    res.render("user/fraudes/hitoseventos", { user, datos });
+    res.render("admin/fraudes/hitoseventos", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -427,14 +427,14 @@ export const hitoseventosReadonlyPage = async (req, res) => {
       estadosHito,
     };
 
-    res.render("user/fraudes/hitoseventos/readonly", { user, datos });
+    res.render("admin/fraudes/hitoseventos/readonly", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -475,14 +475,14 @@ export const addHitosPage = async (req, res) => {
       estadosHito,
     };
 
-    res.render("user/fraudes/hitos/add", { user, datos });
+    res.render("admin/fraudes/hitos/add", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -530,14 +530,14 @@ export const editHitosPage = async (req, res) => {
       estadosHito,
     };
 
-    res.render("user/fraudes/hitos/edit", { user, datos });
+    res.render("admin/fraudes/hitos/edit", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -560,14 +560,14 @@ export const addEventosPage = async (req, res) => {
       tipos: tipos.data.data,
     };
 
-    res.render("user/fraudes/eventos/add", { user, datos });
+    res.render("admin/fraudes/eventos/add", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -595,14 +595,14 @@ export const editEventosPage = async (req, res) => {
       tipos: tipos.data.data,
     };
 
-    res.render("user/fraudes/eventos/edit", { user, datos });
+    res.render("admin/fraudes/eventos/edit", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -692,14 +692,14 @@ export const smssPage = async (req, res) => {
     }
 
     console.log(smss);
-    res.render("user/fraudes/smss", { user, datos });
+    res.render("admin/fraudes/smss", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -723,14 +723,14 @@ export const smssAddPage = async (req, res) => {
       sms,
     };
 
-    res.render("user/fraudes/smss/add", { user, datos });
+    res.render("admin/fraudes/smss/add", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -754,14 +754,14 @@ export const smssEditPage = async (req, res) => {
       sms,
     };
 
-    res.render("user/fraudes/smss/edit", { user, datos });
+    res.render("admin/fraudes/smss/edit", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -786,14 +786,14 @@ export const smssReadonlyPage = async (req, res) => {
       estadosSms,
     }
 
-    res.render("user/fraudes/smss/readonly", { user, datos });
+    res.render("admin/fraudes/smss/readonly", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -881,14 +881,14 @@ export const relacionesPage = async (req, res) => {
       cursor: convertNodeToCursor(JSON.stringify(cursor)),
     }
 
-    res.render("user/fraudes/relaciones", { user, datos });
+    res.render("admin/fraudes/relaciones", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -905,14 +905,14 @@ export const relacionesAddPage = async (req, res) => {
       fraude,
     };
 
-    res.render("user/fraudes/relaciones/add", { user, datos });
+    res.render("admin/fraudes/relaciones/add", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -936,14 +936,14 @@ export const relacionesEditPage = async (req, res) => {
       relacion: result.data.data[0],
     };
 
-    res.render("user/fraudes/relaciones/edit", { user, datos });
+    res.render("admin/fraudes/relaciones/edit", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -967,14 +967,14 @@ export const relacionesReadonlyPage = async (req, res) => {
       relaciones: relaciones.data.data,
     }
 
-    res.render("user/fraudes/relaciones/readonly", { user, datos });
+    res.render("admin/fraudes/relaciones/readonly", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -1000,14 +1000,14 @@ export const addEjercicioPage = async (req, res) => {
       fraude,
     };
 
-    res.render("user/fraudes/ejercicios/add", { user, datos });
+    res.render("admin/fraudes/ejercicios/add", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -1045,14 +1045,14 @@ export const insert = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/user/fraudes?part=${req.query.part}`);
+    res.redirect(`/admin/fraudes?part=${req.query.part}`);
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -1084,14 +1084,14 @@ export const update = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/user/fraudes?part=${req.query.part}`);
+    res.redirect(`/admin/fraudes?part=${req.query.part}`);
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -1121,7 +1121,7 @@ export const remove = async (req, res) => {
           movimiento,
         });
     
-        res.redirect(`/user/fraudes?part=${req.query.part}`);
+        res.redirect(`/admin/fraudes?part=${req.query.part}`);
       } else {
         throw "El documento no puede ser borrado."
       }
@@ -1130,11 +1130,11 @@ export const remove = async (req, res) => {
     }
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -1165,14 +1165,14 @@ export const asignar = async (req, res) => {
       });
     }
 
-    res.redirect(`/user/fraudes?part=${req.query.part}`);
+    res.redirect(`/admin/fraudes?part=${req.query.part}`);
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -1203,7 +1203,7 @@ export const resolver = async (req, res) => {
           const msg =
             "Existe propuesta de liquidación sin su correspondiente liquidación.\nNo se puede resolver el fraude.";
 
-          return res.render("user/error400", {
+          return res.render("admin/error400", {
             alerts: [{ msg }],
           });
         }
@@ -1214,7 +1214,7 @@ export const resolver = async (req, res) => {
           const msg =
             "Existe liquidación/es sin su correspondiente propuesta de liquidación.\nNo se puede resolver el fraude.";
 
-          return res.render("user/error400", {
+          return res.render("admin/error400", {
             alerts: [{ msg }],
           });
         }
@@ -1225,7 +1225,7 @@ export const resolver = async (req, res) => {
           const msg =
             "Existe propuesta de sanción sin su correspondiente sanción o sanción anulada.\nNo se puede resolver el fraude.";
 
-          return res.render("user/error400", {
+          return res.render("admin/error400", {
             alerts: [{ msg }],
           });
         }
@@ -1236,7 +1236,7 @@ export const resolver = async (req, res) => {
           const msg =
             "Existe sanción sin su correspondiente propuesta de sanción.\nNo se puede resolver el fraude.";
 
-          return res.render("user/error400", {
+          return res.render("admin/error400", {
             alerts: [{ msg }],
           });
         }
@@ -1260,14 +1260,14 @@ export const resolver = async (req, res) => {
       });
     }
 
-    res.redirect(`/user/fraudes?part=${req.query.part}`);
+    res.redirect(`/admin/fraudes?part=${req.query.part}`);
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -1299,14 +1299,14 @@ export const desasignar = async (req, res) => {
       });
     }
 
-    res.redirect(`/user/fraudes?part=${req.query.part}`);
+    res.redirect(`/admin/fraudes?part=${req.query.part}`);
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -1378,14 +1378,14 @@ export const insertHito = async (req, res) => {
       });
     }
 
-    res.redirect(`/user/fraudes/hitoseventos/${fraude.IDFRAU}`);
+    res.redirect(`/admin/fraudes/hitoseventos/${fraude.IDFRAU}`);
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -1414,14 +1414,14 @@ export const updateHito = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/user/fraudes/hitoseventos/${fraude.IDFRAU}`);
+    res.redirect(`/admin/fraudes/hitoseventos/${fraude.IDFRAU}`);
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -1447,14 +1447,14 @@ export const removeHito = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/user/fraudes/hitoseventos/${fraude.IDFRAU}`);
+    res.redirect(`/admin/fraudes/hitoseventos/${fraude.IDFRAU}`);
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -1480,14 +1480,14 @@ export const archivoHito = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/user/fraudes/hitoseventos/${fraude.IDFRAU}`);
+    res.redirect(`/admin/fraudes/hitoseventos/${fraude.IDFRAU}`);
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -1516,14 +1516,14 @@ export const insertEvento = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/user/fraudes/hitoseventos/${fraude.IDFRAU}`);
+    res.redirect(`/admin/fraudes/hitoseventos/${fraude.IDFRAU}`);
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -1550,14 +1550,14 @@ export const updateEvento = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/user/fraudes/hitoseventos/${fraude.IDFRAU}`);
+    res.redirect(`/admin/fraudes/hitoseventos/${fraude.IDFRAU}`);
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -1583,14 +1583,14 @@ export const removeEvento = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/user/fraudes/hitoseventos/${fraude.IDFRAU}`);
+    res.redirect(`/admin/fraudes/hitoseventos/${fraude.IDFRAU}`);
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -1628,14 +1628,14 @@ export const insertEjercicio = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/user/fraudes?part=${req.query.part}`);
+    res.redirect(`/admin/fraudes?part=${req.query.part}`);
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -1667,14 +1667,14 @@ export const insertSms = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/user/fraudes/smss/${fraude.IDFRAU}`);
+    res.redirect(`/admin/fraudes/smss/${fraude.IDFRAU}`);
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -1702,14 +1702,14 @@ export const updateSms = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/user/fraudes/smss/${fraude.IDFRAU}`);
+    res.redirect(`/admin/fraudes/smss/${fraude.IDFRAU}`);
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -1735,14 +1735,14 @@ export const removeSms = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/user/fraudes/smss/${fraude.IDFRAU}`);
+    res.redirect(`/admin/fraudes/smss/${fraude.IDFRAU}`);
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -1773,14 +1773,14 @@ export const insertRelacion = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/user/fraudes/relaciones/${fraude.IDFRAU}`);
+    res.redirect(`/admin/fraudes/relaciones/${fraude.IDFRAU}`);
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -1808,14 +1808,14 @@ export const updateRelacion = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/user/fraudes/relaciones/${fraude.IDFRAU}`);
+    res.redirect(`/admin/fraudes/relaciones/${fraude.IDFRAU}`);
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
@@ -1841,14 +1841,14 @@ export const removeRelacion = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/user/fraudes/relaciones/${fraude.IDFRAU}`);
+    res.redirect(`/admin/fraudes/relaciones/${fraude.IDFRAU}`);
   } catch (error) {
     if (error.response?.status === 400) {
-      res.render("user/error400", {
+      res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
       });
     } else {
-      res.render("user/error500", {
+      res.render("admin/error500", {
         alerts: [{ msg: error }],
       });
     }
