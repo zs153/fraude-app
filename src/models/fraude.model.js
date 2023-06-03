@@ -94,15 +94,29 @@ export const fraudes = async (context) => {
   }
 };
 export const extended = async (context) => {
-  let query = extendedQuery
-  let bind = {}
+  // bind
+  let query = "WITH datos AS (SELECT ff.idfrau,ff.fecfra,ff.ejefra,ff.nifcon,ff.nomcon,ff.obsfra,ff.ofifra,ff.liqfra,ff.stafra,oo.desofi,tf.destip FROM fraudes ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifra INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra WHERE (nifcon LIKE '%' || :part || '%' OR nomcon LIKE '%' || :part || '%' OR ejefra LIKE '%' || :part || '%' OR fecfra LIKE '%' || :part || '%' OR destip LIKE '%' || :part || '%' OR desofi LIKE '%' || :part || '%' OR :part IS NULL))"
+  let bind = {
+    limit: context.limit,
+    part: context.part,
+  };
 
-  if (context.IDFRAU) {
-    bind.idfrau = context.IDFRAU
+  if (context.direction === 'next') {
+    bind.idfrau = context.cursor.next;
+    query += "SELECT * FROM datos WHERE idfrau > :idfrau ORDER BY idfrau ASC FETCH NEXT :limit ROWS ONLY"
+  } else {
+    bind.idfrau = context.cursor.prev;
+    query += "SELECT * FROM datos WHERE idfrau < :idfrau ORDER BY idfrau DESC FETCH NEXT :limit ROWS ONLY"
   }
 
-  const result = await simpleExecute(query, bind)
-  return result.rows
+  // proc
+  const ret = await simpleExecute(query, bind)
+
+  if (ret) {
+    return ({ stat: ret.rows.length, data: ret.rows })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
 }
 export const insert = async (context) => {
   // bind
