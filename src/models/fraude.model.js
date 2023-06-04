@@ -95,18 +95,22 @@ export const fraudes = async (context) => {
 };
 export const extended = async (context) => {
   // bind
-  let query = "WITH datos AS (SELECT ff.idfrau,ff.fecfra,ff.ejefra,ff.nifcon,ff.nomcon,ff.obsfra,ff.ofifra,ff.liqfra,ff.stafra,oo.desofi,tf.destip FROM fraudes ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifra INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra WHERE (nifcon LIKE '%' || :part || '%' OR nomcon LIKE '%' || :part || '%' OR ejefra LIKE '%' || :part || '%' OR fecfra LIKE '%' || :part || '%' OR destip LIKE '%' || :part || '%' OR desofi LIKE '%' || :part || '%' OR :part IS NULL))"
+  let query = "WITH datos AS (SELECT ff.idfrau,ff.fecfra,ff.ejefra,ff.nifcon,ff.nomcon,ff.obsfra,ff.ofifra,ff.liqfra,ff.stafra,oo.desofi,tf.destip FROM fraudes ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifra INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra WHERE (nifcon LIKE '%' || :part || '%' OR nomcon LIKE '%' || :part || '%' OR ejefra LIKE '%' || :part || '%' OR liqfra LIKE '%' || LOWER(:part) || '%' OR destip LIKE '%' || :part || '%' OR desofi LIKE '%' || :part || '%' OR :part IS NULL)"
   let bind = {
     limit: context.limit,
     part: context.part,
   };
 
+  if (context.rest) {
+    bind.rest = context.rest
+    query += " AND (nifcon LIKE '%' || :rest || '%' OR nomcon LIKE '%' || :rest || '%' OR ejefra LIKE '%' || :rest || '%' OR liqfra LIKE '%' || LOWER(:rest) || '%' OR destip LIKE '%' || :rest || '%' OR desofi LIKE '%' || :rest || '%')"
+  }
   if (context.direction === 'next') {
     bind.idfrau = context.cursor.next;
-    query += "SELECT * FROM datos WHERE idfrau > :idfrau ORDER BY idfrau ASC FETCH NEXT :limit ROWS ONLY"
+    query += ")SELECT * FROM datos WHERE idfrau > :idfrau ORDER BY idfrau ASC FETCH NEXT :limit ROWS ONLY"
   } else {
     bind.idfrau = context.cursor.prev;
-    query += "SELECT * FROM datos WHERE idfrau < :idfrau ORDER BY idfrau DESC FETCH NEXT :limit ROWS ONLY"
+    query += ")SELECT * FROM datos WHERE idfrau < :idfrau ORDER BY idfrau DESC FETCH NEXT :limit ROWS ONLY"
   }
 
   // proc
@@ -403,16 +407,16 @@ export const eventos = async (context) => {
 export const insertEvento = async (context) => {
   // bind
   let bind = context
-  bind.IDEVEN = {
+  bind.ideven = {
     dir: BIND_OUT,
     type: NUMBER,
   }
-
+console.log(insertEventoSql,bind);
   // proc
   const ret = await simpleExecute(insertEventoSql, bind)
 
   if (ret) {
-    bind.IDEVEN = ret.outBinds.IDEVEN
+    bind.ideven = ret.outBinds.IDEVEN
     return ({ stat: 1, data: bind })
   } else {
     return ({ stat: 0, data: [] })
