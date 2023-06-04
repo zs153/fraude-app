@@ -1404,7 +1404,6 @@ export const updateHito = async (req, res) => {
   };
   const hito = {
     IDHITO: req.body.idhito,
-    FECHIT: new Date().toISOString().slice(0, 10),
     TIPHIT: req.body.tiphit,
     IMPHIT: req.body.imphit, //parseFloat(req.body.imphit.replace(/,/g, '.')),
     OBSHIT: req.body.obshit,

@@ -8,11 +8,21 @@ export const mainPage = async (req, res) => {
 
   const dir = req.query.dir ? req.query.dir : 'next'
   const limit = req.query.limit ? req.query.limit : 9
-  const part = req.query.part ? req.query.part.toUpperCase() : ''
 
   let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
   let hasPrevFras = cursor ? true : false
   let context = {}
+  let part = ''
+  let rest = ''
+
+  if (req.query.part) {
+    const partes = req.query.part.split(',')
+
+    part = partes[0].toUpperCase()
+    if (partes.length > 1) {
+      rest = partes[1].toUpperCase()
+    }
+  }
 
   if (cursor) {
     context = {
@@ -20,6 +30,7 @@ export const mainPage = async (req, res) => {
       direction: dir,
       cursor: JSON.parse(convertCursorToNode(JSON.stringify(cursor))),
       part,
+      rest,
     }
   } else {
     context = {
@@ -30,9 +41,10 @@ export const mainPage = async (req, res) => {
         prev: 0,
       },
       part,
+      rest,
     }
   }
-
+  
   try {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/extended`, {
       context,
@@ -1282,17 +1294,18 @@ export const desasignar = async (req, res) => {
         IDFRAU: req.body.idfrau,
       },
     });
-
+    
     let fraude = result.data.data[0]
+    console.log('fraude...', fraude);
     if (fraude.STAFRA === estadosFraude.asignado) {
       fraude.LIQFRA = "PEND"
       fraude.STAFRA = estadosFraude.pendiente
-
+      
       const movimiento = {
         USUMOV: user.id,
         TIPMOV: tiposMovimiento.desasignarFraude,
       };
-
+      
       await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/unasign`, {
         fraude,
         movimiento,
@@ -1398,7 +1411,6 @@ export const updateHito = async (req, res) => {
   };
   const hito = {
     IDHITO: req.body.idhito,
-    FECHIT: new Date().toISOString().slice(0, 10),
     TIPHIT: req.body.tiphit,
     IMPHIT: req.body.imphit, //parseFloat(req.body.imphit.replace(/,/g, '.')),
     OBSHIT: req.body.obshit,
