@@ -411,7 +411,6 @@ export const insertEvento = async (context) => {
     dir: BIND_OUT,
     type: NUMBER,
   }
-console.log(insertEventoSql,bind);
   // proc
   const ret = await simpleExecute(insertEventoSql, bind)
 
