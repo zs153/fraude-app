@@ -45,6 +45,9 @@ adminRouter.get('/tipos/hitos/add', verifyTokenAndAdmin, tipos.addHitoPage)
 adminRouter.get('/tipos/hitos/edit/:id', verifyTokenAndAdmin, tipos.editHitoPage)
 
 // fraude
+
+adminRouter.get("/fraudes/asignar", verifyTokenAndResp, fraude.asignarPage);
+
 adminRouter.get("/fraudes", verifyTokenAndResp, fraude.mainPage);
 adminRouter.get("/fraudes/resueltos", verifyTokenAndResp, fraude.resueltosPage);
 adminRouter.get("/fraudes/add", verifyTokenAndResp, fraude.addPage);

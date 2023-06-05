@@ -1,5 +1,5 @@
 import axios from "axios";
-import { estadosFraude, estadosSms, tiposMovimiento, tiposRol, estadosHito } from "../../public/js/enumeraciones";
+import { estadosFraude, estadosSms, tiposMovimiento, tiposRol, estadosHito, estadosUsuario } from "../../public/js/enumeraciones";
 import { serverAPI,puertoAPI } from '../../config/settings'
 
 // pages fraude
@@ -92,6 +92,95 @@ export const mainPage = async (req, res) => {
     };
 
     res.render("admin/fraudes", { user, datos });
+  } catch (error) {
+    if (error.response?.status === 400) {
+      res.render("admin/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("admin/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
+  }
+};
+export const asignarPage = async (req, res) => {
+  const user = req.user
+
+  const dir = req.query.dir ? req.query.dir : 'next'
+  const limit = req.query.limit ? req.query.limit : 10
+  const part = req.query.part ? req.query.part.toUpperCase() : ''
+
+  let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
+  let hasPrevUsers = cursor ? true:false
+  let context = {}
+
+  if (cursor) {
+    context = {
+      oficina: user.rol === tiposRol.admin ? 0 : user.oficina,
+      limit: limit + 1,
+      direction: dir,
+      cursor: JSON.parse(convertCursorToNode(JSON.stringify(cursor))),
+      part,
+    }
+  } else {
+    context = {
+      oficina: user.rol === tiposRol.admin ? 0 : user.oficina,
+      limit: limit + 1,
+      direction: dir,
+      cursor: {
+        next: '',
+        prev: '',
+      },
+      part,
+    }
+  }
+
+  try {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/usuarios`, {
+      context,
+    })
+
+    let usuarios = result.data.data
+    let hasNextUsers = usuarios.length === limit +1
+    let nextCursor = ''
+    let prevCursor = ''
+    
+    if (hasNextUsers) {
+      nextCursor= dir === 'next' ? usuarios[limit - 1].NOMUSU : usuarios[0].NOMUSU
+      prevCursor = dir === 'next' ? usuarios[0].NOMUSU : usuarios[limit - 1].NOMUSU
+
+      usuarios.pop()
+    } else {
+      nextCursor = dir === 'next' ? '' : usuarios[0]?.NOMUSU
+      prevCursor = dir === 'next' ? usuarios[0]?.NOMUSU : ''
+      
+      if (cursor) {
+        hasNextUsers = nextCursor === '' ? false : true
+        hasPrevUsers = prevCursor === '' ? false : true
+      } else {
+        hasNextUsers = false
+        hasPrevUsers = false
+      }
+    }
+
+    if (dir === 'prev') {
+      usuarios = usuarios.sort((a,b) => a.NOMUSU > b.NOMUSU ? 1:-1)
+    }
+
+    cursor = {
+      next: nextCursor,
+      prev: prevCursor,
+    }    
+    const datos = {
+      usuarios,
+      hasPrevUsers,
+      hasNextUsers,
+      cursor: convertNodeToCursor(JSON.stringify(cursor)),
+      estadosUsuario,
+    }
+
+    res.render('admin/fraudes/ades', { user, datos })
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
