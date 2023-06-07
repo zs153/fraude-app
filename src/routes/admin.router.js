@@ -45,9 +45,6 @@ adminRouter.get('/tipos/hitos/add', verifyTokenAndAdmin, tipos.addHitoPage)
 adminRouter.get('/tipos/hitos/edit/:id', verifyTokenAndAdmin, tipos.editHitoPage)
 
 // fraude
-
-adminRouter.get("/fraudes/asignar", verifyTokenAndResp, fraude.asignarPage);
-
 adminRouter.get("/fraudes", verifyTokenAndResp, fraude.mainPage);
 adminRouter.get("/fraudes/resueltos", verifyTokenAndResp, fraude.resueltosPage);
 adminRouter.get("/fraudes/add", verifyTokenAndResp, fraude.addPage);
@@ -74,6 +71,10 @@ adminRouter.get("/fraudes/smss/:id", verifyTokenAndResp, fraude.smssPage);
 adminRouter.get("/fraudes/smss/add/:id", verifyTokenAndResp, fraude.smssAddPage);
 adminRouter.get("/fraudes/smss/edit/:idfra/:idsms", verifyTokenAndResp, fraude.smssEditPage);
 adminRouter.get("/fraudes/smss/readonly/:id", verifyTokenAndResp, fraude.smssReadonlyPage);
+// ades
+adminRouter.get("/fraudes/ades", verifyTokenAndResp, fraude.adesPage);
+adminRouter.get("/fraudes/ades/asignar/:id", verifyTokenAndResp, fraude.adesAsignarPage);
+adminRouter.get("/fraudes/ades/desasignar/:id", verifyTokenAndResp, fraude.adesDesasignarPage);
 
 // page carga
 adminRouter.get('/cargas', verifyTokenAndAdmin, carga.mainPage)
@@ -142,6 +143,9 @@ adminRouter.post("/fraudes/relaciones/delete", verifyTokenAndResp, fraude.remove
 adminRouter.post("/fraudes/smss/insert", verifyTokenAndResp, fraude.insertSms);
 adminRouter.post("/fraudes/smss/update", verifyTokenAndResp, fraude.updateSms);
 adminRouter.post("/fraudes/smss/delete", verifyTokenAndResp, fraude.removeSms);
+// ades
+adminRouter.post("/fraudes/ades/asignar", verifyTokenAndResp, fraude.asignarFraudes);
+adminRouter.post("/fraudes/ades/desasignar", verifyTokenAndResp, fraude.desAsignarFraudes);
 
 // carga
 adminRouter.post('/cargas/insert', verifyTokenAndAdmin, carga.insert)

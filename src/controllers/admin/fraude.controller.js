@@ -104,95 +104,6 @@ export const mainPage = async (req, res) => {
     }
   }
 };
-export const asignarPage = async (req, res) => {
-  const user = req.user
-
-  const dir = req.query.dir ? req.query.dir : 'next'
-  const limit = req.query.limit ? req.query.limit : 10
-  const part = req.query.part ? req.query.part.toUpperCase() : ''
-
-  let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
-  let hasPrevUsers = cursor ? true:false
-  let context = {}
-
-  if (cursor) {
-    context = {
-      oficina: user.rol === tiposRol.admin ? 0 : user.oficina,
-      limit: limit + 1,
-      direction: dir,
-      cursor: JSON.parse(convertCursorToNode(JSON.stringify(cursor))),
-      part,
-    }
-  } else {
-    context = {
-      oficina: user.rol === tiposRol.admin ? 0 : user.oficina,
-      limit: limit + 1,
-      direction: dir,
-      cursor: {
-        next: '',
-        prev: '',
-      },
-      part,
-    }
-  }
-
-  try {
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/usuarios`, {
-      context,
-    })
-
-    let usuarios = result.data.data
-    let hasNextUsers = usuarios.length === limit +1
-    let nextCursor = ''
-    let prevCursor = ''
-    
-    if (hasNextUsers) {
-      nextCursor= dir === 'next' ? usuarios[limit - 1].NOMUSU : usuarios[0].NOMUSU
-      prevCursor = dir === 'next' ? usuarios[0].NOMUSU : usuarios[limit - 1].NOMUSU
-
-      usuarios.pop()
-    } else {
-      nextCursor = dir === 'next' ? '' : usuarios[0]?.NOMUSU
-      prevCursor = dir === 'next' ? usuarios[0]?.NOMUSU : ''
-      
-      if (cursor) {
-        hasNextUsers = nextCursor === '' ? false : true
-        hasPrevUsers = prevCursor === '' ? false : true
-      } else {
-        hasNextUsers = false
-        hasPrevUsers = false
-      }
-    }
-
-    if (dir === 'prev') {
-      usuarios = usuarios.sort((a,b) => a.NOMUSU > b.NOMUSU ? 1:-1)
-    }
-
-    cursor = {
-      next: nextCursor,
-      prev: prevCursor,
-    }    
-    const datos = {
-      usuarios,
-      hasPrevUsers,
-      hasNextUsers,
-      cursor: convertNodeToCursor(JSON.stringify(cursor)),
-      estadosUsuario,
-    }
-
-    res.render('admin/fraudes/ades', { user, datos })
-  } catch (error) {
-    if (error.response?.status === 400) {
-      res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
-      });
-    } else {
-      res.render("admin/error500", {
-        alerts: [{ msg: error }],
-      });
-    }
-  }
-};
 export const addPage = async (req, res) => {
   const user = req.user;
   const fecha = new Date();
@@ -1115,6 +1026,308 @@ export const addEjercicioPage = async (req, res) => {
   }
 };
 
+// ades
+export const adesPage = async (req, res) => {
+  const user = req.user
+
+  const dir = req.query.dir ? req.query.dir : 'next'
+  const limit = req.query.limit ? req.query.limit : 10
+  const part = req.query.part ? req.query.part.toUpperCase() : ''
+
+  let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
+  let hasPrevUsers = cursor ? true:false
+  let context = {}
+
+  if (cursor) {
+    context = {
+      oficina: user.rol === tiposRol.admin ? 0 : user.oficina,
+      limit: limit + 1,
+      direction: dir,
+      cursor: JSON.parse(convertCursorToNode(JSON.stringify(cursor))),
+      part,
+    }
+  } else {
+    context = {
+      oficina: user.rol === tiposRol.admin ? 0 : user.oficina,
+      limit: limit + 1,
+      direction: dir,
+      cursor: {
+        next: '',
+        prev: '',
+      },
+      part,
+    }
+  }
+
+  try {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/usuarios`, {
+      context,
+    })
+
+    let usuarios = result.data.data
+    let hasNextUsers = usuarios.length === limit +1
+    let nextCursor = ''
+    let prevCursor = ''
+    
+    if (hasNextUsers) {
+      nextCursor= dir === 'next' ? usuarios[limit - 1].NOMUSU : usuarios[0].NOMUSU
+      prevCursor = dir === 'next' ? usuarios[0].NOMUSU : usuarios[limit - 1].NOMUSU
+
+      usuarios.pop()
+    } else {
+      nextCursor = dir === 'next' ? '' : usuarios[0]?.NOMUSU
+      prevCursor = dir === 'next' ? usuarios[0]?.NOMUSU : ''
+      
+      if (cursor) {
+        hasNextUsers = nextCursor === '' ? false : true
+        hasPrevUsers = prevCursor === '' ? false : true
+      } else {
+        hasNextUsers = false
+        hasPrevUsers = false
+      }
+    }
+
+    if (dir === 'prev') {
+      usuarios = usuarios.sort((a,b) => a.NOMUSU > b.NOMUSU ? 1:-1)
+    }
+
+    cursor = {
+      next: nextCursor,
+      prev: prevCursor,
+    }    
+    const datos = {
+      usuarios,
+      hasPrevUsers,
+      hasNextUsers,
+      cursor: convertNodeToCursor(JSON.stringify(cursor)),
+      estadosUsuario,
+    }
+
+    res.render('admin/fraudes/ades', { user, datos })
+  } catch (error) {
+    if (error.response?.status === 400) {
+      res.render("admin/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("admin/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
+  }
+};
+export const adesAsignarPage = async (req, res) => {
+  const user = req.user
+
+  const dir = req.query.dir ? req.query.dir : 'next'
+  const limit = req.query.limit ? req.query.limit : 100
+
+  let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
+  let hasPrevFras = cursor ? true : false
+  let context = {}
+  let part = ''
+  let rest = ''
+  let alerts = undefined
+
+  if (req.query.part) {
+    const partes = req.query.part.split(',')
+
+    part = partes[0].toUpperCase()
+    if (partes.length > 1) {
+      rest = partes[1].toUpperCase()
+    }
+  }
+
+  if (cursor) {
+    context = {
+      stafra: JSON.stringify(estadosFraude.pendiente),
+      limit: limit + 1,
+      direction: dir,
+      cursor: JSON.parse(convertCursorToNode(JSON.stringify(cursor))),
+      part,
+      rest,
+    }
+  } else {
+    context = {
+      stafra: JSON.stringify(estadosFraude.pendiente),
+      limit: limit + 1,
+      direction: dir,
+      cursor: {
+        next: 0,
+        prev: 0,
+      },
+      part,
+      rest,
+    }
+  }
+  
+  try {
+    const usuario = await axios.post(`http://${serverAPI}:${puertoAPI}/api/usuario`, {
+      context: {
+        IDUSUA: req.params.id,
+      },
+    });
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/extended`, {
+      context,
+    });
+
+    let fraudes = result.data.data
+    let hasNextFras = fraudes.length === limit + 1
+    let nextCursor = 0
+    let prevCursor = 0
+
+    if (hasNextFras) {
+      alerts = [{ msg: 'Se supera el límite de registros permitidos. Sólo se muestran los 100 primeros registros. Refine la consulta' }]      
+      nextCursor = dir === 'next' ? fraudes[limit - 1].IDFRAU : fraudes[0].IDFRAU
+      prevCursor = dir === 'next' ? fraudes[0].IDFRAU : fraudes[limit - 1].IDFRAU
+      
+      fraudes.pop()
+    } else {
+      nextCursor = dir === 'next' ? 0 : fraudes[0]?.IDFRAU
+      prevCursor = dir === 'next' ? fraudes[0]?.IDFRAU : 0
+      
+      if (cursor) {
+        hasNextFras = nextCursor === 0 ? false : true
+        hasPrevFras = prevCursor === 0 ? false : true
+      } else {
+        hasNextFras = false
+        hasPrevFras = false
+      }
+    }
+    
+    if (dir === 'prev') {
+      fraudes = fraudes.reverse()
+    }
+    
+    cursor = {
+      next: nextCursor,
+      prev: prevCursor,
+    }
+    
+    console.log(fraudes.length);
+    const datos = {
+      usuario: usuario.data.data[0],
+      fraudes,
+      hasNextFras,
+      hasPrevFras,
+      cursor: convertNodeToCursor(JSON.stringify(cursor)),
+    };
+
+    res.render("admin/fraudes/ades/asignar", { user, alerts, datos });
+  } catch (error) {
+    if (error.response?.status === 400) {
+      res.render("admin/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("admin/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
+  }
+}
+export const adesDesasignarPage = async (req, res) => {
+  const user = req.user
+
+  const dir = req.query.dir ? req.query.dir : 'next'
+  const limit = req.query.limit ? req.query.limit : 9
+
+  let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
+  let hasPrevFras = cursor ? true : false
+  let context = {}
+  let part = ''
+  let rest = ''
+
+  if (req.query.part) {
+    const partes = req.query.part.split(',')
+
+    part = partes[0].toUpperCase()
+    if (partes.length > 1) {
+      rest = partes[1].toUpperCase()
+    }
+  }
+
+  if (cursor) {
+    context = {
+      limit: limit + 1,
+      direction: dir,
+      cursor: JSON.parse(convertCursorToNode(JSON.stringify(cursor))),
+      part,
+      rest,
+    }
+  } else {
+    context = {
+      limit: limit + 1,
+      direction: dir,
+      cursor: {
+        next: 0,
+        prev: 0,
+      },
+      part,
+      rest,
+    }
+  }
+  
+  try {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/extended`, {
+      context,
+    });
+
+    let fraudes = result.data.data
+    let hasNextFras = fraudes.length === limit + 1
+    let nextCursor = 0
+    let prevCursor = 0
+
+    if (hasNextFras) {
+      nextCursor = dir === 'next' ? fraudes[limit - 1].IDFRAU : fraudes[0].IDFRAU
+      prevCursor = dir === 'next' ? fraudes[0].IDFRAU : fraudes[limit - 1].IDFRAU
+
+      fraudes.pop()
+    } else {
+      nextCursor = dir === 'next' ? 0 : fraudes[0]?.IDFRAU
+      prevCursor = dir === 'next' ? fraudes[0]?.IDFRAU : 0
+
+      if (cursor) {
+        hasNextFras = nextCursor === 0 ? false : true
+        hasPrevFras = prevCursor === 0 ? false : true
+      } else {
+        hasNextFras = false
+        hasPrevFras = false
+      }
+    }
+
+    if (dir === 'prev') {
+      fraudes = fraudes.reverse()
+    }
+
+    cursor = {
+      next: nextCursor,
+      prev: prevCursor,
+    }
+
+    const datos = {
+      fraudes,
+      hasNextFras,
+      hasPrevFras,
+      cursor: convertNodeToCursor(JSON.stringify(cursor)),
+      estadosFraude,
+      verTodo: false,
+    };
+
+    res.render("admin/fraudes", { user, datos });
+  } catch (error) {
+    if (error.response?.status === 400) {
+      res.render("admin/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("admin/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
+  }
+}
+
 // procs fraude
 export const insert = async (req, res) => {
   const user = req.user;
@@ -1943,6 +2156,80 @@ export const removeRelacion = async (req, res) => {
     });
 
     res.redirect(`/admin/fraudes/relaciones/${fraude.IDFRAU}`);
+  } catch (error) {
+    if (error.response?.status === 400) {
+      res.render("admin/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("admin/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
+  }
+}
+
+// ades
+export const asignarFraudes = async (req, res) => {
+  const user = req.user;
+  const fraude = {
+    LIQFRA: req.body.userid,
+    STAFRA: estadosFraude.asignado,
+  }
+  const fraudes = {
+    ARRFRA: JSON.parse(req.body.arrfra)
+  }
+  const movimiento = {
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.asignarFraude,
+  }
+
+  console.log(fraudes);
+  try {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/ades/asignar`, {
+      fraude,
+      fraudes,
+      movimiento,
+    });
+
+    res.redirect(`/admin/fraudes/ades?part=${req.query.part}`);
+  } catch (error) {
+    if (error.response?.status === 400) {
+      res.render("admin/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("admin/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
+  }
+}
+export const desAsignarFraudes = async (req, res) => {
+  const user = req.user;
+  const usuario = {
+    IDUSUA: req.body.idusua,
+  }
+  const tipo = {
+    TIPEST: tiposEstado.formacion.ID,
+  }
+  const fraudes = {
+    ARRFRA: JSON.parse(req.body.arrfra)
+  }
+  const movimiento = {
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.desasignarFraude,
+  }
+
+  try {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/cursos/turnos/usuarios/insert`, {
+      turno,
+      tipo,
+      usuarios,
+      movimiento,
+    });
+
+    res.redirect(`/admin/cursos/turnos/usuarios/${curso.IDCURS}/${turno.IDTURN}?part=${req.query.part}`);
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
