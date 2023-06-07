@@ -32,6 +32,8 @@ import {
   crearRelacion,
   modificarRelacion,
   borrarRelacion,
+  asignarFraudesUsuario,
+  desAsignarFraudesUsuario,
 } from '../controllers/fraude.controller'
 
 const apiFraudeRouter = express.Router()
@@ -77,5 +79,9 @@ apiFraudeRouter.post('/fraudes/relaciones', relaciones)
 apiFraudeRouter.post('/fraudes/relaciones/insert', crearRelacion)
 apiFraudeRouter.post('/fraudes/relaciones/update', modificarRelacion)
 apiFraudeRouter.post('/fraudes/relaciones/delete', borrarRelacion)
+
+// ades
+apiFraudeRouter.post('/fraudes/ades/asignar', asignarFraudesUsuario)
+apiFraudeRouter.post('/fraudes/ades/desasignar', desAsignarFraudesUsuario)
 
 export default apiFraudeRouter

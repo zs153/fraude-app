@@ -676,3 +676,59 @@ export const borrarRelacion = async (req, res) => {
     res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
+
+// ades
+export const asignarFraudesUsuario = async (req, res) => {
+  // context
+  const fraude = {
+    LIQFRA: req.body.fraude.USERID,
+    STAFRA: req.body.fraude.STAFRA,
+  }  
+  const fraudes = {
+    arrfra: {
+      val: req.body.fraudes.ARRFRA,
+    }
+  }
+  const movimiento = {
+    USUMOV: req.body.movimiento.USUMOV,
+    TIPMOV: req.body.movimiento.TIPMOV,
+  }
+  const context = Object.assign(fraude, fraudes, movimiento)
+
+  // proc
+  try {
+    const result = await DAL.asignarFraudes(context)
+
+    res.status(200).json(result)
+  } catch (err) {
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+  }
+}
+export const desAsignarFraudesUsuario = async (req, res) => {
+  // context
+  const usuario = {
+    IDUSUA: req.body.usuario.IDUSUA,
+  }
+  const fraude = {
+    STAFRA: req.body.STAFRA,
+  }
+  const fraudes = {
+    arrfra: {
+      val: req.body.fraudes.ARRFRA,
+    }
+  }
+  const movimiento = {
+    USUMOV: req.body.movimiento.USUMOV,
+    TIPMOV: req.body.movimiento.TIPMOV,
+  }
+  const context = Object.assign(usuario, fraude, fraudes, movimiento)
+
+  // proc
+  try {
+    const result = await DAL.asignarFraudes(context)
+
+    res.status(200).json(result)
+  } catch (err) {
+    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+  }
+}

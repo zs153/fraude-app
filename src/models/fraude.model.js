@@ -4,7 +4,6 @@ import { simpleExecute } from '../services/database.js';
 // fraude
 const baseQuery = "SELECT ff.*,oo.desofi,tf.destip FROM fraudes ff INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra INNER JOIN oficinas oo ON oo.idofic = ff.ofifra"
 const largeQuery = "SELECT ff.*,oo.desofi,tt.destip,p1.* FROM (SELECT ff.idfrau,SUM(CASE WHEN hh.tiphit = 1 THEN 1 ELSE 0 END) AS PROLIQ,SUM(CASE WHEN hh.tiphit = 2 THEN 1 ELSE 0 END) AS LIQUID,SUM(CASE WHEN hh.tiphit = 3 THEN 1 ELSE 0 END) AS PROSAN,SUM(CASE WHEN hh.tiphit = 4 THEN 1 ELSE 0 END) AS SANCIO,COUNT(hf.idhito) AS NUMHIT,COUNT(ef.ideven) AS NUMEVE FROM fraudes ff LEFT JOIN hitosfraude hf ON hf.idfrau = ff.idfrau LEFT JOIN hitos hh ON hh.idhito = hf.idhito LEFT JOIN eventosfraude ef ON ef.idfrau = ff.idfrau LEFT JOIN eventos ee ON ee.ideven = ef.ideven WHERE liqfra = :liqfra AND ff.stafra = 1 GROUP BY ff.idfrau UNION SELECT ff.idfrau, 0 PROLIQ, 0 LIQUID, 0 PROSAN, 0 SANCIO, 0 NUMHIT, 0 NUMEVE FROM fraudes ff WHERE ff.stafra = 0) p1 INNER JOIN fraudes ff ON ff.idfrau = p1.idfrau INNER JOIN tiposfraude tt ON tt.idtipo = ff.tipfra INNER JOIN oficinas oo ON oo.idofic = ff.ofifra ORDER BY ff.stafra DESC"
-const extendedQuery = "SELECT ff.idfrau,ff.fecfra,ff.nifcon,ff.nomcon,ff.ejefra,ff.obsfra,tf.destip TIPFRA,hh.idhito,hh.fechit,hh.imphit,hh.obshit,hh.stahit,th.destip TIPHIT,ee.ideven, ee.feceve, ee.obseve, te.destip TIPEVE,oo.desofi FROM (SELECT hf.idfrau, hf.idhito, null IDEVEN FROM hitosfraude hf WHERE hf.idfrau = :idfrau UNION SELECT ef.idfrau, null IDHITO, ef.ideven FROM eventosfraude ef WHERE ef.idfrau = :idfrau) p1 LEFT JOIN fraudes ff ON ff.idfrau = p1.idfrau LEFT JOIN hitos hh ON hh.idhito = p1.idhito LEFT JOIN eventos ee ON ee.ideven = p1.ideven LEFT JOIN tiposfraude tf ON tf.idtipo = ff.tipfra LEFT JOIN tiposhito th ON th.idtipo = hh.tiphit LEFT JOIN tiposevento te ON te.idtipo = ee.tipeve LEFT JOIN oficinas oo ON oo.idofic = ff.ofifra WHERE ff.idfrau = :idfrau"
 const insertSql = "BEGIN FRAUDE_PKG.INSERTFRAUDE(TO_DATE(:fecfra, 'YYYY-MM-DD'),:nifcon,:nomcon,:emacon,:telcon,:movcon,:reffra,:tipfra,:ejefra,:ofifra,:obsfra,:funfra,:liqfra,:stafra,:usumov,:tipmov,:idfrau); END;"
 const updateSql = "BEGIN FRAUDE_PKG.UPDATEFRAUDE(:idfrau,TO_DATE(:fecfra,'YYYY-MM-DD'),:nifcon,:nomcon,:emacon,:telcon,:movcon,:tipfra,:ejefra,:ofifra,:obsfra,:usumov,:tipmov); END;"
 const removeSql = "BEGIN FRAUDE_PKG.DELETEFRAUDE(:idfrau,:usumov,:tipmov ); END;"
@@ -34,6 +33,9 @@ const relacionesQuery = "SELECT rr.* FROM relaciones rr"
 const insertRelacionSql = "BEGIN FRAUDE_PKG.INSERTRELACIONFRAUDE(:idfrau,TO_DATE(:fecrel, 'YYYY-MM-DD'),:nifcon,:nomcon,:usumov,:tipmov,:idrela); END;"
 const updateRelacionSql = "BEGIN FRAUDE_PKG.UPDATERELACION(:idrela,TO_DATE(:fecrel, 'YYYY-MM-DD'),:nifcon,:nomcon,:usumov,:tipmov); END;"
 const removeRelacionSql = "BEGIN FRAUDE_PKG.DELETERELACIONFRAUDE(:idfrau,:idrela,:usumov,:tipmov ); END;"
+// ades
+const asignarFraudesUsuarioSql = "BEGIN FRAUDE_PKG.ASIGNARFRAUDESUSUARIO(:liqfra,:stafra,:arrfra,:usumov,:tipmov); END;"
+const desAsignarFraudesUsuarioSql = "BEGIN FRAUDE_PKG.DESASIGNARFRAUDESUSUARIO(:liqfra,:stafra,:arrfra,:usumov,:tipmov); END;"
 
 // proc fraude
 export const fraude = async (context) => {
@@ -95,15 +97,22 @@ export const fraudes = async (context) => {
 };
 export const extended = async (context) => {
   // bind
-  let query = "WITH datos AS (SELECT ff.idfrau,ff.fecfra,ff.ejefra,ff.nifcon,ff.nomcon,ff.obsfra,ff.ofifra,ff.liqfra,ff.stafra,oo.desofi,tf.destip FROM fraudes ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifra INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra WHERE (nifcon LIKE '%' || :part || '%' OR nomcon LIKE '%' || :part || '%' OR ejefra LIKE '%' || :part || '%' OR liqfra LIKE '%' || LOWER(:part) || '%' OR destip LIKE '%' || :part || '%' OR desofi LIKE '%' || :part || '%' OR :part IS NULL)"
+  let query = "WITH datos AS (SELECT ff.idfrau,ff.fecfra,ff.ejefra,ff.nifcon,ff.nomcon,ff.obsfra,ff.ofifra,ff.liqfra,ff.stafra,oo.desofi,tf.destip FROM fraudes ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifra INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra"
   let bind = {
     limit: context.limit,
-    part: context.part,
   };
 
+  if (context.stafra) {
+    bind.stafra = context.stafra
+    query += " WHERE ff.stafra = :stafra"
+  }
+  if (context.part) {
+    bind.part = context.part
+    query += " AND (ff.nifcon LIKE '%' || :part || '%' OR ff.nomcon LIKE '%' || :part || '%' OR ff.ejefra LIKE '%' || :part || '%' OR ff.liqfra LIKE '%' || LOWER(:part) || '%' OR tf.destip LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%')"
+  }
   if (context.rest) {
     bind.rest = context.rest
-    query += " AND (nifcon LIKE '%' || :rest || '%' OR nomcon LIKE '%' || :rest || '%' OR ejefra LIKE '%' || :rest || '%' OR liqfra LIKE '%' || LOWER(:rest) || '%' OR destip LIKE '%' || :rest || '%' OR desofi LIKE '%' || :rest || '%')"
+    query += " AND (ff.nifcon LIKE '%' || :rest || '%' OR ff.nomcon LIKE '%' || :rest || '%' OR ff.ejefra LIKE '%' || :rest || '%' OR ff.liqfra LIKE '%' || LOWER(:rest) || '%' OR tf.destip LIKE '%' || :rest || '%' OR oo.desofi LIKE '%' || :rest || '%')"
   }
   if (context.direction === 'next') {
     bind.idfrau = context.cursor.next;
@@ -620,6 +629,34 @@ export const removeRelacion = async (context) => {
   const bind = context
   // proc
   const ret = await simpleExecute(removeRelacionSql, bind)
+
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+}
+
+// ades
+export const asignarFraudesUsuario = async (context) => {
+  // bind
+  let bind = context
+
+  // proc
+  const ret = await simpleExecute(asignarFraudesUsuarioSql, bind)
+
+  if (ret) {
+    return ({ stat: 1, data: bind })
+  } else {
+    return ({ stat: 0, data: [] })
+  }
+}
+export const desAsignarFraudesUsuario = async (context) => {
+  // bind
+  let bind = context
+
+  // proc
+  const ret = await simpleExecute(desAsignarFraudesUsuarioSql, bind)
 
   if (ret) {
     return ({ stat: 1, data: bind })
