@@ -102,10 +102,6 @@ export const extended = async (context) => {
     limit: context.limit,
   };
 
-  if (context.stafra) {
-    bind.stafra = context.stafra
-    query += " WHERE ff.stafra = :stafra"
-  }
   if (context.part) {
     bind.part = context.part
     query += " AND (ff.nifcon LIKE '%' || :part || '%' OR ff.nomcon LIKE '%' || :part || '%' OR ff.ejefra LIKE '%' || :part || '%' OR ff.liqfra LIKE '%' || LOWER(:part) || '%' OR tf.destip LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%')"
@@ -113,6 +109,18 @@ export const extended = async (context) => {
   if (context.rest) {
     bind.rest = context.rest
     query += " AND (ff.nifcon LIKE '%' || :rest || '%' OR ff.nomcon LIKE '%' || :rest || '%' OR ff.ejefra LIKE '%' || :rest || '%' OR ff.liqfra LIKE '%' || LOWER(:rest) || '%' OR tf.destip LIKE '%' || :rest || '%' OR oo.desofi LIKE '%' || :rest || '%')"
+  }
+  if (context.stafra) {
+    bind.stafra = context.stafra
+    query += " WHERE ff.stafra = :stafra"
+  } 
+  if (context.liqfra) {
+    bind.liqfra = context.liqfra
+    if (context.stafra) {
+      query += " AND ff.liqfra = :liqfra"
+    } else {
+      query += " WHERE ff.liqfra = :liqfra"
+    }
   }
   if (context.direction === 'next') {
     bind.idfrau = context.cursor.next;
@@ -122,6 +130,7 @@ export const extended = async (context) => {
     query += ")SELECT * FROM datos WHERE idfrau < :idfrau ORDER BY idfrau DESC FETCH NEXT :limit ROWS ONLY"
   }
 
+  console.log(query,bind);
   // proc
   const ret = await simpleExecute(query, bind)
 

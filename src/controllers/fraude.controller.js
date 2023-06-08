@@ -681,7 +681,7 @@ export const borrarRelacion = async (req, res) => {
 export const asignarFraudesUsuario = async (req, res) => {
   // context
   const fraude = {
-    LIQFRA: req.body.fraude.USERID,
+    LIQFRA: req.body.fraude.LIQFRA,
     STAFRA: req.body.fraude.STAFRA,
   }  
   const fraudes = {
@@ -697,20 +697,19 @@ export const asignarFraudesUsuario = async (req, res) => {
 
   // proc
   try {
-    const result = await DAL.asignarFraudes(context)
+    const result = await DAL.asignarFraudesUsuario(context)
 
     res.status(200).json(result)
   } catch (err) {
+    console.log(err);
     res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
 export const desAsignarFraudesUsuario = async (req, res) => {
   // context
-  const usuario = {
-    IDUSUA: req.body.usuario.IDUSUA,
-  }
   const fraude = {
-    STAFRA: req.body.STAFRA,
+    LIQFRA: req.body.fraude.LIQFRA,
+    STAFRA: req.body.fraude.STAFRA,
   }
   const fraudes = {
     arrfra: {
@@ -721,11 +720,11 @@ export const desAsignarFraudesUsuario = async (req, res) => {
     USUMOV: req.body.movimiento.USUMOV,
     TIPMOV: req.body.movimiento.TIPMOV,
   }
-  const context = Object.assign(usuario, fraude, fraudes, movimiento)
+  const context = Object.assign(fraude, fraudes, movimiento)
 
   // proc
   try {
-    const result = await DAL.asignarFraudes(context)
+    const result = await DAL.desAsignarFraudesUsuario(context)
 
     res.status(200).json(result)
   } catch (err) {

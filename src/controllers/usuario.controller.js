@@ -6,7 +6,7 @@ export const usuario = async (req, res) => {
 
   // proc
   try {
-    const result = await DAL.find(context)
+    const result = await DAL.usuario(context)
 
     res.status(200).json(result)
   } catch (err) {
@@ -19,7 +19,7 @@ export const usuarios = async (req, res) => {
 
   // proc
   try {
-    const result = await DAL.findAll(context)
+    const result = await DAL.usuarios(context)
 
     res.status(200).json(result)
   } catch (err) {

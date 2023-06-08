@@ -7,7 +7,7 @@ const updateSql = "BEGIN FRAUDE_PKG.UPDATEUSUARIO(:idusua,:nomusu,:ofiusu,:rolus
 const removeSql = "BEGIN FRAUDE_PKG.DELETEUSUARIO(:idusua,:usumov,:tipmov); END;";
 const perfilSql = "BEGIN FRAUDE_PKG.UPDATEPERFILUSUARIO(:idusua,:nomusu,:emausu,:telusu, :usumov,:tipmov); END;";
 
-export const find = async (context) => {
+export const usuario = async (context) => {
   // bind
   let query = baseQuery;
   const bind = context
@@ -31,7 +31,7 @@ export const find = async (context) => {
     return ({ stat: 0, data: [] })
   }
 };
-export const findAll = async (context) => {
+export const usuarios = async (context) => {
   // bind
   let query = '';
   let bind = {
@@ -41,9 +41,9 @@ export const findAll = async (context) => {
 
   if (context.oficina) {
     bind.ofiusu = context.oficina
-    query = "WITH datos AS (SELECT uu.idusua,uu.userid,uu.nomusu,uu.telusu,uu.stausu,oo.desofi FROM usuarios uu INNER JOIN oficinas oo ON oo.idofic = uu.ofiusu WHERE uu.ofiusu = :ofiusu AND (uu.nomusu LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%' OR :part IS NULL))"
+    query = "WITH datos AS (SELECT uu.idusua,uu.userid,uu.nomusu,uu.telusu,uu.stausu,oo.desofi FROM usuarios uu INNER JOIN oficinas oo ON oo.idofic = uu.ofiusu WHERE uu.ofiusu = :ofiusu AND (uu.nomusu LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%' OR uu.userid LIKE '%' || LOWER(:part) || '%' OR :part IS NULL))"
   } else {
-    query = "WITH datos AS (SELECT uu.idusua,uu.userid,uu.nomusu,uu.telusu,uu.stausu,oo.desofi FROM usuarios uu INNER JOIN oficinas oo ON oo.idofic = uu.ofiusu WHERE uu.nomusu LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%' OR :part IS NULL)"
+    query = "WITH datos AS (SELECT uu.idusua,uu.userid,uu.nomusu,uu.telusu,uu.stausu,oo.desofi FROM usuarios uu INNER JOIN oficinas oo ON oo.idofic = uu.ofiusu WHERE uu.nomusu LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%' OR uu.userid LIKE '%' || LOWER(:part) || '%' OR :part IS NULL)"
   }
 
   if (context.direction === 'next') {
