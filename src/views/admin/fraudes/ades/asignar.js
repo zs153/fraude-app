@@ -59,6 +59,7 @@ const buildTable = (state) => {
   table.innerHTML = ''
 
   myList.map(element => {
+    // crear linea
     const row = document.createElement('tr')
 
     // col1
@@ -127,6 +128,14 @@ const buildTable = (state) => {
     }
     row.appendChild(cell)
 
+    // col8
+    cell = document.createElement('td')
+    cell.classList.add("w-0")
+    cell.style.display = 'none'
+    cell.value = element.IDFRAU
+    row.appendChild(cell)
+
+    // add linea
     table.appendChild(row)
   })
 }
@@ -135,22 +144,24 @@ const addFraudes = () => {
 
   document.querySelectorAll('input[type=checkbox]').forEach(e => {
     if (e.checked) {
-      arrFraudes.push(e.parentNode.parentNode.cells[3].value)
+      arrFraudes.push(e.parentNode.parentNode.cells[7].value)
     }
   })
   document.getElementById('arrfra').value = JSON.stringify(arrFraudes)
 }
 
 // events
-const elemBuscar = document.getElementById('buscarFraudeBox')
-elemBuscar.onchange = (event) => {
-  setCookie('filtra', event.target.value, .5)
-}
-elemBuscar.value = getCookie('filtra')
+// const elemBuscar = document.getElementById('buscarFraudeBox')
+// elemBuscar.onchange = (event) => {
+//   setCookie('filtrb', event.target.value, .5)
+// }
+// elemBuscar.value = getCookie('filtrb')
 
 // inicializar
 const elemAdd = document.getElementById('add')
 elemAdd.setAttribute('action', `/admin/fraudes/ades/asignar?part=${getCookie('filtra')}`)
+const elemVol = document.getElementById('vol')
+elemVol.setAttribute('href', `/admin/fraudes/ades?part=${getCookie('filtra')}`)
 
 // table
 buildTable(orgList)

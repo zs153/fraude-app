@@ -1204,7 +1204,6 @@ export const adesAsignarPage = async (req, res) => {
       prev: prevCursor,
     }
     
-    console.log(fraudes.length);
     const datos = {
       usuario: usuario.data.data[0],
       fraudes,
@@ -1230,13 +1229,13 @@ export const adesDesasignarPage = async (req, res) => {
   const user = req.user
 
   const dir = req.query.dir ? req.query.dir : 'next'
-  const limit = req.query.limit ? req.query.limit : 9
+  const limit = req.query.limit ? req.query.limit : 100
 
   let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
   let hasPrevFras = cursor ? true : false
-  let context = {}
   let part = ''
   let rest = ''
+  let alerts = undefined
 
   if (req.query.part) {
     const partes = req.query.part.split(',')
@@ -1246,31 +1245,23 @@ export const adesDesasignarPage = async (req, res) => {
       rest = partes[1].toUpperCase()
     }
   }
-
-  if (cursor) {
-    context = {
-      limit: limit + 1,
-      direction: dir,
-      cursor: JSON.parse(convertCursorToNode(JSON.stringify(cursor))),
-      part,
-      rest,
-    }
-  } else {
-    context = {
-      limit: limit + 1,
-      direction: dir,
-      cursor: {
-        next: 0,
-        prev: 0,
-      },
-      part,
-      rest,
-    }
-  }
   
   try {
+    const usuario = await axios.post(`http://${serverAPI}:${puertoAPI}/api/usuario`, {
+      context: {
+        IDUSUA: req.params.id,
+      },
+    });
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/extended`, {
-      context,
+      context: {
+        liqfra: usuario.data.data[0].USERID,
+        stafra: JSON.stringify(estadosFraude.asignado),
+        limit: limit + 1,
+        direction: dir,
+        cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: 0 , prev: 0},
+        part,
+        rest,        
+      },
     });
 
     let fraudes = result.data.data
@@ -1279,14 +1270,15 @@ export const adesDesasignarPage = async (req, res) => {
     let prevCursor = 0
 
     if (hasNextFras) {
+      alerts = [{ msg: 'Se supera el límite de registros permitidos. Sólo se muestran los 100 primeros registros. Refine la consulta' }]      
       nextCursor = dir === 'next' ? fraudes[limit - 1].IDFRAU : fraudes[0].IDFRAU
       prevCursor = dir === 'next' ? fraudes[0].IDFRAU : fraudes[limit - 1].IDFRAU
-
+      
       fraudes.pop()
     } else {
       nextCursor = dir === 'next' ? 0 : fraudes[0]?.IDFRAU
       prevCursor = dir === 'next' ? fraudes[0]?.IDFRAU : 0
-
+      
       if (cursor) {
         hasNextFras = nextCursor === 0 ? false : true
         hasPrevFras = prevCursor === 0 ? false : true
@@ -1295,26 +1287,26 @@ export const adesDesasignarPage = async (req, res) => {
         hasPrevFras = false
       }
     }
-
+    
     if (dir === 'prev') {
       fraudes = fraudes.reverse()
     }
-
+    
     cursor = {
       next: nextCursor,
       prev: prevCursor,
     }
-
+    
     const datos = {
+      usuario: usuario.data.data[0],
       fraudes,
       hasNextFras,
       hasPrevFras,
       cursor: convertNodeToCursor(JSON.stringify(cursor)),
-      estadosFraude,
-      verTodo: false,
     };
 
-    res.render("admin/fraudes", { user, datos });
+    console.log(datos);
+    res.render("admin/fraudes/ades/desasignar", { user, alerts, datos });
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
@@ -2184,7 +2176,6 @@ export const asignarFraudes = async (req, res) => {
     TIPMOV: tiposMovimiento.asignarFraude,
   }
 
-  console.log(fraudes);
   try {
     await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/ades/asignar`, {
       fraude,
@@ -2207,29 +2198,26 @@ export const asignarFraudes = async (req, res) => {
 }
 export const desAsignarFraudes = async (req, res) => {
   const user = req.user;
-  const usuario = {
-    IDUSUA: req.body.idusua,
-  }
-  const tipo = {
-    TIPEST: tiposEstado.formacion.ID,
+  const fraude = {
+    LIQFRA: 'PEND',
+    STAFRA: estadosFraude.pendiente,
   }
   const fraudes = {
     ARRFRA: JSON.parse(req.body.arrfra)
   }
   const movimiento = {
     USUMOV: user.id,
-    TIPMOV: tiposMovimiento.desasignarFraude,
+    TIPMOV: tiposMovimiento.asignarFraude,
   }
 
   try {
-    await axios.post(`http://${serverAPI}:${puertoAPI}/api/cursos/turnos/usuarios/insert`, {
-      turno,
-      tipo,
-      usuarios,
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/ades/desasignar`, {
+      fraude,
+      fraudes,
       movimiento,
     });
 
-    res.redirect(`/admin/cursos/turnos/usuarios/${curso.IDCURS}/${turno.IDTURN}?part=${req.query.part}`);
+    res.redirect(`/admin/fraudes/ades?part=${req.query.part}`);
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
