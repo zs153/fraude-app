@@ -76,7 +76,6 @@ export const mainPage = async (req, res) => {
       cursor: convertNodeToCursor(JSON.stringify(cursor)),
     }
 
-    console.log(datos);
     res.render('admin/cargas', { user, datos })
   } catch (error) {
     if (error.response?.status === 400) {

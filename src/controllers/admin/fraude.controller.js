@@ -11,7 +11,6 @@ export const mainPage = async (req, res) => {
 
   let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
   let hasPrevFras = cursor ? true : false
-  let context = {}
   let part = ''
   let rest = ''
 
@@ -23,31 +22,16 @@ export const mainPage = async (req, res) => {
       rest = partes[1].toUpperCase()
     }
   }
-
-  if (cursor) {
-    context = {
-      limit: limit + 1,
-      direction: dir,
-      cursor: JSON.parse(convertCursorToNode(JSON.stringify(cursor))),
-      part,
-      rest,
-    }
-  } else {
-    context = {
-      limit: limit + 1,
-      direction: dir,
-      cursor: {
-        next: 0,
-        prev: 0,
-      },
-      part,
-      rest,
-    }
-  }
   
   try {
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/extended`, {
-      context,
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes`, {
+      context: {
+        limit: limit + 1,
+        direction: dir,
+        cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: 0 , prev: 0},
+        part,
+        rest,        
+      },
     });
 
     let fraudes = result.data.data
@@ -703,7 +687,6 @@ export const smssPage = async (req, res) => {
       estadosSms,
     }
 
-    console.log(smss);
     res.render("admin/fraudes/smss", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {
@@ -1124,7 +1107,6 @@ export const adesAsignarPage = async (req, res) => {
 
   let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
   let hasPrevFras = cursor ? true : false
-  let context = {}
   let part = ''
   let rest = ''
   let alerts = undefined
@@ -1137,29 +1119,6 @@ export const adesAsignarPage = async (req, res) => {
       rest = partes[1].toUpperCase()
     }
   }
-
-  if (cursor) {
-    context = {
-      stafra: JSON.stringify(estadosFraude.pendiente),
-      limit: limit + 1,
-      direction: dir,
-      cursor: JSON.parse(convertCursorToNode(JSON.stringify(cursor))),
-      part,
-      rest,
-    }
-  } else {
-    context = {
-      stafra: JSON.stringify(estadosFraude.pendiente),
-      limit: limit + 1,
-      direction: dir,
-      cursor: {
-        next: 0,
-        prev: 0,
-      },
-      part,
-      rest,
-    }
-  }
   
   try {
     const usuario = await axios.post(`http://${serverAPI}:${puertoAPI}/api/usuario`, {
@@ -1168,7 +1127,14 @@ export const adesAsignarPage = async (req, res) => {
       },
     });
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/extended`, {
-      context,
+      context: {
+        stafra: JSON.stringify(estadosFraude.pendiente),
+        limit: limit + 1,
+        direction: dir,
+        cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: 0 , prev: 0},
+        part,
+        rest,        
+      },
     });
 
     let fraudes = result.data.data
@@ -1305,7 +1271,6 @@ export const adesDesasignarPage = async (req, res) => {
       cursor: convertNodeToCursor(JSON.stringify(cursor)),
     };
 
-    console.log(datos);
     res.render("admin/fraudes/ades/desasignar", { user, alerts, datos });
   } catch (error) {
     if (error.response?.status === 400) {
@@ -1590,7 +1555,6 @@ export const desasignar = async (req, res) => {
     });
     
     let fraude = result.data.data[0]
-    console.log('fraude...', fraude);
     if (fraude.STAFRA === estadosFraude.asignado) {
       fraude.LIQFRA = "PEND"
       fraude.STAFRA = estadosFraude.pendiente
@@ -2177,6 +2141,10 @@ export const asignarFraudes = async (req, res) => {
   }
 
   try {
+    if (fraudes.ARRFRA.length === 0) {
+      throw "No se han seleccionado registros para procesar."
+    }
+
     await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/ades/asignar`, {
       fraude,
       fraudes,
@@ -2209,14 +2177,18 @@ export const desAsignarFraudes = async (req, res) => {
     USUMOV: user.id,
     TIPMOV: tiposMovimiento.asignarFraude,
   }
-
+  
   try {
+    if (fraudes.ARRFRA.length === 0) {
+      throw "No se han seleccionado registros para procesar."
+    }
+
     await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/ades/desasignar`, {
       fraude,
       fraudes,
       movimiento,
     });
-
+    
     res.redirect(`/admin/fraudes/ades?part=${req.query.part}`);
   } catch (error) {
     if (error.response?.status === 400) {

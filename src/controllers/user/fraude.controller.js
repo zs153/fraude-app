@@ -697,7 +697,6 @@ export const smssPage = async (req, res) => {
       estadosSms,
     }
 
-    console.log(smss);
     res.render("user/fraudes/smss", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {

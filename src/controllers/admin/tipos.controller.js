@@ -78,10 +78,8 @@ export const mainCierresPage = async (req, res) => {
       cursor: convertNodeToCursor(JSON.stringify(cursor)),
     };
 
-    console.log(datos);
     res.render("admin/tipos/cierres", { user, datos });
   } catch (error) {
-    console.log(error);
     if (error.response?.status === 400) {
       res.render("admin/error400", {
         alerts: [{ msg: error.response.data.msg }],
