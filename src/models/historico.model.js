@@ -63,7 +63,6 @@ export const update = async (context) => {
 export const remove = async (context) => {
   // bind
   const bind = context
-  console.log(removeSql,bind);
   // proc
   const ret = await simpleExecute(removeSql, bind)
 

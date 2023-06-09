@@ -64,14 +64,12 @@ export const crearFraude = async (req, res) => {
   }
   const context = Object.assign(fraude, movimiento)
 
-  console.log(context);
   // proc
   try {
     const result = await DAL.insert(context)
 
     res.status(200).json(result)
   } catch (err) {
-    console.log(err);
     res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
@@ -701,7 +699,6 @@ export const asignarFraudesUsuario = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    console.log(err);
     res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
   }
 }
@@ -710,7 +707,7 @@ export const desAsignarFraudesUsuario = async (req, res) => {
   const fraude = {
     LIQFRA: req.body.fraude.LIQFRA,
     STAFRA: req.body.fraude.STAFRA,
-  }
+  }  
   const fraudes = {
     arrfra: {
       val: req.body.fraudes.ARRFRA,

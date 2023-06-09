@@ -69,21 +69,26 @@ export const fraude = async (context) => {
 }
 export const fraudes = async (context) => {
   // bind
-  let query = "WITH datos AS (SELECT ff.idfrau,ff.fecfra,ff.ejefra,ff.nifcon,ff.nomcon,ff.obsfra,ff.ofifra,ff.liqfra,ff.stafra,oo.desofi,tf.destip,numhit,numeve FROM (SELECT ff.idfrau,count(hf.idhito) numhit,count(ef.ideven) numeve FROM fraudes ff LEFT JOIN hitosfraude hf ON hf.idfrau= ff.idfrau LEFT JOIN eventosfraude ef ON ef.idfrau = ff.idfrau GROUP BY ff.idfrau) p1 RIGHT JOIN fraudes ff ON ff.idfrau = p1.idfrau INNER JOIN oficinas oo ON oo.idofic = ff.ofifra INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra WHERE (liqfra = :liqfra AND stafra = :stafra) OR (ofifra = :ofifra AND stafra = 0))"
+  let query = "WITH datos AS (SELECT ff.idfrau,ff.fecfra,ff.ejefra,ff.nifcon,ff.nomcon,ff.obsfra,ff.ofifra,ff.liqfra,ff.stafra,oo.desofi,tf.destip,p1.numhit,p2.numeve FROM fraudes ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifra INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra"
   let bind = {
-    liqfra: context.liquidador,
-    stafra: context.estado,
-    ofifra: context.oficina,
     limit: context.limit,
-    part: context.part,
   };
 
+  if (context.part) {
+    bind.part = context.part
+    query += " AND (ff.nifcon LIKE '%' || :part || '%' OR ff.nomcon LIKE '%' || :part || '%' OR ff.ejefra LIKE '%' || :part || '%' OR ff.liqfra LIKE '%' || LOWER(:part) || '%' OR tf.destip LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%')"
+  }
+  if (context.rest) {
+    bind.rest = context.rest
+    query += " AND (ff.nifcon LIKE '%' || :rest || '%' OR ff.nomcon LIKE '%' || :rest || '%' OR ff.ejefra LIKE '%' || :rest || '%' OR ff.liqfra LIKE '%' || LOWER(:rest) || '%' OR tf.destip LIKE '%' || :rest || '%' OR oo.desofi LIKE '%' || :rest || '%')"
+  }
+  query += " LEFT JOIN (SELECT ff.idfrau,count(hf.idhito) numhit FROM fraudes ff INNER JOIN hitosfraude hf ON hf.idfrau= ff.idfrau GROUP BY ff.idfrau) p1 ON p1.idfrau = ff.idfrau LEFT JOIN (SELECT ff.idfrau,count(ef.ideven) numeve FROM fraudes ff INNER JOIN eventosfraude ef ON ef.idfrau = ff.idfrau GROUP BY ff.idfrau) p2 ON p2.idfrau = ff.idfrau"
   if (context.direction === 'next') {
     bind.idfrau = context.cursor.next;
-    query += "SELECT * FROM datos WHERE idfrau > :idfrau AND (nifcon LIKE '%' || :part || '%' OR nomcon LIKE '%' || :part || '%' OR ejefra LIKE '%' || :part || '%' OR fecfra LIKE '%' || :part || '%' OR destip LIKE '%' || :part || '%' OR desofi LIKE '%' || :part || '%' OR :part IS NULL) ORDER BY idfrau ASC FETCH NEXT :limit ROWS ONLY"
+    query += ")SELECT * FROM datos WHERE idfrau > :idfrau ORDER BY idfrau ASC FETCH NEXT :limit ROWS ONLY"
   } else {
     bind.idfrau = context.cursor.prev;
-    query += "SELECT * FROM datos WHERE idfrau < :idfrau AND (nifcon LIKE '%' || :part || '%' OR nomcon LIKE '%' || :part || '%' OR ejefra LIKE '%' || :part || '%' OR fecfra LIKE '%' || :part || '%' OR destip LIKE '%' || :part || '%' OR desofi LIKE '%' || :part || '%' OR :part IS NULL) ORDER BY idfrau DESC FETCH NEXT :limit ROWS ONLY"
+    query += ")SELECT * FROM datos WHERE idfrau < :idfrau ORDER BY idfrau DESC FETCH NEXT :limit ROWS ONLY"
   }
 
   // proc
@@ -130,7 +135,6 @@ export const extended = async (context) => {
     query += ")SELECT * FROM datos WHERE idfrau < :idfrau ORDER BY idfrau DESC FETCH NEXT :limit ROWS ONLY"
   }
 
-  console.log(query,bind);
   // proc
   const ret = await simpleExecute(query, bind)
 
@@ -148,7 +152,6 @@ export const insert = async (context) => {
     type: NUMBER,
   };
 
-  console.log(insertSql,bind);
   // proc
   const ret = await simpleExecute(insertSql, bind)
 
@@ -494,7 +497,6 @@ export const smss = async (context) => {
     part: context.part,
   };
 
-  console.log(bind);
   if (context.direction === 'next') {
     bind.idsmss = context.cursor.next;
     query = "SELECT ss.*,sf.idfrau FROM smss ss INNER JOIN smssfraude sf ON sf.idsmss = ss.idsmss AND sf.idfrau = :idfrau WHERE ss.idsmss > :idsmss AND (ss.movsms LIKE '%' || :part OR ss.fecsms LIKE '%' || :part || '%' OR :part IS NULL) ORDER BY ss.idsmss ASC FETCH NEXT :limit ROWS ONLY"
