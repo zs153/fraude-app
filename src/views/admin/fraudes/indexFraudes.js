@@ -106,7 +106,17 @@ const buildTable = (state) => {
 
     // col4
     cell = document.createElement('td')
-    cell.classList.add("w-8")
+    cell.classList.add("w-6")
+    cell.innerHTML = `<div class="d-flex py-1 align-items-center">
+      <div class="flex-fill">
+        <div class="font-weight-medium">${element.REFFRA}</div>
+      </div>
+    </div>`
+    row.appendChild(cell)
+    
+    // col5
+    cell = document.createElement('td')
+    cell.classList.add("w-7")
     cell.innerHTML = `<div class="d-flex py-1 align-items-center">
       <div class="flex-fill">
         <div class="font-weight-medium">${element.NIFCON}</div>
@@ -114,7 +124,7 @@ const buildTable = (state) => {
     </div>`
     row.appendChild(cell)
 
-    // col5
+    // col6
     cell = document.createElement('td')
     cell.innerHTML = `<div class="d-flex py-1 align-items-center">
       <div class="flex-fill">
@@ -123,7 +133,7 @@ const buildTable = (state) => {
     </div>`
     row.appendChild(cell)
 
-    // col6
+    // col7
     cell = document.createElement('td')
     cell.classList.add("w-10")
     cell.innerHTML = `<div class="d-flex py-1 align-items-center">
@@ -133,18 +143,18 @@ const buildTable = (state) => {
     </div>`
     row.appendChild(cell)
 
-    // col7
+    // col8
     cell = document.createElement('td')
     if (element.OBSFRA !== null) {
       cell.innerHTML = `<div class="d-flex py-1 align-items-center">
         <div class="flex-fill">
-          <div class="font-weight-medium">${element.OBSFRA.length > 30 ? element.OBSFRA.slice(0, 30) + '...' : element.OBSFRA}</div>
+          <div class="font-weight-medium">${element.OBSFRA.length > 60 ? element.OBSFRA.slice(0, 60) + '...' : element.OBSFRA}</div>
         </div>
       </div>`
     }
     row.appendChild(cell)
 
-    // col8
+    // col9
     cell = document.createElement('td')
     cell.classList.add("w-5")
     if (element.STAFRA === estadosFraude.pendiente) {

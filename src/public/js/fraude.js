@@ -31,15 +31,6 @@ const setCookie = (name, value, days) => {
 const deleteCookie = () => {
   document.cookie = 'filtro=; expires=Thu, 01 Jan 1970 00:00:01 GMT; Path=/;'
 }
-const checkItem = (ver) => {
-  if (ver === 'n') {
-    localStorage.setItem('vertodo', 's')
-    window.location.href = 'http://localhost:4200/admin/fraudes/vertodo'
-  } else {
-    localStorage.setItem('vertodo', 'n')
-    window.location.href = 'http://localhost:4200/admin/fraudes'
-  }
-}
 const sortTableByColumn = (table, column, asc = true) => {
   const dirModifier = asc ? 1 : -1;
   const tBody = table.tBodies[0];

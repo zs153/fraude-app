@@ -22,9 +22,9 @@ export const mainPage = async (req, res) => {
       rest = partes[1].toUpperCase()
     }
   }
-  
+
   try {
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes`, {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/extended`, {
       context: {
         limit: limit + 1,
         direction: dir,
@@ -72,7 +72,6 @@ export const mainPage = async (req, res) => {
       hasPrevFras,
       cursor: convertNodeToCursor(JSON.stringify(cursor)),
       estadosFraude,
-      verTodo: false,
     };
 
     res.render("admin/fraudes", { user, datos });
@@ -327,7 +326,6 @@ export const resueltosPage = async (req, res) => {
       hasPrevFras,
       cursor: convertNodeToCursor(JSON.stringify(cursor)),
       estadosFraude,
-      verTodo: false,
     };
     
     res.render("admin/fraudes/resueltos", { user, datos });

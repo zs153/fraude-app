@@ -71,7 +71,7 @@ const buildTable = (state) => {
         </span>
       </div>`
     } else if (element.STAFRA === estadosFraude.asignado) {
-      if (element.NUMHIT === 0 && element.NUMEVE === 0) {
+      if (element.NUMHIT === null && element.NUMEVE === null) {
         cell.innerHTML = `<div class="align-items-center py-1">
           <span class="avatar avatar-rounded bg-blue-lt">
             <h6>${element.LIQFRA}</h6>
@@ -119,16 +119,6 @@ const buildTable = (state) => {
 
     // col3
     cell = document.createElement('td')
-    cell.classList.add("w-6")
-    cell.innerHTML = `<div class="d-flex py-1 align-items-center">
-      <div class="flex-fill">
-        <div class="font-weight-medium">${element.FECFRA.slice(0,10).split('-').reverse().join('-')}</div>
-      </div>
-    </div>`
-    row.appendChild(cell)
-
-    // col4
-    cell = document.createElement('td')
     cell.classList.add("w-5")
     cell.innerHTML = `<div class="d-flex py-1 align-items-center">
       <div class="flex-fill">
@@ -137,7 +127,7 @@ const buildTable = (state) => {
     </div>`
     row.appendChild(cell)
 
-    // col5
+    // col4
     cell = document.createElement('td')
     cell.classList.add("w-8")
     cell.innerHTML = `<div class="d-flex py-1 align-items-center">
@@ -147,8 +137,9 @@ const buildTable = (state) => {
     </div>`
     row.appendChild(cell)
 
-    // col6
+    // col5
     cell = document.createElement('td')
+    cell.classList.add("w-25")
     cell.innerHTML = `<div class="d-flex py-1 align-items-center">
       <div class="flex-fill">
         <div class="font-weight-medium">${element.NOMCON}</div>
@@ -156,9 +147,9 @@ const buildTable = (state) => {
     </div>`
     row.appendChild(cell)
 
-    // col7
+    // col6
     cell = document.createElement('td')
-    cell.classList.add("w-10")
+    cell.classList.add("w-15")
     cell.innerHTML = `<div class="d-flex py-1 align-items-center">
       <div class="flex-fill">
         <div class="font-weight-medium">${element.DESTIP.length > 30 ? element.DESTIP.slice(0, 30) + '...' : element.DESTIP}</div>
@@ -166,18 +157,18 @@ const buildTable = (state) => {
     </div>`
     row.appendChild(cell)
 
-    // col8
+    // col7
     cell = document.createElement('td')
     if (element.OBSFRA !== null) {
       cell.innerHTML = `<div class="d-flex py-1 align-items-center">
         <div class="flex-fill">
-          <div class="font-weight-medium">${element.OBSFRA.length > 30 ? element.OBSFRA.slice(0, 30) + '...' : element.OBSFRA}</div>
+          <div class="font-weight-medium">${element.OBSFRA}</div>
         </div>
       </div>`
     }
     row.appendChild(cell)
 
-    // col9
+    // col8
     cell = document.createElement('td')
     cell.classList.add("w-5")
     if (element.STAFRA === estadosFraude.pendiente) {
