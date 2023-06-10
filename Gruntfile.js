@@ -26,7 +26,7 @@ module.exports = function (grunt) {
       },
       target: {
         files: {
-          'src/public/css/styles.min.css': ['src/public/css/estilos.css', 'src/public/css/navbar.css']
+          'src/public/css/styles.css': ['src/public/css/estilos.css', 'src/public/css/navbar.css']
         }
       }
     },    
@@ -73,7 +73,6 @@ module.exports = function (grunt) {
           'dist/public/js/asignar.min.js': ['./dist/public/js/asignar.min.js'],
           'dist/public/js/ayuda.min.js': ['./dist/public/js/ayuda.min.js'],
           'dist/public/js/desasignar.min.js': ['./dist/public/js/desasignar.min.js'],
-          'dist/public/js/easypiechart.min.js': ['./dist/public/js/easypiechart.min.js'],
           'dist/public/js/editHistorico.min.js': ['./dist/public/js/editHistorico.min.js'],
           'dist/public/js/editHito.min.js': ['./dist/public/js/editHito.min.js'],
           'dist/public/js/enumeraciones.js': ['./dist/public/js/enumeraciones.js'],
