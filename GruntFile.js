@@ -28,31 +28,40 @@ module.exports = function (grunt) {
           // config
           'dist/config/settings.js': ['./dist/config/settings.js'],
           // controllers
-          'dist/controllers/curso.controller.js': ['./dist/controllers/curso.controller.js'],
-          'dist/controllers/estado.controller.js': ['./dist/controllers/estado.controller.js'],
-          'dist/controllers/festivo.controller.js': ['./dist/controllers/festivo.controller.js'],
-          'dist/controllers/formacion.controller.js': ['./dist/controllers/formacion.controller.js'],
+          'dist/controllers/carga.controller.js': ['./dist/controllers/carga.controller.js'],
+          'dist/controllers/estadistica.controller.js': ['./dist/controllers/estadistica.controller.js'],
+          'dist/controllers/evento.controller.js': ['./dist/controllers/evento.controller.js'],
+          'dist/controllers/fraude.controller.js': ['./dist/controllers/fraude.controller.js'],
+          'dist/controllers/gente.controller.js': ['./dist/controllers/gente.controller.js'],          
           'dist/controllers/historico.controller.js': ['./dist/controllers/historico.controller.js'],
-          'dist/controllers/matricula.controller.js': ['./dist/controllers/matricula.controller.js'],
+          'dist/controllers/hito.controller.js': ['./dist/controllers/hito.controller.js'],
           'dist/controllers/oficina.controller.js': ['./dist/controllers/oficina.controller.js'],
+          'dist/controllers/relacion.controller.js': ['./dist/controllers/relacion.controller.js'],
+          'dist/controllers/tipos.controller.js': ['./dist/controllers/tipos.controller.js'],
           'dist/controllers/usuario.controller.js': ['./dist/controllers/usuario.controller.js'],
           // models
-          'dist/models/curso.models.js': ['./dist/models/curso.model.js'],
-          'dist/models/estado.model.js': ['./dist/models/estado.model.js'],
-          'dist/models/festivo.model.js': ['./dist/models/festivo.model.js'],
-          'dist/models/formacion.model.js': ['./dist/models/formacion.model.js'],
+          'dist/models/carga.models.js': ['./dist/models/carga.model.js'],
+          'dist/models/estadistica.model.js': ['./dist/models/estadistica.model.js'],
+          'dist/models/evento.model.js': ['./dist/models/evento.model.js'],
+          'dist/models/fraude.model.js': ['./dist/models/fraude.model.js'],
+          'dist/models/gente.model.js': ['./dist/models/gente.model.js'],
           'dist/models/historico.model.js': ['./dist/models/historico.model.js'],
-          'dist/models/matricula.model.js': ['./dist/models/matricula.model.js'],
+          'dist/models/hito.model.js': ['./dist/models/hito.model.js'],
           'dist/models/oficina.model.js': ['./dist/models/oficina.model.js'],
+          'dist/models/relacion.model.js': ['./dist/models/relacion.model.js'],
+          'dist/models/tipos.model.js': ['./dist/models/tipos.model.js'],
           'dist/models/usuario.model.js': ['./dist/models/usuario.model.js'],
           // routes
-          'dist/routes/curso.routes.js': ['./dist/routes/curso.router.js'],
-          'dist/routes/estado.router.js': ['./dist/routes/estado.router.js'],
-          'dist/routes/festivo.router.js': ['./dist/routes/festivo.router.js'],
-          'dist/routes/formacion.router.js': ['./dist/routes/formacion.router.js'],
-          'dist/routes/historico.router.js': ['./dist/routes/historico.router.js'],
-          'dist/routes/matricula.router.js': ['./dist/routes/matricula.router.js'],
+          'dist/routes/carga.routes.js': ['./dist/routes/carga.router.js'],
+          'dist/routes/estadistica.router.js': ['./dist/routes/estadistica.router.js'],
+          'dist/routes/evento.router.js': ['./dist/routes/evento.router.js'],
+          'dist/routes/fraude.router.js': ['./dist/routes/fraude.router.js'],
+          'dist/routes/gente.router.js': ['./dist/routes/gente.router.js'],
+          'dist/routes/historico.router.js': ['./dist/routes/historico.router.js'],          
+          'dist/routes/hito.router.js': ['./dist/routes/hito.router.js'],
           'dist/routes/oficina.router.js': ['./dist/routes/oficina.router.js'],
+          'dist/routes/relacion.router.js': ['./dist/routes/relacion.router.js'],
+          'dist/routes/tipos.router.js': ['./dist/routes/tipos.router.js'],
           'dist/routes/usuario.router.js': ['./dist/routes/usuario.router.js'],
           // services
           'dist/services/database.js': ['./dist/services/database.js'],
@@ -60,12 +69,6 @@ module.exports = function (grunt) {
           // indice
           'dist/index.js': ['./dist/index.js'],
         }
-        // src: ['./dist/models/usuario.model.js'],
-        // dest: './dist/models/usuario.model.js'
-      },
-      css: {
-        src: 'src/public/css/concat.css',
-        dest: 'src/public/css/card-stamp.min.css'
       },
     },
   });
@@ -80,5 +83,4 @@ module.exports = function (grunt) {
   grunt.registerTask('default-js', ['uglify:js']);
   grunt.registerTask('default-css', ['concat:css', 'uglify:css']);
   grunt.registerTask('concat-css', ['concat:css']);
-  grunt.registerTask('default-uglify-css', ['uglify:css'])
 };
