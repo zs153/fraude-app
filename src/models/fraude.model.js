@@ -71,6 +71,9 @@ export const fraudes = async (context) => {
   // bind
   let query = "WITH datos AS (SELECT ff.idfrau,ff.fecfra,ff.ejefra,ff.nifcon,ff.nomcon,ff.obsfra,ff.ofifra,ff.liqfra,ff.stafra,oo.desofi,tf.destip,p1.numhit,p2.numeve FROM fraudes ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifra INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra"
   let bind = {
+    liqfra: context.liquidador,
+    stafra: context.estado,
+    ofifra: context.oficina,
     limit: context.limit,
   };
 
@@ -82,7 +85,7 @@ export const fraudes = async (context) => {
     bind.rest = context.rest
     query += " AND (ff.nifcon LIKE '%' || :rest || '%' OR ff.nomcon LIKE '%' || :rest || '%' OR ff.ejefra LIKE '%' || :rest || '%' OR ff.liqfra LIKE '%' || LOWER(:rest) || '%' OR tf.destip LIKE '%' || :rest || '%' OR oo.desofi LIKE '%' || :rest || '%')"
   }
-  query += " LEFT JOIN (SELECT ff.idfrau,count(hf.idhito) numhit FROM fraudes ff INNER JOIN hitosfraude hf ON hf.idfrau= ff.idfrau GROUP BY ff.idfrau) p1 ON p1.idfrau = ff.idfrau LEFT JOIN (SELECT ff.idfrau,count(ef.ideven) numeve FROM fraudes ff INNER JOIN eventosfraude ef ON ef.idfrau = ff.idfrau GROUP BY ff.idfrau) p2 ON p2.idfrau = ff.idfrau"
+  query += " LEFT JOIN (SELECT ff.idfrau,count(hf.idhito) numhit FROM fraudes ff INNER JOIN hitosfraude hf ON hf.idfrau= ff.idfrau GROUP BY ff.idfrau) p1 ON p1.idfrau = ff.idfrau LEFT JOIN (SELECT ff.idfrau,count(ef.ideven) numeve FROM fraudes ff INNER JOIN eventosfraude ef ON ef.idfrau = ff.idfrau GROUP BY ff.idfrau) p2 ON p2.idfrau = ff.idfrau WHERE (ff.liqfra = :liqfra AND ff.stafra = :stafra) OR (ff.ofifra = :ofifra AND ff.stafra = 0)"
   if (context.direction === 'next') {
     bind.idfrau = context.cursor.next;
     query += ")SELECT * FROM datos WHERE idfrau > :idfrau ORDER BY idfrau ASC FETCH NEXT :limit ROWS ONLY"
@@ -102,18 +105,18 @@ export const fraudes = async (context) => {
 };
 export const extended = async (context) => {
   // bind
-  let query = "WITH datos AS (SELECT ff.idfrau,ff.fecfra,ff.ejefra,ff.nifcon,ff.nomcon,ff.obsfra,ff.ofifra,ff.liqfra,ff.stafra,oo.desofi,tf.destip FROM fraudes ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifra INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra"
+  let query = "WITH datos AS (SELECT ff.idfrau,ff.ejefra,ff.nifcon,ff.nomcon,ff.reffra,ff.obsfra,ff.ofifra,ff.liqfra,ff.stafra,oo.desofi,tf.destip FROM fraudes ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifra INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra"
   let bind = {
     limit: context.limit,
   };
 
   if (context.part) {
     bind.part = context.part
-    query += " AND (ff.nifcon LIKE '%' || :part || '%' OR ff.nomcon LIKE '%' || :part || '%' OR ff.ejefra LIKE '%' || :part || '%' OR ff.liqfra LIKE '%' || LOWER(:part) || '%' OR tf.destip LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%')"
+    query += " AND (ff.nifcon LIKE '%' || :part || '%' OR ff.nomcon LIKE '%' || :part || '%' OR ff.ejefra LIKE '%' || :part || '%' OR ff.reffra LIKE '%' || :part || '%' OR ff.liqfra LIKE '%' || LOWER(:part) || '%' OR tf.destip LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%')"
   }
   if (context.rest) {
     bind.rest = context.rest
-    query += " AND (ff.nifcon LIKE '%' || :rest || '%' OR ff.nomcon LIKE '%' || :rest || '%' OR ff.ejefra LIKE '%' || :rest || '%' OR ff.liqfra LIKE '%' || LOWER(:rest) || '%' OR tf.destip LIKE '%' || :rest || '%' OR oo.desofi LIKE '%' || :rest || '%')"
+    query += " AND (ff.nifcon LIKE '%' || :rest || '%' OR ff.nomcon LIKE '%' || :rest || '%' OR ff.ejefra LIKE '%' || :rest || '%' OR ff.reffra LIKE '%' || :rest || '%' OR ff.liqfra LIKE '%' || LOWER(:rest) || '%' OR tf.destip LIKE '%' || :rest || '%' OR oo.desofi LIKE '%' || :rest || '%')"
   }
   if (context.stafra) {
     bind.stafra = context.stafra
