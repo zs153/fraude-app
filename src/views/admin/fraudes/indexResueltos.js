@@ -64,56 +64,11 @@ const buildTable = (state) => {
     // col1
     let cell = document.createElement('td')
     cell.classList.add("w-4")
-    if (element.STAFRA === estadosFraude.pendiente) {
-      cell.innerHTML = `<div class="align-items-center py-1">
-        <span class="avatar avatar-rounded bg-red-lt">
-          <h6>${element.LIQFRA}</h6>
-        </span>
-      </div>`
-    } else if (element.STAFRA === estadosFraude.asignado) {
-      if (element.NUMHIT === 0 && element.NUMEVE === 0) {
-        cell.innerHTML = `<div class="align-items-center py-1">
-          <span class="avatar avatar-rounded bg-blue-lt">
-            <h6>${element.LIQFRA}</h6>
-          </span>
-        </div>`
-      } else {
-        cell.innerHTML = `<ul class="dots-menu">
-          <li class="nav-item drop-left p-0">
-            <div class="align-items-center py-1">
-              <span class="avatar avatar-rounded bg-yellow-lt">
-                <h6>${element.LIQFRA}</h6>
-              </span>
-            </div>
-            <a href="#" class="nav-info">
-            </a>
-            <ul class='ms-4'>
-              <li>
-                <h4 class='m-0'>Propuesta liquidación: ${element.PROLIQ === 0 ? 'No' : 'Sí'}</h4>
-              </li>
-              <li>
-                <h4 class='m-0'>Liquidación: ${element.LIQUID === 0 ? 'No' : 'Sí'}</h4>
-              </li>
-              <li>
-                <h4 class='m-0'>Propuesta sanción: ${element.PROSAN === 0 ? 'No' : 'Sí'}</h4>
-              </li>
-              <li>
-                <h4 class='m-0'>Sanción: ${element.SANCIO === 0 ? 'No' : 'Sí'}</h4>
-              </li>
-              <li>
-                <h4 class='m-0'>Nº de eventos: ${element.NUMEVE}</h4>
-              </li>
-            </ul>
-          </li>
-        </ul>`
-      }
-    } else if (element.STAFRA === estadosFraude.resuelto) {
-      cell.innerHTML = `<div class="align-items-center py-1">
-        <span class="avatar avatar-rounded bg-green-lt">
-          <h6>${element.LIQFRA}</h6>
-        </span>
-      </div>`
-    }
+    cell.innerHTML = `<div class="align-items-center py-1">
+      <span class="avatar avatar-rounded bg-green-lt">
+        <h6>${element.LIQFRA}</h6>
+      </span>
+    </div>`
     row.appendChild(cell)
 
     // col2
@@ -128,16 +83,6 @@ const buildTable = (state) => {
 
     // col3
     cell = document.createElement('td')
-    cell.classList.add("w-6")
-    cell.innerHTML = `<div class="d-flex py-1 align-items-center">
-      <div class="flex-fill">
-        <div class="font-weight-medium">${element.FECFRA.slice(0, 10).split('-').reverse().join('-')}</div>
-      </div>
-    </div>`
-    row.appendChild(cell)
-
-    // col4
-    cell = document.createElement('td')
     cell.classList.add("w-5")
     cell.innerHTML = `<div class="d-flex py-1 align-items-center">
       <div class="flex-fill">
@@ -146,9 +91,19 @@ const buildTable = (state) => {
     </div>`
     row.appendChild(cell)
 
+    // col4
+    cell = document.createElement('td')
+    cell.classList.add("w-6")
+    cell.innerHTML = `<div class="d-flex py-1 align-items-center">
+      <div class="flex-fill">
+        <div class="font-weight-medium">${element.REFFRA}</div>
+      </div>
+    </div>`
+    row.appendChild(cell)
+    
     // col5
     cell = document.createElement('td')
-    cell.classList.add("w-8")
+    cell.classList.add("w-7")
     cell.innerHTML = `<div class="d-flex py-1 align-items-center">
       <div class="flex-fill">
         <div class="font-weight-medium">${element.NIFCON}</div>
@@ -158,6 +113,7 @@ const buildTable = (state) => {
 
     // col6
     cell = document.createElement('td')
+    cell.classList.add("w-25")
     cell.innerHTML = `<div class="d-flex py-1 align-items-center">
       <div class="flex-fill">
         <div class="font-weight-medium">${element.NOMCON}</div>
@@ -167,7 +123,7 @@ const buildTable = (state) => {
 
     // col7
     cell = document.createElement('td')
-    cell.classList.add("w-10")
+    cell.classList.add("w-15")
     cell.innerHTML = `<div class="d-flex py-1 align-items-center">
       <div class="flex-fill">
         <div class="font-weight-medium">${element.DESTIP.length > 30 ? element.DESTIP.slice(0, 30) + '...' : element.DESTIP}</div>
@@ -180,7 +136,7 @@ const buildTable = (state) => {
     if (element.OBSFRA !== null) {
       cell.innerHTML = `<div class="d-flex py-1 align-items-center">
         <div class="flex-fill">
-          <div class="font-weight-medium">${element.OBSFRA.length > 30 ? element.OBSFRA.slice(0, 30) + '...' : element.OBSFRA}</div>
+          <div class="font-weight-medium">${element.OBSFRA}</div>
         </div>
       </div>`
     }

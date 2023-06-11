@@ -26,6 +26,7 @@ export const mainPage = async (req, res) => {
   try {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/extended`, {
       context: {
+        stafra: JSON.stringify(estadosFraude.pendiente),
         limit: limit + 1,
         direction: dir,
         cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: 0 , prev: 0},
@@ -87,221 +88,52 @@ export const mainPage = async (req, res) => {
     }
   }
 };
-export const addPage = async (req, res) => {
-  const user = req.user;
-  const fecha = new Date();
-  const fraude = {
-    ISOFEC: fecha.toISOString().slice(0, 10),
-    EJEFRA: fecha.getFullYear() - 1,
-    OFIFRA: user.oficina,
-    FUNFRA: user.userid,
-  };
-
-  try {
-    const tipos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/fraude`, {
-      context: {},
-    })
-    const oficinas = await axios.post(`http://${serverAPI}:${puertoAPI}/api/oficina`, {
-      context: {
-        IDOFIC: user.oficina,
-      },
-    })
-    const datos = {
-      fraude,
-      tipos: tipos.data.data,
-      oficinas: oficinas.data.data,
-    };
-
-    res.render("admin/fraudes/add", { user, datos });
-  } catch (error) {
-    if (error.response?.status === 400) {
-      res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
-      });
-    } else {
-      res.render("admin/error500", {
-        alerts: [{ msg: error }],
-      });
-    }
-  }
-};
-export const editPage = async (req, res) => {
-  const user = req.user;
-
-  try {
-    const tipos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/fraude`, {
-      context: {},
-    })
-    const oficinas = await axios.post(`http://${serverAPI}:${puertoAPI}/api/oficina`, {
-      context: {},
-    })
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
-      context: {
-        IDFRAU: req.params.id,
-      },
-    });
-
-    let fraude = result.data.data[0]
-    fraude.FECFRA = fraude.FECFRA.slice(0, 10)
-    const datos = {
-      fraude,
-      tipos: tipos.data.data,
-      oficinas: oficinas.data.data,
-      tiposRol,
-    };
-
-    res.render("admin/fraudes/edit", { user, datos });
-  } catch (error) {
-    if (error.response?.status === 400) {
-      res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
-      });
-    } else {
-      res.render("admin/error500", {
-        alerts: [{ msg: error }],
-      });
-    }
-  }
-};
-export const resolverPage = async (req, res) => {
-  const user = req.user;
-  let hayLiquidacion = false;
-  
-  try {
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/hito`, {
-      context: {
-        IDFRAU: req.params.id,
-      },
-    });
-
-    let hitos = result.data
-    if (hitos.stat) {
-      const hayPropuestaLiquidacion = hitos.data.some((itm) => itm.STAHIT === estadosHito.propuestaLiquidacion);
-      if (hayPropuestaLiquidacion) {
-        if (!hitos.data.some((itm) => itm.STAHIT === estadosHito.liquidacion)) {
-          const msg =
-            "Existe propuesta de liquidación sin su correspondiente liquidación.\nNo se puede resolver el fraude.";
-
-          return res.render("admin/error400", {
-            alerts: [{ msg }],
-          });
-        }
-      }
-      hayLiquidacion = hitos.data.some((itm) => itm.STAHIT === estadosHito.liquidacion);
-      if (hayLiquidacion) {
-        if (!hitos.data.some((itm) => itm.STAHIT === estadosHito.propuestaLiquidacion)) {
-          const msg =
-            "Existe liquidación sin su correspondiente propuesta de liquidación.\nNo se puede resolver el fraude.";
-
-          return res.render("admin/error400", {
-            alerts: [{ msg }],
-          });
-        }
-      }
-      const hayPropuestaSancion = hitos.data.some((itm) => itm.STAHIT === estadosHito.propuestaSancion);
-      if (hayPropuestaSancion) {
-        if (!hitos.data.some((itm) => itm.STAHIT === estadosHito.sancion || itm.STAHIT === estadosHito.sancionAnulada)) {
-          const msg =
-            "Existe propuesta de sanción sin su correspondiente sanción o sanción anulada.\nNo se puede resolver el fraude.";
-
-          return res.render("admin/error400", {
-            alerts: [{ msg }],
-          });
-        }
-      }
-      const haySancion = hitos.data.some((itm) => itm.STAHIT === estadosHito.sancion);
-      if (haySancion) {
-        if (!hitos.data.some((itm) => itm.STAHIT === estadosHito.propuestaSancion)) {
-          const msg =
-            "Existe sanción sin su correspondiente propuesta de sanción.\nNo se puede resolver el fraude.";
-
-          return res.render("admin/error400", {
-            alerts: [{ msg }],
-          });
-        }
-      }
-    }
-
-    const tipos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/cierre`, {
-      context: {},
-    });
-    const fraude = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
-      context: {
-        IDFRAU: req.params.id,
-      },
-    });
-    const datos = {
-      fraude: fraude.data.data[0],
-      tipos: tipos.data.data,
-      hayLiquidacion,
-    };
-
-    res.render("admin/fraudes/resolver", { user, datos });
-  } catch (error) {
-    if (error.response?.status === 400) {
-      res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
-      });
-    } else {
-      res.render("admin/error500", {
-        alerts: [{ msg: error }],
-      });
-    }
-  }
-};
 export const resueltosPage = async (req, res) => {
   const user = req.user
 
   const dir = req.query.dir ? req.query.dir : 'next'
   const limit = req.query.limit ? req.query.limit : 9
-  const part = req.query.part ? req.query.part.toUpperCase() : ''
 
   let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
   let hasPrevFras = cursor ? true : false
-  let context = {}
+  let part = ''
+  let rest = ''
 
-  if (cursor) {
-    context = {
-      liquidador: user.userid,
-      estado: estadosFraude.resuelto,
-      limit: limit + 1,
-      direction: dir,
-      cursor: JSON.parse(convertCursorToNode(JSON.stringify(cursor))),
-      part,
-    }
-  } else {
-    context = {
-      liquidador: user.userid,
-      estado: estadosFraude.resuelto,
-      limit: limit + 1,
-      direction: dir,
-      cursor: {
-        next: 0,
-        prev: 0,
-      },
-      part,
+  if (req.query.part) {
+    const partes = req.query.part.split(',')
+
+    part = partes[0].toUpperCase()
+    if (partes.length > 1) {
+      rest = partes[1].toUpperCase()
     }
   }
-  
+
   try {
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes`, {
-      context,
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/extended`, {
+      context: {
+        stafra: estadosFraude.resuelto,
+        limit: limit + 1,
+        direction: dir,
+        cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: 0 , prev: 0},
+        part,
+        rest,        
+      },
     });
-    
+
     let fraudes = result.data.data
     let hasNextFras = fraudes.length === limit + 1
     let nextCursor = 0
     let prevCursor = 0
-    
+
     if (hasNextFras) {
       nextCursor = dir === 'next' ? fraudes[limit - 1].IDFRAU : fraudes[0].IDFRAU
       prevCursor = dir === 'next' ? fraudes[0].IDFRAU : fraudes[limit - 1].IDFRAU
-      
+
       fraudes.pop()
     } else {
       nextCursor = dir === 'next' ? 0 : fraudes[0]?.IDFRAU
       prevCursor = dir === 'next' ? fraudes[0]?.IDFRAU : 0
-      
+
       if (cursor) {
         hasNextFras = nextCursor === 0 ? false : true
         hasPrevFras = prevCursor === 0 ? false : true
@@ -310,16 +142,16 @@ export const resueltosPage = async (req, res) => {
         hasPrevFras = false
       }
     }
-    
+
     if (dir === 'prev') {
       fraudes = fraudes.reverse()
     }
-    
+
     cursor = {
       next: nextCursor,
       prev: prevCursor,
     }
-    
+
     const datos = {
       fraudes,
       hasNextFras,
@@ -327,7 +159,7 @@ export const resueltosPage = async (req, res) => {
       cursor: convertNodeToCursor(JSON.stringify(cursor)),
       estadosFraude,
     };
-    
+
     res.render("admin/fraudes/resueltos", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {

@@ -39,6 +39,9 @@
                                 aria-label="Buscar en fraudes">
                             </div>
                           </form>
+                          <a href="" id="rsltos" class="btn me-1">
+                            Resueltos
+                          </a>
                           <a href="/admin/fraudes/ades" id="new" class="btn">
                             Usuarios
                           </a>
@@ -52,7 +55,7 @@
                             <th class="w-4"></th>
                             <th class="w-8">Oficina</th>
                             <th class="w-5">Ejerc</th>
-                            <th class="w-6">Referenc</th>
+                            <th class="w-6">Referencia</th>
                             <th class="w-7">NIF</th>
                             <th>Nombre</th>
                             <th class="w-15">Tipo</th>
@@ -102,40 +105,6 @@
                 <form action="#" id="del" method="POST">
                   <input type="hidden" id="idborr" name="idfrau" value="">
                   <button type="submit" class="btn btn-danger w-100">Borrar fraude</button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="modal modal-blur fade" id="modal-asignar" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        <div class="modal-status bg-primary"></div>
-        <div class="modal-body text-center py-4">
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-blue icon-lg" width="24" height="24"
-            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
-            stroke-linejoin="round">
-            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-            <path d="M12 9v2m0 4v.01"></path>
-            <path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75"></path>
-          </svg>
-          <h3>Asignar fraude</h3>
-          <div id="msgasi"></div>
-        </div>
-        <div class="modal-footer">
-          <div class="w-100">
-            <div class="row">
-              <div class="col">
-                <a href="#" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
-              </div>
-              <div class="col">
-                <form action="#" id="asig" method="POST">
-                  <input type="hidden" id="idasig" name="idfrau" value="">
-                  <button type="submit" class="btn btn-success w-100">Asignar fraude</button>
                 </form>
               </div>
             </div>

@@ -28,7 +28,7 @@ export const mainPage = async (req, res) => {
       context: {
         liquidador: user.userid,
         estado: estadosFraude.asignado,
-        oficina: user.oficina,
+        pendientes: {oficina: user.oficina, estado: estadosFraude.pendiente},
         limit: limit + 1,
         direction: dir,
         cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: 0 , prev: 0},
@@ -257,54 +257,48 @@ export const resueltosPage = async (req, res) => {
 
   const dir = req.query.dir ? req.query.dir : 'next'
   const limit = req.query.limit ? req.query.limit : 9
-  const part = req.query.part ? req.query.part.toUpperCase() : ''
 
   let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
   let hasPrevFras = cursor ? true : false
-  let context = {}
+  let part = ''
+  let rest = ''
 
-  if (cursor) {
-    context = {
-      liquidador: user.userid,
-      estado: estadosFraude.resuelto,
-      limit: limit + 1,
-      direction: dir,
-      cursor: JSON.parse(convertCursorToNode(JSON.stringify(cursor))),
-      part,
-    }
-  } else {
-    context = {
-      liquidador: user.userid,
-      estado: estadosFraude.resuelto,
-      limit: limit + 1,
-      direction: dir,
-      cursor: {
-        next: 0,
-        prev: 0,
-      },
-      part,
+  if (req.query.part) {
+    const partes = req.query.part.split(',')
+
+    part = partes[0].toUpperCase()
+    if (partes.length > 1) {
+      rest = partes[1].toUpperCase()
     }
   }
-  
+
   try {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes`, {
-      context,
+      context: {
+        liquidador: user.userid,
+        estado: estadosFraude.resuelto,
+        limit: limit + 1,
+        direction: dir,
+        cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: 0 , prev: 0},
+        part,
+        rest,
+      },
     });
-    
+
     let fraudes = result.data.data
     let hasNextFras = fraudes.length === limit + 1
     let nextCursor = 0
     let prevCursor = 0
-    
+
     if (hasNextFras) {
       nextCursor = dir === 'next' ? fraudes[limit - 1].IDFRAU : fraudes[0].IDFRAU
       prevCursor = dir === 'next' ? fraudes[0].IDFRAU : fraudes[limit - 1].IDFRAU
-      
+
       fraudes.pop()
     } else {
       nextCursor = dir === 'next' ? 0 : fraudes[0]?.IDFRAU
       prevCursor = dir === 'next' ? fraudes[0]?.IDFRAU : 0
-      
+
       if (cursor) {
         hasNextFras = nextCursor === 0 ? false : true
         hasPrevFras = prevCursor === 0 ? false : true
@@ -313,16 +307,16 @@ export const resueltosPage = async (req, res) => {
         hasPrevFras = false
       }
     }
-    
+
     if (dir === 'prev') {
       fraudes = fraudes.reverse()
     }
-    
+
     cursor = {
       next: nextCursor,
       prev: prevCursor,
     }
-    
+
     const datos = {
       fraudes,
       hasNextFras,
@@ -330,7 +324,7 @@ export const resueltosPage = async (req, res) => {
       cursor: convertNodeToCursor(JSON.stringify(cursor)),
       estadosFraude,
     };
-    
+
     res.render("user/fraudes/resueltos", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {
