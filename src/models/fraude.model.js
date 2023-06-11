@@ -46,16 +46,6 @@ export const fraude = async (context) => {
     query += " WHERE ff.idfrau = :idfrau"
   } else if (context.REFFRA) {
     query += " WHERE ff.reffra = :reffra"
-  } else if (context.LIQFRA) {
-    if (context.STAFRA === 1) {
-      //TODO
-      // mostrar asignados al liquidador y todos los no asignados
-      query = largeQuery
-    } else {
-      //TODO
-      // mostrar los resueltos por el liquidador
-      query += " WHERE ff.liqfra = :liqfra AND stafra = 2"
-    }
   }
 
   // proc
@@ -69,23 +59,27 @@ export const fraude = async (context) => {
 }
 export const fraudes = async (context) => {
   // bind
-  let query = "WITH datos AS (SELECT ff.idfrau,ff.fecfra,ff.ejefra,ff.nifcon,ff.nomcon,ff.obsfra,ff.ofifra,ff.liqfra,ff.stafra,oo.desofi,tf.destip,p1.numhit,p2.numeve FROM fraudes ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifra INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra"
+  let query = "WITH datos AS (SELECT ff.idfrau,ff.ejefra,ff.nifcon,ff.nomcon,ff.reffra,ff.obsfra,ff.ofifra,ff.liqfra,ff.stafra,oo.desofi,tf.destip,p1.numhit,p2.numeve FROM fraudes ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifra INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra"
   let bind = {
     liqfra: context.liquidador,
     stafra: context.estado,
-    ofifra: context.oficina,
     limit: context.limit,
   };
 
   if (context.part) {
     bind.part = context.part
-    query += " AND (ff.nifcon LIKE '%' || :part || '%' OR ff.nomcon LIKE '%' || :part || '%' OR ff.ejefra LIKE '%' || :part || '%' OR ff.liqfra LIKE '%' || LOWER(:part) || '%' OR tf.destip LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%')"
+    query += " AND (ff.nifcon LIKE '%' || :part || '%' OR ff.nomcon LIKE '%' || :part || '%' OR ff.ejefra LIKE '%' || :part || '%' OR ff.reffra LIKE '%' || :part || '%' OR ff.liqfra LIKE '%' || LOWER(:part) || '%' OR tf.destip LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%')"
   }
   if (context.rest) {
     bind.rest = context.rest
-    query += " AND (ff.nifcon LIKE '%' || :rest || '%' OR ff.nomcon LIKE '%' || :rest || '%' OR ff.ejefra LIKE '%' || :rest || '%' OR ff.liqfra LIKE '%' || LOWER(:rest) || '%' OR tf.destip LIKE '%' || :rest || '%' OR oo.desofi LIKE '%' || :rest || '%')"
+    query += " AND (ff.nifcon LIKE '%' || :rest || '%' OR ff.nomcon LIKE '%' || :rest || '%' OR ff.ejefra LIKE '%' || :rest || '%' OR ff.reffra LIKE '%' || :part || '%' OR ff.liqfra LIKE '%' || LOWER(:rest) || '%' OR tf.destip LIKE '%' || :rest || '%' OR oo.desofi LIKE '%' || :rest || '%')"
   }
-  query += " LEFT JOIN (SELECT ff.idfrau,count(hf.idhito) numhit FROM fraudes ff INNER JOIN hitosfraude hf ON hf.idfrau= ff.idfrau GROUP BY ff.idfrau) p1 ON p1.idfrau = ff.idfrau LEFT JOIN (SELECT ff.idfrau,count(ef.ideven) numeve FROM fraudes ff INNER JOIN eventosfraude ef ON ef.idfrau = ff.idfrau GROUP BY ff.idfrau) p2 ON p2.idfrau = ff.idfrau WHERE (ff.liqfra = :liqfra AND ff.stafra = :stafra) OR (ff.ofifra = :ofifra AND ff.stafra = 0)"
+  query += " LEFT JOIN (SELECT ff.idfrau,count(hf.idhito) numhit FROM fraudes ff INNER JOIN hitosfraude hf ON hf.idfrau= ff.idfrau GROUP BY ff.idfrau) p1 ON p1.idfrau = ff.idfrau LEFT JOIN (SELECT ff.idfrau,count(ef.ideven) numeve FROM fraudes ff INNER JOIN eventosfraude ef ON ef.idfrau = ff.idfrau GROUP BY ff.idfrau) p2 ON p2.idfrau = ff.idfrau WHERE (ff.liqfra = :liqfra AND ff.stafra = :stafra)"
+  if (context.pendientes) {
+    bind.ofifra = context.pendientes.oficina
+    bind.estado = context.pendientes.estado
+    query += " OR (ff.ofifra = :ofifra AND ff.stafra = :estado)"
+  }
   if (context.direction === 'next') {
     bind.idfrau = context.cursor.next;
     query += ")SELECT * FROM datos WHERE idfrau > :idfrau ORDER BY idfrau ASC FETCH NEXT :limit ROWS ONLY"
@@ -120,7 +114,7 @@ export const extended = async (context) => {
   }
   if (context.stafra) {
     bind.stafra = context.stafra
-    query += " WHERE ff.stafra = :stafra"
+    query += " WHERE BITAND(ff.stafra, 2) = :stafra"
   } 
   if (context.liqfra) {
     bind.liqfra = context.liqfra
@@ -137,6 +131,8 @@ export const extended = async (context) => {
     bind.idfrau = context.cursor.prev;
     query += ")SELECT * FROM datos WHERE idfrau < :idfrau ORDER BY idfrau DESC FETCH NEXT :limit ROWS ONLY"
   }
+
+  console.log(query,bind);
 
   // proc
   const ret = await simpleExecute(query, bind)
