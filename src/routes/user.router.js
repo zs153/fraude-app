@@ -48,6 +48,9 @@ userRouter.post('/perfil', authRoutes, usuario.updatePerfil)
 // cambio password
 userRouter.post('/cambio', authRoutes, usuario.changePassword)
 
+// actualizar recurso
+userRouter.post('/actualizar', authRoutes, usuario.updateRecurso)
+
 // fraudes
 userRouter.post("/fraudes/insert", authRoutes, fraude.insert);
 userRouter.post("/fraudes/update", authRoutes, fraude.update);

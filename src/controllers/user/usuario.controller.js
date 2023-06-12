@@ -82,7 +82,20 @@ export const changePassword = async (req, res) => {
 
   res.clearCookie("x-access_token");
   res.cookie("auth", undefined, options);
-  res.cookie("noVer", undefined, options);
 
   res.redirect(`http://${serverAUTH}:${puertoAUTH}/log/change/?valid=${strUrl}`)
+}
+export const updateRecurso = async (req, res) => {
+  const strUrl = encodeURIComponent(`${serverWEB}:${puertoWEB}`);
+  const options = {
+    path: "/",
+    sameSite: true,
+    maxAge: 1,
+    httpOnly: true,
+  };
+
+  res.clearCookie("x-access_token");
+  res.cookie("auth", undefined, options);
+
+  res.redirect(`http://${serverAUTH}:${puertoAUTH}/log/update/?valid=${strUrl}`)
 }
