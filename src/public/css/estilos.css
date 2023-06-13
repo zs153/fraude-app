@@ -5187,7 +5187,8 @@ Sortable
 tabs
 */
 #tabs #tabContent1,
-#tabs #tabContent2 {
+#tabs #tabContent2,
+#tabs #tabContent3 {
   display: none;
 }
 
@@ -5219,7 +5220,8 @@ tabs
 }
 
 #tab1:checked~.contents #tabContent1,
-#tab2:checked~.contents #tabContent2 {
+#tab2:checked~.contents #tabContent2,
+#tab3:checked~.contents #tabContent3 {
   display: block;
 }
 

@@ -97,5 +97,5 @@ export const updateRecurso = async (req, res) => {
   res.clearCookie("x-access_token");
   res.cookie("auth", undefined, options);
 
-  res.redirect(`http://${serverAUTH}:${puertoAUTH}/log/update/?valid=${strUrl}`)
+  res.redirect(`http://${serverAUTH}:${puertoAUTH}/log/update?valid=${strUrl}`)
 }
