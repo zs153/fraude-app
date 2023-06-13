@@ -132,7 +132,6 @@ export const extended = async (context) => {
     query += ")SELECT * FROM datos WHERE idfrau < :idfrau ORDER BY idfrau DESC FETCH NEXT :limit ROWS ONLY"
   }
 
-  console.log(query,bind);
 
   // proc
   const ret = await simpleExecute(query, bind)
