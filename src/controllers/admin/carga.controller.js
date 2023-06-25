@@ -7,43 +7,28 @@ export const mainPage = async (req, res) => {
   const user = req.user
 
   const dir = req.query.dir ? req.query.dir : 'next'
-  const limit = req.query.limit ? req.query.limit : 10
+  const limit = req.query.limit ? req.query.limit : 9
   const part = req.query.part ? req.query.part.toUpperCase() : ''
 
   let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
-  let hasPrevCarg = cursor ? true : false
-  let context = {}
-
-  if (cursor) {
-    context = {
-      limit: limit + 1,
-      direction: dir,
-      cursor: JSON.parse(convertCursorToNode(JSON.stringify(cursor))),
-      part,
-    }
-  } else {
-    context = {
-      limit: limit + 1,
-      direction: dir,
-      cursor: {
-        next: 0,
-        prev: 0,
-      },
-      part,
-    }
-  }
+  let hasPrevs = cursor ? true : false
 
   try {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/cargas`, {
-      context,
+      context: {
+        limit: limit + 1,
+        direction: dir,
+        cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: 0 , prev: 0},
+        part,
+      },
     })
 
     let cargas = result.data.data
-    let hasNextCarg = cargas.length === limit + 1
+    let hasNexts = cargas.length === limit + 1
     let nextCursor = 0
     let prevCursor = 0
 
-    if (hasNextCarg) {
+    if (hasNexts) {
       nextCursor = dir === 'next' ? cargas[limit - 1].IDCARG : cargas[0].IDCARG
       prevCursor = dir === 'next' ? cargas[0].IDCARG : cargas[limit - 1].IDCARG
 
@@ -53,11 +38,11 @@ export const mainPage = async (req, res) => {
       prevCursor = dir === 'next' ? cargas[0]?.IDCARG : 0
 
       if (cursor) {
-        hasNextCarg = nextCursor === 0 ? false : true
-        hasPrevCarg = prevCursor === 0 ? false : true
+        hasNexts = nextCursor === 0 ? false : true
+        hasPrevs = prevCursor === 0 ? false : true
       } else {
-        hasNextCarg = false
-        hasPrevCarg = false
+        hasNexts = false
+        hasPrevs = false
       }
     }
 
@@ -71,8 +56,8 @@ export const mainPage = async (req, res) => {
     }
     const datos = {
       cargas,
-      hasNextCarg,
-      hasPrevCarg,
+      hasNexts,
+      hasPrevs,
       cursor: convertNodeToCursor(JSON.stringify(cursor)),
     }
 
@@ -122,7 +107,7 @@ export const insert = async (req, res) => {
   };
 
   try {
-    await axios.post(`http://${serverAPI}:8100/api/cargas/insert`, {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/cargas/insert`, {
       carga,
       movimiento,
     });
@@ -131,7 +116,7 @@ export const insert = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {

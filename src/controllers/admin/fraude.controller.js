@@ -10,7 +10,7 @@ export const mainPage = async (req, res) => {
   const limit = req.query.limit ? req.query.limit : 9
 
   let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
-  let hasPrevFras = cursor ? true : false
+  let hasPrevs = cursor ? true : false
   let part = ''
   let rest = ''
 
@@ -26,7 +26,7 @@ export const mainPage = async (req, res) => {
   try {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/extended`, {
       context: {
-        stafra: JSON.stringify(estadosFraude.pendiente),
+        stafra: estadosFraude.pendientesAsignados,
         limit: limit + 1,
         direction: dir,
         cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: 0 , prev: 0},
@@ -36,11 +36,11 @@ export const mainPage = async (req, res) => {
     });
 
     let fraudes = result.data.data
-    let hasNextFras = fraudes.length === limit + 1
+    let hasNexts = fraudes.length === limit + 1
     let nextCursor = 0
     let prevCursor = 0
 
-    if (hasNextFras) {
+    if (hasNexts) {
       nextCursor = dir === 'next' ? fraudes[limit - 1].IDFRAU : fraudes[0].IDFRAU
       prevCursor = dir === 'next' ? fraudes[0].IDFRAU : fraudes[limit - 1].IDFRAU
 
@@ -50,11 +50,11 @@ export const mainPage = async (req, res) => {
       prevCursor = dir === 'next' ? fraudes[0]?.IDFRAU : 0
 
       if (cursor) {
-        hasNextFras = nextCursor === 0 ? false : true
-        hasPrevFras = prevCursor === 0 ? false : true
+        hasNexts = nextCursor === 0 ? false : true
+        hasPrevs = prevCursor === 0 ? false : true
       } else {
-        hasNextFras = false
-        hasPrevFras = false
+        hasNexts = false
+        hasPrevs = false
       }
     }
 
@@ -69,8 +69,8 @@ export const mainPage = async (req, res) => {
 
     const datos = {
       fraudes,
-      hasNextFras,
-      hasPrevFras,
+      hasNexts,
+      hasPrevs,
       cursor: convertNodeToCursor(JSON.stringify(cursor)),
       estadosFraude,
     };
@@ -79,7 +79,7 @@ export const mainPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -117,7 +117,7 @@ export const editPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -133,7 +133,7 @@ export const resueltosPage = async (req, res) => {
   const limit = req.query.limit ? req.query.limit : 9
 
   let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
-  let hasPrevFras = cursor ? true : false
+  let hasPrevs = cursor ? true : false
   let part = ''
   let rest = ''
 
@@ -159,11 +159,11 @@ export const resueltosPage = async (req, res) => {
     });
 
     let fraudes = result.data.data
-    let hasNextFras = fraudes.length === limit + 1
+    let hasNexts = fraudes.length === limit + 1
     let nextCursor = 0
     let prevCursor = 0
 
-    if (hasNextFras) {
+    if (hasNexts) {
       nextCursor = dir === 'next' ? fraudes[limit - 1].IDFRAU : fraudes[0].IDFRAU
       prevCursor = dir === 'next' ? fraudes[0].IDFRAU : fraudes[limit - 1].IDFRAU
 
@@ -173,11 +173,11 @@ export const resueltosPage = async (req, res) => {
       prevCursor = dir === 'next' ? fraudes[0]?.IDFRAU : 0
 
       if (cursor) {
-        hasNextFras = nextCursor === 0 ? false : true
-        hasPrevFras = prevCursor === 0 ? false : true
+        hasNexts = nextCursor === 0 ? false : true
+        hasPrevs = prevCursor === 0 ? false : true
       } else {
-        hasNextFras = false
-        hasPrevFras = false
+        hasNexts = false
+        hasPrevs = false
       }
     }
 
@@ -192,8 +192,8 @@ export const resueltosPage = async (req, res) => {
 
     const datos = {
       fraudes,
-      hasNextFras,
-      hasPrevFras,
+      hasNexts,
+      hasPrevs,
       cursor: convertNodeToCursor(JSON.stringify(cursor)),
       estadosFraude,
     };
@@ -202,7 +202,7 @@ export const resueltosPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -215,13 +215,9 @@ export const resueltosPage = async (req, res) => {
 // page hitosevento
 export const hitoseventosPage = async (req, res) => {
   const user = req.user;
-  const fraude = {
-    IDFRAU: req.params.id,
-  };
-  const tipo = {}
 
   try {
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
+    const fraude = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
       context: {
         IDFRAU: req.params.id,
       },
@@ -241,7 +237,7 @@ export const hitoseventosPage = async (req, res) => {
     });
 
     const datos = {
-      fraude: result.data.data[0],
+      fraude: fraude.data.data[0],
       hitos: hitos.data.data,
       eventos: eventos.data.data,
       tiposHito: tiposHito.data.data,
@@ -252,7 +248,7 @@ export const hitoseventosPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -263,12 +259,9 @@ export const hitoseventosPage = async (req, res) => {
 };
 export const hitoseventosReadonlyPage = async (req, res) => {
   const user = req.user;
-  const fraude = {
-    IDFRAU: req.params.id,
-  };
 
   try {
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
+    const fraude = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
       context: {
         IDFRAU: req.params.id,
       },
@@ -285,7 +278,7 @@ export const hitoseventosReadonlyPage = async (req, res) => {
     });
 
     const datos = {
-      fraude: result.data.data[0],
+      fraude: fraude.data.data[0],
       hitos: hitos.data.data,
       eventos: eventos.data.data,
       estadosHito,
@@ -295,7 +288,7 @@ export const hitoseventosReadonlyPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -343,7 +336,7 @@ export const addHitosPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -398,7 +391,7 @@ export const editHitosPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -428,7 +421,7 @@ export const addEventosPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -463,7 +456,7 @@ export const editEventosPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -482,41 +475,25 @@ export const smssPage = async (req, res) => {
   const part = req.query.part ? req.query.part.toUpperCase() : ''
 
   let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
-  let hasPrevSms = cursor ? true : false
-  let context = {}
-
-  if (cursor) {
-    context = {
-      fraude: req.params.id,
-      limit: limit + 1,
-      direction: dir,
-      cursor: JSON.parse(convertCursorToNode(JSON.stringify(cursor))),
-      part,
-    }
-  } else {
-    context = {
-      fraude: req.params.id,
-      limit: limit + 1,
-      direction: dir,
-      cursor: {
-        next: 0,
-        prev: 0,
-      },
-      part,
-    }
-  }
+  let hasPrevs = cursor ? true : false
 
   try {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/smss`, {
-      context,
+      context: {
+        fraude: req.params.id,        
+        limit: limit + 1,
+        direction: dir,
+        cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: 0 , prev: 0},
+        part,
+      },
     })
 
     let smss = result.data.data
-    let hasNextSms = smss.length === limit + 1
+    let hasNexts = smss.length === limit + 1
     let nextCursor = 0
     let prevCursor = 0
 
-    if (hasNextSms) {
+    if (hasNexts) {
       nextCursor = dir === 'next' ? smss[limit - 1].IDSMSS : smss[0].IDSMSS
       prevCursor = dir === 'next' ? smss[0].IDSMSS : smss[limit - 1].IDSMSS
 
@@ -526,11 +503,11 @@ export const smssPage = async (req, res) => {
       prevCursor = dir === 'next' ? smss[0]?.IDSMSS : 0
 
       if (cursor) {
-        hasNextSms = nextCursor === 0 ? false : true
-        hasPrevSms = prevCursor === 0 ? false : true
+        hasNexts = nextCursor === 0 ? false : true
+        hasPrevs = prevCursor === 0 ? false : true
       } else {
-        hasNextSms = false
-        hasPrevSms = false
+        hasNexts = false
+        hasPrevs = false
       }
     }
 
@@ -549,8 +526,8 @@ export const smssPage = async (req, res) => {
     const datos = {
       fraude,
       smss,
-      hasNextSms,
-      hasPrevSms,
+      hasNexts,
+      hasPrevs,
       cursor: convertNodeToCursor(JSON.stringify(cursor)),      
       estadosSms,
     }
@@ -559,7 +536,7 @@ export const smssPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -590,7 +567,7 @@ export const smssAddPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -621,7 +598,7 @@ export const smssEditPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -653,7 +630,7 @@ export const smssReadonlyPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -672,41 +649,25 @@ export const relacionesPage = async (req, res) => {
   const part = req.query.part ? req.query.part.toUpperCase() : ''
 
   let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
-  let hasPrevRela = cursor ? true : false
-  let context = {}
-
-  if (cursor) {
-    context = {
-      fraude: req.params.id,
-      limit: limit + 1,
-      direction: dir,
-      cursor: JSON.parse(convertCursorToNode(JSON.stringify(cursor))),
-      part,
-    }
-  } else {
-    context = {
-      fraude: req.params.id,
-      limit: limit + 1,
-      direction: dir,
-      cursor: {
-        next: 0,
-        prev: 0,
-      },
-      part,
-    }
-  }
+  let hasPrevs = cursor ? true : false
 
   try {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/relaciones`, {
-      context,
+      context: {
+        fraude: req.params.id,
+        limit: limit + 1,
+        direction: dir,
+        cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next:0, prev: 0},
+        part,
+      },
     })
 
     let relaciones = result.data.data
-    let hasNextRela = relaciones.length === limit + 1
+    let hasNexts = relaciones.length === limit + 1
     let nextCursor = 0
     let prevCursor = 0
 
-    if (hasNextRela) {
+    if (hasNexts) {
       nextCursor = dir === 'next' ? relaciones[limit - 1].IDRELA : relaciones[0].IDRELA
       prevCursor = dir === 'next' ? relaciones[0].IDRELA : relaciones[limit - 1].IDRELA
 
@@ -716,11 +677,11 @@ export const relacionesPage = async (req, res) => {
       prevCursor = dir === 'next' ? relaciones[0]?.IDRELA : 0
 
       if (cursor) {
-        hasNextRela = nextCursor === 0 ? false : true
-        hasPrevRela = prevCursor === 0 ? false : true
+        hasNexts = nextCursor === 0 ? false : true
+        hasPrevs = prevCursor === 0 ? false : true
       } else {
-        hasNextRela = false
-        hasPrevRela = false
+        hasNexts = false
+        hasPrevs = false
       }
     }
 
@@ -739,8 +700,8 @@ export const relacionesPage = async (req, res) => {
     const datos = {
       fraude,
       relaciones,
-      hasNextRela,
-      hasPrevRela,
+      hasNexts,
+      hasPrevs,
       cursor: convertNodeToCursor(JSON.stringify(cursor)),
     }
 
@@ -748,7 +709,7 @@ export const relacionesPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -772,7 +733,7 @@ export const relacionesAddPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -803,7 +764,7 @@ export const relacionesEditPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -834,7 +795,7 @@ export const relacionesReadonlyPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -867,7 +828,7 @@ export const addEjercicioPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -886,41 +847,25 @@ export const adesPage = async (req, res) => {
   const part = req.query.part ? req.query.part.toUpperCase() : ''
 
   let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
-  let hasPrevUsers = cursor ? true:false
-  let context = {}
-
-  if (cursor) {
-    context = {
-      oficina: user.rol === tiposRol.admin ? 0 : user.oficina,
-      limit: limit + 1,
-      direction: dir,
-      cursor: JSON.parse(convertCursorToNode(JSON.stringify(cursor))),
-      part,
-    }
-  } else {
-    context = {
-      oficina: user.rol === tiposRol.admin ? 0 : user.oficina,
-      limit: limit + 1,
-      direction: dir,
-      cursor: {
-        next: '',
-        prev: '',
-      },
-      part,
-    }
-  }
+  let hasPrevs = cursor ? true:false
 
   try {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/usuarios`, {
-      context,
+      context: {
+        oficina: user.rol === tiposRol.admin ? 0 : user.oficina,
+        limit: limit + 1,
+        direction: dir,
+        cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next:'', prev: ''},
+        part,
+      },
     })
 
     let usuarios = result.data.data
-    let hasNextUsers = usuarios.length === limit +1
+    let hasNexts = usuarios.length === limit +1
     let nextCursor = ''
     let prevCursor = ''
     
-    if (hasNextUsers) {
+    if (hasNexts) {
       nextCursor= dir === 'next' ? usuarios[limit - 1].NOMUSU : usuarios[0].NOMUSU
       prevCursor = dir === 'next' ? usuarios[0].NOMUSU : usuarios[limit - 1].NOMUSU
 
@@ -930,11 +875,11 @@ export const adesPage = async (req, res) => {
       prevCursor = dir === 'next' ? usuarios[0]?.NOMUSU : ''
       
       if (cursor) {
-        hasNextUsers = nextCursor === '' ? false : true
-        hasPrevUsers = prevCursor === '' ? false : true
+        hasNexts = nextCursor === '' ? false : true
+        hasPrevs = prevCursor === '' ? false : true
       } else {
-        hasNextUsers = false
-        hasPrevUsers = false
+        hasNexts = false
+        hasPrevs = false
       }
     }
 
@@ -948,8 +893,8 @@ export const adesPage = async (req, res) => {
     }    
     const datos = {
       usuarios,
-      hasPrevUsers,
-      hasNextUsers,
+      hasPrevs,
+      hasNexts,
       cursor: convertNodeToCursor(JSON.stringify(cursor)),
       estadosUsuario,
     }
@@ -958,7 +903,7 @@ export const adesPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -974,7 +919,7 @@ export const adesAsignarPage = async (req, res) => {
   const limit = req.query.limit ? req.query.limit : 100
 
   let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
-  let hasPrevFras = cursor ? true : false
+  let hasPrevs = cursor ? true : false
   let part = ''
   let rest = ''
   let alerts = undefined
@@ -1006,11 +951,11 @@ export const adesAsignarPage = async (req, res) => {
     });
 
     let fraudes = result.data.data
-    let hasNextFras = fraudes.length === limit + 1
+    let hasNexts = fraudes.length === limit + 1
     let nextCursor = 0
     let prevCursor = 0
 
-    if (hasNextFras) {
+    if (hasNexts) {
       alerts = [{ msg: 'Se supera el límite de registros permitidos. Sólo se muestran los 100 primeros registros. Refine la consulta' }]      
       nextCursor = dir === 'next' ? fraudes[limit - 1].IDFRAU : fraudes[0].IDFRAU
       prevCursor = dir === 'next' ? fraudes[0].IDFRAU : fraudes[limit - 1].IDFRAU
@@ -1021,11 +966,11 @@ export const adesAsignarPage = async (req, res) => {
       prevCursor = dir === 'next' ? fraudes[0]?.IDFRAU : 0
       
       if (cursor) {
-        hasNextFras = nextCursor === 0 ? false : true
-        hasPrevFras = prevCursor === 0 ? false : true
+        hasNexts = nextCursor === 0 ? false : true
+        hasPrevs = prevCursor === 0 ? false : true
       } else {
-        hasNextFras = false
-        hasPrevFras = false
+        hasNexts = false
+        hasPrevs = false
       }
     }
     
@@ -1041,8 +986,8 @@ export const adesAsignarPage = async (req, res) => {
     const datos = {
       usuario: usuario.data.data[0],
       fraudes,
-      hasNextFras,
-      hasPrevFras,
+      hasNexts,
+      hasPrevs,
       cursor: convertNodeToCursor(JSON.stringify(cursor)),
     };
 
@@ -1050,7 +995,7 @@ export const adesAsignarPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1066,7 +1011,7 @@ export const adesDesasignarPage = async (req, res) => {
   const limit = req.query.limit ? req.query.limit : 100
 
   let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
-  let hasPrevFras = cursor ? true : false
+  let hasPrevs = cursor ? true : false
   let part = ''
   let rest = ''
   let alerts = undefined
@@ -1089,7 +1034,7 @@ export const adesDesasignarPage = async (req, res) => {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/extended`, {
       context: {
         liqfra: usuario.data.data[0].USERID,
-        stafra: JSON.stringify(estadosFraude.asignado),
+        stafra: estadosFraude.asignado,
         limit: limit + 1,
         direction: dir,
         cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: 0 , prev: 0},
@@ -1099,11 +1044,11 @@ export const adesDesasignarPage = async (req, res) => {
     });
 
     let fraudes = result.data.data
-    let hasNextFras = fraudes.length === limit + 1
+    let hasNexts = fraudes.length === limit + 1
     let nextCursor = 0
     let prevCursor = 0
 
-    if (hasNextFras) {
+    if (hasNexts) {
       alerts = [{ msg: 'Se supera el límite de registros permitidos. Sólo se muestran los 100 primeros registros. Refine la consulta' }]      
       nextCursor = dir === 'next' ? fraudes[limit - 1].IDFRAU : fraudes[0].IDFRAU
       prevCursor = dir === 'next' ? fraudes[0].IDFRAU : fraudes[limit - 1].IDFRAU
@@ -1114,11 +1059,11 @@ export const adesDesasignarPage = async (req, res) => {
       prevCursor = dir === 'next' ? fraudes[0]?.IDFRAU : 0
       
       if (cursor) {
-        hasNextFras = nextCursor === 0 ? false : true
-        hasPrevFras = prevCursor === 0 ? false : true
+        hasNexts = nextCursor === 0 ? false : true
+        hasPrevs = prevCursor === 0 ? false : true
       } else {
-        hasNextFras = false
-        hasPrevFras = false
+        hasNexts = false
+        hasPrevs = false
       }
     }
     
@@ -1134,8 +1079,8 @@ export const adesDesasignarPage = async (req, res) => {
     const datos = {
       usuario: usuario.data.data[0],
       fraudes,
-      hasNextFras,
-      hasPrevFras,
+      hasNexts,
+      hasPrevs,
       cursor: convertNodeToCursor(JSON.stringify(cursor)),
     };
 
@@ -1143,7 +1088,7 @@ export const adesDesasignarPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1188,7 +1133,7 @@ export const insert = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1227,7 +1172,7 @@ export const update = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1270,7 +1215,7 @@ export const remove = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1308,7 +1253,7 @@ export const asignar = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1403,7 +1348,7 @@ export const resolver = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1442,7 +1387,7 @@ export const desasignar = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1521,7 +1466,7 @@ export const insertHito = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1556,7 +1501,7 @@ export const updateHito = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1589,7 +1534,7 @@ export const removeHito = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1622,7 +1567,7 @@ export const archivoHito = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1658,7 +1603,7 @@ export const insertEvento = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1692,7 +1637,7 @@ export const updateEvento = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1725,7 +1670,7 @@ export const removeEvento = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1770,7 +1715,7 @@ export const insertEjercicio = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1784,6 +1729,7 @@ export const insertEjercicio = async (req, res) => {
 export const insertSms = async (req, res) => {
   const user = req.user;
   const fecha = new Date()
+  // TODO
   const fraude = {
     IDFRAU: req.body.idfrau,
   }
@@ -1809,7 +1755,7 @@ export const insertSms = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1844,7 +1790,7 @@ export const updateSms = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1877,7 +1823,7 @@ export const removeSms = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1915,7 +1861,7 @@ export const insertRelacion = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1950,7 +1896,7 @@ export const updateRelacion = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -1983,7 +1929,7 @@ export const removeRelacion = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -2023,7 +1969,7 @@ export const asignarFraudes = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -2061,7 +2007,7 @@ export const desAsignarFraudes = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {

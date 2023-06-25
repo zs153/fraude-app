@@ -43,8 +43,11 @@ export const generarEstadistica = async (req, res) => {
   const fraude = {
     REFFRA: req.body.refcar,
   }
-
+  
   try {
+    const cargas = await axios.post(`http://${serverAPI}:${puertoAPI}/api/carga`, {
+      context: {},
+    })
     const tipos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/cierre`, {
       context: {},
     })
@@ -71,9 +74,6 @@ export const generarEstadistica = async (req, res) => {
     //     HASTA: periodo.HASTA,
     //   }
     // })
-    const cargas = await axios.post(`http://${serverAPI}:${puertoAPI}/api/carga`, {
-      context: {},
-    })
 
     const serieC = []
     const serieL = []

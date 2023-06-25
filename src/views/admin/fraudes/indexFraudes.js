@@ -302,13 +302,13 @@ const buildTable = (state) => {
 const createPages = () => {
   let str = "<ul>";
 
-  if (hasPrevFras) {
+  if (hasPrevs) {
     str += "<li class='page-item previous no'><a href='/admin/fraudes?cursor=" + JSON.stringify(cursor) + "&part=" + document.getElementById('buscarFraudeBox').value + "&dir=prev' class='nav-link'>&#9664 Anterior</a>";
   } else {
     str += "<li><a href='#' class='nav-link disabled'>&#9664 Anterior</a>";
   }
 
-  if (hasNextFras) {
+  if (hasNexts) {
     str += "<li class='page-item next no'><a href='/admin/fraudes?cursor=" + JSON.stringify(cursor) + "&part=" + document.getElementById('buscarFraudeBox').value + "&dir=next' class='nav-link'>Siguiente &#9654</a>";
   } else {
     str += "<li><a href='#' class='nav-link disabled'>Siguiente &#9654</a>";

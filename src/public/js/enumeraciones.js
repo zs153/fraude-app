@@ -73,7 +73,8 @@ export const estadosUsuario = {
 export const estadosFraude = {
   pendiente: 0,
   asignado: 1,
-  resuelto: 2,
+  pendientesAsignados: 2,
+  resuelto: 3,
 }
 export const estadosSms = {
   pendiente: 0,
@@ -123,7 +124,7 @@ export const arrEstadosSms = [
 export const arrEstadosFraude = [
   { ID: 0, DES: 'PENDIENTE', LIT: 'PEN' },
   { ID: 1, DES: 'ASIGNADO', LIT: 'ASI' },
-  { ID: 2, DES: 'RESUELTO', LIT: 'RES' },
+  { ID: 3, DES: 'RESUELTO', LIT: 'RES' },
 ]
 export const arrTiposLiquidacion = [
   { id: 1, des: 'INFRESAR' },
