@@ -11,7 +11,7 @@ export const fraude = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 export const fraudes = async (req, res) => {
@@ -24,7 +24,7 @@ export const fraudes = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 export const extended = async (req, res) => {
@@ -37,7 +37,7 @@ export const extended = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 export const crearFraude = async (req, res) => {
@@ -70,7 +70,7 @@ export const crearFraude = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 export const modificarFraude = async (req, res) => {
@@ -100,7 +100,7 @@ export const modificarFraude = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }  
 }
 export const borrarFraude = async (req, res) => {
@@ -120,7 +120,7 @@ export const borrarFraude = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 export const asignarFraude = async (req, res) => {
@@ -142,7 +142,7 @@ export const asignarFraude = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 export const desasignarFraude = async (req, res) => {
@@ -164,7 +164,7 @@ export const desasignarFraude = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 export const cierreFraude = async (req, res) => {
@@ -190,7 +190,7 @@ export const cierreFraude = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 
@@ -205,7 +205,7 @@ export const hito = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 export const hitos = async (req, res) => {
@@ -218,7 +218,7 @@ export const hitos = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 export const crearHito = async (req, res) => {
@@ -244,7 +244,7 @@ export const crearHito = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 export const modificarHito = async (req, res) => {
@@ -267,7 +267,7 @@ export const modificarHito = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 export const borrarHito = async (req, res) => {
@@ -290,7 +290,7 @@ export const borrarHito = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 export const crearHitoLiquidacion = async (req, res) => {
@@ -322,7 +322,7 @@ export const crearHitoLiquidacion = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 export const crearHitoSancion = async (req, res) => {
@@ -354,7 +354,7 @@ export const crearHitoSancion = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 export const cambioEstadoHito = async (req, res) => {
@@ -375,7 +375,7 @@ export const cambioEstadoHito = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 
@@ -390,7 +390,7 @@ export const evento = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 export const eventos = async (req, res) => {
@@ -403,7 +403,7 @@ export const eventos = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 export const crearEvento = async (req, res) => {
@@ -427,7 +427,7 @@ export const crearEvento = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 export const modificarEvento = async (req, res) => {
@@ -449,7 +449,7 @@ export const modificarEvento = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 export const borrarEvento = async (req, res) => {
@@ -472,7 +472,7 @@ export const borrarEvento = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 
@@ -487,7 +487,7 @@ export const sms = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 export const smss = async (req, res) => {
@@ -500,7 +500,7 @@ export const smss = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 export const crearSms = async (req, res) => {
@@ -526,7 +526,7 @@ export const crearSms = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 export const modificarSms = async (req, res) => {
@@ -549,7 +549,7 @@ export const modificarSms = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 export const borrarSms = async (req, res) => {
@@ -572,7 +572,7 @@ export const borrarSms = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 
@@ -587,7 +587,7 @@ export const relacion = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 export const relaciones = async (req, res) => {
@@ -600,7 +600,7 @@ export const relaciones = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 export const crearRelacion = async (req, res) => {
@@ -625,7 +625,7 @@ export const crearRelacion = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 export const modificarRelacion = async (req, res) => {
@@ -648,7 +648,7 @@ export const modificarRelacion = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 export const borrarRelacion = async (req, res) => {
@@ -671,7 +671,7 @@ export const borrarRelacion = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 
@@ -699,7 +699,7 @@ export const asignarFraudesUsuario = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }
 export const desAsignarFraudesUsuario = async (req, res) => {
@@ -725,6 +725,6 @@ export const desAsignarFraudesUsuario = async (req, res) => {
 
     res.status(200).json(result)
   } catch (err) {
-    res.status(500).json({ stat: null, data: 'Conexión no estableciada' })
+    res.status(500).json({ stat: null, data: err })
   }
 }

@@ -2,7 +2,6 @@ import { BIND_OUT, NUMBER } from "oracledb";
 import { simpleExecute } from '../services/database.js';
 
 // fraude
-const baseQuery = "SELECT ff.*,oo.desofi,tf.destip FROM fraudes ff INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra INNER JOIN oficinas oo ON oo.idofic = ff.ofifra"
 const largeQuery = "SELECT ff.*,oo.desofi,tt.destip,p1.* FROM (SELECT ff.idfrau,SUM(CASE WHEN hh.tiphit = 1 THEN 1 ELSE 0 END) AS PROLIQ,SUM(CASE WHEN hh.tiphit = 2 THEN 1 ELSE 0 END) AS LIQUID,SUM(CASE WHEN hh.tiphit = 3 THEN 1 ELSE 0 END) AS PROSAN,SUM(CASE WHEN hh.tiphit = 4 THEN 1 ELSE 0 END) AS SANCIO,COUNT(hf.idhito) AS NUMHIT,COUNT(ef.ideven) AS NUMEVE FROM fraudes ff LEFT JOIN hitosfraude hf ON hf.idfrau = ff.idfrau LEFT JOIN hitos hh ON hh.idhito = hf.idhito LEFT JOIN eventosfraude ef ON ef.idfrau = ff.idfrau LEFT JOIN eventos ee ON ee.ideven = ef.ideven WHERE liqfra = :liqfra AND ff.stafra = 1 GROUP BY ff.idfrau UNION SELECT ff.idfrau, 0 PROLIQ, 0 LIQUID, 0 PROSAN, 0 SANCIO, 0 NUMHIT, 0 NUMEVE FROM fraudes ff WHERE ff.stafra = 0) p1 INNER JOIN fraudes ff ON ff.idfrau = p1.idfrau INNER JOIN tiposfraude tt ON tt.idtipo = ff.tipfra INNER JOIN oficinas oo ON oo.idofic = ff.ofifra ORDER BY ff.stafra DESC"
 const insertSql = "BEGIN FRAUDE_PKG.INSERTFRAUDE(TO_DATE(:fecfra, 'YYYY-MM-DD'),:nifcon,:nomcon,:emacon,:telcon,:movcon,:reffra,:tipfra,:ejefra,:ofifra,:obsfra,:funfra,:liqfra,:stafra,:usumov,:tipmov,:idfrau); END;"
 const updateSql = "BEGIN FRAUDE_PKG.UPDATEFRAUDE(:idfrau,TO_DATE(:fecfra,'YYYY-MM-DD'),:nifcon,:nomcon,:emacon,:telcon,:movcon,:tipfra,:ejefra,:ofifra,:obsfra,:usumov,:tipmov); END;"
@@ -39,7 +38,7 @@ const desAsignarFraudesUsuarioSql = "BEGIN FRAUDE_PKG.DESASIGNARFRAUDESUSUARIO(:
 
 // proc fraude
 export const fraude = async (context) => {
-  let query = baseQuery
+  let query = "SELECT ff.*,oo.desofi,tf.destip FROM fraudes ff INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra INNER JOIN oficinas oo ON oo.idofic = ff.ofifra"
   let bind = context
 
   if (context.IDFRAU) {
@@ -58,11 +57,9 @@ export const fraude = async (context) => {
   }
 }
 export const fraudes = async (context) => {
-  // bind
-  let query = "WITH datos AS (SELECT ff.idfrau,ff.ejefra,ff.nifcon,ff.nomcon,ff.reffra,ff.obsfra,ff.ofifra,ff.liqfra,ff.stafra,oo.desofi,tf.destip,p1.numhit,p2.numeve FROM fraudes ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifra INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra"
+  // bind  
+  let query = "WITH datos AS (SELECT ff.*,oo.desofi,tf.destip,p1.numhit,p2.numeve FROM fraudes ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifra INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra"
   let bind = {
-    liqfra: context.liquidador,
-    stafra: context.estado,
     limit: context.limit,
   };
 
@@ -75,10 +72,22 @@ export const fraudes = async (context) => {
     query += " AND (ff.nifcon LIKE '%' || :rest || '%' OR ff.nomcon LIKE '%' || :rest || '%' OR ff.ejefra LIKE '%' || :rest || '%' OR ff.reffra LIKE '%' || :part || '%' OR ff.liqfra LIKE '%' || LOWER(:rest) || '%' OR tf.destip LIKE '%' || :rest || '%' OR oo.desofi LIKE '%' || :rest || '%')"
   }
   query += " LEFT JOIN (SELECT ff.idfrau,count(hf.idhito) numhit FROM fraudes ff INNER JOIN hitosfraude hf ON hf.idfrau= ff.idfrau GROUP BY ff.idfrau) p1 ON p1.idfrau = ff.idfrau LEFT JOIN (SELECT ff.idfrau,count(ef.ideven) numeve FROM fraudes ff INNER JOIN eventosfraude ef ON ef.idfrau = ff.idfrau GROUP BY ff.idfrau) p2 ON p2.idfrau = ff.idfrau WHERE (ff.liqfra = :liqfra AND ff.stafra = :stafra)"
-  if (context.pendientes) {
-    bind.ofifra = context.pendientes.oficina
-    bind.estado = context.pendientes.estado
-    query += " OR (ff.ofifra = :ofifra AND ff.stafra = :estado)"
+
+  if (context.stafra) {
+    if (context.stafra === 2) {
+      query += " WHERE BITAND(ff.stafra, 2) = 0"
+    } else {
+      bind.stafra = context.stafra
+      query += " WHERE BITAND(ff.stafra, 3) = :stafra"
+    }
+  }
+  if (context.liqfra) {
+    bind.liqfra = context.liqfra
+    if (context.stafra) {
+      query += " AND (ff.liqfor = :liqfra OR ff.stafra = 0)"
+    } else {
+      query += " WHERE ff.liqfra = :liqfra OR ff.stafra = 0"
+    }
   }
   if (context.direction === 'next') {
     bind.idfrau = context.cursor.next;
@@ -97,51 +106,6 @@ export const fraudes = async (context) => {
     return ({ stat: 0, data: [] })
   }
 };
-export const extended = async (context) => {
-  // bind
-  let query = "WITH datos AS (SELECT ff.idfrau,ff.ejefra,ff.nifcon,ff.nomcon,ff.reffra,ff.obsfra,ff.ofifra,ff.liqfra,ff.stafra,oo.desofi,tf.destip FROM fraudes ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifra INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra"
-  let bind = {
-    limit: context.limit,
-  };
-
-  if (context.part) {
-    bind.part = context.part
-    query += " AND (ff.nifcon LIKE '%' || :part || '%' OR ff.nomcon LIKE '%' || :part || '%' OR ff.ejefra LIKE '%' || :part || '%' OR ff.reffra LIKE '%' || :part || '%' OR ff.liqfra LIKE '%' || LOWER(:part) || '%' OR tf.destip LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%')"
-  }
-  if (context.rest) {
-    bind.rest = context.rest
-    query += " AND (ff.nifcon LIKE '%' || :rest || '%' OR ff.nomcon LIKE '%' || :rest || '%' OR ff.ejefra LIKE '%' || :rest || '%' OR ff.reffra LIKE '%' || :rest || '%' OR ff.liqfra LIKE '%' || LOWER(:rest) || '%' OR tf.destip LIKE '%' || :rest || '%' OR oo.desofi LIKE '%' || :rest || '%')"
-  }
-  if (context.stafra) {
-    bind.stafra = context.stafra
-    query += " WHERE BITAND(ff.stafra, 2) = :stafra"
-  } 
-  if (context.liqfra) {
-    bind.liqfra = context.liqfra
-    if (context.stafra) {
-      query += " AND ff.liqfra = :liqfra"
-    } else {
-      query += " WHERE ff.liqfra = :liqfra"
-    }
-  }
-  if (context.direction === 'next') {
-    bind.idfrau = context.cursor.next;
-    query += ")SELECT * FROM datos WHERE idfrau > :idfrau ORDER BY idfrau ASC FETCH NEXT :limit ROWS ONLY"
-  } else {
-    bind.idfrau = context.cursor.prev;
-    query += ")SELECT * FROM datos WHERE idfrau < :idfrau ORDER BY idfrau DESC FETCH NEXT :limit ROWS ONLY"
-  }
-
-
-  // proc
-  const ret = await simpleExecute(query, bind)
-
-  if (ret) {
-    return ({ stat: ret.rows.length, data: ret.rows })
-  } else {
-    return ({ stat: 0, data: [] })
-  }
-}
 export const insert = async (context) => {
   // bind
   let bind = context
