@@ -1,9 +1,9 @@
 import express from "express";
 import { getGente } from "../controllers/gente.controller";
 
-const apiSmsRouter = express.Router();
+const apiGenteRouter = express.Router();
 
 // smss
-apiSmsRouter.post("/gente", getGente);
+apiGenteSmsRouter.post("/gente", getGente);
 
-export default apiSmsRouter;
+export default apiGenteRouter;
