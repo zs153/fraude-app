@@ -6,43 +6,28 @@ export const mainPage = async (req, res) => {
   const user = req.user
 
   const dir = req.query.dir ? req.query.dir : 'next'
-  const limit = req.query.limit ? req.query.limit : 10
+  const limit = req.query.limit ? req.query.limit : 9
   const part = req.query.part ? req.query.part.toUpperCase() : ''
 
   let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
-  let hasPrevOficinas = cursor ? true:false
-  let context = {}
-
-  if (cursor) {
-    context = {
-      limit: limit + 1,
-      direction: dir,
-      cursor: JSON.parse(convertCursorToNode(JSON.stringify(cursor))),
-      part,
-    }
-  } else {
-    context = {
-      limit: limit + 1,
-      direction: dir,
-      cursor: {
-        next: 0,
-        prev: 0,
-      },
-      part,
-    }
-  }
+  let hasPrevs = cursor ? true : false
 
   try {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/oficinas`, {
-      context,
+      context: {
+        limit: limit + 1,
+        direction: dir,
+        cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: 0 , prev: 0},
+        part,
+      },
     })
 
     let oficinas = result.data.data
-    let hasNextOficinas = oficinas.length === limit +1
+    let hasNexts = oficinas.length === limit +1
     let nextCursor = 0
     let prevCursor = 0
     
-    if (hasNextOficinas) {
+    if (hasNexts) {
       nextCursor = dir === 'next' ? oficinas[limit - 1].IDOFIC : oficinas[0].IDOFIC
       prevCursor = dir === 'next' ? oficinas[0].IDOFIC : oficinas[limit - 1].IDOFIC
 
@@ -52,11 +37,11 @@ export const mainPage = async (req, res) => {
       prevCursor = dir === 'next' ? oficinas[0]?.IDOFIC : 0
       
       if (cursor) {
-        hasNextOficinas = nextCursor === 0 ? false : true
-        hasPrevOficinas = prevCursor === 0 ? false : true
+        hasNexts = nextCursor === 0 ? false : true
+        hasPrevs = prevCursor === 0 ? false : true
       } else {
-        hasNextOficinas = false
-        hasPrevOficinas = false
+        hasNexts = false
+        hasPrevs = false
       }
     }
 
@@ -70,8 +55,8 @@ export const mainPage = async (req, res) => {
     }
     const datos = {
       oficinas,
-      hasNextOficinas,
-      hasPrevOficinas,
+      hasNexts,
+      hasPrevs,
       cursor: convertNodeToCursor(JSON.stringify(cursor)),
     }
 
@@ -79,7 +64,7 @@ export const mainPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -96,7 +81,7 @@ export const addPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -122,7 +107,7 @@ export const editPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -152,7 +137,7 @@ export const insert = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -183,7 +168,7 @@ export const update = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -212,7 +197,7 @@ export const remove = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {

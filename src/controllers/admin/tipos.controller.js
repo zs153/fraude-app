@@ -12,39 +12,24 @@ export const mainCierresPage = async (req, res) => {
   const part = req.query.part ? req.query.part.toUpperCase() : ''
 
   let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
-  let hasPrevCierr = cursor ? true : false
-  let context = {}
-
-  if (cursor) {
-    context = {
-      limit: limit + 1,
-      direction: dir,
-      cursor: JSON.parse(convertCursorToNode(JSON.stringify(cursor))),
-      part,
-    }
-  } else {
-    context = {
-      limit: limit + 1,
-      direction: dir,
-      cursor: {
-        next: 0,
-        prev: 0,
-      },
-      part,
-    }
-  }
+  let hasPrevs = cursor ? true : false
 
   try {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/cierres`, {
-      context,
+      context: {
+        limit: limit + 1,
+        direction: dir,
+        cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: 0 , prev: 0},
+        part,
+      },
     });
 
     let cierres = result.data.data
-    let hasNextCierr = cierres.length === limit + 1
+    let hasNexts = cierres.length === limit + 1
     let nextCursor = 0
     let prevCursor = 0
 
-    if (hasNextCierr) {
+    if (hasNexts) {
       nextCursor = dir === 'next' ? cierres[limit - 1].IDTIPO : cierres[0].IDTIPO
       prevCursor = dir === 'next' ? cierres[0].IDTIPO : cierres[limit - 1].IDTIPO
 
@@ -54,11 +39,11 @@ export const mainCierresPage = async (req, res) => {
       prevCursor = dir === 'next' ? cierres[0]?.IDTIPO : 0
 
       if (cursor) {
-        hasNextCierr = nextCursor === 0 ? false : true
-        hasPrevCierr = prevCursor === 0 ? false : true
+        hasNexts = nextCursor === 0 ? false : true
+        hasPrevs = prevCursor === 0 ? false : true
       } else {
-        hasNextCierr = false
-        hasPrevCierr = false
+        hasNexts = false
+        hasPrevs = false
       }
     }
 
@@ -73,8 +58,8 @@ export const mainCierresPage = async (req, res) => {
 
     const datos = {
       cierres,
-      hasNextCierr,
-      hasPrevCierr,
+      hasNexts,
+      hasPrevs,
       cursor: convertNodeToCursor(JSON.stringify(cursor)),
     };
 
@@ -82,7 +67,7 @@ export const mainCierresPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -99,7 +84,7 @@ export const addCierrePage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -126,7 +111,7 @@ export const editCierrePage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -144,39 +129,24 @@ export const mainEventosPage = async (req, res) => {
   const part = req.query.part ? req.query.part.toUpperCase() : ''
 
   let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
-  let hasPrevEven = cursor ? true : false
-  let context = {}
-
-  if (cursor) {
-    context = {
-      limit: limit + 1,
-      direction: dir,
-      cursor: JSON.parse(convertCursorToNode(JSON.stringify(cursor))),
-      part,
-    }
-  } else {
-    context = {
-      limit: limit + 1,
-      direction: dir,
-      cursor: {
-        next: 0,
-        prev: 0,
-      },
-      part,
-    }
-  }
+  let hasPrevs = cursor ? true : false
 
   try {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/eventos`, {
-      context,
+      context: {
+        limit: limit + 1,
+        direction: dir,
+        cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: 0 , prev: 0},
+        part,
+      },
     });
 
     let eventos = result.data.data
-    let hasNextEven = eventos.length === limit + 1
+    let hasNexts = eventos.length === limit + 1
     let nextCursor = 0
     let prevCursor = 0
 
-    if (hasNextEven) {
+    if (hasNexts) {
       nextCursor = dir === 'next' ? eventos[limit - 1].IDTIPO : eventos[0].IDTIPO
       prevCursor = dir === 'next' ? eventos[0].IDTIPO : eventos[limit - 1].IDTIPO
 
@@ -186,11 +156,11 @@ export const mainEventosPage = async (req, res) => {
       prevCursor = dir === 'next' ? eventos[0]?.IDTIPO : 0
 
       if (cursor) {
-        hasNextEven = nextCursor === 0 ? false : true
-        hasPrevEven = prevCursor === 0 ? false : true
+        hasNexts = nextCursor === 0 ? false : true
+        hasPrevs = prevCursor === 0 ? false : true
       } else {
-        hasNextEven = false
-        hasPrevEven = false
+        hasNexts = false
+        hasPrevs = false
       }
     }
 
@@ -205,8 +175,8 @@ export const mainEventosPage = async (req, res) => {
 
     const datos = {
       eventos,
-      hasNextEven,
-      hasPrevEven,
+      hasNexts,
+      hasPrevs,
       cursor: convertNodeToCursor(JSON.stringify(cursor)),
     };
 
@@ -214,7 +184,7 @@ export const mainEventosPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -231,7 +201,7 @@ export const addEventoPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -258,7 +228,7 @@ export const editEventoPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -276,39 +246,24 @@ export const mainFraudesPage = async (req, res) => {
   const part = req.query.part ? req.query.part.toUpperCase() : ''
 
   let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
-  let hasPrevFrau = cursor ? true : false
-  let context = {}
-
-  if (cursor) {
-    context = {
-      limit: limit + 1,
-      direction: dir,
-      cursor: JSON.parse(convertCursorToNode(JSON.stringify(cursor))),
-      part,
-    }
-  } else {
-    context = {
-      limit: limit + 1,
-      direction: dir,
-      cursor: {
-        next: 0,
-        prev: 0,
-      },
-      part,
-    }
-  }
+  let hasPrevs = cursor ? true : false
 
   try {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/fraudes`, {
-      context,
+      context: {
+        limit: limit + 1,
+        direction: dir,
+        cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: 0 , prev: 0},
+        part,
+      },
     });
 
     let fraudes = result.data.data
-    let hasNextFrau = fraudes.length === limit + 1
+    let hasNexts = fraudes.length === limit + 1
     let nextCursor = 0
     let prevCursor = 0
 
-    if (hasNextFrau) {
+    if (hasNexts) {
       nextCursor = dir === 'next' ? fraudes[limit - 1].IDTIPO : fraudes[0].IDTIPO
       prevCursor = dir === 'next' ? fraudes[0].IDTIPO : fraudes[limit - 1].IDTIPO
 
@@ -318,11 +273,11 @@ export const mainFraudesPage = async (req, res) => {
       prevCursor = dir === 'next' ? fraudes[0]?.IDTIPO : 0
 
       if (cursor) {
-        hasNextFrau = nextCursor === 0 ? false : true
-        hasPrevFrau = prevCursor === 0 ? false : true
+        hasNexts = nextCursor === 0 ? false : true
+        hasPrevs = prevCursor === 0 ? false : true
       } else {
-        hasNextFrau = false
-        hasPrevFrau = false
+        hasNexts = false
+        hasPrevs = false
       }
     }
 
@@ -337,8 +292,8 @@ export const mainFraudesPage = async (req, res) => {
 
     const datos = {
       fraudes,
-      hasNextFrau,
-      hasPrevFrau,
+      hasNexts,
+      hasPrevs,
       cursor: convertNodeToCursor(JSON.stringify(cursor)),
     };
 
@@ -346,7 +301,7 @@ export const mainFraudesPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -363,7 +318,7 @@ export const addFraudePage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -390,7 +345,7 @@ export const editFraudePage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -408,39 +363,24 @@ export const mainHitosPage = async (req, res) => {
   const part = req.query.part ? req.query.part.toUpperCase() : ''
 
   let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
-  let hasPrevHito = cursor ? true : false
-  let context = {}
-
-  if (cursor) {
-    context = {
-      limit: limit + 1,
-      direction: dir,
-      cursor: JSON.parse(convertCursorToNode(JSON.stringify(cursor))),
-      part,
-    }
-  } else {
-    context = {
-      limit: limit + 1,
-      direction: dir,
-      cursor: {
-        next: 0,
-        prev: 0,
-      },
-      part,
-    }
-  }
+  let hasPrevs = cursor ? true : false
 
   try {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/hitos`, {
-      context,
+      context: {
+        limit: limit + 1,
+        direction: dir,
+        cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: 0 , prev: 0},
+        part,
+      },
     });
 
     let hitos = result.data.data
-    let hasNextHito = hitos.length === limit + 1
+    let hasNexts = hitos.length === limit + 1
     let nextCursor = 0
     let prevCursor = 0
 
-    if (hasNextHito) {
+    if (hasNexts) {
       nextCursor = dir === 'next' ? hitos[limit - 1].IDTIPO : hitos[0].IDTIPO
       prevCursor = dir === 'next' ? hitos[0].IDTIPO : hitos[limit - 1].IDTIPO
 
@@ -450,11 +390,11 @@ export const mainHitosPage = async (req, res) => {
       prevCursor = dir === 'next' ? hitos[0]?.IDTIPO : 0
 
       if (cursor) {
-        hasNextHito = nextCursor === 0 ? false : true
-        hasPrevHito = prevCursor === 0 ? false : true
+        hasNexts = nextCursor === 0 ? false : true
+        hasPrevs = prevCursor === 0 ? false : true
       } else {
-        hasNextHito = false
-        hasPrevHito = false
+        hasNexts = false
+        hasPrevs = false
       }
     }
 
@@ -469,8 +409,8 @@ export const mainHitosPage = async (req, res) => {
 
     const datos = {
       hitos,
-      hasNextHito,
-      hasPrevHito,
+      hasNexts,
+      hasPrevs,
       cursor: convertNodeToCursor(JSON.stringify(cursor)),
     };
 
@@ -478,7 +418,7 @@ export const mainHitosPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -498,7 +438,7 @@ export const addHitoPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -526,7 +466,7 @@ export const editHitoPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -558,7 +498,7 @@ export const insertCierre = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -588,7 +528,7 @@ export const updateCierre = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -617,7 +557,7 @@ export const removeCierre = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -647,7 +587,7 @@ export const insertEvento = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -677,7 +617,7 @@ export const updateEvento = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -706,7 +646,7 @@ export const removeEvento = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -736,7 +676,7 @@ export const insertFraude = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -766,7 +706,7 @@ export const updateFraude = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -795,7 +735,7 @@ export const removeFraude = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -825,7 +765,7 @@ export const insertHito = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -856,7 +796,7 @@ export const updateHito = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -885,7 +825,7 @@ export const removeHito = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {

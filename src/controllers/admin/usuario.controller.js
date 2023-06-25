@@ -6,45 +6,28 @@ export const mainPage = async (req, res) => {
   const user = req.user
 
   const dir = req.query.dir ? req.query.dir : 'next'
-  const limit = req.query.limit ? req.query.limit : 10
+  const limit = req.query.limit ? req.query.limit : 9
   const part = req.query.part ? req.query.part.toUpperCase() : ''
 
   let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
-  let hasPrevUsers = cursor ? true:false
-  let context = {}
-
-  if (cursor) {
-    context = {
-      oficina: user.rol === tiposRol.admin ? 0 : user.oficina,
-      limit: limit + 1,
-      direction: dir,
-      cursor: JSON.parse(convertCursorToNode(JSON.stringify(cursor))),
-      part,
-    }
-  } else {
-    context = {
-      oficina: user.rol === tiposRol.admin ? 0 : user.oficina,
-      limit: limit + 1,
-      direction: dir,
-      cursor: {
-        next: '',
-        prev: '',
-      },
-      part,
-    }
-  }
+  let hasPrevs = cursor ? true : false
 
   try {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/usuarios`, {
-      context,
+      context: {
+        limit: limit + 1,
+        direction: dir,
+        cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: '' , prev: ''},
+        part,
+      },
     })
 
     let usuarios = result.data.data
-    let hasNextUsers = usuarios.length === limit +1
+    let hasNexts = usuarios.length === limit +1
     let nextCursor = ''
     let prevCursor = ''
     
-    if (hasNextUsers) {
+    if (hasNexts) {
       nextCursor= dir === 'next' ? usuarios[limit - 1].NOMUSU : usuarios[0].NOMUSU
       prevCursor = dir === 'next' ? usuarios[0].NOMUSU : usuarios[limit - 1].NOMUSU
 
@@ -54,11 +37,11 @@ export const mainPage = async (req, res) => {
       prevCursor = dir === 'next' ? usuarios[0]?.NOMUSU : ''
       
       if (cursor) {
-        hasNextUsers = nextCursor === '' ? false : true
-        hasPrevUsers = prevCursor === '' ? false : true
+        hasNexts = nextCursor === '' ? false : true
+        hasPrevs = prevCursor === '' ? false : true
       } else {
-        hasNextUsers = false
-        hasPrevUsers = false
+        hasNexts = false
+        hasPrevs = false
       }
     }
 
@@ -72,8 +55,8 @@ export const mainPage = async (req, res) => {
     }    
     const datos = {
       usuarios,
-      hasPrevUsers,
-      hasNextUsers,
+      hasPrevs,
+      hasNexts,
       cursor: convertNodeToCursor(JSON.stringify(cursor)),
       estadosUsuario,
     }
@@ -82,7 +65,7 @@ export const mainPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -110,7 +93,7 @@ export const addPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -144,7 +127,7 @@ export const editPage = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -220,7 +203,7 @@ export const update = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
@@ -249,7 +232,7 @@ export const remove = async (req, res) => {
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
-        alerts: [{ msg: error.response.data.msg }],
+        alerts: [{ msg: error.response.data.data }],
       });
     } else {
       res.render("admin/error500", {
