@@ -27,23 +27,9 @@ export const fraudes = async (req, res) => {
     res.status(500).json({ stat: null, data: err })
   }
 }
-export const extended = async (req, res) => {
-  // context
-  const context = req.body.context
-
-  // proc
-  try {
-    const result = await DAL.extended(context)
-
-    res.status(200).json(result)
-  } catch (err) {
-    res.status(500).json({ stat: null, data: err })
-  }
-}
 export const crearFraude = async (req, res) => {
   // context
   const fraude = {
-    fecfra: req.body.fraude.FECFRA,
     nifcon: req.body.fraude.NIFCON,
     nomcon: req.body.fraude.NOMCON,
     emacon: req.body.fraude.EMACON,
@@ -77,7 +63,6 @@ export const modificarFraude = async (req, res) => {
   // context
   const fraude = {
     idfrau: req.body.fraude.IDFRAU,
-    fecfra: req.body.fraude.FECFRA,
     nifcon: req.body.fraude.NIFCON,
     nomcon: req.body.fraude.NOMCON,
     emacon: req.body.fraude.EMACON,
@@ -509,7 +494,6 @@ export const crearSms = async (req, res) => {
     IDFRAU: req.body.fraude.IDFRAU,
   }
   const sms = {
-    fecsms: req.body.sms.FECSMS,
     texsms: req.body.sms.TEXSMS,
     movsms: req.body.sms.MOVSMS,
     stasms: req.body.sms.STASMS,
@@ -533,7 +517,6 @@ export const modificarSms = async (req, res) => {
   // context
   const sms = {
     idsmss: req.body.sms.IDSMSS,
-    fecsms: req.body.sms.FECSMS,
     texsms: req.body.sms.TEXSMS,
     movsms: req.body.sms.MOVSMS,
   }
@@ -609,7 +592,6 @@ export const crearRelacion = async (req, res) => {
     idfrau: req.body.fraude.IDFRAU,
   }
   const relacion = {
-    fecrel: req.body.relacion.FECREL,
     nifcon: req.body.relacion.NIFCON,
     nomcon: req.body.relacion.NOMCON,
   }
@@ -632,7 +614,6 @@ export const modificarRelacion = async (req, res) => {
   // context
   const relacion = {
     idrela: req.body.relacion.IDRELA,
-    fecrel: req.body.relacion.FECREL,
     nifcon: req.body.relacion.NIFCON,
     nomcon: req.body.relacion.NOMCON,
   }
