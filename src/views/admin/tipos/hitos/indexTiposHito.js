@@ -59,6 +59,7 @@ const buildTable = (state) => {
 
   myList.map(element => {
     const row = document.createElement('tr')
+
     // col1
     let cell = document.createElement('td')
     cell.classList.add("w-4")
@@ -77,15 +78,8 @@ const buildTable = (state) => {
       </div>
     </div>`
     row.appendChild(cell)
+
     // col3
-    // cell = document.createElement('td')
-    // cell.innerHTML = `<div class="d-flex py-1 align-items-center">
-    //   <div class="flex-fill">
-    //     <div class="font-weight-medium">${element.ANUHIT}</div>
-    //   </div>
-    // </div>`
-    row.appendChild(cell)
-    // col4
     cell = document.createElement('td')
     cell.classList.add("w-5")
     cell.innerHTML = `<ul class="dots-menu">
@@ -125,13 +119,13 @@ const buildTable = (state) => {
 const createPages = () => {
   let str = "<ul>";
 
-  if (hasPrevHito) {
+  if (hasPrevs) {
     str += "<li class='page-item previous no'><a href='/admin/tipos/hitos?cursor=" + JSON.stringify(cursor) + "&part=" + document.getElementById('buscarTipoBox').value + "&dir=prev' class='nav-link'>&#9664 Anterior</a>";
   } else {
     str += "<li><a href='#' class='nav-link disabled'>&#9664 Anterior</a>";
   }
 
-  if (hasNextHito) {
+  if (hasNexts) {
     str += "<li class='page-item next no'><a href='/admin/tipos/hitos?cursor=" + JSON.stringify(cursor) + "&part=" + document.getElementById('buscarTipoBox').value + "&dir=next' class='nav-link'>Siguiente &#9654</a>";
   } else {
     str += "<li><a href='#' class='nav-link disabled'>Siguiente &#9654</a>";

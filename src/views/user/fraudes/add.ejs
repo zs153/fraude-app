@@ -53,7 +53,7 @@
                       </div>
                     </div>
                     <div class="row">
-                      <div class="col-9">
+                      <div class="col-5">
                         <div class="mb-1">
                           <div class="input-control">
                             <div class="form-label required">Tipo</div>
@@ -62,6 +62,22 @@
                               <% datos.tipos.map(element=> { %>
                                 <option value="<%- element.IDTIPO %>">
                                   <%- element.DESTIP %>
+                                </option>
+                              <% }) %>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="mb-1">
+                          <div class="input-control">
+                            <div class="form-label required">Referencia</div>
+                            <select class="form-select form-control" id="cboref" name="reffra" value="">
+                              <option value="0">SELECCIONE UNA REFERENCIA</option>
+                              <% datos.cargas.map(element=> { %>
+                                <option value="<%- element.REFCAR %>">
+                                  <%- element.REFCAR %>
                                 </option>
                               <% }) %>
                             </select>
@@ -149,7 +165,7 @@
   </div>
 
   <script src="/js/ayuda.min.js"></script>
-  <script src="/js/addEditFraude.min.js"></script>
+  <script src="/js/user/addEditFraude.min.js"></script>
   <script>
     const elemAdd = document.getElementById('add');
     elemAdd.setAttribute('action', `/user/fraudes/insert?part=${getCookie('filtro')}`)

@@ -10,7 +10,7 @@ export const mainPage = async (req, res) => {
   const limit = req.query.limit ? req.query.limit : 9
 
   let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
-  let hasPrevFras = cursor ? true : false
+  let hasPrevs = cursor ? true : false
   let part = ''
   let rest = ''
 
@@ -173,6 +173,92 @@ export const editPage = async (req, res) => {
     }
   }
 };
+export const resolverPage = async (req, res) => {
+  const user = req.user;
+  let hayLiquidacion = false;
+
+  try {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/hito`, {
+      context: {
+        IDFRAU: req.params.id,
+      },
+    });
+
+    let hitos = result.data
+    if (hitos.stat) {
+      const hayPropuestaLiquidacion = hitos.data.some((itm) => itm.STAHIT === estadosHito.propuestaLiquidacion);
+      if (hayPropuestaLiquidacion) {
+        if (!hitos.data.some((itm) => itm.STAHIT === estadosHito.liquidacion)) {
+          const msg =
+            "Existe propuesta de liquidación sin su correspondiente liquidación.\nNo se puede resolver el fraude.";
+
+          return res.render("user/error400", {
+            alerts: [{ msg }],
+          });
+        }
+      }
+      hayLiquidacion = hitos.data.some((itm) => itm.STAHIT === estadosHito.liquidacion);
+      if (hayLiquidacion) {
+        if (!hitos.data.some((itm) => itm.STAHIT === estadosHito.propuestaLiquidacion)) {
+          const msg =
+            "Existe liquidación sin su correspondiente propuesta de liquidación.\nNo se puede resolver el fraude.";
+
+          return res.render("user/error400", {
+            alerts: [{ msg }],
+          });
+        }
+      }
+      const hayPropuestaSancion = hitos.data.some((itm) => itm.STAHIT === estadosHito.propuestaSancion);
+      if (hayPropuestaSancion) {
+        if (!hitos.data.some((itm) => itm.STAHIT === estadosHito.sancion || itm.STAHIT === estadosHito.sancionAnulada)) {
+          const msg =
+            "Existe propuesta de sanción sin su correspondiente sanción o sanción anulada.\nNo se puede resolver el fraude.";
+
+          return res.render("user/error400", {
+            alerts: [{ msg }],
+          });
+        }
+      }
+      const haySancion = hitos.data.some((itm) => itm.STAHIT === estadosHito.sancion);
+      if (haySancion) {
+        if (!hitos.data.some((itm) => itm.STAHIT === estadosHito.propuestaSancion)) {
+          const msg =
+            "Existe sanción sin su correspondiente propuesta de sanción.\nNo se puede resolver el fraude.";
+
+          return res.render("user/error400", {
+            alerts: [{ msg }],
+          });
+        }
+      }
+    }
+
+    const tipos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/cierre`, {
+      context: {},
+    });
+    const fraude = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
+      context: {
+        IDFRAU: req.params.id,
+      },
+    });
+    const datos = {
+      fraude: fraude.data.data[0],
+      tipos: tipos.data.data,
+      hayLiquidacion,
+    };
+
+    res.render("user/fraudes/resolver", { user, datos });
+  } catch (error) {
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
+  }
+};
 export const resueltosPage = async (req, res) => {
   const user = req.user
 
@@ -259,9 +345,36 @@ export const resueltosPage = async (req, res) => {
     }
   }
 };
+export const readonlyPage = async (req, res) => {
+  const user = req.user;
 
+  try {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
+      context: {
+        IDFRAU: req.params.id,
+      },
+    })
 
-// TODO
+    let fraude = result.data.data[0]
+    fraude.FECFRA = fraude.FECFRA.slice(0,10).split('-').reverse().join('/')
+    const datos = {
+      fraude,
+    }
+
+    res.render("user/fraudes/readonly", { user, datos });
+  } catch (error) {
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.data }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
+  }
+}
+
 // page hitosevento
 export const hitoseventosPage = async (req, res) => {
   const user = req.user;
@@ -532,41 +645,25 @@ export const smssPage = async (req, res) => {
   const part = req.query.part ? req.query.part.toUpperCase() : ''
 
   let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
-  let hasPrevSms = cursor ? true : false
-  let context = {}
-
-  if (cursor) {
-    context = {
-      fraude: req.params.id,
-      limit: limit + 1,
-      direction: dir,
-      cursor: JSON.parse(convertCursorToNode(JSON.stringify(cursor))),
-      part,
-    }
-  } else {
-    context = {
-      fraude: req.params.id,
-      limit: limit + 1,
-      direction: dir,
-      cursor: {
-        next: 0,
-        prev: 0,
-      },
-      part,
-    }
-  }
+  let hasPrevs = cursor ? true : false
 
   try {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/smss`, {
-      context,
+      context: {
+        fraude: req.params.id,
+        limit: limit + 1,
+        direction: dir,
+        cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))):{next:0, prev:0},
+        part,
+      },
     })
 
     let smss = result.data.data
-    let hasNextSms = smss.length === limit + 1
+    let hasNexts = smss.length === limit + 1
     let nextCursor = 0
     let prevCursor = 0
 
-    if (hasNextSms) {
+    if (hasNexts) {
       nextCursor = dir === 'next' ? smss[limit - 1].IDSMSS : smss[0].IDSMSS
       prevCursor = dir === 'next' ? smss[0].IDSMSS : smss[limit - 1].IDSMSS
 
@@ -576,11 +673,11 @@ export const smssPage = async (req, res) => {
       prevCursor = dir === 'next' ? smss[0]?.IDSMSS : 0
 
       if (cursor) {
-        hasNextSms = nextCursor === 0 ? false : true
-        hasPrevSms = prevCursor === 0 ? false : true
+        hasNexts = nextCursor === 0 ? false : true
+        hasPrevs = prevCursor === 0 ? false : true
       } else {
-        hasNextSms = false
-        hasPrevSms = false
+        hasNexts = false
+        hasPrevs = false
       }
     }
 
@@ -599,8 +696,8 @@ export const smssPage = async (req, res) => {
     const datos = {
       fraude,
       smss,
-      hasNextSms,
-      hasPrevSms,
+      hasNexts,
+      hasPrevs,
       cursor: convertNodeToCursor(JSON.stringify(cursor)),      
       estadosSms,
     }
@@ -722,41 +819,25 @@ export const relacionesPage = async (req, res) => {
   const part = req.query.part ? req.query.part.toUpperCase() : ''
 
   let cursor = req.query.cursor ? JSON.parse(req.query.cursor) : null
-  let hasPrevRela = cursor ? true : false
-  let context = {}
-
-  if (cursor) {
-    context = {
-      fraude: req.params.id,
-      limit: limit + 1,
-      direction: dir,
-      cursor: JSON.parse(convertCursorToNode(JSON.stringify(cursor))),
-      part,
-    }
-  } else {
-    context = {
-      fraude: req.params.id,
-      limit: limit + 1,
-      direction: dir,
-      cursor: {
-        next: 0,
-        prev: 0,
-      },
-      part,
-    }
-  }
+  let hasPrevs = cursor ? true : false
 
   try {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/relaciones`, {
-      context,
+      context: {
+        fraude: req.params.id,
+        limit: limit + 1,
+        direction: dir,
+        cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))): {next:0, prev:0},
+        part,
+      },
     })
 
     let relaciones = result.data.data
-    let hasNextRela = relaciones.length === limit + 1
+    let hasNexts = relaciones.length === limit + 1
     let nextCursor = 0
     let prevCursor = 0
 
-    if (hasNextRela) {
+    if (hasNexts) {
       nextCursor = dir === 'next' ? relaciones[limit - 1].IDRELA : relaciones[0].IDRELA
       prevCursor = dir === 'next' ? relaciones[0].IDRELA : relaciones[limit - 1].IDRELA
 
@@ -766,11 +847,11 @@ export const relacionesPage = async (req, res) => {
       prevCursor = dir === 'next' ? relaciones[0]?.IDRELA : 0
 
       if (cursor) {
-        hasNextRela = nextCursor === 0 ? false : true
-        hasPrevRela = prevCursor === 0 ? false : true
+        hasNexts = nextCursor === 0 ? false : true
+        hasPrevs = prevCursor === 0 ? false : true
       } else {
-        hasNextRela = false
-        hasPrevRela = false
+        hasNexts = false
+        hasPrevs = false
       }
     }
 
@@ -789,8 +870,8 @@ export const relacionesPage = async (req, res) => {
     const datos = {
       fraude,
       relaciones,
-      hasNextRela,
-      hasPrevRela,
+      hasNexts,
+      hasPrevs,
       cursor: convertNodeToCursor(JSON.stringify(cursor)),
     }
 
@@ -930,15 +1011,13 @@ export const addEjercicioPage = async (req, res) => {
 // procs fraude
 export const insert = async (req, res) => {
   const user = req.user;
-  const referencia = "F" + randomString(10, "1234567890YMGS");
   const fraude = {
-    FECFRA: req.body.fecfra,
     NIFCON: req.body.nifcon.toUpperCase(),
     NOMCON: req.body.nomcon.toUpperCase(),
     EMACON: req.body.emacon,
     TELCON: req.body.telcon,
     MOVCON: req.body.movcon,
-    REFFRA: referencia,
+    REFFRA: req.body.reffra,
     TIPFRA: req.body.tipfra,
     EJEFRA: req.body.ejefra,
     OFIFRA: req.body.ofifra,
@@ -975,12 +1054,12 @@ export const update = async (req, res) => {
   const user = req.user;
   const fraude = {
     IDFRAU: req.body.idfrau,
-    FECFRA: req.body.fecfra,
     NIFCON: req.body.nifcon.toUpperCase(),
     NOMCON: req.body.nomcon.toUpperCase(),
     EMACON: req.body.emacon,
     TELCON: req.body.telcon,
     MOVCON: req.body.movcon,
+    REFFRA: req.body.reffra,
     TIPFRA: req.body.tipfra,
     EJEFRA: req.body.ejefra,
     OFIFRA: req.body.ofifra,
@@ -1562,7 +1641,6 @@ export const insertSms = async (req, res) => {
     IDFRAU: req.body.idfrau,
   }
   const sms = {
-    FECSMS: fecha.toISOString().substring(0, 10),
     TEXSMS: req.body.texsms,
     MOVSMS: req.body.movsms,
     STASMS: estadosSms.pendiente,
@@ -1599,7 +1677,6 @@ export const updateSms = async (req, res) => {
   }
   const sms = {
     IDSMSS: req.body.idsmss,
-    FECSMS: new Date().toISOString().slice(0, 10),
     TEXSMS: req.body.texsms,
     MOVSMS: req.body.movsms,
   };
@@ -1664,12 +1741,10 @@ export const removeSms = async (req, res) => {
 // proc relacion
 export const insertRelacion = async (req, res) => {
   const user = req.user;
-  const fecha = new Date()
   const fraude = {
     IDFRAU: req.body.idfrau,
   }
   const relacion = {
-    FECREL: fecha.toISOString().substring(0, 10),
     NIFCON: req.body.nifcon.toUpperCase(),
     NOMCON: req.body.nomcon.toUpperCase(),
   };
@@ -1705,7 +1780,6 @@ export const updateRelacion = async (req, res) => {
   };
   const relacion = {
     IDRELA: req.body.idrela,
-    FECREL: new Date().toISOString().slice(0, 10),
     NIFCON: req.body.nifcon.toUpperCase(),
     NOMCON: req.body.nomcon.toUpperCase(),
   };
@@ -1773,11 +1847,4 @@ const convertNodeToCursor = (node) => {
 }
 const convertCursorToNode = (cursor) => {
   return new Buffer.from(cursor, 'base64').toString('binary')
-}
-const randomString = (long, chars) => {
-  let result = "";
-  for (let i = long; i > 0; --i) {
-    result += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return result;
 }

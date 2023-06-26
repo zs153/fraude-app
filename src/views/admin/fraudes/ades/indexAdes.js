@@ -62,7 +62,7 @@ const buildTable = (state) => {
     // col1
     let cell = document.createElement('td')
     cell.classList.add("w-4")
-    if (element.STAUSU === estadosUsuario.activo) {
+    if (element.STAUSU === estados.activo) {
       cell.innerHTML = `<div class="align-items-center">
         <span class="avatar avatar-rounded bg-green-lt">
           <h6>${element.USERID.slice(0, 5)}</h6>
@@ -135,13 +135,13 @@ const buildTable = (state) => {
 const createPages = () => {
   let str = "<ul>";
 
-  if (hasPrevUsers) {
+  if (hasPrevs) {
     str += "<li class='page-item previous no'><a href='/admin/fraudes/ades?cursor=" + JSON.stringify(cursor) + "&part=" + document.getElementById('buscarUserBox').value + "&dir=prev' class='nav-link'>&#9664 Anterior</a>";
   } else {
     str += "<li><a href='#' class='nav-link disabled'>&#9664 Anterior</a>";
   }
 
-  if (hasNextUsers) {
+  if (hasNexts) {
     str += "<li class='page-item next no'><a href='/admin/fraudes/ades?cursor=" + JSON.stringify(cursor) + "&part=" + document.getElementById('buscarUserBox').value + "&dir=next' class='nav-link'>Siguiente &#9654</a>";
   } else {
     str += "<li><a href='#' class='nav-link disabled'>Siguiente &#9654</a>";

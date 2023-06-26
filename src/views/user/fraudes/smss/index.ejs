@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>Fraude</title>
+  <title>Fraudes</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
   <!-- styles -->
   <link rel="stylesheet" href="/css/styles.css">
@@ -23,7 +23,7 @@
               <div class="card">
                 <div class="card-header">
                   <div>
-                    <h3 class="card-title">Gestión Sms</h3>
+                    <h3 class="card-title">Mensajes</h3>
                   </div>
                   <div class="col-auto ms-auto">
                     <div class="d-flex">
@@ -40,14 +40,14 @@
                           </span>
                           <input type="text" class="form-control d-inline-block me-3" id="buscarSmsBox"
                             onkeyup="arrayFilter(this.value);" placeholder="Buscar..."
-                            aria-label="Buscar en smss">
+                            aria-label="Buscar en mensajes">
                         </div>
                       </form>
-                      <a href="/user/fraudes/smss/add/<%- datos.fraude.IDFRAU %>" class="btn">
+                      <a href="" id="new" class="btn">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" height="24" width="24" viewBox="0 0 24 24">
                           <path d="M11.25 18.75v-6h-6v-1.5h6v-6h1.5v6h6v1.5h-6v6Z" />
                         </svg>
-                        Nuevo SMS
+                        Nuevo Mensaje
                       </a>
                     </div>
                   </div>
@@ -68,7 +68,7 @@
                   </table>
                   <div id="pagination-wrapper" class="py-1"></div>
                   <div class="ms-auto d-flex py-1">
-                    <a href="#" id="vol" class="btn btn-white">Volver</a>
+                    <a href="" id="vol" class="btn btn-white">Volver</a>
                   </div>
                 </div>
               </div>
@@ -101,13 +101,12 @@
           <div class="w-100">
             <div class="row">
               <div class="col">
-                <a href="/user/fraudes/smss/<%- datos.fraude.IDFRAU %>" class="btn btn-white w-100"
-                  data-bs-dismiss="modal">Cancelar</a>
+                <a href="#" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
               </div>
               <div class="col">
-                <form action="#" id="del" method="POST">
+                <form action="" id="del" method="POST">
                   <input type="hidden" id="idsmss" name="idsmss" value="">
-                  <input type="hidden" id="idfrau" name="idfrau" value="<%- datos.fraude.IDFRAU %>">
+                  <input type="hidden" id="idfrau" name="idfrau" value="<%- datos.formulario.IDFRAU %>">
                   <button type="submit" class="btn btn-danger w-100">Borrar mensaje sms</button>
                 </form>
               </div>
@@ -137,13 +136,12 @@
           <div class="w-100">
             <div class="row">
               <div class="col">
-                <a href="/user/fraudes/smss/<%- datos.fraude.IDFRAU %>" class="btn btn-white w-100"
-                  data-bs-dismiss="modal">Cancelar</a>
+                <a href="#" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
               </div>
               <div class="col">
-                <form action="/user/fraudes/smss/cambio" method="POST">
+                <form action="" id="chng" method="POST">
                   <input type="hidden" id="idcamb" name="idsmss" value="">
-                  <input type="hidden" id="idfrau" name="idfrau" value="<%- datos.fraude.IDFRAU %>">
+                  <input type="hidden" id="idfrau" name="idfrau" value="<%- datos.formulario.IDFRAU %>">
                   <button type="submit" class="btn btn-danger w-100">Cambiar estado</button>
                 </form>
               </div>
@@ -156,13 +154,14 @@
 
   <script>
     const orgList = <%- JSON.stringify(datos.smss) %>
+    const fraude = <%- JSON.stringify(datos.fraude) %>
     const estados = <%- JSON.stringify(datos.estadosSms) %>
     const cursor = <%- JSON.stringify(datos.cursor) %>
-    const hasNextSms = <%- datos.hasNextSms %>
-    const hasPrevSms = <%- datos.hasPrevSms %>
+    const hasNexts = <%- datos.hasNexts %>
+    const hasPrevs = <%- datos.hasPrevs %>
   </script>
   <script src="/js/ayuda.min.js"></script>
-  <script src="/js/indexSmss.min.js"></script>
+  <script src="/js/user/indexSmss.min.js"></script>
 </body>
 
 </html>

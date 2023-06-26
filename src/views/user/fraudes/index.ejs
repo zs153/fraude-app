@@ -42,7 +42,7 @@
                           <a href="#" id="rsltos" class="btn me-1">
                             Resueltos
                           </a>
-                          <a href="#" id="new" class="btn">
+                          <a href="" id="new" class="btn">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" height="24" width="24"
                               viewBox="0 0 24 24">
                               <path d="M11.25 18.75v-6h-6v-1.5h6v-6h1.5v6h6v1.5h-6v6Z" />
@@ -106,7 +106,7 @@
                 <a href="#" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
               </div>
               <div class="col">
-                <form action="#" id="del" method="POST">
+                <form action="" id="del" method="POST">
                   <input type="hidden" id="idborr" name="idfrau" value="">
                   <button type="submit" class="btn btn-danger w-100">Borrar fraude</button>
                 </form>
@@ -140,7 +140,7 @@
                 <a href="#" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
               </div>
               <div class="col">
-                <form action="#" id="asig" method="POST">
+                <form action="" id="asig" method="POST">
                   <input type="hidden" id="idasig" name="idfrau" value="">
                   <button type="submit" class="btn btn-success w-100">Asignar fraude</button>
                 </form>
@@ -174,9 +174,43 @@
                 <a href="" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
               </div>
               <div class="col">
-                <form action="#" id="desag" method="POST">
+                <form action="" id="desag" method="POST">
                   <input type="hidden" id="iddesa" name="idfrau" value="">
                   <button type="submit" class="btn btn-danger w-100">Desasignar fraude</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal modal-blur fade" id="modal-resolver" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-status bg-primary"></div>
+        <div class="modal-body text-center py-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-blue icon-lg" width="24" height="24"
+            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <path d="M12 9v2m0 4v.01"></path>
+            <path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75"></path>
+          </svg>
+          <h3>Resolver formulario</h3>
+          <div id="msgcer"></div>
+        </div>
+        <div class="modal-footer">
+          <div class="w-100">
+            <div class="row">
+              <div class="col">
+                <a href="" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
+              </div>
+              <div class="col">
+                <form action="" id="cerr" method="POST">
+                  <input type="hidden" id="idcerr" name="idfrau" value="">
+                  <button type="submit" class="btn btn-success w-100">Resolver fraude</button>
                 </form>
               </div>
             </div>
@@ -188,13 +222,13 @@
 
   <script>
     const orgList = <%- JSON.stringify(datos.fraudes) %>
-    const estadosFraude = <%- JSON.stringify(datos.estadosFraude) %>
+    const estados = <%- JSON.stringify(datos.estadosFraude) %>
     const cursor = <%- JSON.stringify(datos.cursor) %>
-    const hasNextFras = <%- datos.hasNextFras %>
-    const hasPrevFras = <%- datos.hasPrevFras %>
+    const hasNexts = <%- datos.hasNexts %>
+    const hasPrevs = <%- datos.hasPrevs %>
   </script>
   <script src="/js/ayuda.min.js"></script>
-  <script src="/js/indexFraudes.min.js"></script>
+  <script src="/js/user/indexFraudes.min.js"></script>
 </body>
 
 </html>

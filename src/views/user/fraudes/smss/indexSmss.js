@@ -148,13 +148,13 @@ const buildTable = (state) => {
 const createPages = () => {
   let str = "<ul>";
 
-  if (hasPrevSms) {
+  if (hasPrevs) {
     str += "<li class='page-item previous no'><a href='/user/fraudes/smss?cursor=" + JSON.stringify(cursor) + "&part=" + document.getElementById('buscarSmsBox').value + "&dir=prev' class='nav-link'>&#9664 Anterior</a>";
   } else {
     str += "<li><a href='#' class='nav-link disabled'>&#9664 Anterior</a>";
   }
 
-  if (hasNextSms) {
+  if (hasNexts) {
     str += "<li class='page-item next no'><a href='/user/fraudes/smss?cursor=" + JSON.stringify(cursor) + "&part=" + document.getElementById('buscarSmsBox').value + "&dir=next' class='nav-link'>Siguiente &#9654</a>";
   } else {
     str += "<li><a href='#' class='nav-link disabled'>Siguiente &#9654</a>";
@@ -165,6 +165,12 @@ const createPages = () => {
 }
 
 // incializacion
+const elemNew = document.getElementById('new');
+elemNew.setAttribute('href', `/user/fraudes/smss/add/${fraude.IDFRAU}?part=${getCookie('filtro')}`)
+
+const elemChange = document.getElementById('chng');
+elemChange.setAttribute('href', `/user/fraudes/smss/cambio?part=${getCookie('filtro')}`)
+
 const elemDel = document.getElementById('del');
 elemDel.setAttribute('action', `/user/fraudes/smss/delete?part=${getCookie('filtro')}`)
 

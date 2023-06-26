@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>Oficinas</title>
+  <title>Fraudes</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
   <!-- styles -->
   <link rel="stylesheet" href="/css/styles.css">
@@ -22,7 +22,7 @@
             <div class="col-2"></div>
             <div class="col-8">
               <div class="card mt-3">            
-                <form action="#" id="upd" method="POST" onsubmit="return validate();">
+                <form action="" id="upd" method="POST" onsubmit="return validate();">
                   <input type="hidden" id="idofic" name="idofic" value="<%- datos.oficina.IDOFIC %>">
                   <div class="card-header">
                     <h3 class="card-title">Oficina</h3>
@@ -66,7 +66,7 @@
   </div>
 
   <script src="/js/ayuda.min.js"></script>
-  <script src="/js/addEditOficina.min.js"></script>
+  <script src="/js/admin/addEditOficina.min.js"></script>
   <script>
     const elemUpd = document.getElementById('upd');
     elemUpd.setAttribute('action', `/admin/oficinas/update?part=${getCookie('filtro')}`)

@@ -65,5 +65,6 @@ const validate = () => {
 // inicializar
 const elemNew = document.getElementById('new');
 elemNew.setAttribute('action', `/admin/fraudes/ejercicios/insert?part=${getCookie('filtro')}`)
+
 const elemVol = document.getElementById('vol');
 elemVol.setAttribute('href', `/admin/fraudes/?part=${getCookie('filtro')}`)

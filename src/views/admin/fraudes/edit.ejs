@@ -14,14 +14,14 @@
 <body class="antialiased">
   <div class="wrapper">
     <%- include('../../partials/header') %>
-      <%- include('../../partials/navbar', {opcion: 'FRAUDE' }) %>
+      <%- include('../../partials/navbar', {opcion: 'ADMINISTRACION' }) %>
         <div class="page-wrapper">
           <div class="page-body">
             <div class="container-xl">
               <div class="row">
                 <div class="col-12">
                   <div class="card">
-                    <form action="#" id="upd" method="POST" onsubmit="return validate();">
+                    <form action="" id="upd" method="POST" onsubmit="return validate();">
                       <input type="hidden" name="idfrau" value="<%= datos.fraude.IDFRAU %>">
                       <div class="card-header">
                         <h3 class="card-title">Fraude</h3>
@@ -153,7 +153,7 @@
   </div>
 
   <script src="/js/ayuda.min.js"></script>
-  <script src="/js/addEditFraude.min.js"></script>
+  <script src="/js/admin/addEditFraude.min.js"></script>
   <script>
     const elemAdd = document.getElementById('upd');
     elemAdd.setAttribute('action', `/admin/fraudes/update?part=${getCookie('filtro')}`)

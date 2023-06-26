@@ -139,13 +139,13 @@ const buildTable = (state) => {
 const createPages = () => {
   let str = "<ul>";
 
-  if (hasPrevRela) {
+  if (hasPrevs) {
     str += "<li class='page-item previous no'><a href='/user/fraudes/relaciones?cursor=" + JSON.stringify(cursor) + "&part=" + document.getElementById('buscarRelBox').value + "&dir=prev' class='nav-link'>&#9664 Anterior</a>";
   } else {
     str += "<li><a href='#' class='nav-link disabled'>&#9664 Anterior</a>";
   }
 
-  if (hasNextRela) {
+  if (hasNexts) {
     str += "<li class='page-item next no'><a href='/user/fraudes/relaciones?cursor=" + JSON.stringify(cursor) + "&part=" + document.getElementById('buscarRelBox').value + "&dir=next' class='nav-link'>Siguiente &#9654</a>";
   } else {
     str += "<li><a href='#' class='nav-link disabled'>Siguiente &#9654</a>";
@@ -156,13 +156,16 @@ const createPages = () => {
 }
 
 // events
-// const elemBuscar = document.getElementById('buscarRelBox');
-// elemBuscar.onchange = (event) => {
-//   setCookie('filtro', event.target.value, .5) // medio dia
-// }
-// elemBuscar.value = getCookie('filtro')
+const elemBuscar = document.getElementById('buscarRelBox');
+elemBuscar.onchange = (event) => {
+  setCookie('filtra', event.target.value, .5) // medio dia
+}
+elemBuscar.value = getCookie('filtra')
 
 // incializacion
+const elemNew = document.getElementById('new');
+elemNew.setAttribute('href', `/user/fraudes/relaciones/add/${fraude.IDFRAU}?part=${getCookie('filtro')}`)
+
 const elemDel = document.getElementById('del');
 elemDel.setAttribute('action', `/user/fraudes/relaciones/delete?part=${getCookie('filtro')}`)
 

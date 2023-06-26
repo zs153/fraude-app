@@ -63,19 +63,19 @@ const buildTable = (state) => {
     // col1
     let cell = document.createElement('td')
     cell.classList.add("w-4")
-    if (element.STAFRA === estadosFraude.pendiente) {
+    if (element.STAFRA === estados.pendiente) {
       cell.innerHTML = `<div class="align-items-center py-1">
         <span class="avatar avatar-rounded bg-red-lt">
           <h6>${element.LIQFRA}</h6>
         </span>
       </div>`
-    } else if (element.STAFRA === estadosFraude.asignado) {
+    } else if (element.STAFRA === estados.asignado) {
       cell.innerHTML = `<div class="align-items-center py-1">
         <span class="avatar avatar-rounded bg-blue-lt">
           <h6>${element.LIQFRA}</h6>
         </span>
       </div>`
-    } else if (element.STAFRA === estadosFraude.resuelto) {
+    } else {
       cell.innerHTML = `<div class="align-items-center py-1">
         <span class="avatar avatar-rounded bg-green-lt">
           <h6>${element.LIQFRA}</h6>
@@ -158,7 +158,7 @@ const buildTable = (state) => {
     // col9
     cell = document.createElement('td')
     cell.classList.add("w-5")
-    if (element.STAFRA === estadosFraude.pendiente) {
+    if (element.STAFRA === estados.pendiente) {
       cell.innerHTML = `<ul class="dots-menu">
         <li class="nav-item drop-right">
           <a href="#" class="nav-link">
@@ -186,7 +186,7 @@ const buildTable = (state) => {
           </ul>
         </li>                              
       </ul>`
-    } else if (element.STAFRA === estadosFraude.resuelto) {
+    } else if (element.STAFRA === estados.resuelto) {
       cell.innerHTML = `<ul class="dots-menu">
         <li class="nav-item drop-right">
           <a href="#" class="nav-link">
@@ -331,6 +331,12 @@ elemDel.setAttribute('action', `/admin/fraudes/delete?part=${getCookie('filtro')
 
 const elemDesag = document.getElementById('desag');
 elemDesag.setAttribute('action', `/admin/fraudes/desasignar?part=${getCookie('filtro')}`)
+
+const elemAsig = document.getElementById('asig');
+elemAsig.setAttribute('action', `/admin/fraudes/asignar?part=${getCookie('filtro')}`)
+
+const elemCerr = document.getElementById('cerr');
+elemCerr.setAttribute('action', `/admin/fraudes/resolver?part=${getCookie('filtro')}`)
 
 const elemRes = document.getElementById('rsltos');
 elemRes.setAttribute('href', `/admin/fraudes/resueltos?part=${getCookie('filtro')}`)

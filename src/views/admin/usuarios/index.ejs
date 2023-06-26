@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>Usuarios</title>
+  <title>Fraudes</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
   <!-- styles -->
   <link rel="stylesheet" href="/css/styles.css">
@@ -40,7 +40,7 @@
                             placeholder="Buscar..." aria-label="Buscar en usuarios">
                         </div>
                       </form>
-                      <a href="#" id="new" class="btn">
+                      <a href="" id="new" class="btn">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" height="24" width="24" viewBox="0 0 24 24">
                           <path d="M11.25 18.75v-6h-6v-1.5h6v-6h1.5v6h6v1.5h-6v6Z" />
                         </svg>
@@ -97,7 +97,7 @@
                 <a href="#" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
               </div>
               <div class="col">
-                <form action="#" id="del" method="POST">
+                <form action="" id="del" method="POST">
                   <input type="hidden" id="idusua" name="idusua" value="">
                   <button type="submit" class="btn btn-danger w-100" id="btnUpdate">Borrar usuario</button>
                 </form>
@@ -111,13 +111,13 @@
 
   <script>
     const orgList = <%- JSON.stringify(datos.usuarios) %>
-    const estadosUsuario = <%- JSON.stringify(datos.estadosUsuario) %>
+    const estados = <%- JSON.stringify(datos.estadosUsuario) %>
     const cursor = <%- JSON.stringify(datos.cursor) %>
-    const hasNextUsers = <%- datos.hasNextUsers %>
-    const hasPrevUsers = <%- datos.hasPrevUsers %>
+    const hasNexts = <%- datos.hasNexts %>
+    const hasPrevs = <%- datos.hasPrevs %>
   </script>
   <script src="/js/ayuda.min.js"></script>
-  <script src="/js/indexUsuarios.min.js"></script>
+  <script src="/js/admin/indexUsuarios.min.js"></script>
 </body>
 
 </html>

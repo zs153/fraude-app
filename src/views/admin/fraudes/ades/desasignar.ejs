@@ -82,7 +82,7 @@
                   <div class="card-footer">
                     <form action="" id="add" method="POST" onsubmit="return addFraudes();">
                       <div class="col-12 d-flex">
-                        <a href="" id="vol" class="btn btn-white">Volver</a>
+                        <a href="" id="vol" onclick="deleteCookie('filtrb');" class="btn btn-white">Volver</a>
                         <input type="hidden" name="arrfra" id="arrfra" value="">
                         <input type="hidden" name="userid" id="userid" value="<%- datos.usuario.USERID %>">
                         <button type="submit" class="btn btn-link ms-auto" id="btnAdd">Desasignar fraudes</button>
@@ -102,11 +102,11 @@
     const orgList = <%- JSON.stringify(datos.fraudes) %>
     const usuario = <%- JSON.stringify(datos.usuario) %>
     const cursor = <%- JSON.stringify(datos.cursor) %>
-    const hasNextFras = <%- datos.hasNextFras %>
-    const hasPrevFras = <%- datos.hasPrevFras %>
+    const hasNexts = <%- datos.hasNexts %>
+    const hasPrevs = <%- datos.hasPrevs %>
   </script>
   <script src="/js/ayuda.min.js"></script>
-  <script src="/js/desasignar.min.js"></script>
+  <script src="/js/admin/desasignar.min.js"></script>
 </body>
 
 </html>

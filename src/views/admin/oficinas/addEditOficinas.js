@@ -1,6 +1,8 @@
+// const
 const desofi = document.getElementById('desofi')
 const codofi = document.getElementById('codofi')
 
+// func
 const getCookie = (key) => {
   let value = ''
   document.cookie.split(';').forEach((e) => {

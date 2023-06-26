@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>Eventos</title>
+  <title>Fraudes</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
   <!-- styles -->
   <link rel="stylesheet" href="/css/styles.css">
@@ -13,14 +13,14 @@
 <body class="antialiased">
   <div class="wrapper">
     <%- include('../../../partials/header') %>
-    <%- include('../../../partials/navbar', {opcion: 'FRAUDE'}) %>
+    <%- include('../../../partials/navbar', {opcion: 'ADMINISTRACION'}) %>
     <div class="page-wrapper">
       <div class="page-body">
         <div class="container-xl">
           <div class="row">
             <div class="col-12">
               <div class="card">  
-                <form action="/admin/fraudes/eventos/update" method="POST" onsubmit="return validate();">
+                <form action="" id="upd" method="POST" onsubmit="return validate();">
                   <input type="hidden" id="ideven" name="ideven" value="<%- datos.evento.IDEVEN %>">
                   <input type="hidden" id="idfrau" name="idfrau" value="<%- datos.fraude.IDFRAU %>">
                   <div class="card-header">
@@ -71,6 +71,10 @@
   </div>
 
   <script src="/js/ayuda.min.js"></script>
-  <script src="/js/addEditEvento.min.js"></script>
+  <script src="/js/admin/addEditEvento.min.js"></script>
+  <script>
+    const elemAdd = document.getElementById('upd');
+    elemAdd.setAttribute('action', `/admin/fraudes/eventos/update?part=${getCookie('filtro')}`)
+  </script>
 </body>
 </html>

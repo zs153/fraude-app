@@ -1,6 +1,5 @@
 // const
 const destip = document.getElementById('destip')
-const cbosta = document.getElementById('cbosta');
 
 // func
 const getCookie = (key) => {
@@ -40,19 +39,11 @@ const setError = (element, message) => {
 }
 const validate = () => {
   const destipValue = destip.value.trim()
-  const cbostaValue = cbosta.value
 
   if (destipValue === '') {
     setError(destip, 'Descripción requerida')
     setTimeout(function () {
       setSuccess(destip)
-    }, 3000)
-    return false
-  }
-  if (cbostaValue === '0') {
-    setError(cbosta, 'Estado requerido')
-    setTimeout(function () {
-      setSuccess(cbosta)
     }, 3000)
     return false
   }

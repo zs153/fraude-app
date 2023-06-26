@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>Fraude</title>
+  <title>Fraudes</title>
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
   <!-- styles -->
   <link rel="stylesheet" href="/css/styles.css">
@@ -14,7 +14,7 @@
 <body class="antialiased">
   <div class="wrapper">
     <%- include('../../../partials/header') %>
-    <%- include('../../../partials/navbar', {opcion: 'FRAUDE' }) %>
+    <%- include('../../../partials/navbar', {opcion: 'ADMINISTRACION' }) %>
     <div class="page-wrapper">
       <div class="page-body">
         <div class="container-xl">
@@ -23,7 +23,7 @@
               <div class="card">
                 <div class="card-header">
                   <div>
-                    <h3 class="card-title">Gestión Sms</h3>
+                    <h3 class="card-title">Mensajes</h3>
                   </div>
                   <div class="col-auto ms-auto">
                     <div class="d-flex">
@@ -43,12 +43,6 @@
                             aria-label="Buscar en smss">
                         </div>
                       </form>
-                      <a href="/admin/fraudes/smss/add/<%- datos.fraude.IDFRAU %>" class="btn">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" height="24" width="24" viewBox="0 0 24 24">
-                          <path d="M11.25 18.75v-6h-6v-1.5h6v-6h1.5v6h6v1.5h-6v6Z" />
-                        </svg>
-                        Nuevo SMS
-                      </a>
                     </div>
                   </div>
                 </div>
@@ -56,7 +50,7 @@
                   <table class="table table-vcenter table-striped sortable" id="tblSms">
                     <thead>
                       <tr class="header">
-                        <th class="w-3"></th>
+                        <th class="w-4"></th>
                         <th class="w-6">Fecha</th>
                         <th class="w-8">Movil</th>
                         <th>Texto</th>
@@ -68,7 +62,7 @@
                   </table>
                   <div id="pagination-wrapper" class="py-1"></div>
                   <div class="ms-auto d-flex py-1">
-                    <a href="#" id="vol" class="btn btn-white">Volver</a>
+                    <a href="" id="vol" class="btn btn-white">Volver</a>
                   </div>
                 </div>
               </div>
@@ -93,7 +87,7 @@
             <path d="M12 9v2m0 4v.01"></path>
             <path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75"></path>
           </svg>
-          <h3>¿Desea borrar este mensaje sms?</h3>
+          <h3>¿Desea borrar este mensaje?</h3>
           <div id="msgbor"></div>
           <div class="text-muted">Lo que vas a hacer no puede ser recuperado.</div>
         </div>
@@ -101,50 +95,13 @@
           <div class="w-100">
             <div class="row">
               <div class="col">
-                <a href="/admin/fraudes/smss/<%- datos.fraude.IDFRAU %>" class="btn btn-white w-100"
-                  data-bs-dismiss="modal">Cancelar</a>
+                <a href="#" class="btn btn-white w-100" data-bs-dismiss="modal">Cancelar</a>
               </div>
               <div class="col">
-                <form action="#" id="del" method="POST">
+                <form action="" id="del" method="POST">
                   <input type="hidden" id="idsmss" name="idsmss" value="">
                   <input type="hidden" id="idfrau" name="idfrau" value="<%- datos.fraude.IDFRAU %>">
-                  <button type="submit" class="btn btn-danger w-100">Borrar mensaje sms</button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="modal modal-blur fade" id="modal-cambio" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        <div class="modal-status bg-warning"></div>
-        <div class="modal-body text-center py-4">
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-warning icon-lg" width="24" height="24"
-            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
-            stroke-linejoin="round">
-            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-            <path d="M12 9v2m0 4v.01"></path>
-            <path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75"></path>
-          </svg>
-          <h3>¿Desea cambiar el estado de mensaje sms?</h3>
-          <div id="msgcam"></div>
-        </div>
-        <div class="modal-footer">
-          <div class="w-100">
-            <div class="row">
-              <div class="col">
-                <a href="/admin/fraudes/smss/<%- datos.fraude.IDFRAU %>" class="btn btn-white w-100"
-                  data-bs-dismiss="modal">Cancelar</a>
-              </div>
-              <div class="col">
-                <form action="/admin/fraudes/smss/cambio" method="POST">
-                  <input type="hidden" id="idcamb" name="idsmss" value="">
-                  <input type="hidden" id="idfrau" name="idfrau" value="<%- datos.fraude.IDFRAU %>">
-                  <button type="submit" class="btn btn-danger w-100">Cambiar estado</button>
+                  <button type="submit" class="btn btn-danger w-100">Borrar mensaje</button>
                 </form>
               </div>
             </div>
@@ -158,11 +115,11 @@
     const orgList = <%- JSON.stringify(datos.smss) %>
     const estados = <%- JSON.stringify(datos.estadosSms) %>
     const cursor = <%- JSON.stringify(datos.cursor) %>
-    const hasNextSms = <%- datos.hasNextSms %>
-    const hasPrevSms = <%- datos.hasPrevSms %>
+    const hasNexts = <%- datos.hasNexts %>
+    const hasPrevs = <%- datos.hasPrevs %>
   </script>
   <script src="/js/ayuda.min.js"></script>
-  <script src="/js/indexSmss.min.js"></script>
+  <script src="/js/admin/indexSmss.min.js"></script>
 </body>
 
 </html>

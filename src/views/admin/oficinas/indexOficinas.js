@@ -14,7 +14,6 @@ const setCookie = (name, value, days) => {
     date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
     expires = "; expires=" + date.toUTCString();
   }
-  // document.cookie = name + "=" + (encodeURIComponent(value) || "")  + expires + "; path=/";
   document.cookie = name + "=" + (value || "") + expires + "; path=/";
 }
 const deleteCookie = () => {
@@ -120,13 +119,13 @@ const buildTable = (state) => {
 const createPages = () => {
   let str = "<ul>";
 
-  if (hasPrevOficinas) {
+  if (hasPrevs) {
     str += "<li class='page-item previous no'><a href='/admin/oficinas?cursor=" + JSON.stringify(cursor) + "&part=" + document.getElementById('buscarOficinaBox').value + "&dir=prev' class='nav-link'>&#9664 Anterior</a>";
   } else {
     str += "<li><a href='#' class='nav-link disabled'>&#9664 Anterior</a>";
   }
 
-  if (hasNextOficinas) {
+  if (hasNexts) {
     str += "<li class='page-item next no'><a href='/admin/oficinas?cursor=" + JSON.stringify(cursor) + "&part=" + document.getElementById('buscarOficinaBox').value + "&dir=next' class='nav-link'>Siguiente &#9654</a>";
   } else {
     str += "<li><a href='#' class='nav-link disabled'>Siguiente &#9654</a>";

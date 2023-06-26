@@ -61,7 +61,7 @@ const buildTable = (state) => {
     const row = document.createElement('tr')
     // col1
     let cell = document.createElement('td')
-    cell.classList.add("w-3")
+    cell.classList.add("w-4")
     if (element.STASMS === estados.pendiente) {
       cell.innerHTML = `<div class="align-items-center py-1">
         <span class="avatar avatar-rounded bg-red-lt">
@@ -148,13 +148,13 @@ const buildTable = (state) => {
 const createPages = () => {
   let str = "<ul>";
 
-  if (hasPrevSms) {
+  if (hasPrevs) {
     str += "<li class='page-item previous no'><a href='/admin/fraudes/smss?cursor=" + JSON.stringify(cursor) + "&part=" + document.getElementById('buscarSmsBox').value + "&dir=prev' class='nav-link'>&#9664 Anterior</a>";
   } else {
     str += "<li><a href='#' class='nav-link disabled'>&#9664 Anterior</a>";
   }
 
-  if (hasNextSms) {
+  if (hasNexts) {
     str += "<li class='page-item next no'><a href='/admin/fraudes/smss?cursor=" + JSON.stringify(cursor) + "&part=" + document.getElementById('buscarSmsBox').value + "&dir=next' class='nav-link'>Siguiente &#9654</a>";
   } else {
     str += "<li><a href='#' class='nav-link disabled'>Siguiente &#9654</a>";
@@ -163,6 +163,13 @@ const createPages = () => {
 
   document.getElementById('pagination-wrapper').innerHTML = str;
 }
+
+// events
+// const elemBuscar = document.getElementById('buscarSmsBox');
+// elemBuscar.onchange = (event) => {
+//   setCookie('filtro', event.target.value, .5) // medio dia
+// }
+// elemBuscar.value = getCookie('filtro')
 
 // incializacion
 const elemDel = document.getElementById('del');

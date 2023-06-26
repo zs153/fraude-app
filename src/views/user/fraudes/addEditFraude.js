@@ -4,6 +4,7 @@ const nomcon = document.getElementById('nomcon')
 const ejefra = document.getElementById('ejefra')
 const fecfra = document.getElementById('fecfra')
 const tipfra = document.getElementById('cbotip')
+const reffra = document.getElementById('cboref')
 
 // func
 const getCookie = (key) => {
@@ -47,6 +48,7 @@ const validate = () => {
   const ejefraValue = ejefra.value.trim()
   const fecfraValue = fecfra.value.trim()
   const tipfraValue = tipfra.value
+  const reffraValue = reffra.value
 
   if (nifconValue === '') {
     setError(nifcon, 'NIF/NIE requerido')
@@ -105,6 +107,13 @@ const validate = () => {
     setError(cbotip, 'Seleccione un tipo')
     setTimeout(function () {
       setSuccess(cbotip)
+    }, 3000)
+    return false
+  }
+  if (reffraValue === '0') {
+    setError(cboref, 'Seleccione una referencia')
+    setTimeout(function () {
+      setSuccess(cboref)
     }, 3000)
     return false
   }

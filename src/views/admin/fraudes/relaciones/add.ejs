@@ -14,14 +14,14 @@
 <body class="antialiased">
   <div class="wrapper">
     <%- include('../../../partials/header') %>
-    <%- include('../../../partials/navbar', {opcion: 'FRAUDE'}) %>
+    <%- include('../../../partials/navbar', {opcion: 'ADMINISTRACION'}) %>
     <div class="page-wrapper">
       <div class="page-body">
         <div class="container-xl">
           <div class="row">
             <div class="col-12">
               <div class="card">
-                <form action="/admin/fraudes/relaciones/insert" method="POST" onsubmit="return validate();">
+                <form action="" id="add" method="POST" onsubmit="return validate();">
                   <input type="hidden" id="idfrau" name="idfrau" value="<%- datos.fraude.IDFRAU %>">
                   <div class="card-header">
                     <h3 class="card-title">Relacionado</h3>
@@ -65,7 +65,11 @@
   </div>
 
   <script src="/js/ayuda.min.js"></script>
-  <script src="/js/addEditRelacion.min.js"></script>
+  <script src="/js/admin/addEditRelacion.min.js"></script>
+  <script>
+    const elemAdd = document.getElementById('add');
+    elemAdd.setAttribute('action', `/admin/fraudes/relaciones/insert?part=${getCookie('filtro')}`)
+  </script>
 </body>
 
 </html>

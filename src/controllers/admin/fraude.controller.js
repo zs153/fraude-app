@@ -88,6 +88,44 @@ export const mainPage = async (req, res) => {
     }
   }
 };
+export const editPage = async (req, res) => {
+  const user = req.user;
+
+  try {
+    const tipos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/fraude`, {
+      context: {},
+    });
+    const oficinas = await axios.post(`http://${serverAPI}:${puertoAPI}/api/oficina`, {
+      context: {},
+    })
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
+      context: {
+        IDFRAU: req.params.id,
+      },
+    });
+
+    let fraude = result.data.data[0]
+    fraude.FECFRA = fraude.FECFRA.slice(0, 10)
+    const datos = {
+      fraude,
+      tipos: tipos.data.data,
+      oficinas: oficinas.data.data,
+      tiposRol,
+    };
+
+    res.render("admin/fraudes/edit", { user, datos });
+  } catch (error) {
+    if (error.response?.status === 400) {
+      res.render("admin/error400", {
+        alerts: [{ msg: error.response.data.data }],
+      });
+    } else {
+      res.render("admin/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
+  }
+};
 export const resueltosPage = async (req, res) => {
   const user = req.user
 
@@ -173,6 +211,35 @@ export const resueltosPage = async (req, res) => {
     }
   }
 };
+export const readonlyPage = async (req, res) => {
+  const user = req.user;
+
+  try {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
+      context: {
+        IDFORM: req.params.id,
+      },
+    })
+
+    let fraude = result.data.data[0]
+    fraude.FECFRA = fraude.FECFRA.slice(0,10).split('-').reverse().join('/')
+    const datos = {
+      fraude,
+    }
+
+    res.render("admin/fraude/readonly", { user, datos });
+  } catch (error) {
+    if (error.response?.status === 400) {
+      res.render("admin/error400", {
+        alerts: [{ msg: error.response.data.data }],
+      });
+    } else {
+      res.render("admin/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
+  }
+}
 
 // page hitosevento
 export const hitoseventosPage = async (req, res) => {

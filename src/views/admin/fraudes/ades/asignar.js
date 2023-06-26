@@ -14,7 +14,6 @@ const setCookie = (name, value, days) => {
     date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
     expires = "; expires=" + date.toUTCString();
   }
-  // document.cookie = name + "=" + (encodeURIComponent(value) || "")  + expires + "; path=/";
   document.cookie = name + "=" + (value || "") + expires + "; path=/";
 }
 const deleteCookie = (key) => {
@@ -151,15 +150,16 @@ const addFraudes = () => {
 }
 
 // events
-// const elemBuscar = document.getElementById('buscarFraudeBox')
-// elemBuscar.onchange = (event) => {
-//   setCookie('filtrb', event.target.value, .5)
-// }
-// elemBuscar.value = getCookie('filtrb')
+const elemBuscar = document.getElementById('buscarFraudeBox')
+elemBuscar.onchange = (event) => {
+  setCookie('filtrb', event.target.value, .5)
+}
+elemBuscar.value = getCookie('filtrb')
 
 // inicializar
 const elemAdd = document.getElementById('add')
 elemAdd.setAttribute('action', `/admin/fraudes/ades/asignar?part=${getCookie('filtra')}`)
+
 const elemVol = document.getElementById('vol')
 elemVol.setAttribute('href', `/admin/fraudes/ades?part=${getCookie('filtra')}`)
 

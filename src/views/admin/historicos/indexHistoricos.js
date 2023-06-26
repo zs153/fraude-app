@@ -14,7 +14,6 @@ const setCookie = (name, value, days) => {
     date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
     expires = "; expires=" + date.toUTCString();
   }
-  // document.cookie = name + "=" + (encodeURIComponent(value) || "")  + expires + "; path=/";
   document.cookie = name + "=" + (value || "") + expires + "; path=/";
 }
 const deleteCookie = () => {
@@ -59,8 +58,8 @@ const buildTable = (state) => {
   table.innerHTML = ''
 
   myList.map(element => {
-    // col1
     const row = document.createElement('tr')
+    // col1
     let cell = document.createElement('td')
     cell.classList.add("w-4")
     cell.innerHTML = `<div class="align-items-center">
@@ -125,13 +124,13 @@ const buildTable = (state) => {
 const createPages = () => {
   let str = "<ul>";
 
-  if (hasPrevUsers) {
+  if (hasPrevs) {
     str += "<li class='page-item previous no'><a href='/admin/historicos?cursor=" + JSON.stringify(cursor) + "&part=" + document.getElementById('buscarUserBox').value + "&dir=prev' class='nav-link'>&#9664 Anterior</a>";
   } else {
     str += "<li><a href='#' class='nav-link disabled'>&#9664 Anterior</a>";
   }
 
-  if (hasNextUsers) {
+  if (hasNexts) {
     str += "<li class='page-item next no'><a href='/admin/historicos?cursor=" + JSON.stringify(cursor) + "&part=" + document.getElementById('buscarUserBox').value + "&dir=next' class='nav-link'>Siguiente &#9654</a>";
   } else {
     str += "<li><a href='#' class='nav-link disabled'>Siguiente &#9654</a>";

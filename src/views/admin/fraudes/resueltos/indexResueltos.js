@@ -145,7 +145,7 @@ const buildTable = (state) => {
     // col9
     cell = document.createElement('td')
     cell.classList.add("w-5")
-    if (element.STAFRA === estadosFraude.resuelto) {
+    if (element.STAFRA === estados.resuelto) {
       cell.innerHTML = `<ul class="dots-menu">
         <li class="nav-item drop-right">
           <a href="#" class="nav-link">
@@ -193,13 +193,13 @@ const buildTable = (state) => {
 const createPages = () => {
   let str = "<ul>";
 
-  if (hasPrevFras) {
+  if (hasPrevs) {
     str += "<li class='page-item previous no'><a href='/admin/fraudes/resueltos?cursor=" + JSON.stringify(cursor) + "&part=" + document.getElementById('buscarFraudeBox').value + "&dir=prev' class='nav-link'>&#9664 Anterior</a>";
   } else {
     str += "<li><a href='#' class='nav-link disabled'>&#9664 Anterior</a>";
   }
 
-  if (hasNextFras) {
+  if (hasNexts) {
     str += "<li class='page-item next no'><a href='/admin/fraudes/resueltos?cursor=" + JSON.stringify(cursor) + "&part=" + document.getElementById('buscarFraudeBox').value + "&dir=next' class='nav-link'>Siguiente &#9654</a>";
   } else {
     str += "<li><a href='#' class='nav-link disabled'>Siguiente &#9654</a>";

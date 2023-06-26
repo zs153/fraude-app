@@ -139,13 +139,13 @@ const buildTable = (state) => {
 const createPages = () => {
   let str = "<ul>";
 
-  if (hasPrevRela) {
+  if (hasPrevs) {
     str += "<li class='page-item previous no'><a href='/admin/fraudes/relaciones?cursor=" + JSON.stringify(cursor) + "&part=" + document.getElementById('buscarRelBox').value + "&dir=prev' class='nav-link'>&#9664 Anterior</a>";
   } else {
     str += "<li><a href='#' class='nav-link disabled'>&#9664 Anterior</a>";
   }
 
-  if (hasNextRela) {
+  if (hasNexts) {
     str += "<li class='page-item next no'><a href='/admin/fraudes/relaciones?cursor=" + JSON.stringify(cursor) + "&part=" + document.getElementById('buscarRelBox').value + "&dir=next' class='nav-link'>Siguiente &#9654</a>";
   } else {
     str += "<li><a href='#' class='nav-link disabled'>Siguiente &#9654</a>";
@@ -163,6 +163,9 @@ const createPages = () => {
 // elemBuscar.value = getCookie('filtro')
 
 // incializacion
+const elemAdd = document.getElementById('new');
+elemAdd.setAttribute('action', `/admin/fraudes/relaciones/add/${datos.fraude.IDFRAU}?part=${getCookie('filtro')}`)
+
 const elemDel = document.getElementById('del');
 elemDel.setAttribute('action', `/admin/fraudes/relaciones/delete?part=${getCookie('filtro')}`)
 
