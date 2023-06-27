@@ -2,7 +2,6 @@ import express from 'express'
 import {
   fraude,
   fraudes,
-  extended,
   asignarFraude,
   crearFraude,
   modificarFraude,
@@ -41,7 +40,6 @@ const apiFraudeRouter = express.Router()
 // fraudes
 apiFraudeRouter.post('/fraude', fraude)
 apiFraudeRouter.post('/fraudes', fraudes)
-apiFraudeRouter.post('/fraudes/extended', extended)
 apiFraudeRouter.post('/fraudes/insert', crearFraude)
 apiFraudeRouter.post('/fraudes/update', modificarFraude)
 apiFraudeRouter.post('/fraudes/delete', borrarFraude)

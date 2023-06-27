@@ -1,12 +1,7 @@
 import { simpleExecute } from "../services/database.js";
 
-const baseQuery = `SELECT 
-  gg.*
-FROM gentes gg
-WHERE gg.nifgen = :nifgen
-`;
 export const find = async (context) => {
-  let query = baseQuery;
+  let query = "SELECT gg.* FROM gentes gg WHERE gg.nifgen = :nifgen";
   let binds = {};
 
   binds.nifgen = context.nifgen;

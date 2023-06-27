@@ -2,8 +2,8 @@ import { BIND_OUT, NUMBER } from "oracledb";
 import { simpleExecute } from '../services/database.js';
 
 // fraude
-const insertSql = "BEGIN FRAUDE_PKG.INSERTFRAUDE(TO_DATE(:fecfra, 'YYYY-MM-DD'),:nifcon,:nomcon,:emacon,:telcon,:movcon,:reffra,:tipfra,:ejefra,:ofifra,:obsfra,:funfra,:liqfra,:stafra,:usumov,:tipmov,:idfrau); END;"
-const updateSql = "BEGIN FRAUDE_PKG.UPDATEFRAUDE(:idfrau,TO_DATE(:fecfra,'YYYY-MM-DD'),:nifcon,:nomcon,:emacon,:telcon,:movcon,:tipfra,:ejefra,:ofifra,:obsfra,:usumov,:tipmov); END;"
+const insertSql = "BEGIN FRAUDE_PKG.INSERTFRAUDE(:nifcon,:nomcon,:emacon,:telcon,:movcon,:reffra,:tipfra,:ejefra,:ofifra,:obsfra,:funfra,:liqfra,:stafra,:usumov,:tipmov,:idfrau); END;"
+const updateSql = "BEGIN FRAUDE_PKG.UPDATEFRAUDE(:idfrau,:nifcon,:nomcon,:emacon,:telcon,:movcon,:tipfra,:ejefra,:ofifra,:obsfra,:usumov,:tipmov); END;"
 const removeSql = "BEGIN FRAUDE_PKG.DELETEFRAUDE(:idfrau,:usumov,:tipmov ); END;"
 const cambioSql = "BEGIN FRAUDE_PKG.CAMBIOESTADOFRAUDE(:idfrau,:liqfra,:stafra,:usumov,:tipmov ); END;"
 const unasignSql = "BEGIN FRAUDE_PKG.UNASIGNFRAUDE(:idfrau,:liqfra,:stafra,:usumov,:tipmov ); END;"
@@ -20,12 +20,12 @@ const insertEventoSql = "BEGIN FRAUDE_PKG.INSERTEVENTOFRAUDE(:idfrau,:tipeve,:ob
 const updateEventoSql = "BEGIN FRAUDE_PKG.UPDATEEVENTO(:ideven,:tipeve,:obseve,:usumov,:tipmov); END;"
 const removeEventoSql = "BEGIN FRAUDE_PKG.DELETEEVENTOFRAUDE(:idfrau,:ideven,:usumov,:tipmov ); END;"
 // sms
-const insertSmsSql = "BEGIN FRAUDE_PKG.INSERTSMSFRAUDE(:idfrau,TO_DATE(:fecsms, 'YYYY-MM-DD'),:texsms,:movsms,:stasms,:usumov,:tipmov,:idsmss); END;"
-const updateSmsSql = "BEGIN FRAUDE_PKG.UPDATESMS(:idsmss,TO_DATE(:fecsms, 'YYYY-MM-DD'),:texsms,:movsms,:usumov,:tipmov); END;"
+const insertSmsSql = "BEGIN FRAUDE_PKG.INSERTSMSFRAUDE(:idfrau,:texsms,:movsms,:stasms,:usumov,:tipmov,:idsmss); END;"
+const updateSmsSql = "BEGIN FRAUDE_PKG.UPDATESMS(:idsmss,:texsms,:movsms,:usumov,:tipmov); END;"
 const removeSmsSql = "BEGIN FRAUDE_PKG.DELETESMSFRAUDE(:idfrau,:idsmss,:usumov,:tipmov ); END;"
 // relacion
-const insertRelacionSql = "BEGIN FRAUDE_PKG.INSERTRELACIONFRAUDE(:idfrau,TO_DATE(:fecrel, 'YYYY-MM-DD'),:nifcon,:nomcon,:usumov,:tipmov,:idrela); END;"
-const updateRelacionSql = "BEGIN FRAUDE_PKG.UPDATERELACION(:idrela,TO_DATE(:fecrel, 'YYYY-MM-DD'),:nifcon,:nomcon,:usumov,:tipmov); END;"
+const insertRelacionSql = "BEGIN FRAUDE_PKG.INSERTRELACIONFRAUDE(:idfrau,:nifcon,:nomcon,:usumov,:tipmov,:idrela); END;"
+const updateRelacionSql = "BEGIN FRAUDE_PKG.UPDATERELACION(:idrela,:nifcon,:nomcon,:usumov,:tipmov); END;"
 const removeRelacionSql = "BEGIN FRAUDE_PKG.DELETERELACIONFRAUDE(:idfrau,:idrela,:usumov,:tipmov ); END;"
 // ades
 const asignarFraudesUsuarioSql = "BEGIN FRAUDE_PKG.ASIGNARFRAUDESUSUARIO(:liqfra,:stafra,:arrfra,:usumov,:tipmov); END;"
@@ -55,6 +55,7 @@ export const fraudes = async (context) => {
   // bind  
   let query = "WITH datos AS (SELECT ff.*,oo.desofi,tf.destip,p1.numhit,p2.numeve FROM fraudes ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifra INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra"
   let bind = {
+    liqfra: context.liqfra,
     limit: context.limit,
   };
 
@@ -66,23 +67,11 @@ export const fraudes = async (context) => {
     bind.rest = context.rest
     query += " AND (ff.nifcon LIKE '%' || :rest || '%' OR ff.nomcon LIKE '%' || :rest || '%' OR ff.ejefra LIKE '%' || :rest || '%' OR ff.reffra LIKE '%' || :part || '%' OR ff.liqfra LIKE '%' || LOWER(:rest) || '%' OR tf.destip LIKE '%' || :rest || '%' OR oo.desofi LIKE '%' || :rest || '%')"
   }
-  query += " LEFT JOIN (SELECT ff.idfrau,count(hf.idhito) numhit FROM fraudes ff INNER JOIN hitosfraude hf ON hf.idfrau= ff.idfrau GROUP BY ff.idfrau) p1 ON p1.idfrau = ff.idfrau LEFT JOIN (SELECT ff.idfrau,count(ef.ideven) numeve FROM fraudes ff INNER JOIN eventosfraude ef ON ef.idfrau = ff.idfrau GROUP BY ff.idfrau) p2 ON p2.idfrau = ff.idfrau WHERE (ff.liqfra = :liqfra AND ff.stafra = :stafra)"
-
-  if (context.stafra) {
-    if (context.stafra === 2) {
-      query += " WHERE BITAND(ff.stafra, 2) = 0"
-    } else {
-      bind.stafra = context.stafra
-      query += " WHERE BITAND(ff.stafra, 3) = :stafra"
-    }
-  }
-  if (context.liqfra) {
-    bind.liqfra = context.liqfra
-    if (context.stafra) {
-      query += " AND (ff.liqfor = :liqfra OR ff.stafra = 0)"
-    } else {
-      query += " WHERE ff.liqfra = :liqfra OR ff.stafra = 0"
-    }
+  if (context.stafra === 2) {
+    query += " LEFT JOIN (SELECT ff.idfrau,count(hf.idhito) numhit FROM fraudes ff INNER JOIN hitosfraude hf ON hf.idfrau= ff.idfrau GROUP BY ff.idfrau) p1 ON p1.idfrau = ff.idfrau LEFT JOIN (SELECT ff.idfrau,count(ef.ideven) numeve FROM fraudes ff INNER JOIN eventosfraude ef ON ef.idfrau = ff.idfrau GROUP BY ff.idfrau) p2 ON p2.idfrau = ff.idfrau WHERE (ff.liqfra = :liqfra AND ff.stafra = 1) OR ff.stafra = 0"
+  } else {
+    bind.stafra = context.stafra
+    query += " LEFT JOIN (SELECT ff.idfrau,count(hf.idhito) numhit FROM fraudes ff INNER JOIN hitosfraude hf ON hf.idfrau= ff.idfrau GROUP BY ff.idfrau) p1 ON p1.idfrau = ff.idfrau LEFT JOIN (SELECT ff.idfrau,count(ef.ideven) numeve FROM fraudes ff INNER JOIN eventosfraude ef ON ef.idfrau = ff.idfrau GROUP BY ff.idfrau) p2 ON p2.idfrau = ff.idfrau WHERE ff.liqfra = :liqfra AND ff.stafra = :stafra"
   }
   if (context.direction === 'next') {
     bind.idfrau = context.cursor.next;
