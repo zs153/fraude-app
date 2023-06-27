@@ -78,7 +78,7 @@
                               <tr>
                                 <!-- col1 -->
                                 <td class="w4">
-                                  <% if (element.STAHIT===datos.estados.sancionAnulada) { %>
+                                  <% if (element.STAHIT===datos.estadosHito.sancionAnulada) { %>
                                     <div class="align-items-center py-0">
                                       <span class="avatar avatar-rounded bg-red-lt">
                                         <h6>ANU</h6>
@@ -383,7 +383,7 @@
               <div class="card-footer text-end">
                 <div class="d-flex">
                   <a href="" id="vol" class="btn btn-white">Volver</a>                    
-                  <a href="" id="idreso" class="btn btn-white ms-auto">Resolver fraude</a>
+                  <a href="" id="reso" class="btn btn-white ms-auto">Resolver fraude</a>
                 </div>
               </div>
             </div>
@@ -500,7 +500,7 @@
 
     <script src="/js/ayuda.min.js"></script>
     <script>
-      const elemUpd = document.getElementById('idreso');
+      const elemUpd = document.getElementById('reso');
       elemUpd.setAttribute('href', `/user/fraudes/resolver/${<%= datos.fraude.IDFRAU %>}?part=${getCookie('filtro')}`)
 
       const elemVol = document.getElementById('vol');

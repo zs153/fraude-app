@@ -20,7 +20,7 @@
           <div class="row">
             <div class="col-12">
               <div class="card">
-                <form action="/user/fraudes/hitos/update" method="POST" onsubmit="return validate();">
+                <form action="" id="upd" method="POST" onsubmit="return validate();">
                   <input type="hidden" id="idhito" name="idhito" value="<%- datos.hito.IDHITO %>">
                   <input type="hidden" id="idfrau" name="idfrau" value="<%- datos.fraude.IDFRAU %>">
                   <input type="hidden" id="stahit" name="stahit" value="<%- datos.hito.STAHIT %>">
@@ -83,7 +83,7 @@
   <script src="/js/user/editHito.min.js"></script>
   <script>
     const elemUpd = document.getElementById('upd');
-    elemUpd.setAttribute('action', `/admin/usuarios/update?part=${getCookie('filtro')}`)
+    elemUpd.setAttribute('action', `/user/fraudes/hitos/update?part=${getCookie('filtro')}`)
   </script>
 </body>
 </html>

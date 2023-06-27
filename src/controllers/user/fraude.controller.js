@@ -27,7 +27,7 @@ export const mainPage = async (req, res) => {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes`, {
       context: {
         liqfra: user.userid,
-        stafra: estadosFraude.asignado,
+        stafra: estadosFraude.pendientesAsignados,
         limit: limit + 1,
         direction: dir,
         cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: 0 , prev: 0},
@@ -283,7 +283,7 @@ export const resueltosPage = async (req, res) => {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes`, {
       context: {
         liqfra: user.userid,
-        estado: estadosFraude.resuelto,
+        stafra: estadosFraude.resuelto,
         limit: limit + 1,
         direction: dir,
         cursor: cursor ? JSON.parse(convertCursorToNode(JSON.stringify(cursor))) : {next: 0 , prev: 0},
@@ -1657,7 +1657,7 @@ export const insertSms = async (req, res) => {
       movimiento,
     });
 
-    res.redirect(`/user/fraudes/smss/${fraude.IDFRAU}?part=${getCookie('filtro')}`);
+    res.redirect(`/user/fraudes/smss/${fraude.IDFRAU}`);
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("user/error400", {

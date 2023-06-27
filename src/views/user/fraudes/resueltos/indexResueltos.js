@@ -135,7 +135,7 @@ const buildTable = (state) => {
     if (element.OBSFRA !== null) {
       cell.innerHTML = `<div class="d-flex py-1 align-items-center">
         <div class="flex-fill">
-          <div class="font-weight-medium">${element.OBSFRA}</div>
+          <div class="font-weight-medium">${element.OBSFRA.length > 37 ? element.OBSFRA.slice(0, 37) + '...' : element.OBSFRA}</div>
         </div>
       </div>`
     }

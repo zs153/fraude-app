@@ -2,7 +2,6 @@
 const nifcon = document.getElementById('nifcon')
 const nomcon = document.getElementById('nomcon')
 const ejefra = document.getElementById('ejefra')
-const fecfra = document.getElementById('fecfra')
 const tipfra = document.getElementById('cbotip')
 const reffra = document.getElementById('cboref')
 
@@ -46,7 +45,6 @@ const validate = () => {
   const nifconValue = nifcon.value.trim().toUpperCase().slice(0, 9)
   const nomconValue = nomcon.value.trim()
   const ejefraValue = ejefra.value.trim()
-  const fecfraValue = fecfra.value.trim()
   const tipfraValue = tipfra.value
   const reffraValue = reffra.value
 
@@ -134,13 +132,6 @@ const validate = () => {
       }, 3000)
       return false
     }
-  }
-  if (isNaN(Date.parse(fecfraValue))) {
-    setError(fecfra, 'Fecha requerida')
-    setTimeout(function () {
-      setSuccess(fecfra)
-    }, 3000)
-    return false
   }
 
   return true
