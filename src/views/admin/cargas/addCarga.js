@@ -1,7 +1,9 @@
+// const
 const descar = document.getElementById("descar");
 const ficcar = document.getElementById("ficcar");
 const refcar = document.getElementById("refcar");
 
+// func
 const getCookie = (key) => {
   let value = ''
   document.cookie.split(';').forEach((e) => {

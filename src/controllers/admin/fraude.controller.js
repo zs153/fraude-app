@@ -24,7 +24,7 @@ export const mainPage = async (req, res) => {
   }
 
   try {
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/extended`, {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes`, {
       context: {
         stafra: estadosFraude.pendientesAsignados,
         limit: limit + 1,

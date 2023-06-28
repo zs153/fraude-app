@@ -1,6 +1,8 @@
+// const
 const emausu = document.getElementById('emausu')
 const telusu = document.getElementById('telusu')
 
+// func
 const getCookie = (key) => {
   let value = ''
   document.cookie.split(';').forEach((e) => {
@@ -39,6 +41,7 @@ const setError = (element, message) => {
 const validate = () => {
   const emausuValue = emausu.value.trim()
   const telusuValue = telusu.value.trim()
+  
   if (emausuValue === '') {
     setError(emausu, 'Email requerido')
     setTimeout(function () {

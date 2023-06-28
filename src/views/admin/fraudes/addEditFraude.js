@@ -1,4 +1,4 @@
-// vars
+// const
 const nifcon = document.getElementById('nifcon')
 const nomcon = document.getElementById('nomcon')
 const ejefra = document.getElementById('ejefra')

@@ -1,3 +1,14 @@
+// const
+const userid = document.getElementById('userid')
+const nomusu = document.getElementById('nomusu')
+const emausu = document.getElementById('emausu')
+const telusu = document.getElementById('telusu')
+const cboest = document.getElementById('cboest')
+const cboofi = document.getElementById('cboofi')
+const cborol = document.getElementById('cborol')
+const cboper = document.getElementById('cboper')
+
+// func
 const getCookie = (key) => {
   let value = ''
   document.cookie.split(';').forEach((e) => {
@@ -33,16 +44,6 @@ const setError = (element, message) => {
   element.classList.add('is-invalid');
   inputControl.classList.remove('is-valid');
 }
-
-const userid = document.getElementById('userid')
-const nomusu = document.getElementById('nomusu')
-const emausu = document.getElementById('emausu')
-const telusu = document.getElementById('telusu')
-const cboest = document.getElementById('cboest')
-const cboofi = document.getElementById('cboofi')
-const cborol = document.getElementById('cborol')
-const cboper = document.getElementById('cboper')
-
 const validate = () => {
   const useridValue = userid.value.trim()
   const nomusuValue = nomusu.value.trim()
