@@ -255,39 +255,6 @@ const buildTable = (state) => {
                 Desasignar
               </a>
             </li>
-            <li class="nav-item">
-              <a href="/admin/fraudes/ejercicios/add/${element.IDFRAU}" class="nav-link">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                  <path stroke-width=".4" fill="none" d="M11.025 19.575q-1.575 0-2.963-.6-1.387-.6-2.412-1.625t-1.625-2.412q-.6-1.388-.6-2.938 0-1.6.6-2.975t1.625-2.4Q6.675 5.6 8.062 5q1.388-.6 2.963-.6.525 0 1.025.062.5.063 1 .188v.675q-.5-.15-1-.225-.5-.075-1.05-.075-2.85 0-4.887 2.037Q4.075 9.1 4.075 11.975q0 2.875 2.038 4.912 2.037 2.038 4.912 2.038t4.913-2.038q2.037-2.037 2.037-4.912 0-.275-.025-.6-.025-.325-.1-.6h.625q.05.225.087.575.038.35.038.65 0 1.55-.6 2.938-.6 1.387-1.625 2.412t-2.4 1.625q-1.375.6-2.95.6Zm3.25-3.9-3.575-3.55v-5.1h.625v4.825l3.4 3.375Zm3.7-6.825V5.875H15v-.65h2.975V2.25h.625v2.975h2.975v.65H18.6V8.85Z"/>
-                </svg>
-                Nuevo ejercicio
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="/admin/fraudes/relaciones/${element.IDFRAU}" class="nav-link">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                  <path stroke-width=".4" fill="none" d="M12.975 13.35h.65v-2.975H16.6v-.65h-2.975V6.75h-.65v2.975H10v.65h2.975ZM8.1 16.7q-.625 0-1.038-.412-.412-.413-.412-1.038V4.85q0-.6.412-1.013.413-.412 1.038-.412h10.4q.6 0 1.013.412.412.413.412 1.013v10.4q0 .625-.412 1.038-.413.412-1.013.412Zm0-.65h10.4q.3 0 .55-.25.25-.25.25-.55V4.85q0-.3-.25-.55-.25-.25-.55-.25H8.1q-.3 0-.55.25-.25.25-.25.55v10.4q0 .3.25.55.25.25.55.25Zm-2.575 3.225q-.625 0-1.037-.413-.413-.412-.413-1.037V6.8h.65v11.025q0 .3.25.55.25.25.55.25H16.55v.65ZM7.3 4.05v12-12Z"/>
-                </svg>
-                Relacionados
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="/admin/fraudes/hitoseventos/${element.IDFRAU}" class="nav-link">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                  <path stroke-width=".4" fill="none" d="M15 17.95q-.825 0-1.387-.575-.563-.575-.563-1.4 0-.8.563-1.375.562-.575 1.387-.575t1.4.575q.575.575.575 1.375 0 .825-.575 1.4t-1.4.575Zm-9.15 2.625q-.6 0-1.012-.412-.413-.413-.413-1.013V6.825q0-.6.413-1.013Q5.25 5.4 5.85 5.4h2.075V3.1h.725v2.3h6.8V3.1h.65v2.3h2.05q.6 0 1.025.412.425.413.425 1.013V19.15q0 .6-.425 1.013-.425.412-1.025.412Zm0-.65h12.3q.3 0 .55-.25.25-.25.25-.55v-8.3H5.05v8.3q0 .3.25.55.25.25.55.25Zm-.8-9.75h13.9v-3.35q0-.3-.25-.55-.25-.25-.55-.25H5.85q-.3 0-.55.25-.25.25-.25.55Zm0 0v-4.15 4.15Z"/>
-                </svg>
-                Hitos/Eventos
-              </a>
-            </li>
-            <li class="nav-item list-divider"></li>
-            <li class="nav-item ">
-              <a href="/admin/fraudes/smss/${element.IDFRAU}" class="nav-link">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-2" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                  <path stroke-width=".4" fill="none" d="M12.875 10.4V5.1q0-.275.2-.488.2-.212.475-.212h5.3q.275 0 .487.212.213.213.213.488v3.1q0 .25-.213.462-.212.213-.487.213h-4.425Zm.65-2.175H18.9V5.05h-5.375Zm0 0V5.05v3.175Zm4.975 11.2q-2.375 0-4.863-1.287-2.487-1.288-4.524-3.326-2.038-2.037-3.338-4.512-1.3-2.475-1.3-4.85 0-.45.288-.75.287-.3.737-.3h1.925q.45 0 .75.262.3.263.4.688l.45 2q.075.375-.013.7-.087.325-.362.55L6.6 10.475q1.4 2.35 3.1 4.037 1.7 1.688 4.075 3.013l2.05-2.15q.275-.275.525-.35.25-.075.575 0l1.65.325q.45.1.713.412.262.313.262.763v1.85q0 .45-.3.75t-.75.3ZM6.275 9.9l2-1.8q.1-.1.138-.275.037-.175.012-.325L7.95 5.45q-.05-.2-.175-.3-.125-.1-.325-.1H5.475q-.175 0-.262.1-.088.1-.088.25-.025 1 .288 2.162.312 1.163.862 2.338Zm8.1 7.875q1 .525 2.187.763 1.188.237 1.988.237.15 0 .25-.1t.1-.25v-1.95q0-.2-.1-.325t-.3-.175l-1.675-.35q-.15-.05-.263-.012-.112.037-.237.162ZM6.275 9.9Zm8.1 7.875Z"/>
-                </svg>
-                Gestión SMS
-              </a>
-            </li>
           </ul>
         </li>
       </ul>`
@@ -329,17 +296,11 @@ elemBuscar.value = getCookie('filtro')
 const elemDel = document.getElementById('del');
 elemDel.setAttribute('action', `/admin/fraudes/delete?part=${getCookie('filtro')}`)
 
-const elemUsua = document.getElementById('usua');
-elemUsua.setAttribute('action', `/admin/fraudes/ades?part=${getCookie('filtro')}`)
+const elemAdes = document.getElementById('ades');
+elemAdes.setAttribute('href', `/admin/fraudes/ades?part=`)
 
 const elemDesag = document.getElementById('desag');
 elemDesag.setAttribute('action', `/admin/fraudes/desasignar?part=${getCookie('filtro')}`)
-
-// const elemAsig = document.getElementById('asig');
-// elemAsig.setAttribute('action', `/admin/fraudes/asignar?part=${getCookie('filtro')}`)
-
-// const elemCerr = document.getElementById('cerr');
-// elemCerr.setAttribute('action', `/admin/fraudes/resolver?part=${getCookie('filtro')}`)
 
 const elemRes = document.getElementById('rsltos');
 elemRes.setAttribute('href', `/admin/fraudes/resueltos?part=${getCookie('filtro')}`)

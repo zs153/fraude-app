@@ -99,8 +99,8 @@ module.exports = function (grunt) {
         //   // app
         //   'dist/app.js': ['./dist/app.js'],
         // }
-        src: ['./src/views/admin/fraudes/indexFraudes.js'],
-        dest: './src/public/js/admin/indexFraudes.min.js'
+        src: ['./src/views/admin/fraudes/resueltos/indexResueltos.js'],
+        dest: './src/public/js/admin/indexResueltos.min.js'
       },
     },
   });

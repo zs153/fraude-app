@@ -45,7 +45,7 @@
                     </div>
                     <div class="col-auto ms-auto">
                       <div class="d-flex">
-                        <form action="/admin/fraudes/ades/asignar/<%= datos.usuario.IDUSUA %>" method="GET">
+                        <form action="" id="sel" method="GET">
                           <div class="input-icon">
                             <span class="input-icon-addon">
                               <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
@@ -80,12 +80,12 @@
                     </table>
                   </div>
                   <div class="card-footer">
-                    <form action="" id="add" method="POST" onsubmit="return addFraudes();">
+                    <form action="" id="asig" method="POST" onsubmit="return asignarFraudes();">
                       <div class="col-12 d-flex">
-                        <a href="" id="vol" class="btn btn-white">Volver</a>
+                        <a href="" id="vol" class="btn btn-white">Cancelar</a>
                         <input type="hidden" name="arrfra" id="arrfra" value="">
                         <input type="hidden" name="userid" id="userid" value="<%- datos.usuario.USERID %>">
-                        <button type="submit" class="btn btn-link ms-auto" id="btnAdd">Asignar fraudes</button>
+                        <button type="submit" class="btn btn-link ms-auto" id="btnAsignar">Asignar fraudes</button>
                       </div>
                     </form>
                   </div>

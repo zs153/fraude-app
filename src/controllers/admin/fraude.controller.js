@@ -147,7 +147,7 @@ export const resueltosPage = async (req, res) => {
   }
 
   try {
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/extended`, {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes`, {
       context: {
         stafra: estadosFraude.resuelto,
         limit: limit + 1,
@@ -650,7 +650,7 @@ export const adesAsignarPage = async (req, res) => {
         IDUSUA: req.params.id,
       },
     });
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/extended`, {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes`, {
       context: {
         stafra: JSON.stringify(estadosFraude.pendiente),
         limit: limit + 1,
@@ -667,7 +667,7 @@ export const adesAsignarPage = async (req, res) => {
     let prevCursor = 0
 
     if (hasNexts) {
-      alerts = [{ msg: 'Se supera el límite de registros permitidos. Sólo se muestran los 100 primeros registros. Refine la consulta' }]      
+      alerts = [{ msg: 'Se supera el límite de registros permitidos. Sólo se muestran los 100 primeros. Refine la consulta' }]      
       nextCursor = dir === 'next' ? fraudes[limit - 1].IDFRAU : fraudes[0].IDFRAU
       prevCursor = dir === 'next' ? fraudes[0].IDFRAU : fraudes[limit - 1].IDFRAU
       
@@ -742,7 +742,7 @@ export const adesDesasignarPage = async (req, res) => {
         IDUSUA: req.params.id,
       },
     });
-    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/extended`, {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes`, {
       context: {
         liqfra: usuario.data.data[0].USERID,
         stafra: estadosFraude.asignado,
@@ -760,7 +760,7 @@ export const adesDesasignarPage = async (req, res) => {
     let prevCursor = 0
 
     if (hasNexts) {
-      alerts = [{ msg: 'Se supera el límite de registros permitidos. Sólo se muestran los 100 primeros registros. Refine la consulta' }]      
+      alerts = [{ msg: 'Se supera el límite de registros permitidos. Sólo se muestran los 100 primeros. Refine la consulta' }]      
       nextCursor = dir === 'next' ? fraudes[limit - 1].IDFRAU : fraudes[0].IDFRAU
       prevCursor = dir === 'next' ? fraudes[0].IDFRAU : fraudes[limit - 1].IDFRAU
       
@@ -808,6 +808,47 @@ export const adesDesasignarPage = async (req, res) => {
     }
   }
 }
+
+// fraude
+export const update = async (req, res) => {
+  const user = req.user;
+  const fraude = {
+    IDFRAU: req.body.idfrau,
+    NIFCON: req.body.nifcon.toUpperCase(),
+    NOMCON: req.body.nomcon.toUpperCase(),
+    EMACON: req.body.emacon,
+    TELCON: req.body.telcon,
+    MOVCON: req.body.movcon,
+    REFFRA: req.body.reffra,
+    TIPFRA: req.body.tipfra,
+    EJEFRA: req.body.ejefra,
+    OFIFRA: req.body.ofifra,
+    OBSFRA: req.body.obsfra,
+  };
+  const movimiento = {
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.modificarFraude,
+  };
+
+  try {
+    await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/update`, {
+      fraude,
+      movimiento,
+    });
+
+    res.redirect(`/admin/fraudes?part=${req.query.part}`);
+  } catch (error) {
+    if (error.response?.status === 400) {
+      res.render("admin/error400", {
+        alerts: [{ msg: error.response.data.data }],
+      });
+    } else {
+      res.render("admin/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
+  }
+};
 
 // ades
 export const asignarFraudes = async (req, res) => {
@@ -894,4 +935,3 @@ const convertNodeToCursor = (node) => {
 const convertCursorToNode = (cursor) => {
   return new Buffer.from(cursor, 'base64').toString('binary')
 }
-

@@ -138,7 +138,7 @@ const buildTable = (state) => {
     table.appendChild(row)
   })
 }
-const addFraudes = () => {
+const asignarFraudes = () => {
   let arrFraudes = []
 
   document.querySelectorAll('input[type=checkbox]').forEach(e => {
@@ -157,8 +157,11 @@ elemBuscar.onchange = (event) => {
 elemBuscar.value = getCookie('filtrb')
 
 // inicializar
-const elemAdd = document.getElementById('add')
-elemAdd.setAttribute('action', `/admin/fraudes/ades/asignar?part=${getCookie('filtra')}`)
+const elemSel = document.getElementById('sel')
+elemSel.setAttribute('action', `/admin/fraudes/ades/asignar/${usuario.IDUSUA}?part=${getCookie('filtra')}`)
+
+const elemAsig = document.getElementById('asig')
+elemAsig.setAttribute('action', `/admin/fraudes/ades/asignar?part=${getCookie('filtra')}`)
 
 const elemVol = document.getElementById('vol')
 elemVol.setAttribute('href', `/admin/fraudes/ades?part=${getCookie('filtra')}`)

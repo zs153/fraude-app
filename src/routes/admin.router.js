@@ -46,6 +46,7 @@ adminRouter.get('/tipos/hitos/edit/:id', verifyTokenAndAdmin, tipos.editHitoPage
 
 // fraude
 adminRouter.get("/fraudes", verifyTokenAndResp, fraude.mainPage);
+adminRouter.get("/fraudes/edit/:id", verifyTokenAndResp, fraude.editPage);
 adminRouter.get("/fraudes/resueltos", verifyTokenAndResp, fraude.resueltosPage);
 adminRouter.get("/fraudes/readonly/:id", verifyTokenAndResp, fraude.readonlyPage);
 // hitoseventos
@@ -102,6 +103,9 @@ adminRouter.post('/tipos/fraudes/delete', verifyTokenAndAdmin, tipos.removeFraud
 adminRouter.post('/tipos/hitos/insert', verifyTokenAndAdmin, tipos.insertHito)
 adminRouter.post('/tipos/hitos/update', verifyTokenAndAdmin, tipos.updateHito)
 adminRouter.post('/tipos/hitos/delete', verifyTokenAndAdmin, tipos.removeHito)
+
+// fraude
+adminRouter.post('/fraudes/update', verifyTokenAndResp, fraude.update)
 
 // ades
 adminRouter.post("/fraudes/ades/asignar", verifyTokenAndResp, fraude.asignarFraudes);
