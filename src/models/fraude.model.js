@@ -53,12 +53,27 @@ export const fraude = async (context) => {
 }
 export const fraudes = async (context) => {
   // bind  
-  let query = "WITH datos AS (SELECT ff.*,oo.desofi,tf.destip,p1.numhit,p2.numeve FROM fraudes ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifra INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra"
+  let query = "WITH datos AS (SELECT ff.*,oo.desofi,tf.destip,p1.numhit,p2.numeve FROM fraudes ff INNER JOIN oficinas oo ON oo.idofic = ff.ofifra INNER JOIN tiposfraude tf ON tf.idtipo = ff.tipfra LEFT JOIN (SELECT ff.idfrau,count(hf.idhito) numhit FROM fraudes ff INNER JOIN hitosfraude hf ON hf.idfrau= ff.idfrau GROUP BY ff.idfrau) p1 ON p1.idfrau = ff.idfrau LEFT JOIN (SELECT ff.idfrau,count(ef.ideven) numeve FROM fraudes ff INNER JOIN eventosfraude ef ON ef.idfrau = ff.idfrau GROUP BY ff.idfrau) p2 ON p2.idfrau = ff.idfrau"
   let bind = {
-    liqfra: context.liqfra,
     limit: context.limit,
   };
 
+  if (context.stafra === 2) {
+    if (context.liqfra) {
+      bind.liqfra = context.liqfra
+      query += " WHERE ((ff.liqfra = :liqfra AND ff.stafra = 1) OR ff.stafra = 0)"
+    } else {
+      query += " WHERE (ff.stafra = 1 OR ff.stafra = 0)"
+    }
+  } else {
+    bind.stafra = context.stafra
+    if (context.liqfra) {
+      bind.liqfra = context.liqfra
+      query += " WHERE (ff.liqfra = :liqfra AND ff.stafra = :stafra)"
+    } else {
+      query += " WHERE ff.stafra = :stafra"
+    }
+  }
   if (context.part) {
     bind.part = context.part
     query += " AND (ff.nifcon LIKE '%' || :part || '%' OR ff.nomcon LIKE '%' || :part || '%' OR ff.ejefra LIKE '%' || :part || '%' OR ff.reffra LIKE '%' || :part || '%' OR ff.liqfra LIKE '%' || LOWER(:part) || '%' OR tf.destip LIKE '%' || :part || '%' OR oo.desofi LIKE '%' || :part || '%')"
@@ -66,12 +81,6 @@ export const fraudes = async (context) => {
   if (context.rest) {
     bind.rest = context.rest
     query += " AND (ff.nifcon LIKE '%' || :rest || '%' OR ff.nomcon LIKE '%' || :rest || '%' OR ff.ejefra LIKE '%' || :rest || '%' OR ff.reffra LIKE '%' || :part || '%' OR ff.liqfra LIKE '%' || LOWER(:rest) || '%' OR tf.destip LIKE '%' || :rest || '%' OR oo.desofi LIKE '%' || :rest || '%')"
-  }
-  if (context.stafra === 2) {
-    query += " LEFT JOIN (SELECT ff.idfrau,count(hf.idhito) numhit FROM fraudes ff INNER JOIN hitosfraude hf ON hf.idfrau= ff.idfrau GROUP BY ff.idfrau) p1 ON p1.idfrau = ff.idfrau LEFT JOIN (SELECT ff.idfrau,count(ef.ideven) numeve FROM fraudes ff INNER JOIN eventosfraude ef ON ef.idfrau = ff.idfrau GROUP BY ff.idfrau) p2 ON p2.idfrau = ff.idfrau WHERE (ff.liqfra = :liqfra AND ff.stafra = 1) OR ff.stafra = 0"
-  } else {
-    bind.stafra = context.stafra
-    query += " LEFT JOIN (SELECT ff.idfrau,count(hf.idhito) numhit FROM fraudes ff INNER JOIN hitosfraude hf ON hf.idfrau= ff.idfrau GROUP BY ff.idfrau) p1 ON p1.idfrau = ff.idfrau LEFT JOIN (SELECT ff.idfrau,count(ef.ideven) numeve FROM fraudes ff INNER JOIN eventosfraude ef ON ef.idfrau = ff.idfrau GROUP BY ff.idfrau) p2 ON p2.idfrau = ff.idfrau WHERE ff.liqfra = :liqfra AND ff.stafra = :stafra"
   }
   if (context.direction === 'next') {
     bind.idfrau = context.cursor.next;
