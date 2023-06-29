@@ -126,6 +126,92 @@ export const editPage = async (req, res) => {
     }
   }
 };
+export const resolverPage = async (req, res) => {
+  const user = req.user;
+  let hayLiquidacion = false;
+
+  try {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/hito`, {
+      context: {
+        IDFRAU: req.params.id,
+      },
+    });
+
+    let hitos = result.data
+    if (hitos.stat) {
+      const hayPropuestaLiquidacion = hitos.data.some((itm) => itm.STAHIT === estadosHito.propuestaLiquidacion);
+      if (hayPropuestaLiquidacion) {
+        if (!hitos.data.some((itm) => itm.STAHIT === estadosHito.liquidacion)) {
+          const msg =
+            "Existe propuesta de liquidación sin su correspondiente liquidación.\nNo se puede resolver el fraude.";
+
+          return res.render("user/error400", {
+            alerts: [{ msg }],
+          });
+        }
+      }
+      hayLiquidacion = hitos.data.some((itm) => itm.STAHIT === estadosHito.liquidacion);
+      if (hayLiquidacion) {
+        if (!hitos.data.some((itm) => itm.STAHIT === estadosHito.propuestaLiquidacion)) {
+          const msg =
+            "Existe liquidación sin su correspondiente propuesta de liquidación.\nNo se puede resolver el fraude.";
+
+          return res.render("user/error400", {
+            alerts: [{ msg }],
+          });
+        }
+      }
+      const hayPropuestaSancion = hitos.data.some((itm) => itm.STAHIT === estadosHito.propuestaSancion);
+      if (hayPropuestaSancion) {
+        if (!hitos.data.some((itm) => itm.STAHIT === estadosHito.sancion || itm.STAHIT === estadosHito.sancionAnulada)) {
+          const msg =
+            "Existe propuesta de sanción sin su correspondiente sanción o sanción anulada.\nNo se puede resolver el fraude.";
+
+          return res.render("user/error400", {
+            alerts: [{ msg }],
+          });
+        }
+      }
+      const haySancion = hitos.data.some((itm) => itm.STAHIT === estadosHito.sancion);
+      if (haySancion) {
+        if (!hitos.data.some((itm) => itm.STAHIT === estadosHito.propuestaSancion)) {
+          const msg =
+            "Existe sanción sin su correspondiente propuesta de sanción.\nNo se puede resolver el fraude.";
+
+          return res.render("user/error400", {
+            alerts: [{ msg }],
+          });
+        }
+      }
+    }
+
+    const tipos = await axios.post(`http://${serverAPI}:${puertoAPI}/api/tipos/cierre`, {
+      context: {},
+    });
+    const fraude = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
+      context: {
+        IDFRAU: req.params.id,
+      },
+    });
+    const datos = {
+      fraude: fraude.data.data[0],
+      tipos: tipos.data.data,
+      hayLiquidacion,
+    };
+
+    res.render("admin/fraudes/resolver", { user, datos });
+  } catch (error) {
+    if (error.response?.status === 400) {
+      res.render("admin/error400", {
+        alerts: [{ msg: error.response.data.msg }],
+      });
+    } else {
+      res.render("admin/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
+  }
+};
 export const resueltosPage = async (req, res) => {
   const user = req.user
 
@@ -835,6 +921,140 @@ export const update = async (req, res) => {
       fraude,
       movimiento,
     });
+
+    res.redirect(`/admin/fraudes?part=${req.query.part}`);
+  } catch (error) {
+    if (error.response?.status === 400) {
+      res.render("admin/error400", {
+        alerts: [{ msg: error.response.data.data }],
+      });
+    } else {
+      res.render("admin/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
+  }
+};
+export const resolver = async (req, res) => {
+  const user = req.user;
+
+  try {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
+      context: {
+        IDFRAU: req.body.idfrau,
+      },
+    });
+
+    let fraude = result.data.data[0]
+    if (fraude.STAFRA === estadosFraude.asignado) {
+      const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/hito`, {
+        context: {
+          IDFRAU: req.body.idfrau,
+        }
+      });
+
+      const hitos = result.data.data
+      const hayPropuestaLiquidacion = hitos.some((itm) => itm.STAHIT === estadosHito.propuestaLiquidacion);
+      if (hayPropuestaLiquidacion) {
+        if (!hitos.some((itm) => itm.STAHIT === estadosHito.liquidacion)) {
+          const msg =
+            "Existe propuesta de liquidación sin su correspondiente liquidación.\nNo se puede resolver el fraude.";
+
+          return res.render("user/error400", {
+            alerts: [{ msg }],
+          });
+        }
+      }
+      const hayLiquidacion = hitos.some((itm) => itm.STAHIT === estadosHito.liquidacion);
+      if (hayLiquidacion) {
+        if (!hitos.some((itm) => itm.STAHIT === estadosHito.propuestaLiquidacion)) {
+          const msg =
+            "Existe liquidación/es sin su correspondiente propuesta de liquidación.\nNo se puede resolver el fraude.";
+
+          return res.render("user/error400", {
+            alerts: [{ msg }],
+          });
+        }
+      }
+      const hayPropuestaSancion = hitos.some((itm) => itm.STAHIT === estadosHito.propuestaSancion);
+      if (hayPropuestaSancion) {
+        if (!hitos.some((itm) => itm.STAHIT === estadosHito.sancion || itm.STAHIT === estadosHito.sancionAnulada)) {
+          const msg =
+            "Existe propuesta de sanción sin su correspondiente sanción o sanción anulada.\nNo se puede resolver el fraude.";
+
+          return res.render("user/error400", {
+            alerts: [{ msg }],
+          });
+        }
+      }
+      const haySancion = hitos.some((itm) => itm.STAHIT === estadosHito.sancion);
+      if (haySancion) {
+        if (!hitos.some((itm) => itm.STAHIT === estadosHito.propuestaSancion)) {
+          const msg =
+            "Existe sanción sin su correspondiente propuesta de sanción.\nNo se puede resolver el fraude.";
+
+          return res.render("user/error400", {
+            alerts: [{ msg }],
+          });
+        }
+      }
+
+      fraude.LIQFRA = user.userid
+      fraude.STAFRA = estadosFraude.resuelto
+      const cierre = {
+        REFFRA: fraude.REFFRA,
+        SITCIE: req.body.sitcie
+      }
+      const movimiento = {
+        USUMOV: user.id,
+        TIPMOV: tiposMovimiento.resolverFraude,
+      };
+    
+      await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/cierre`, {
+        fraude,
+        cierre,
+        movimiento,
+      });
+    }
+
+    res.redirect(`/admin/fraudes?part=${req.query.part}`);
+  } catch (error) {
+    if (error.response?.status === 400) {
+      res.render("admin/error400", {
+        alerts: [{ msg: error.response.data.data }],
+      });
+    } else {
+      res.render("admin/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
+  }
+};
+export const desasignar = async (req, res) => {
+  const user = req.user;
+
+  try {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
+      context : {
+        IDFRAU: req.body.idfrau,
+      },
+    });
+
+    let fraude = result.data.data[0]
+    if (fraude.STAFRA === estadosFraude.asignado) {
+      fraude.LIQFRA = "PEND"
+      fraude.STAFRA = estadosFraude.pendiente
+
+      const movimiento = {
+        USUMOV: user.id,
+        TIPMOV: tiposMovimiento.desasignarFraude,
+      };
+
+      await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/unasign`, {
+        fraude,
+        movimiento,
+      });
+    }
 
     res.redirect(`/admin/fraudes?part=${req.query.part}`);
   } catch (error) {
