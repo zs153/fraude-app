@@ -94,6 +94,7 @@ module.exports = function (grunt) {
           'dist/public/js/user/perfil.min.js': ['./dist/public/js/user/perfil.min.js'],
           // 
           'dist/public/js/ayuda.min.js': ['./dist/public/js/ayuda.min.js'],
+          'dist/public/js/easypiechart.min.js': ['./dist/public/js/easypiechart.min.js'],
           'dist/public/js/enumeraciones.js': ['./dist/public/js/enumeraciones.js'],
           // routes
           'dist/routes/admin.router.js': ['./dist/routes/admin.router.js'],
