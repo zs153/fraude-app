@@ -15,7 +15,7 @@ module.exports = function (grunt) {
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
       },
       css: {
-        src: ['src/public/css/estilos.css', 'src/public/css/navbar.css'],
+        src: ['src/public/css/estilos.css', 'src/public/css/navbar.css', 'src/public/css/tabs.css'],
         dest: 'src/public/css/concat.css'
       },
     },
@@ -26,7 +26,7 @@ module.exports = function (grunt) {
       },
       target: {
         files: {
-          'src/public/css/styles.css': ['src/public/css/estilos.css', 'src/public/css/navbar.css']
+          'src/public/css/styles.css': ['src/public/css/estilos.css', 'src/public/css/navbar.css', 'src/public/css/tabs.css']
         }
       }
     },    
@@ -105,6 +105,10 @@ module.exports = function (grunt) {
         // src: ['./src/views/admin/estadisticas/indexStats.js'],
         // dest: './src/public/js/admin/indexStats.min.js'
       },
+      css: {
+        src:  'src/public/css/concat.css',
+        dest: 'src/public/css/concat.min.css'
+      },
     },
   });
 
@@ -115,10 +119,15 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-cssmin');
 
   // Default task.
-  grunt.registerTask('concat-js', ['concat:js']);
+  
+  // para minimizar js es OK
   grunt.registerTask('default-js', ['uglify:js']);
-  grunt.registerTask('default-css', ['uglify:css']);
-  grunt.registerTask('concat-css', ['concat:css']);
+  // minimizar css y concat es OK
   grunt.registerTask('css-min', ['cssmin']);
-
+  
+  // para unir es OK (pero usar cssmin)
+  grunt.registerTask('concat-js', ['concat:js']);
+  grunt.registerTask('concat-css', ['concat:css']);  
+  // para minificar da error no utilizar
+  grunt.registerTask('default-css', ['uglify:css']);
 };
