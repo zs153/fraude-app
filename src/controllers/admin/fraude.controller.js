@@ -303,7 +303,7 @@ export const readonlyPage = async (req, res) => {
   try {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
       context: {
-        IDFORM: req.params.id,
+        IDFRAU: req.params.id,
       },
     })
 
@@ -313,7 +313,7 @@ export const readonlyPage = async (req, res) => {
       fraude,
     }
 
-    res.render("admin/fraude/readonly", { user, datos });
+    res.render("admin/fraudes/readonly", { user, datos });
   } catch (error) {
     if (error.response?.status === 400) {
       res.render("admin/error400", {
