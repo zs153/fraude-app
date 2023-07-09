@@ -3,7 +3,7 @@
     <div class="container-xl">
       <ul class="navbar-nav">
         <li class="nav-item <%- opcion === 'INICIO' ? 'active':'' %>">
-          <a class="nav-link" href="/user">
+          <a class="nav-link nav-link-ltr" href="/user">
             <span class="nav-link-icon d-md-none d-lg-inline-block">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon" height="20" width="20" viewBox="0 0 20 20">
                 <path
@@ -15,7 +15,7 @@
           </a>
         </li>
         <li class="nav-item <%- opcion === 'FRAUDE' ? 'active':'' %>">
-          <a class="nav-link" href="/user/fraudes" onclick="document.cookie='filtro=;Path=/;Expires=Thu, 01 Jan 1970 00:00:01 GMT;';">
+          <a class="nav-link nav-link-ltr" href="/user/fraudes" onclick="document.cookie='filtro=;Path=/;Expires=Thu, 01 Jan 1970 00:00:01 GMT;';">
             <span class="nav-link-icon d-md-none d-lg-inline-block">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon" height="20" width="20" viewBox="0 0 20 20">
                 <path d="M6.75 7.333q.229 0 .406-.166.177-.167.177-.417 0-.229-.166-.406Q7 6.167 6.75 6.167q-.229 0-.406.166-.177.167-.177.417 0 .229.166.406.167.177.417.177Zm0 3.25q.229 0 .406-.166.177-.167.177-.417 0-.229-.166-.406Q7 9.417 6.75 9.417q-.229 0-.406.166-.177.167-.177.417 0 .229.166.406.167.177.417.177Zm0 3.25q.229 0 .406-.166.177-.167.177-.417 0-.229-.166-.406-.167-.177-.417-.177-.229 0-.406.166-.177.167-.177.417 0 .229.166.406.167.177.417.177Zm-1.729 2.334q-.521 0-.854-.334-.334-.333-.334-.854V5.021q0-.521.334-.854.333-.334.854-.334h7.625l3.521 3.521v7.625q0 .521-.334.854-.333.334-.854.334Zm0-.667h9.958q.229 0 .375-.146t.146-.375V8H12V4.5H5.021q-.229 0-.375.146t-.146.375v9.958q0 .229.146.375t.375.146ZM4.5 4.5v3.25V4.5v11V4.5Z" />
@@ -27,7 +27,7 @@
           </a>
         </li>
         <li class="nav-item dropdown <%- opcion === 'ADMINISTRACION' ? 'active':'' %>">
-          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside"
+          <a class="nav-link nav-link-ltr dropdown-toggle" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside"
             role="button" aria-expanded="false">
             <span class="nav-link-icon d-md-none d-lg-inline-block">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24">

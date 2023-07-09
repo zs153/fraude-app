@@ -935,6 +935,49 @@ export const update = async (req, res) => {
     }
   }
 };
+export const remove = async (req, res) => { 
+  const user = req.user;
+  const fraude = {
+    IDFRAU: req.body.id,
+  };
+  const movimiento = {
+    USUMOV: user.id,
+    TIPMOV: tiposMovimiento.borrarFraude,
+  };
+
+  try {
+    const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
+      context: {
+        IDFRAU: req.body.id,
+      }
+    });
+
+    if (result.data.stat) {
+      if (result.data.data[0].FUNFRA === user.userid) {
+        await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/delete`, {
+          fraude,
+          movimiento,
+        });
+    
+        res.redirect(`/admin/faudes?part=${req.query.part}`);
+      } else {
+        throw "El documento no puede ser borrado."
+      }
+    } else {
+      throw "El documento no existe."
+    }
+  } catch (error) {
+    if (error.response?.status === 400) {
+      res.render("admin/error400", {
+        alerts: [{ msg: error.response.data.data }],
+      });
+    } else {
+      res.render("admin/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
+  }
+};
 export const resolver = async (req, res) => {
   const user = req.user;
 

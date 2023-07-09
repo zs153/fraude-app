@@ -26,7 +26,7 @@ module.exports = function (grunt) {
       },
       target: {
         files: {
-          'src/public/css/styles.css': ['src/public/css/estilos.css', 'src/public/css/navbar.css', 'src/public/css/tabs.css']
+          'src/public/css/styles.css': ['src/public/css/estilos.css', 'src/public/css/navbar.css', 'src/public/css/nav.css', 'src/public/css/tabs.css', 'src/public/css/fonts.css']
         }
       }
     },    

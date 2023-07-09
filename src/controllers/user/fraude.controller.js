@@ -1636,7 +1636,6 @@ export const insertEjercicio = async (req, res) => {
 // proc sms
 export const insertSms = async (req, res) => {
   const user = req.user;
-  const fecha = new Date()
   const fraude = {
     IDFRAU: req.body.idfrau,
   }

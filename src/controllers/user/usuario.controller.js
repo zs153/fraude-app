@@ -23,11 +23,15 @@ export const perfilPage = async (req, res) => {
 
     res.render('user/perfil', { user, datos })
   } catch (error) {
-    const msg = 'No se ha podido acceder a los datos de la aplicación.'
-
-    res.render('user/error400', {
-      alerts: [{ msg }],
-    })
+    if (error.response?.status === 400) {
+      res.render("user/error400", {
+        alerts: [{ msg: error.response.data.data }],
+      });
+    } else {
+      res.render("user/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 }
 export const logoutPage = async (req, res) => {
@@ -41,7 +45,9 @@ export const logoutPage = async (req, res) => {
   res.clearCookie("x-access_token");
   res.cookie("auth", undefined, options);
   res.cookie("filtro", undefined, options);
-
+  res.cookie("filtra", undefined, options);
+  res.cookie("filtrb", undefined, options);
+  
   res.redirect('/')
 }
 

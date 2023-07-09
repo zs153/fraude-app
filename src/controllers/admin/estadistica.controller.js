@@ -25,11 +25,15 @@ export const mainPage = async (req, res) => {
 
     res.render('admin/estadisticas', { user, datos })
   } catch (error) {
-    const msg = 'No se ha podido acceder a los datos de la aplicación.'
-
-    res.render('admin/error400', {
-      alerts: [{ msg }],
-    })
+    if (error.response?.status === 400) {
+      res.render("admin/error400", {
+        alerts: [{ msg: error.response.data.data }],
+      });
+    } else {
+      res.render("admin/error500", {
+        alerts: [{ msg: error }],
+      });
+    }
   }
 }
 
@@ -136,10 +140,10 @@ export const generarEstadistica = async (req, res) => {
     }
 
     const datos = {
+      periodo,
       fraude,
       cargas: cargas.data.data,
       oficinas: oficinas.data.data,
-      periodo,
       contadores,
       importes,
       causas,

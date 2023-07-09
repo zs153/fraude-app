@@ -15,26 +15,32 @@ userRouter.get('/perfil/:userid', authRoutes, usuario.perfilPage)
 
 // fraude
 userRouter.get("/fraudes", authRoutes,fraude.mainPage);
-userRouter.get("/fraudes/resueltos", authRoutes, fraude.resueltosPage);
 userRouter.get("/fraudes/add", authRoutes, fraude.addPage);
 userRouter.get("/fraudes/edit/:id", authRoutes, fraude.editPage);
 userRouter.get("/fraudes/resolver/:id", authRoutes, fraude.resolverPage);
+userRouter.get("/fraudes/resueltos", authRoutes, fraude.resueltosPage);
+
 // hitoseventos
 userRouter.get("/fraudes/hitoseventos/:id", authRoutes, fraude.hitoseventosPage);
 userRouter.get("/fraudes/hitoseventos/readonly/:id", authRoutes, fraude.hitoseventosReadonlyPage);
+
 // hitos
 userRouter.get("/fraudes/hitos/add/:id", authRoutes, fraude.addHitosPage);
 userRouter.get("/fraudes/hitos/edit/:idfra/:idhit", authRoutes, fraude.editHitosPage);
+
 // eventos
 userRouter.get("/fraudes/eventos/add/:id", authRoutes, fraude.addEventosPage);
 userRouter.get("/fraudes/eventos/edit/:idfra/:ideve", authRoutes, fraude.editEventosPage);
+
 // ejercios
 userRouter.get("/fraudes/ejercicios/add/:id", authRoutes, fraude.addEjercicioPage);
+
 // relacion
 userRouter.get("/fraudes/relaciones/:id", authRoutes, fraude.relacionesPage);
 userRouter.get("/fraudes/relaciones/add/:id", authRoutes, fraude.relacionesAddPage);
 userRouter.get("/fraudes/relaciones/edit/:idfra/:idrel", authRoutes, fraude.relacionesEditPage);
 userRouter.get("/fraudes/relaciones/readonly/:id", authRoutes, fraude.relacionesReadonlyPage);
+
 // smss
 userRouter.get("/fraudes/smss/:id", authRoutes, fraude.smssPage);
 userRouter.get("/fraudes/smss/add/:id", authRoutes, fraude.smssAddPage);

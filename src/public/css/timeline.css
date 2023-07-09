@@ -1,0 +1,493 @@
+/* timeline */
+.timeline {
+  text-align: center;
+  vertical-align: top;
+  position: relative;
+}
+.timeline.vacas:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 14px;
+  height: 10px;
+  top: 4px;
+  background-color: #0d8004;
+}
+.timeline.bajas:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 14px;
+  height: 10px;
+  top: 4px;
+  background-color: #800209;
+}
+.timeline.trasp:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 14px;
+  height: 10px;
+  top: 4px;
+  background-color: #803807;
+}
+.timeline.trasdo:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 14px;
+  height: 10px;
+  top: 4px;
+  background-color: #808000;
+}
+.timeline.forma:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 14px;
+  height: 10px;
+  top: 4px;
+  background-color: #063780;
+}
+.timeline.conci:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 14px;
+  height: 10px;
+  top: 4px;
+  background-color: #ffa80a;
+}
+.timeline.reuni:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 14px;
+  height: 10px;
+  top: 4px;
+  background-color: #dcd20d;
+}
+.timeline.turno:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 14px;
+  height: 10px;
+  top: 4px;
+  background-color: #c1bdc3;
+}
+.timeline.horas:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 14px;
+  height: 10px;
+  top: 4px;
+  background-color: #05cbf5;
+}
+.timeline.famil:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 14px;
+  height: 10px;
+  top: 4px;
+  background-color: #c3038f;
+}
+.timeline.tele:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 14px;
+  height: 10px;
+  top: 4px;
+  background-color: #7fb3d5;
+}
+.timeline.otros:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 14px;
+  height: 10px;
+  top: 4px;
+  background-color: #000080;
+}
+.timeline.vacasH:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 14px;
+  height: 10px;
+  top: 4px;
+  background-color: #0d8004;
+}
+.timeline.bajasH:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 14px;
+  height: 10px;
+  top: 4px;
+  background-color: #800209;
+}
+.timeline.traspH:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 14px;
+  height: 10px;
+  top: 4px;
+  background-color: #803807;
+}
+.timeline.trasdoH:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 14px;
+  height: 10px;
+  top: 4px;
+  background-color: #808000;
+}
+.timeline.formaH:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 14px;
+  height: 10px;
+  top: 4px;
+  background-color: #063780;
+}
+.timeline.conciH:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 14px;
+  height: 10px;
+  top: 4px;
+  background-color: #ffa80a;
+}
+.timeline.reuniH:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 14px;
+  height: 10px;
+  top: 4px;
+  background-color: #dcd20d;
+}
+.timeline.turnoH:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 14px;
+  height: 10px;
+  top: 4px;
+  background-color: #c1bdc3;
+}
+.timeline.horasH:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 14px;
+  height: 10px;
+  top: 4px;
+  background-color: #05cbf5;
+}
+.timeline.familH:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 14px;
+  height: 10px;
+  top: 4px;
+  background-color: #c3038f;
+}
+.timeline.teleH:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 14px;
+  height: 10px;
+  top: 4px;
+  background-color: #7fb3d5;
+}
+.timeline.otrosH:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 14px;
+  height: 10px;
+  top: 4px;
+  background-color: #000080;
+}
+
+/* timeline mes */
+.timelineMes {
+  text-align: center;
+  vertical-align: top;
+  position: relative;
+}
+.timelineMes.vacas:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 28px;
+  height: 10px;
+  top: 4px;
+  background-color: #0d8004;
+}
+.timelineMes.bajas:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 28px;
+  height: 10px;
+  top: 4px;
+  background-color: #800209;
+}
+.timelineMes.trasp:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 28px;
+  height: 10px;
+  top: 4px;
+  background-color: #803807;
+}
+.timelineMes.trasdo:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 28px;
+  height: 10px;
+  top: 4px;
+  background-color: #808000;
+}
+.timelineMes.forma:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 28px;
+  height: 10px;
+  top: 4px;
+  background-color: #063780;
+}
+.timelineMes.conci:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 28px;
+  height: 10px;
+  top: 4px;
+  background-color: #ffa80a;
+}
+.timelineMes.reuni:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 28px;
+  height: 10px;
+  top: 4px;
+  background-color: #dcd20d;
+}
+.timelineMes.turno:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 28px;
+  height: 10px;
+  top: 4px;
+  background-color: #c1bdc3;
+}
+.timelineMes.horas:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 28px;
+  height: 10px;
+  top: 4px;
+  background-color: #05cbf5;
+}
+.timelineMes.famil:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 28px;
+  height: 10px;
+  top: 4px;
+  background-color: #c3038f;
+}
+.timelineMes.tele:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 28px;
+  height: 10px;
+  top: 4px;
+  background-color: #7fb3d5;
+}
+.timelineMes.otros:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 28px;
+  height: 10px;
+  top: 4px;
+  background-color: #000080;
+}
+.timelineMes.vacasH:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 28px;
+  height: 10px;
+  top: 4px;
+  background-color: #0d8004;
+}
+.timelineMes.bajasH:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 28px;
+  height: 10px;
+  top: 4px;
+  background-color: #800209;
+}
+.timelineMes.traspH:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 28px;
+  height: 10px;
+  top: 4px;
+  background-color: #803807;
+}
+.timelineMes.trasdoH:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 28px;
+  height: 10px;
+  top: 4px;
+  background-color: #808000;
+}
+.timelineMes.formaH:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 28px;
+  height: 10px;
+  top: 4px;
+  background-color: #063780;
+}
+.timelineMes.conciH:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 28px;
+  height: 10px;
+  top: 4px;
+  background-color: #ffa80a;
+}
+.timelineMes.reuniH:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 28px;
+  height: 10px;
+  top: 4px;
+  background-color: #dcd20d;
+}
+.timelineMes.turnoH:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 28px;
+  height: 10px;
+  top: 4px;
+  background-color: #c1bdc3;
+}
+.timelineMes.horasH:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 28px;
+  height: 10px;
+  top: 4px;
+  background-color: #05cbf5;
+}
+.timelineMes.familH:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 28px;
+  height: 10px;
+  top: 4px;
+  background-color: #c3038f;
+}
+.timelineMes.teleH:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 28px;
+  height: 10px;
+  top: 4px;
+  background-color: #7fb3d5;
+}
+.timelineMes.otrosH:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  left: -1px;
+  width: 28px;
+  height: 10px;
+  top: 4px;
+  background-color: #000080;
+}
