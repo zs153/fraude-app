@@ -19,6 +19,7 @@ userRouter.get("/fraudes/add", authRoutes, fraude.addPage);
 userRouter.get("/fraudes/edit/:id", authRoutes, fraude.editPage);
 userRouter.get("/fraudes/resolver/:id", authRoutes, fraude.resolverPage);
 userRouter.get("/fraudes/resueltos", authRoutes, fraude.resueltosPage);
+userRouter.get("/fraudes/readonly/:id", authRoutes, fraude.readonlyPage);
 
 // hitoseventos
 userRouter.get("/fraudes/hitoseventos/:id", authRoutes, fraude.hitoseventosPage);
