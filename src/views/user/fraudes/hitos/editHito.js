@@ -42,17 +42,17 @@ const validate = () => {
   const imphitValue = imphit.value
   const tiphitValue = tiphit.value
 
-  if (imphitValue === '0') {
-    setError(imphit, 'Importe requerido')
-    setTimeout(function () {
-      setSuccess(imphit)
-    }, 3000)
-    return false
-  }
-  if (tiphitValue === '') {
+  if (tiphitValue === '0') {
     setError(tiphit, 'Tipo requerido')
     setTimeout(function () {
       setSuccess(tiphit)
+    }, 3000)
+    return false
+  }
+  if (imphitValue === '') {
+    setError(imphit, 'Importe requerido')
+    setTimeout(function () {
+      setSuccess(imphit)
     }, 3000)
     return false
   }

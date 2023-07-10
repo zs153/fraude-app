@@ -938,7 +938,7 @@ export const update = async (req, res) => {
 export const remove = async (req, res) => { 
   const user = req.user;
   const fraude = {
-    IDFRAU: req.body.id,
+    IDFRAU: req.body.idfrau,
   };
   const movimiento = {
     USUMOV: user.id,
@@ -948,21 +948,17 @@ export const remove = async (req, res) => {
   try {
     const result = await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraude`, {
       context: {
-        IDFRAU: req.body.id,
+        IDFRAU: req.body.idfrau,
       }
     });
 
     if (result.data.stat) {
-      if (result.data.data[0].FUNFRA === user.userid) {
-        await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/delete`, {
-          fraude,
-          movimiento,
-        });
-    
-        res.redirect(`/admin/faudes?part=${req.query.part}`);
-      } else {
-        throw "El documento no puede ser borrado."
-      }
+      await axios.post(`http://${serverAPI}:${puertoAPI}/api/fraudes/delete`, {
+        fraude,
+        movimiento,
+      });
+  
+      res.redirect(`/admin/fraudes?part=${req.query.part}`);
     } else {
       throw "El documento no existe."
     }

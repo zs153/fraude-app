@@ -108,7 +108,7 @@ const buildTable = (state) => {
 
     // col6
     cell = document.createElement('td')
-    cell.classList.add("w-10")
+    cell.classList.add("w-20")
     cell.innerHTML = `<div class="d-flex py-1 align-items-center">
       <div class="flex-fill">
         <div class="font-weight-medium">${element.DESTIP.length > 30 ? element.DESTIP.slice(0, 30) + '...' : element.DESTIP}</div>
@@ -117,17 +117,6 @@ const buildTable = (state) => {
     row.appendChild(cell)
 
     // col7
-    cell = document.createElement('td')
-    if (element.OBSFRA !== null) {
-      cell.innerHTML = `<div class="d-flex py-1 align-items-center">
-        <div class="flex-fill">
-          <div class="font-weight-medium">${element.OBSFRA.length > 30 ? element.OBSFRA.slice(0, 30) + '...' : element.OBSFRA}</div>
-        </div>
-      </div>`
-    }
-    row.appendChild(cell)
-
-    // col8
     cell = document.createElement('td')
     cell.classList.add("w-0")
     cell.style.display = 'none'

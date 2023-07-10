@@ -1,6 +1,6 @@
 // vars
-const imphit = document.getElementById('imphit');
 const tiphit = document.getElementById('cbotip');
+const imphit = document.getElementById('imphit');
 const genliq = document.getElementById('genliq');
 const gensan = document.getElementById('gensan');
 const elemLiq = document.getElementById('liq');
@@ -43,20 +43,20 @@ const setError = (element, message) => {
   inputControl.classList.remove('is-valid');
 }
 const validate = () => {
-  const imphitValue = imphit.value
   const tiphitValue = tiphit.value
+  const imphitValue = imphit.value
 
-  if (imphitValue === '0') {
-    setError(imphit, 'Importe requerido')
-    setTimeout(function () {
-      setSuccess(imphit)
-    }, 3000)
-    return false
-  }
-  if (tiphitValue === '') {
+  if (tiphitValue === '0') {
     setError(tiphit, 'Tipo requerido')
     setTimeout(function () {
       setSuccess(tiphit)
+    }, 3000)
+    return false
+  }
+  if (imphitValue === '') {
+    setError(imphit, 'Importe requerido')
+    setTimeout(function () {
+      setSuccess(imphit)
     }, 3000)
     return false
   }

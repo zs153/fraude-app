@@ -40,7 +40,7 @@ const setError = (element, message) => {
 const validate = () => {
   const tipeveValue = tipeve.value
 
-  if (tipeveValue === '') {
+  if (tipeveValue === '0') {
     setError(tipeve, 'Tipo requerido')
     setTimeout(function () {
       setSuccess(tipeve)
